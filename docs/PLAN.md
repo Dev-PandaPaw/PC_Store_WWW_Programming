@@ -512,19 +512,21 @@ Spring Modulith chỉ dùng phần kiểm tra cấu trúc và tài liệu hóa c
 
 ### 5.4. Module và trách nhiệm
 
-| Module | Sở hữu |
-|---|---|
-| `identity` | User, credentials, external identity, OTP, phân quyền |
-| `catalog` | Product, category, brand, specification, ảnh |
-| `advisory` | Hồ sơ nhu cầu, đánh giá, gợi ý và so sánh |
-| `inventory` | Số dư, ledger, reservation, máy vật lý |
-| `cart` | Session cart |
-| `sales` | Checkout, order, revision, điều phối giao dịch |
-| `payment` | Attempts, receipts, events, refund cases |
-| `fulfillment` | Phân bổ serial, checklist, shipment |
-| `aftersales` | Warranty và service request |
-| `notification` | In-app notification, outbox, email |
-| `audit` | Nhật ký thay đổi nghiệp vụ |
+| Module | Sở hữu nghiệp vụ | Thành viên chủ trì hiện thực |
+|---|---|---|
+| `identity` | User, credentials, external identity, OTP, hồ sơ và phân quyền | Võ Văn Nhựt |
+| `catalog` | Product, category, brand, specification và ảnh | Bùi Ngọc Bửu |
+| `advisory` | Hồ sơ nhu cầu, đánh giá, gợi ý và so sánh | Huỳnh Đoàn Nhân |
+| `inventory` | Số dư, ledger, reservation và máy vật lý | Bùi Ngọc Bửu |
+| `cart` | Giỏ hàng trong HTTP Session | Huỳnh Đoàn Nhân |
+| `sales` | Checkout, order, revision và điều phối giao dịch | Võ Văn Cảnh |
+| `payment` | Attempts, receipts, events, reconciliation và refund cases | Võ Văn Cảnh |
+| `fulfillment` | Phân bổ serial, checklist, shipment và hàng hoàn | Lê Thị Kim Ngân |
+| `aftersales` | Warranty entitlement và service request | Lê Thị Kim Ngân |
+| `notification` | In-app notification, outbox và email | Huỳnh Đoàn Nhân |
+| `audit` | Nhật ký thay đổi nghiệp vụ | Võ Văn Nhựt |
+
+“Chủ trì” nghĩa là chịu trách nhiệm trọn chiều dọc của module: thiết kế, code, migration thuộc module, giao diện liên quan, test, tài liệu và demo. Chi tiết phân bổ và ranh giới phối hợp nằm tại mục 8.1.
 
 Quy tắc phụ thuộc:
 
@@ -768,23 +770,225 @@ Một task nên hoàn thành trong 0,5–2 ngày làm việc tập trung. Task l
 
 ### 8.1. Phân công theo thành viên đã đăng ký
 
-| Thành viên | Phụ trách chính | Người review |
-|---|---|---|
-| **Võ Văn Cảnh** | Kiến trúc, nền tảng, checkout/payment, CI và tích hợp | Bửu |
-| **Bùi Ngọc Bửu** | Catalog, dữ liệu cấu hình, inventory, serial, migration | Cảnh |
-| **Huỳnh Đoàn Nhân** | Thymeleaf storefront, giỏ, advisory, comparison | Nhựt |
-| **Võ Văn Nhựt** | Identity, Spring Security, OTP/Google, profile | Nhân |
-| **Lê Thị Kim Ngân** | Quản trị đơn, fulfillment, warranty, điều phối E2E và báo cáo | Cảnh |
+Theo nhận xét của giảng viên, phần “phụ trách” được chi tiết hóa thành đầu ra có thể kiểm tra. Mỗi thành viên phải trực tiếp hiện thực module được giao, không chỉ phân tích, thiết kế giao diện, kiểm thử hoặc viết báo cáo.
 
-Mỗi người chịu trách nhiệm cả code, test, tài liệu và demo của phần mình. Không giao toàn bộ kiểm thử cho Ngân hoặc toàn bộ tích hợp cuối kỳ cho Cảnh.
+#### 8.1.1. Nguyên tắc phân chia
+
+- Mỗi module có đúng một người chủ trì để tránh bỏ sót hoặc đùn đẩy trách nhiệm.
+- Người chủ trì sở hữu trọn luồng `api` → `application` → `domain` → `infrastructure` → `web`, cùng migration, template/static asset, test, tài liệu và demo tương ứng.
+- Số module không chia đều máy móc. Module có concurrency, security, payment hoặc nhiều trạng thái được tính nặng hơn; các module nhỏ hoặc không có database được ghép thành một gói rộng hơn.
+- Vai trò điều phối CI, migration, UI/UX, E2E hoặc báo cáo không có nghĩa người điều phối làm thay phần của thành viên khác.
+- Mỗi thành viên đều phải có đóng góp nhìn thấy được ở backend, dữ liệu hoặc tích hợp, giao diện, kiểm thử và tài liệu.
+- Công việc liên module phải tách ticket theo contract và đầu ra của từng owner; không dùng một ticket chung để che khuất đóng góp cá nhân.
+
+#### 8.1.2. Bảng phân công tổng quan
+
+| Thành viên | Module chủ trì | Trách nhiệm xuyên suốt | Người review chính |
+|---|---|---|---|
+| **Võ Văn Cảnh** | `sales`, `payment` | Kiến trúc nền tảng, checkout/payment, VNPAY, cấu hình tích hợp và CI | Bùi Ngọc Bửu |
+| **Bùi Ngọc Bửu** | `catalog`, `inventory` | Mô hình dữ liệu sản phẩm/kho, Flyway, PostgreSQL, media và dữ liệu demo | Lê Thị Kim Ngân |
+| **Huỳnh Đoàn Nhân** | `cart`, `advisory`, `notification` | Thymeleaf storefront, UI/UX chung, Redis cart, outbox/email | Võ Văn Nhựt |
+| **Võ Văn Nhựt** | `identity`, `audit` | Spring Security, RBAC, CSRF, OTP/Google, hồ sơ và audit | Võ Văn Cảnh |
+| **Lê Thị Kim Ngân** | `fulfillment`, `aftersales` | Serial allocation, checklist, shipment, warranty, E2E và báo cáo | Huỳnh Đoàn Nhân |
+
+Vòng review chính là: **Bửu review Cảnh → Ngân review Bửu → Nhựt review Nhân → Cảnh review Nhựt → Nhân review Ngân**. Như vậy mỗi người vừa có một reviewer chính, vừa chịu trách nhiệm review chính cho một thành viên khác.
+
+#### 8.1.3. Võ Văn Cảnh — `sales`, `payment` và nền tảng tích hợp
+
+**Hiện thực module**
+
+- `sales`: checkout preview, tạo đơn idempotent, order item snapshot, sửa số lượng COD theo điều kiện, hủy đơn, lịch sử trạng thái và điều phối transaction với inventory/payment/notification.
+- `payment`: payment intent/attempt, receipt, payment event, expiry, callback hợp lệ/trùng/muộn, đối soát và hồ sơ refund cần xử lý thủ công.
+- Xác định public contract của `sales` và `payment`; không để controller gọi trực tiếp repository hoặc gọi HTTP nội bộ giữa MVC và REST.
+- Chịu trách nhiệm các quy tắc tổng tiền, phí vận chuyển snapshot, idempotency, late payment và trạng thái order/payment tương thích nhau.
+
+**Database và migration**
+
+- Sở hữu schema và migration cho `orders`, `order_items`, `order_revisions`, `order_status_history`, `idempotency_records`.
+- Sở hữu schema và migration cho `payment_attempts`, `payment_receipts`, `payment_events`, `refund_cases`.
+- Chịu trách nhiệm index theo order code, customer, trạng thái, expiry và provider transaction; giữ snapshot đơn hàng độc lập với dữ liệu hiện tại.
+
+**Template, UI/UX và API**
+
+- Hiện thực `templates/account/checkout/`, `templates/account/orders/`, `templates/admin/orders/`, `templates/admin/payments/` và màn hình kết quả/return thanh toán.
+- Xử lý đầy đủ trạng thái quote hết hạn, giá thay đổi, thiếu tồn, submit lặp, thanh toán chờ/không thành công và đơn không có quyền truy cập.
+- Hiện thực MVC form và REST contract cho checkout, order, cancellation, VNPAY IPN/return; client không được gửi giá hoặc vai trò có thẩm quyền.
+
+**Tích hợp và nền tảng**
+
+- Sở hữu port `PaymentGateway`, adapter VNPAY sandbox, xác minh chữ ký và cấu hình callback theo môi trường.
+- Bootstrap Maven, Docker Compose, profile môi trường, Actuator cơ bản và GitHub Actions; phối hợp nhưng không viết thay cấu hình riêng của module khác.
+- Bảo đảm tác vụ mạng không chạy trong lúc giữ khóa kho và lỗi provider không phá transaction đã commit.
+
+**Kiểm thử, tài liệu và demo**
+
+- Test checkout transaction, idempotency, sửa/hủy COD, payment callback sai/trùng/muộn, expiry race và return trước IPN.
+- Viết contract checkout/payment, ADR điều phối transaction, hướng dẫn cấu hình VNPAY và bằng chứng CI.
+- Demo luồng COD và VNPAY từ checkout đến trạng thái đơn/thanh toán; giải thích được rollback và xử lý callback lặp.
+
+#### 8.1.4. Bùi Ngọc Bửu — `catalog`, `inventory` và nền tảng dữ liệu
+
+**Hiện thực module**
+
+- `catalog`: product, category, brand, specification, image, trạng thái kinh doanh, search/filter và ràng buộc ngừng bán/xóa.
+- `inventory`: on-hand/reserved/available, inventory movement, reservation, expiry/release và `product_units` đại diện máy vật lý/serial trong kho.
+- Hiện thực khóa tồn kho, optimistic/pessimistic control phù hợp, ledger bất biến và quy tắc không sửa tồn trực tiếp từ form sản phẩm.
+- Phân định rõ: Bửu sở hữu máy vật lý và trạng thái kho; Ngân sở hữu phân bổ máy cho order, checklist, shipment và luồng hàng hoàn.
+
+**Database và migration**
+
+- Sở hữu schema và migration cho `products`, `categories`, `brands`, `product_specs`, `product_images`.
+- Sở hữu schema và migration cho `inventory_balances`, `inventory_movements`, `stock_reservations`, `product_units`.
+- Chịu trách nhiệm quy ước UUID, `NUMERIC(19,0)`, index/filter catalog, unique SKU/serial, khóa ngoại và kiểm tra `ddl-auto=validate`.
+- Điều phối thứ tự version Flyway và review migration liên module; mỗi owner vẫn phải tự viết migration của module mình.
+
+**Template, UI/UX và dữ liệu**
+
+- Hiện thực `templates/storefront/catalog/`, `templates/admin/catalog/`, `templates/admin/inventory/`, `templates/admin/units/` cùng JavaScript đặc thù của các màn hình này.
+- Xử lý catalog rỗng, không có kết quả lọc, sản phẩm ngừng bán, upload ảnh lỗi, thiếu hàng và xung đột cập nhật kho.
+- Chuẩn bị bộ 20–30 SKU, ít nhất 40 máy vật lý, nguồn/ngày tham khảo cấu hình và dữ liệu kho ở nhiều trạng thái.
+
+**Tích hợp và hạ tầng dữ liệu**
+
+- Sở hữu port `MediaStorage`, adapter lưu file local, kiểm tra MIME/kích thước/tên file và đường dẫn media có thể chuyển sang cloud.
+- Duy trì ERD, data dictionary, migration strategy và dữ liệu seed/demo; hỗ trợ chuẩn PostgreSQL/Testcontainers cho cả nhóm.
+
+**Kiểm thử, tài liệu và demo**
+
+- Test CRUD/ràng buộc catalog, dữ liệu đang được order tham chiếu, serial trùng, ledger, reservation và hai khách tranh sản phẩm cuối.
+- Test rollback không làm lệch tồn, release/hủy idempotent và hàng hoàn chưa kiểm tra không quay lại tồn bán được.
+- Demo nhập kho, thay đổi số dư qua ledger, reservation và truy vết một máy vật lý từ SKU đến trạng thái kho.
+
+#### 8.1.5. Huỳnh Đoàn Nhân — `cart`, `advisory`, `notification` và UI/UX chung
+
+**Hiện thực module**
+
+- `cart`: session cart, cart version, thêm/sửa/xóa riêng từng dòng, giữ giỏ khi login, kiểm tra lại giá/tình trạng bán và chỉ xóa phần đã checkout.
+- `advisory`: usage profile, suitability data, rule version, xếp hạng xác định, giải thích lý do gợi ý và so sánh PC.
+- `notification`: in-app notification, outbox dispatcher, retry, trạng thái gửi email và luồng không rollback đơn hàng khi gửi thất bại.
+- Cart không có bảng PostgreSQL; dữ liệu giỏ nằm trong Redis-backed HTTP Session và không trở thành nguồn giá/tồn kho.
+
+**Database và dữ liệu tư vấn**
+
+- Sở hữu schema và migration cho `usage_profiles`, `product_suitability`, `advisory_rule_versions`.
+- Sở hữu schema và migration cho `outbox_events`, `notifications`; payload phải loại dữ liệu nhạy cảm và hỗ trợ retry/idempotency.
+- Chuẩn bị bốn nhóm nhu cầu, thang điểm, lý do giải thích và bộ dữ liệu advisory có version/người duyệt.
+
+**Template, UI/UX và frontend**
+
+- Hiện thực `templates/fragments/`, `templates/storefront/home/`, `templates/storefront/advisory/`, `templates/storefront/comparison/`, `templates/storefront/cart/`, `templates/admin/advisory/` và `templates/mail/`.
+- Xây dựng layout chung, navigation, Bootstrap theme, responsive behavior, accessibility cơ bản và quy ước CSS/JavaScript ES modules.
+- Thiết kế trạng thái loading, empty, error, validation, success và no-permission nhất quán; review tính nhất quán UI của template do các thành viên khác sở hữu.
+- Hiện thực trung tâm/fragment thông báo trong ứng dụng và badge chưa đọc mà không làm lộ dữ liệu người dùng khác.
+
+**Tích hợp**
+
+- Sở hữu port `MailSender`, adapter SMTP/Mailpit và template email; không gửi email trực tiếp trong transaction nghiệp vụ.
+- Phối hợp với Cảnh về Redis/Compose: Cảnh cấu hình nền tảng, Nhân chịu trách nhiệm hành vi session cart và kiểm thử nhiều tab/login/logout.
+
+**Kiểm thử, tài liệu và demo**
+
+- Test số lượng âm, sản phẩm ngừng bán, giá đổi, hai tab sửa giỏ, login/logout và partial clear sau checkout.
+- Test advisory không vượt ngân sách, không gợi ý hàng hết, dữ liệu thiếu, thứ tự ổn định và giải thích đúng.
+- Test outbox retry/app dừng sau commit/email lỗi; viết wireframe, UI flow, style guide và tài liệu dữ liệu tư vấn.
+- Demo luồng guest từ tư vấn → so sánh → giỏ, cùng một trường hợp outbox/email được retry.
+
+#### 8.1.6. Võ Văn Nhựt — `identity`, `audit` và bảo mật
+
+**Hiện thực module**
+
+- `identity`: user, role, credential, external identity, address, verification token, email/password, OTP, Google linking, quên mật khẩu, profile và khóa tài khoản.
+- `audit`: ghi nhận ai làm gì, thời điểm, đối tượng, before/after đã lọc nhạy cảm; hỗ trợ tra cứu có phân quyền.
+- Hiện thực kiểm tra quyền ở endpoint và application service; khóa user phải vô hiệu thao tác được bảo vệ kể cả session đã tồn tại.
+- Chịu trách nhiệm quy tắc không tự gộp Google theo email, không gỡ phương thức đăng nhập cuối và không vô hiệu hóa Admin hoạt động cuối cùng.
+
+**Database và migration**
+
+- Sở hữu schema và migration cho `users`, `user_roles`, `external_identities`, `user_addresses`, `verification_tokens`.
+- Sở hữu schema và migration cho `audit_logs`; xác định index phục vụ tra cứu actor, action, target và thời gian.
+- Bảo đảm password hash, OTP, token, session identifier và secret không xuất hiện trong DTO, audit payload hoặc log.
+
+**Template, UI/UX và bảo mật web**
+
+- Hiện thực `templates/account/auth/`, `templates/account/profile/`, `templates/account/addresses/`, `templates/admin/users/`, `templates/admin/audit/` và các trang lỗi xác thực/phân quyền trong `templates/errors/`.
+- Hiện thực register/login, OTP challenge, quên/đặt lại mật khẩu, liên kết Google, đổi số điện thoại, quản lý địa chỉ và khóa/mở user.
+- Cấu hình Spring Security, RBAC, CSRF, session fixation protection, cookie policy, password encoder và authorization rule cho MVC/REST.
+
+**Tích hợp**
+
+- Sở hữu port `OtpProvider`, adapter OTP giả lập có nhãn môi trường và contract cho provider thật.
+- Sở hữu Google OIDC client, callback, liên kết tài khoản có xác thực và cấu hình secret theo biến môi trường.
+
+**Kiểm thử, tài liệu và demo**
+
+- Test email/phone trùng, OTP hết hạn/dùng lại/sai mục đích, rate limit, Google trùng email, đổi số và phương thức đăng nhập cuối.
+- Test RBAC, CSRF, xem dữ liệu người khác, khóa user đang đăng nhập, Admin cuối cùng và lọc dữ liệu nhạy cảm trong audit.
+- Viết auth flow, ma trận quyền, threat/security checklist và hướng dẫn cấu hình Google/OTP.
+- Demo ba phương thức đăng nhập, bước xác minh điện thoại trước checkout và truy vết một thao tác Admin trong audit.
+
+#### 8.1.7. Lê Thị Kim Ngân — `fulfillment`, `aftersales` và chất lượng đầu cuối
+
+**Hiện thực module**
+
+- `fulfillment`: unit allocation, kiểm tra serial, inspection checklist, shipment, shipment event, bàn giao vận chuyển và tiếp nhận hàng hoàn.
+- `aftersales`: warranty entitlement, hồ sơ máy khách đã nhận, QR có kiểm soát, service request, kiểm tra điều kiện và lịch sử xử lý.
+- Chịu trách nhiệm state transition fulfillment/warranty; chỉ cho giao khi đủ serial/checklist và chỉ kích hoạt bảo hành khi giao thành công.
+- Phân định rõ: Ngân gọi public contract để cập nhật order/inventory; không sửa trực tiếp repository của `sales` hoặc `inventory`.
+
+**Database và migration**
+
+- Sở hữu schema và migration cho `unit_allocations`, `inspection_records`, `shipments`, `shipment_events`.
+- Sở hữu schema và migration cho `warranty_entitlements`, `service_requests`, `service_request_events`.
+- Bảo toàn lịch sử phân bổ, giao hàng và bảo hành; không ghi đè quan hệ cũ khi hoàn hàng hoặc thay máy.
+
+**Template, UI/UX và vận hành**
+
+- Hiện thực `templates/account/devices/`, `templates/account/service-requests/`, `templates/admin/dashboard/`, `templates/admin/inspections/`, `templates/admin/shipments/`, `templates/admin/aftersales/`.
+- Hiện thực màn hình phân bổ serial/checklist qua luồng fulfillment, theo dõi shipment, hồ sơ máy, tạo/theo dõi service request và xử lý bảo hành.
+- Thiết kế trạng thái thiếu serial, checklist chưa đạt, event giao hàng trùng, hàng hoàn cách ly, hết bảo hành và chuyển trạng thái không hợp lệ.
+
+**Tích hợp và E2E**
+
+- Sở hữu port `ShippingProvider`, adapter giao hàng giả lập và contract cho provider thật; callback/event phải idempotent.
+- Điều phối Playwright, dữ liệu/kịch bản E2E và test report; từng owner vẫn phải viết hoặc hỗ trợ scenario thuộc module mình.
+- Điều phối báo cáo và kịch bản bảo vệ từ artifact đã có; không viết thay tài liệu kỹ thuật của module khác.
+
+**Kiểm thử, tài liệu và demo**
+
+- Test serial trùng/thiếu, phân bổ một order item nhiều máy, chưa checklist vẫn giao, shipment event trùng và hàng hoàn chưa đạt kiểm tra.
+- Test quyền sở hữu thiết bị, QR khó đoán, thời hạn bảo hành, service request trùng và state transition sai.
+- Duy trì E2E matrix, test evidence, runbook demo và bảng truy vết yêu cầu → module → màn hình/API → test → người phụ trách.
+- Demo luồng Admin phân bổ máy → kiểm tra → giao; Customer xem đúng serial → gửi bảo hành; Admin xử lý và đóng yêu cầu.
+
+#### 8.1.8. Ranh giới phối hợp liên module
+
+| Luồng | Owner điều phối | Trách nhiệm phối hợp |
+|---|---|---|
+| Checkout và giữ tồn | Cảnh (`sales`) | Bửu cung cấp contract khóa/giữ/giải phóng tồn; Nhân cung cấp cart snapshot; Nhựt bảo vệ identity/authorization |
+| Thanh toán và thông báo | Cảnh (`payment`) | Cảnh xác minh provider event; Nhân ghi/dispatch outbox và notification; không gọi SMTP trong payment transaction |
+| Xuất kho và giao hàng | Ngân (`fulfillment`) | Bửu quản lý product unit/ledger; Cảnh quản lý order transition; Ngân quản lý allocation/checklist/shipment |
+| Hàng hoàn | Ngân (`fulfillment`) | Ngân tiếp nhận và inspection; Bửu chỉ tăng lại `on_hand` sau kết quả đạt; Cảnh cập nhật trạng thái order khi cần |
+| Kích hoạt bảo hành | Ngân (`aftersales`) | Ngân tạo entitlement từ unit đã giao; Bửu cung cấp thông tin product unit; Cảnh cung cấp order snapshot |
+| Audit thao tác Admin | Nhựt (`audit`) | Mỗi module phát thông tin audit đã lọc; Nhựt lưu, bảo vệ và cung cấp màn hình tra cứu |
+
+#### 8.1.9. Kiểm soát cân bằng đóng góp
+
+- Năm gói công việc được cân theo độ khó, không theo số module: `sales/payment`, `catalog/inventory`, `cart/advisory/notification`, `identity/audit`, `fulfillment/aftersales`.
+- Mỗi gói đều có nghiệp vụ P0/P1, database hoặc state storage, MVC/REST, template/UI, integration, test và tài liệu/demo.
+- `cart` không có PostgreSQL và `audit` nhỏ hơn các module giao dịch, nên được ghép lần lượt với advisory/notification và identity/security.
+- Cuối tuần 2, 6 và 10, nhóm ước lượng lại ticket theo độ phức tạp và thời gian; mục tiêu mỗi thành viên giữ khoảng 18–22% tổng effort còn lại.
+- Nếu một người vượt ngưỡng, chuyển một feature trọn chiều dọc hoặc một nhóm test/UI có acceptance criteria rõ ràng; không chia đôi entity/repository của một module cho hai người cùng sở hữu.
+- Đóng góp được đánh giá bằng feature hoàn thành, chất lượng PR/review, migration, test, tài liệu và khả năng demo/giải thích; số commit hoặc số dòng code không phải thước đo chính.
 
 ### 8.2. Git và review
 
 - `main` luôn build được.
 - Feature branch ngắn theo ticket.
-- Một PR cần ít nhất một người review và CI pass.
+- Một PR cần ít nhất một người review và CI pass; tác giả không tự approve PR của mình.
+- PR thay đổi module phải có owner hoặc reviewer chính của module tham gia review; PR liên module cần review từ các owner bị ảnh hưởng.
 - Không chờ hoàn thành cả module mới tích hợp.
-- Migration đã merge không sửa lại; tạo migration tiếp theo.
+- Migration thuộc trách nhiệm owner của module; Bửu điều phối version và hỗ trợ review migration liên module. Migration đã merge không sửa lại; tạo migration tiếp theo.
+- Nhân điều phối tính nhất quán UI/UX, Ngân điều phối E2E/báo cáo và Cảnh điều phối CI/tích hợp; mỗi thành viên vẫn tự hoàn thành UI, test, tài liệu và sửa build của phần mình.
 - Mỗi tuần có demo tích hợp và cập nhật rủi ro.
 - Đánh giá đóng góp bằng chức năng, PR, test, tài liệu và khả năng trình bày; không chỉ đếm commit.
 
