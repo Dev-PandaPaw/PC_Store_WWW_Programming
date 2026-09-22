@@ -1,0 +1,42 @@
+# Maven / Java
+target/
+*.class
+*.jar
+*.war
+*.log
+
+# IDE / editor
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Runtime data
+media/*
+!media/.gitkeep
+logs/
+tmp/
+
+# E2E / Node tooling
+node_modules/
+playwright-report/
+test-results/
+blob-report/
+
+# Local test artifacts
+coverage/
+*.pid
