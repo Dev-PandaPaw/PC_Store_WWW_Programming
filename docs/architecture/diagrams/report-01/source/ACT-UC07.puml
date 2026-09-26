@@ -1,0 +1,41 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam ArrowColor #334155
+skinparam activityBackgroundColor #EFF6FF
+skinparam activityBorderColor #2563EB
+skinparam activityDiamondBackgroundColor #FFF7ED
+skinparam activityDiamondBorderColor #C2410C
+skinparam usecaseBackgroundColor #EFF6FF
+skinparam usecaseBorderColor #2563EB
+skinparam padding 8
+title ACT-UC07 — Quản lý PC và loại sản phẩm
+|Admin|
+start
+|Admin|
+:B1. Tìm PC/loại và chọn thêm, sửa, trạng thái, xóa hoặc\nđiều chỉnh tồn;
+|PC Store|
+:B2. Kiểm quyền, field, ảnh, unique SKU/slug và version;
+|PC Store|
+if (Dữ liệu và version hợp lệ?) then (Có)
+else (Không)
+:E-B2. Báo field/trùng/stale; giữ form;
+stop
+endif
+|PC Store|
+:B3. Kiểm điều kiện riêng: xóa không tham chiếu, tồn không\ndưới reserved, ACTIVE đủ cấu hình;
+|PC Store|
+if (Thỏa điều kiện nghiệp vụ?) then (Có)
+else (Không)
+:E-B3. Chặn xóa dữ liệu đã dùng hoặc giảm quá tồn; đề nghị\nngừng bán;
+stop
+endif
+|PC Store|
+:B4. Lưu thay đổi catalog trong transaction; stock\nadjustment ghi actor, before/after và lý do;
+|PC Store|
+:B5. Commit, dọn media bỏ sau commit; trả danh sách/chi\ntiết cập nhật;
+stop
+@enduml

@@ -1,0 +1,70 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam ArrowColor #334155
+skinparam activityBackgroundColor #EFF6FF
+skinparam activityBorderColor #2563EB
+skinparam activityDiamondBackgroundColor #FFF7ED
+skinparam activityDiamondBorderColor #C2410C
+skinparam usecaseBackgroundColor #EFF6FF
+skinparam usecaseBorderColor #2563EB
+skinparam padding 8
+title ERD-IDENTITY — PC Store
+hide circle
+skinparam linetype ortho
+skinparam entityBackgroundColor #F8FAFC
+skinparam entityBorderColor #475569
+entity "users" as users {
+* id: uuid <<PK>>
+  email: varchar(254)
+  email_verified_at: timestamptz
+  password_hash: varchar(100)
+  phone: varchar(16)
+  phone_verified_at: timestamptz
+* full_name: varchar(100)
+  recipient_name: varchar(100)
+  province: varchar(100)
+  district: varchar(100)
+  ward: varchar(100)
+  address_line: varchar(255)
+* status: varchar(16)
+  status_reason: varchar(500)
+* session_version: bigint
+* version: bigint
+* created_at: timestamptz
+* updated_at: timestamptz
+}
+entity "user_roles" as user_roles {
+* user_id: uuid <<PK>>
+* role: varchar(16) <<PK>>
+}
+entity "external_identities" as external_identities {
+* id: uuid <<PK>>
+* user_id: uuid <<FK>>
+* issuer: varchar(255)
+* subject: varchar(255)
+* provider: varchar(20)
+* created_at: timestamptz
+}
+entity "verification_challenges" as verification_challenges {
+* id: uuid <<PK>>
+  user_id: uuid <<FK>>
+* purpose: varchar(32)
+* target: varchar(254)
+* secret_digest: varchar(128)
+  session_binding: varchar(128)
+  auth_version: bigint
+* attempts: smallint
+* expires_at: timestamptz
+* resend_after: timestamptz
+  verified_at: timestamptz
+  consumed_at: timestamptz
+* created_at: timestamptz
+}
+users ||--o{ user_roles : user_id
+users ||--o{ external_identities : user_id
+users |o--o{ verification_challenges : user_id
+@enduml

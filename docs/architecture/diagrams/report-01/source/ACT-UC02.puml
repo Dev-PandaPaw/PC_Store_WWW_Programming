@@ -1,0 +1,49 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam ArrowColor #334155
+skinparam activityBackgroundColor #EFF6FF
+skinparam activityBorderColor #2563EB
+skinparam activityDiamondBackgroundColor #FFF7ED
+skinparam activityDiamondBorderColor #C2410C
+skinparam usecaseBackgroundColor #EFF6FF
+skinparam usecaseBorderColor #2563EB
+skinparam padding 8
+title ACT-UC02 — Tìm và xem PC
+|Guest|
+start
+|Guest|
+:B1. Mở trang chủ hoặc danh sách PC; nhập từ khóa/bộ lọc;
+|PC Store|
+:B2. Kiểm bộ lọc, khoảng giá và phân trang;
+|PC Store|
+if (Bộ lọc hợp lệ?) then (Có)
+else (Không)
+:E-B2. Giữ form, thông báo điều kiện sai;
+stop
+endif
+|PC Store|
+:B3. Tìm PC ACTIVE, phân trang và sắp xếp ổn định;
+|PC Store|
+if (Có kết quả?) then (Có)
+else (Không)
+:E-B3. Hiện danh sách rỗng và nút xóa bộ lọc;
+stop
+endif
+|Guest|
+:B4. Chọn PC cần xem;
+|PC Store|
+:B5. Đọc lại PC theo slug, cấu hình, ảnh và bảo hành;
+|PC Store|
+if (PC vẫn ACTIVE?) then (Có)
+else (Không)
+:E-B5. Trả 404; gợi ý quay danh sách;
+stop
+endif
+|PC Store|
+:B6. Hiển thị chi tiết và available; khóa nút thêm giỏ nếu\nhết hàng;
+stop
+@enduml

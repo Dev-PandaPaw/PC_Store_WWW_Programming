@@ -1,0 +1,43 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam ArrowColor #334155
+skinparam activityBackgroundColor #EFF6FF
+skinparam activityBorderColor #2563EB
+skinparam activityDiamondBackgroundColor #FFF7ED
+skinparam activityDiamondBorderColor #C2410C
+skinparam usecaseBackgroundColor #EFF6FF
+skinparam usecaseBorderColor #2563EB
+skinparam padding 8
+title ACT-UC03 — Tư vấn chọn PC
+|Guest|
+start
+|Guest|
+:B1. Chọn nhu cầu và nhập ngân sách, RAM, dung lượng tối\nthiểu;
+|PC Store|
+:B2. Kiểm enum và giới hạn số;
+|PC Store|
+if (Tiêu chí hợp lệ?) then (Có)
+else (Không)
+:E-B2. Báo lỗi theo field; giữ form;
+stop
+endif
+|PC Store|
+:B3. Lọc PC ACTIVE, còn hàng, có profile, không vượt ngân\nsách và đủ cấu hình;
+|PC Store|
+if (Có PC đạt tất cả điều kiện?) then (Có)
+else (Không)
+:E-B3. Trả rỗng, chỉ ra bộ lọc làm hết ứng viên; không tự\ntăng ngân sách;
+stop
+endif
+|PC Store|
+:B4. Xếp score giảm, giá tăng, SKU tăng; lấy tối đa 3;
+|PC Store|
+:B5. Hiển thị lý do, hạn chế, giá và phần ngân sách còn\nlại;
+|Guest|
+:B6. Mở chi tiết hoặc chỉnh tiêu chí để tư vấn lại;
+stop
+@enduml

@@ -1,0 +1,43 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam ArrowColor #334155
+skinparam activityBackgroundColor #EFF6FF
+skinparam activityBorderColor #2563EB
+skinparam activityDiamondBackgroundColor #FFF7ED
+skinparam activityDiamondBorderColor #C2410C
+skinparam usecaseBackgroundColor #EFF6FF
+skinparam usecaseBorderColor #2563EB
+skinparam padding 8
+title ACT-UC04 — Quản lý giỏ hàng
+|Guest|
+start
+|Guest|
+:B1. Xem giỏ hoặc chọn thêm, đổi số lượng, xóa dòng;
+|PC Store|
+:B2. Đọc session cart và kiểm version cho thao tác ghi;
+|PC Store|
+if (Version và số lượng hợp lệ?) then (Có)
+else (Không)
+:E-B2. 409 nếu hai tab xung đột hoặc lỗi lượng; tải lại, giữ\ngiỏ mới hơn;
+stop
+endif
+|PC Store|
+:B3. Đọc catalog; thêm/đổi lượng cần PC ACTIVE và đủ\navailable, xóa được cả dòng không còn bán;
+|PC Store|
+if (Thao tác được phép?) then (Có)
+else (Không)
+:E-B3. Giữ giỏ; báo thiếu hàng/ngừng bán/giới hạn 20 SKU;
+stop
+endif
+|PC Store|
+:B4. Cập nhật dòng: thêm trùng SKU cộng lượng, đổi lượng\nthay thế, xóa bỏ dòng; tăng version khi thay đổi;
+|PC Store|
+:B5. Tính lại giá hiện tại và subtotal; đánh dấu dòng\nkhông mua được;
+|PC Store|
+:B6. Hiện giỏ mới, empty state hoặc CTA checkout nếu hợp\nlệ;
+stop
+@enduml

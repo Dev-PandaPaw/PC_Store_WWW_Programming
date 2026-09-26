@@ -1,0 +1,51 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam ArrowColor #334155
+skinparam activityBackgroundColor #EFF6FF
+skinparam activityBorderColor #2563EB
+skinparam activityDiamondBackgroundColor #FFF7ED
+skinparam activityDiamondBorderColor #C2410C
+skinparam usecaseBackgroundColor #EFF6FF
+skinparam usecaseBorderColor #2563EB
+skinparam padding 8
+title ACT-UC08 — Xử lý đơn hàng
+|Admin|
+start
+|Admin|
+:B1. Tra cứu và mở chi tiết đơn;
+|PC Store|
+:B2. Đọc snapshots, timeline, payment summary và action\nhợp lệ;
+|PC Store|
+if (Đơn tồn tại?) then (Có)
+else (Không)
+:E-B2. 404; trở về danh sách;
+stop
+endif
+|Admin|
+:B3. Chọn action và xác nhận thông tin;
+|PC Store|
+:B4. Khóa order/attempt, so version và bảng chuyển trạng\nthái;
+|PC Store|
+if (Action hợp lệ?) then (Có)
+else (Không)
+:E-B4. 409; tải lại dữ liệu mới, không ép trạng thái;
+stop
+endif
+|PC Store|
+:B5. Sửa/hủy/giao: khóa products theo ID; kiểm và cập nhật\nlượng giữ/xuất;
+|PC Store|
+if (Đủ tồn và đơn còn ít nhất một item khi\nsửa?) then (Có)
+else (Không)
+:E-B5. 409 thiếu tồn hoặc 422 đơn rỗng; rollback;
+stop
+endif
+|PC Store|
+:B6. Ghi order/revision/history/payment liên quan và\ncommit;
+|PC Store|
+:B7. Hiển thị timeline mới; DELIVERED bắt đầu quyền bảo\nhành;
+stop
+@enduml

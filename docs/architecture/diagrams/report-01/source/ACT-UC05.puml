@@ -1,0 +1,52 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam ArrowColor #334155
+skinparam activityBackgroundColor #EFF6FF
+skinparam activityBorderColor #2563EB
+skinparam activityDiamondBackgroundColor #FFF7ED
+skinparam activityDiamondBorderColor #C2410C
+skinparam usecaseBackgroundColor #EFF6FF
+skinparam usecaseBorderColor #2563EB
+skinparam padding 8
+title ACT-UC05 — Đặt hàng và thanh toán
+|Customer|
+start
+|Customer|
+:B1. Nhập nơi nhận và chọn COD hoặc VNPAY;
+|PC Store|
+:B2. Kiểm tài khoản, phone, giỏ, địa chỉ; tính giá + phí\n50.000 và quote hạn 10 phút;
+|PC Store|
+if (Đủ điều kiện checkout?) then (Có)
+else (Không)
+:E-B2. Yêu cầu xác minh phone, sửa giỏ/địa chỉ; chưa tạo đơn;
+stop
+endif
+|Customer|
+:B3. Xem tổng và xác nhận đặt hàng;
+|PC Store|
+:B4. Kiểm idempotency, khóa user và products theo ID; đọc\nlại quote/giá/stock;
+|PC Store|
+if (Key mới và quote/stock còn hợp lệ?) then (Có)
+else (Không)
+:E-B4. Cùng key/payload trả đơn cũ; mismatch hoặc thay đổi\ntrả 409, không tạo đơn mới;
+stop
+endif
+|PC Store|
+:B5. Trong một transaction: tạo order/items\nsnapshot/attempt/history, tăng reserved, lưu\nidempotency;
+|PC Store|
+:B6. Commit, dọn giỏ đúng version và gửi mail sau commit;
+|PC Store|
+:B7. COD: chờ xác nhận; VNPAY: redirect URL ký cùng\nreference và hạn 15 phút;
+|Customer|
+if (Phương thức VNPAY?) then (Có)
+else (Không)
+stop
+endif
+|PC Store|
+:B8. VNPAY: IPN xác minh cập nhật; return chỉ đọc trạng\nthái; hiển thị kết quả server;
+stop
+@enduml

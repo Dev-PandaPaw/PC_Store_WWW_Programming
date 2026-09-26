@@ -1,288 +1,197 @@
-# PC Store — Đặc tả định hướng và kế hoạch triển khai toàn dự án
+# PC Store — Đặc tả và kế hoạch triển khai
 
-## 1. Kết luận review và định hướng viết lại
+**Phiên bản:** 2.1
 
-**PC Store sẽ là website bán PC hoàn chỉnh, hỗ trợ tư vấn chọn máy có giải thích, quản lý bán hàng và theo dõi hậu mãi theo từng máy.** Hệ thống sử dụng **Java Spring Boot, Spring MVC, Thymeleaf**, triển khai dưới dạng **modular monolith**, phù hợp nhóm 5 sinh viên trong 10–14 tuần.
+**Ngày cập nhật:** 26/09/2026
 
-Ba kết quả cần đạt:
+**Môn học:** Lập trình WWW Java
 
-1. Đáp ứng đầy đủ chức năng đã đăng ký và thể hiện kiến thức môn học.
-2. Xử lý đúng các nghiệp vụ quan trọng: tài khoản, giỏ hàng, tồn kho, đặt hàng, thanh toán, giao hàng và bảo hành.
-3. Có điểm khác biệt demonstrable: khách hiểu **vì sao một PC phù hợp**, và sau mua có thể xem **hồ sơ chiếc máy thực tế mình nhận**.
+**Nhóm:** 16 — 5 thành viên
 
-Đây là bản kế hoạch và nội dung định hướng cho đặc tả thay thế; chưa chỉnh sửa các file gốc.
+**Đề tài:** Website giới thiệu và bán máy PC trực tuyến
 
-### 1.1. Căn cứ và thứ tự ưu tiên
+## 1. Mục đích và nguồn yêu cầu
 
-| Nguồn | Cách sử dụng |
-|---|---|
-| Yêu cầu và lựa chọn của bạn | Chốt Thymeleaf, thời gian 10–14 tuần, tư vấn + hậu mãi, sandbox/giả lập |
-| Phiếu đăng ký đề tài | Căn cứ chức năng nhóm đã đăng ký |
-| Biểu mẫu môn học cung cấp ở lượt trước | Đối chiếu rubric, nội dung báo cáo và đánh giá cá nhân |
-| Bản Markdown hiện tại | Bản nháp kỹ thuật để review, không mặc nhiên xem mọi đề xuất là yêu cầu bắt buộc |
-| Tài liệu nhà cung cấp và cửa hàng thực tế | Căn cứ tham khảo nghiệp vụ, kỹ thuật; không sao chép chính sách thành cam kết của PC Store |
+Tài liệu này là nguồn thống nhất để phân tích, thiết kế, chia việc, hiện thực, kiểm thử, trình diễn và viết báo cáo. Phiên bản 2.0 thay thế phạm vi doanh nghiệp nhỏ của phiên bản 1.0 bằng một đồ án có thể hoàn thành bởi năm sinh viên trong một học kỳ.
 
-Phiếu đăng ký đã được đọc để đối chiếu các yêu cầu về tài khoản, Session, số điện thoại, quản trị và ràng buộc xóa. :codex-file-citation{path="C:/Users/Canh-dev/Downloads/23676641_DangkyDetai.pdf" purpose="source"}
+Thứ tự ưu tiên khi có xung đột:
 
-### 1.2. Những điểm giữ, sửa và bổ sung
+1. Yêu cầu đã đăng ký với giảng viên trong phiếu đề tài.
+2. Quyết định phạm vi tại tài liệu này.
+3. Đặc tả UI và cấu trúc repository.
+4. Ý tưởng mở rộng và tài liệu tham khảo.
 
-| Nội dung bản nháp | Quyết định viết lại |
-|---|---|
-| Modular monolith | Giữ; một ứng dụng, một cơ sở dữ liệu, module rõ trách nhiệm |
-| React SPA và frontend riêng | Thay bằng Thymeleaf + Bootstrap + JavaScript theo lựa chọn của nhóm |
-| Backend REST dùng lại về sau | Giữ application service độc lập với giao diện; chỉ mở REST cho các chức năng thực sự cần |
-| Danh sách nhiều dịch vụ ngoài | Chốt VNPAY sandbox, Google; OTP và giao hàng có giả lập minh bạch |
-| Trừ tồn kho khi tạo đơn/thanh toán | Sửa: giữ hàng khi đặt, xuất kho khi bàn giao vận chuyển |
-| Clear giỏ hàng sau callback | Sửa: clear phần giỏ đã đặt sau khi transaction tạo đơn thành công |
-| Sửa số lượng đơn chưa thanh toán | Thu hẹp có chủ đích: đơn COD đang chờ xác nhận, chưa đóng gói |
-| Gửi email bằng async event | Bổ sung outbox để tránh mất thông báo khi ứng dụng dừng |
-| Tài khoản trùng email Google | Bổ sung luồng liên kết có xác thực, không tự động gộp |
-| Tư vấn, bảo hành để stretch | Đưa phiên bản vừa sức vào mục tiêu chính |
-| Nhiều lựa chọn kiến trúc còn mở | Chốt một hướng thực hiện, ghi rõ phần mở rộng ngoài bản nộp |
+Nội dung trong phiếu đăng ký là yêu cầu đầu vào, không phải chỉ dẫn kỹ thuật bắt buộc. Các quyết định về kiến trúc, giao diện và công nghệ trong tài liệu này là lựa chọn của nhóm để hiện thực yêu cầu môn học.
 
-**Lưu ý học thuật:** Thymeleaf không đồng nghĩa với JSP. Báo cáo phải trình bày đúng Spring MVC chạy trên Servlet và vai trò `DispatcherServlet`; không tuyên bố đã triển khai JSP. Trong tuần đầu, nhóm đối chiếu lựa chọn này với giảng viên vì rubric có nhắc JSP/Servlets.
-
----
-
-## 2. Đặc tả sản phẩm được viết lại
-
-### 2.1. Tên và mục tiêu
-
-**Tên đề tài giữ nguyên:** Website giới thiệu, bán máy PC trực tuyến.
-
-**Mô tả đề xuất:**
-
-> PC Store là ứng dụng Web hỗ trợ khách hàng tìm hiểu, so sánh và lựa chọn máy PC hoàn chỉnh theo nhu cầu và ngân sách; quản lý giỏ hàng, xác thực tài khoản và đặt hàng trực tuyến. Hệ thống cung cấp khu vực quản trị sản phẩm, tồn kho, đơn hàng và hậu mãi. Mỗi máy được giao có hồ sơ serial và kết quả kiểm tra, giúp khách hàng theo dõi thông tin mua hàng và yêu cầu bảo hành. Ứng dụng được xây dựng bằng Java và Spring ecosystem, vận dụng Spring MVC, Spring Data JPA, Spring Security, Session, Web Services và kiểm thử nghiệp vụ.
-
-### 2.2. Phạm vi kinh doanh
-
-Chốt các mặc định:
-
-- Một cửa hàng, một kho.
-- Bán PC mới, cấu hình hoàn chỉnh, hàng có sẵn.
-- Mỗi cấu hình bán là một SKU riêng.
-- Một đơn được giao trọn gói trong một vận đơn.
-- Ngôn ngữ tiếng Việt, tiền tệ VND.
-- Không bán linh kiện rời hoặc nhận khách tự chọn linh kiện trong phiên bản này.
-- Thông số linh kiện vẫn được lưu để tư vấn, so sánh và bảo hành.
-- Không triển khai trả góp, đa người bán, đa chi nhánh, hóa đơn điện tử hoặc kế toán.
-- Không xử lý tiền thật trong môi trường đồ án.
-
-### 2.3. Phân tầng phạm vi
-
-| Mức | Chức năng |
-|---|---|
-| **P0 — Bắt buộc theo đề tài** | Catalog, chi tiết PC, giỏ Session, đăng nhập Email/điện thoại/Google, hồ sơ, số điện thoại trước đặt hàng, tạo đơn, thông báo, Staff vận hành sản phẩm/loại/đơn, Admin quản trị tài khoản/phân quyền, sửa số lượng theo điều kiện, ràng buộc xóa |
-| **P1 — Hoàn thiện nghiệp vụ và điểm khác biệt** | Giữ tồn kho, COD, VNPAY sandbox, lịch sử trạng thái, vận chuyển giả lập, tư vấn có giải thích, so sánh PC, serial, checklist kiểm tra, hồ sơ bảo hành và yêu cầu hậu mãi |
-| **P2 — Sau khi bản nộp ổn định** | SMS thật, GHN thật, hoàn tiền tự động, khuyến mãi, tích điểm, đánh giá, bảo hành từng linh kiện nâng cao, dashboard vận hành mở rộng |
-
-P0 và P1 là đích của kế hoạch 14 tuần. P2 không nằm trên đường găng.
-
-### 2.4. Vai trò
-
-| Vai trò | Trách nhiệm chính | Không được phép |
-|---|---|---|
-| Guest | Khám phá sản phẩm: xem/tìm/lọc PC, nhận tư vấn, so sánh, dùng giỏ Session và đăng ký/đăng nhập | Checkout, xem đơn, hồ sơ máy hoặc bảo hành của bất kỳ tài khoản nào |
-| Customer | Thực hiện hành trình mua và hậu mãi cá nhân: hồ sơ, địa chỉ, xác minh điện thoại, checkout, thanh toán, đơn hàng, máy đã mua, thông báo và yêu cầu bảo hành | Truy cập dữ liệu khách khác hoặc chức năng back-office |
-| Staff | Vận hành cửa hàng: catalog, dữ liệu tư vấn, kho, đơn, đối soát thanh toán, serial, checklist, giao hàng, hàng hoàn và xử lý bảo hành | Quản lý tài khoản nội bộ, vai trò, cấu hình bảo mật, phát hành quy tắc tư vấn hoặc xem audit toàn hệ thống |
-| Admin | Quản trị hệ thống: tài khoản Customer/Staff, vai trò, cấu hình, phê duyệt/phát hành quy tắc tư vấn, audit và xử lý ngoại lệ; kế thừa quyền Staff và có quyền Customer theo phiếu đăng ký | Không được tự nâng quyền qua hồ sơ hoặc vô hiệu hóa Admin hoạt động cuối cùng |
-
-Trong bản nộp có bốn vai trò phân biệt. Chức năng chính được phân theo owner nghiệp vụ như sau:
-
-| Nhóm chức năng | Guest | Customer | Staff | Admin |
-|---|---|---|---|---|
-| Storefront và catalog | Xem, tìm kiếm, lọc | Như Guest | Tạo/cập nhật/ngừng bán sản phẩm, category, brand, ảnh và thông số | Kế thừa Staff; xử lý ngoại lệ dữ liệu |
-| Tư vấn và so sánh | Sử dụng | Sử dụng | Nhập/cập nhật điểm phù hợp, lý do, hạn chế và nguồn | Duyệt dữ liệu, phát hành/khóa phiên bản quy tắc |
-| Giỏ hàng Session | Thêm/sửa/xóa | Tiếp tục giỏ sau đăng nhập | Không quản lý giỏ của khách | Không quản lý giỏ của khách |
-| Tài khoản và địa chỉ | Đăng ký/đăng nhập/quên mật khẩu | Quản lý hồ sơ, địa chỉ và phương thức đăng nhập của mình | Chỉ xem thông tin liên hệ cần cho đơn/bảo hành được xử lý | Quản lý tài khoản, trạng thái khóa và vai trò |
-| Checkout và thanh toán | Bị yêu cầu đăng nhập | Preview, đặt hàng, COD/VNPAY và xem trạng thái của mình | Hỗ trợ giao dịch, ghi nhận COD, đối soát và lập hồ sơ hoàn tiền | Giám sát, xử lý ngoại lệ và cấu hình tích hợp |
-| Đơn hàng | Không truy cập | Xem/hủy/gửi yêu cầu hủy đơn của mình theo điều kiện | Xác nhận, sửa COD, chuyển trạng thái, xử lý hủy và hàng hoàn | Can thiệp ngoại lệ, xem audit và bảo vệ ràng buộc lịch sử |
-| Kho và máy vật lý | Chỉ thấy còn/hết hàng | Chỉ thấy còn/hết hàng và máy đã mua | Nhập/điều chỉnh kho, reservation, ledger, serial và phân bổ máy | Giám sát, đối chiếu và xử lý sai lệch đặc biệt |
-| Checklist và giao hàng | Không truy cập | Theo dõi vận đơn và xem checklist máy của mình | Kiểm tra máy, đóng gói, tạo/cập nhật vận đơn và tiếp nhận hàng hoàn | Giám sát và xử lý sự kiện bất thường |
-| Bảo hành/hậu mãi | Bị yêu cầu đăng nhập | Tạo/theo dõi yêu cầu cho máy của mình | Tiếp nhận, chẩn đoán, sửa chữa/từ chối và đóng yêu cầu | Quản lý chính sách và xử lý khiếu nại/ngoại lệ |
-| Thông báo | Chỉ thông báo giao diện công khai | Nhận và đánh dấu đã đọc thông báo của mình | Nhận thông báo công việc; không quản lý outbox toàn hệ thống | Theo dõi outbox lỗi, retry và cấu hình mẫu thông báo |
-| Phân quyền, cấu hình và audit | Không truy cập | Không truy cập | Không truy cập | Toàn quyền có audit bắt buộc |
-
-Staff chỉ được xem dữ liệu khách hàng trong ngữ cảnh đơn hàng, thanh toán, giao hàng hoặc bảo hành mà họ đang xử lý; không có chức năng duyệt toàn bộ hồ sơ khách như Admin. Admin kế thừa quyền Staff để có thể can thiệp khi cần, nhưng mọi thao tác đặc quyền phải được ghi audit. Các màn hình vận hành tiếp tục chia theo công việc để có thể tách `SALES_STAFF`, `WAREHOUSE_STAFF` và `TECHNICIAN` về sau.
-
-Các trang dưới `templates/admin/` là namespace kỹ thuật chung cho back-office, không đồng nghĩa mọi trang đều yêu cầu role `Admin`. Mỗi endpoint và application service phải kiểm tra quyền Staff hoặc Admin theo đúng nhóm nghiệp vụ.
-
-Về kỹ thuật, Guest là actor chưa xác thực nên không cần bản ghi trong `user_roles`. Các quyền đăng nhập dùng `ROLE_CUSTOMER`, `ROLE_STAFF`, `ROLE_ADMIN`; role hierarchy cho phép Admin kế thừa cả Staff và Customer, còn Staff không mặc nhiên có quyền Customer.
-
----
-
-## 3. Nghiên cứu nghiệp vụ và quy tắc vận hành
-
-### 3.1. Những gì rút ra từ thực tế
-
-Phong Vũ mô tả quy trình kiểm tra linh kiện, phần mềm và driver cho PC trước giao. Điều này là cơ sở tham khảo để PC Store có checklist chuẩn bị máy, thay vì chuyển đơn từ “đã trả tiền” sang “đã giao” trực tiếp. [Hướng dẫn mua hàng Phong Vũ](https://help.phongvu.vn/chinh-sach-ban-hang/huong-dan-mua-hang-online)
-
-Phí giao hàng cần được thể hiện trước khi khách xác nhận thanh toán. PC Store sẽ lưu báo giá giao hàng cùng đơn, tránh thay đổi số tiền âm thầm sau đặt hàng. [Giá và hình thức thanh toán Phong Vũ](https://help.phongvu.vn/chinh-sach-chung/gia-ca-va-hinh-thuc-thanh-toan)
-
-Chính sách GEARVN có bước kiểm tra và điều kiện tiếp nhận bảo hành. Từ đó, PC Store tách **khách yêu cầu bảo hành** khỏi **kết luận được bảo hành**, đồng thời lưu người kiểm tra, kết quả và phương án xử lý. [Chính sách bảo hành GEARVN](https://www.gearvn.com/pages/chinh-sach-bao-hanh)
-
-Các quy tắc dưới đây là **chính sách thiết kế của đồ án**, không phải khẳng định mọi cửa hàng đều áp dụng như vậy.
-
-### 3.2. Tài khoản và xác thực
-
-**Email/mật khẩu**
-
-- Email được trim, chuẩn hóa chữ thường theo chính sách hệ thống và kiểm tra duy nhất.
-- Không tự bỏ dấu chấm hoặc phần `+suffix` của email.
-- Mật khẩu được hash bằng BCrypt.
-- Cho đăng nhập sau đăng ký; các thao tác xác nhận quyền sở hữu email dùng token có hạn.
-- Có luồng quên mật khẩu; không gửi mật khẩu qua email.
-- Không trả password hash trong DTO, log hoặc màn hình Admin.
-
-**Điện thoại**
-
-- Chuẩn hóa định dạng trước kiểm tra duy nhất.
-- Đăng ký/đăng nhập bằng OTP là một luồng riêng, không chỉ là xác minh số điện thoại trong hồ sơ.
-- OTP gắn với mục đích: đăng nhập, liên kết hoặc thay số.
-- Mặc định OTP có hạn 5 phút, tối đa 5 lần thử, gửi lại sau ít nhất 60 giây; giới hạn thêm theo số điện thoại và IP.
-- OTP chỉ dùng một lần.
-- Thay số điện thoại yêu cầu xác thực lại phiên và xác minh số mới.
-- Số điện thoại là thông tin liên hệ; `user_id` mới là khóa sở hữu dữ liệu.
-
-**Google**
-
-- Định danh tài khoản ngoài bằng cặp `issuer + subject`.
-- Nếu Google trả email đã có trên một tài khoản khác, yêu cầu đăng nhập tài khoản hiện hữu trước khi liên kết.
-- Không tự gộp tài khoản chỉ vì trùng email.
-- Không cho gỡ phương thức đăng nhập cuối cùng.
-
-**Phân quyền**
-
-- Chỉ Admin được tạo tài khoản nội bộ, khóa/mở tài khoản và gán hoặc thu hồi vai trò.
-- Staff không được quản lý tài khoản nội bộ, thay đổi vai trò, cấu hình bảo mật hoặc xem audit toàn hệ thống.
-- Staff và Admin không tự nâng quyền qua form cập nhật hồ sơ.
-- Không vô hiệu hóa hoặc xóa Admin hoạt động cuối cùng.
-- Tài khoản bị khóa phải mất khả năng thực hiện thao tác được bảo vệ, kể cả đang có Session.
-
-**Thông báo**
-
-- Tài khoản chỉ có điện thoại không bị ép nhập email để hoàn tất đăng ký.
-- Có email đã xác minh thì gửi email; mọi tài khoản đều có thông báo trong hệ thống.
-- Giả lập OTP phải có nhãn môi trường và không được bật trên cấu hình production.
-
-### 3.3. Catalog và cấu hình PC
-
-Mỗi sản phẩm gồm:
-
-- SKU, tên, slug, loại, hãng hoặc đơn vị lắp ráp.
-- Giá bán, trạng thái kinh doanh, hình ảnh, mô tả.
-- CPU, GPU, RAM, lưu trữ, mainboard, PSU, case, hệ điều hành.
-- Thời hạn bảo hành.
-- Khối lượng và kích thước **sau đóng gói**.
-- Các thuộc tính phục vụ tư vấn và thông tin nguồn.
-
-Nguyên tắc:
-
-- Không sửa trực tiếp trường tồn kho trong form sản phẩm.
-- Giá và nội dung có thể cập nhật; đơn cũ giữ snapshot.
-- Thay đổi đáng kể cấu hình phần cứng phải tạo SKU mới.
-- Không hiển thị “Windows bản quyền” nếu dữ liệu không xác nhận.
-- Sản phẩm ngừng bán vẫn tồn tại để phục vụ lịch sử đơn và hậu mãi.
-- Không dùng tên CPU/GPU dạng chuỗi để suy luận hiệu năng tự động.
-
-### 3.4. Giỏ hàng Session
-
-- Giỏ chứa `productId`, số lượng và phiên bản giỏ.
-- Không có bảng giỏ hàng trong PostgreSQL.
-- Redis lưu HTTP Session, không trở thành nguồn dữ liệu giá hoặc tồn kho.
-- Số lượng phải là số nguyên dương; xóa sản phẩm là thao tác riêng.
-- Thêm giỏ không giữ hàng.
-- Giá và tình trạng bán được đọc lại khi xem giỏ và checkout.
-- Đăng nhập giữ giỏ hiện tại; thay session ID để phòng session fixation.
-- Logout hủy Session, bao gồm giỏ, để tránh lộ dữ liệu trên máy dùng chung.
-
-**Sau tạo đơn:** loại khỏi giỏ đúng những dòng/phiên bản đã checkout. Nếu người dùng mở tab khác và thay giỏ trong lúc đặt hàng, không xóa mù toàn bộ dữ liệu mới.
-
-### 3.5. Giá và checkout
-
-Công thức bản đầu:
+## 2. Kết luận thu gọn phạm vi
 
 ```text
-Tổng tiền = Tổng(đơn giá snapshot × số lượng) + phí vận chuyển snapshot
+Khách tìm PC
+→ nhận tư vấn theo nhu cầu và ngân sách
+→ thêm giỏ Session
+→ đăng nhập/xác minh số điện thoại
+→ đặt hàng COD hoặc VNPAY sandbox
+→ Admin xác nhận và xử lý đơn
+→ khách theo dõi kết quả
 ```
 
-- Dùng `BigDecimal` và `NUMERIC(19,0)` cho VND.
-- Giá niêm yết là số tiền khách trả cho sản phẩm; chưa triển khai nghiệp vụ tính thuế riêng.
-- Server tính mọi giá trị tiền.
-- Checkout yêu cầu đăng nhập, giỏ hợp lệ, số điện thoại đã xác minh và địa chỉ nhận hàng.
-- Số điện thoại liên hệ đơn hàng lấy từ tài khoản tại thời điểm đặt.
-- Tên người nhận có thể khác chủ tài khoản.
+Tính năng nổi bật là **tư vấn chọn PC có giải thích**. Hệ thống bán PC hoàn chỉnh, không cho khách tự lắp từng linh kiện.
 
-**Preview**
+### 2.1. Phạm vi bắt buộc
 
-- Không giữ hàng.
-- Trả tổng tiền, lỗi từng dòng và thời hạn báo giá 10 phút.
-- Gắn với người dùng, phiên bản giỏ và dữ liệu địa chỉ.
+- Guest xem danh sách, tìm kiếm, lọc và xem chi tiết PC.
+- Guest sử dụng giỏ hàng lưu trong HTTP Session.
+- Đăng ký/đăng nhập bằng email và mật khẩu, số điện thoại OTP hoặc Google.
+- Email và số điện thoại của tài khoản là duy nhất.
+- Customer phải có số điện thoại đã xác minh trước khi đặt hàng.
+- Customer quản lý hồ sơ và một địa chỉ nhận hàng mặc định.
+- Customer đặt hàng bằng COD hoặc VNPAY sandbox và xem lịch sử đơn.
+- Customer xem hiệu lực bảo hành của mặt hàng đã giao, gửi và theo dõi yêu cầu bảo hành tối giản.
+- Hệ thống gửi email/thông báo kết quả đăng ký và đặt hàng khi có email phù hợp.
+- Admin tìm kiếm và quản lý sản phẩm, loại sản phẩm, tài khoản và đơn hàng.
+- Admin không được xem mật khẩu.
+- Admin chỉ xóa sản phẩm chưa có trong đơn, loại chưa có sản phẩm và tài khoản chưa từng đặt hàng.
+- Admin được sửa số lượng mặt hàng trong đơn theo điều kiện nghiệp vụ an toàn.
+- Dữ liệu nhập được kiểm tra tại client để hỗ trợ UX và luôn được kiểm tra lại tại server.
+- Không dùng stored procedure, database function hoặc CHECK constraint để thay business validation trong Java. PK, FK, UNIQUE, NOT NULL và index vẫn được dùng để bảo vệ dữ liệu.
 
-**Submit**
+### 2.2. Tính năng nổi bật
 
-- Bắt buộc khóa chống gửi lặp; HTML form dùng hidden token, REST dùng `Idempotency-Key`.
-- Cùng khóa/cùng nội dung trả lại cùng đơn.
-- Cùng khóa/khác nội dung trả lỗi xung đột.
-- Giá hoặc phí thay đổi so với preview thì yêu cầu khách xác nhận lại.
-- Khóa tồn kho và kiểm tra lần cuối trong transaction.
-- Lưu order, items, giữ hàng, payment intent và outbox cùng transaction.
-- Xóa phần giỏ đã đặt sau commit.
-- Lỗi gửi email không làm thất bại đơn đã tạo.
+Khách nhập nhu cầu chính, ngân sách tối đa, RAM tối thiểu và dung lượng lưu trữ tối thiểu. Hệ thống lọc PC đang bán, còn hàng và không vượt ngân sách; sau đó trả tối đa ba kết quả kèm lý do phù hợp, điểm hạn chế, giá, phần ngân sách còn lại và liên kết mua hàng.
 
-### 3.6. Tồn kho
+Đây là rule engine xác định được kết quả, không phải AI. Hệ thống không tự suy FPS, benchmark hoặc cam kết hiệu năng từ tên CPU/GPU.
 
-Chốt định nghĩa:
+### 2.3. Ngoài phạm vi bản nộp
+
+- Tự build PC từ linh kiện và kiểm tra tương thích.
+- So sánh PC bằng màn hình riêng.
+- Kho đa chi nhánh, phiếu nhập, ledger và serial từng máy.
+- Checklist kỹ thuật, vận đơn, tích hợp hãng vận chuyển và hàng hoàn.
+- Serial/hồ sơ từng máy, QR, vận chuyển bảo hành, quản lý linh kiện sửa chữa, chi phí, đổi máy và hoàn tiền.
+- Đối soát COD, hoàn tiền tự động và màn hình tài chính riêng.
+- Dashboard thống kê, audit UI, notification center và quản trị rule tư vấn.
+- Khuyến mãi, voucher, tích điểm, đánh giá, trả góp và hóa đơn điện tử.
+- Microservices, Kafka, Elasticsearch, Kubernetes và hệ thống quan sát chuyên biệt.
+
+Các nội dung trên chỉ xuất hiện trong phần hướng phát triển của báo cáo. Chúng không phải backlog bắt buộc hoặc tiêu chí hoàn thành.
+
+## 3. Người dùng và chức năng
+
+### 3.1. Guest
+
+- Xem trang chủ và danh sách PC.
+- Tìm theo tên/SKU; lọc theo loại, hãng, khoảng giá, RAM và GPU.
+- Sắp xếp theo mới nhất, giá tăng/giảm và tên.
+- Xem ảnh, giá, cấu hình, bảo hành và tình trạng còn hàng.
+- Nhận tư vấn chọn PC.
+- Thêm, sửa số lượng, xóa và xem giỏ Session.
+- Đăng ký và đăng nhập.
+
+### 3.2. Customer
+
+Có toàn bộ chức năng Guest và:
+
+- cập nhật họ tên, email, điện thoại và địa chỉ mặc định;
+- xác minh số điện thoại;
+- xem bản tóm tắt checkout do server tính;
+- đặt hàng COD hoặc VNPAY sandbox;
+- xem danh sách và chi tiết đơn của chính mình;
+- hủy đơn khi trạng thái cho phép;
+- xem các mặt hàng còn/hết bảo hành, gửi yêu cầu và theo dõi tiến độ xử lý;
+- đăng xuất.
+
+### 3.3. Admin
+
+- Sử dụng khu vực Customer theo yêu cầu đăng ký.
+- Quản lý PC, loại sản phẩm và ảnh.
+- Xem số lượng thực có, đang giữ và có thể bán của từng SKU.
+- Điều chỉnh tồn có lý do và không được giảm dưới lượng đang giữ.
+- Tìm kiếm, xem và cập nhật tài khoản trong phạm vi cho phép.
+- Tìm kiếm, xem, xác nhận, sửa số lượng COD và cập nhật trạng thái đơn.
+- Xem trạng thái/thông tin thanh toán ngay trong chi tiết đơn.
+- Tiếp nhận, xử lý và đóng/từ chối yêu cầu bảo hành.
+
+## 4. Quy tắc nghiệp vụ
+
+### 4.1. Tài khoản và xác thực
+
+- Email được trim, chuẩn hóa chữ thường và kiểm tra duy nhất.
+- Số điện thoại được chuẩn hóa trước khi so sánh và kiểm tra duy nhất.
+- Mật khẩu được hash bằng BCrypt; không log hoặc trả password hash.
+- OTP gắn với mục đích, có hạn 5 phút, tối đa 5 lần thử và gửi lại sau tối thiểu 60 giây.
+- Môi trường local/demo dùng OTP giả lập có nhãn rõ ràng; không chứa OTP cố định trong production profile.
+- Google identity được định danh bằng issuer và subject.
+- Google trả email đã tồn tại không tự gộp tài khoản; người dùng phải đăng nhập tài khoản hiện hữu để liên kết.
+- Không được gỡ phương thức đăng nhập cuối cùng.
+- Admin không thể tự cấp role qua form hồ sơ; không khóa/xóa Admin hoạt động cuối cùng.
+- Khóa tài khoản phải chặn thao tác được bảo vệ ở lần request tiếp theo.
+
+### 4.2. Catalog
+
+- Mỗi cấu hình PC hoàn chỉnh là một SKU; SKU và slug là duy nhất.
+- Trạng thái sản phẩm: `ACTIVE`, `INACTIVE`, `DISCONTINUED`.
+- PC chỉ xuất hiện tại storefront khi `ACTIVE`.
+- Thay đổi lớn về cấu hình phần cứng nên tạo SKU mới để không làm sai lịch sử.
+- Order item lưu snapshot SKU, tên, cấu hình tóm tắt, giá và số tháng bảo hành.
+- Sản phẩm đã có trong đơn không hard-delete; chuyển sang ngừng bán.
+- Hãng được lưu là trường của PC; loại sản phẩm có bảng quản lý riêng.
+
+Thông tin PC tối thiểu:
 
 ```text
-on_hand   = số máy còn trong kho và đạt điều kiện bán
-reserved  = số máy đang giữ cho đơn
-available = on_hand - reserved
+sku, name, slug, category, brand
+price, stockOnHand, reservedQuantity, status
+cpu, gpu, ramGb, storageGb, storageType
+motherboard, psu, caseName, operatingSystem
+warrantyMonths, description, images
+advisory profile scores/reasons/limitations
 ```
 
-| Sự kiện | Tác động |
-|---|---|
-| Nhập máy đạt kiểm tra | Tăng `on_hand` |
-| Đặt đơn COD hoặc online | Tăng `reserved` |
-| Online thanh toán thành công | Giữ reservation, bỏ thời hạn chờ thanh toán |
-| Hủy đơn trước bàn giao | Giảm `reserved` |
-| Đơn online hết hạn | Giải phóng reservation |
-| Bàn giao vận chuyển | Giảm cả `on_hand` và `reserved` |
-| Nhận hàng hoàn | Đưa vào kiểm tra; chưa tăng tồn có thể bán |
-| Hàng hoàn đạt kiểm tra | Tăng lại `on_hand` |
+### 4.3. Giỏ hàng Session
 
-Quy tắc kỹ thuật:
+- Giỏ không lưu trong PostgreSQL; mỗi dòng chứa product ID và số lượng.
+- Thêm vào giỏ không giữ hàng.
+- Số lượng là số nguyên dương; thao tác xóa dùng action riêng.
+- Giá, trạng thái và tồn được đọc lại từ database khi xem giỏ và checkout.
+- Sau login, Spring Security đổi session ID và giữ dữ liệu giỏ.
+- Logout hủy Session, gồm cả giỏ, để an toàn trên máy dùng chung.
+- Sau khi tạo đơn thành công, chỉ xóa các dòng/phiên bản giỏ đã dùng để đặt hàng.
 
-- PostgreSQL là nguồn sự thật.
-- Khóa các dòng tồn kho theo thứ tự `productId` cố định.
-- Kiểm tra `available >= requestedQuantity` trong transaction.
-- Có ledger cho mọi biến động: số lượng, lý do, chứng từ, người thực hiện.
-- Không dùng Redis lock thay cho transaction tồn kho.
-- Không cho điều chỉnh tồn xuống dưới lượng đang giữ.
-- Có kiểm tra đối chiếu số dư và ledger để phát hiện lệch.
-
-### 3.7. Vòng đời đơn hàng
+### 4.4. Giá và checkout
 
 ```text
-Online:
-AWAITING_PAYMENT → AWAITING_CONFIRMATION → CONFIRMED
-→ PREPARING → READY_TO_SHIP → SHIPPED → DELIVERED
-
-COD:
-AWAITING_CONFIRMATION → CONFIRMED
-→ PREPARING → READY_TO_SHIP → SHIPPED → DELIVERED
+subtotal = Σ(unitPriceSnapshot × quantity)
+grandTotal = subtotal + shippingFee
 ```
 
-Nhánh ngoại lệ:
+- Tiền dùng `BigDecimal` và `NUMERIC(19,0)`; tiền tệ VND.
+- Server là nguồn sự thật của giá, phí và tổng tiền.
+- Bản nộp dùng phí vận chuyển cố định 50.000 VND, cấu hình phía server và hiển thị trước khi xác nhận.
+- Checkout yêu cầu user đăng nhập, giỏ không rỗng, điện thoại đã xác minh và địa chỉ hợp lệ.
+- Tên người nhận có thể khác tên tài khoản; số điện thoại liên hệ lấy từ tài khoản đã xác minh.
+- Order snapshot họ tên người nhận, số điện thoại và địa chỉ tại thời điểm đặt.
+- Preview không giữ hàng và có hiệu lực 10 phút.
+- Giá, phí hoặc phiên bản giỏ thay đổi thì yêu cầu preview/xác nhận lại.
+- Submit dùng idempotency key; cùng key/cùng nội dung trả cùng kết quả, cùng key/khác nội dung trả conflict.
+- Tạo order, order item, marker `orders.reservation_status=HELD`, tăng `products.reserved_quantity` và tạo payment attempt trong cùng transaction; không có bảng reservation riêng.
+
+### 4.5. Tồn kho đơn giản theo SKU
 
 ```text
-AWAITING_PAYMENT → EXPIRED
-Trước SHIPPED → CANCELLED, theo điều kiện
-SHIPPED → RETURNING → RETURNED
+available = stockOnHand - reservedQuantity
 ```
 
-Không dùng một enum duy nhất cho cả đơn, tiền và vận chuyển.
+- `stockOnHand` là số PC thực có theo SKU.
+- `reservedQuantity` là số đang giữ cho đơn chưa xuất kho.
+- Checkout khóa các dòng sản phẩm theo thứ tự ID cố định và kiểm tra `available >= requested`.
+- Tạo đơn hợp lệ làm tăng `reservedQuantity`.
+- Hủy hoặc hết hạn trước giao làm giảm `reservedQuantity`.
+- Chuyển đơn sang `SHIPPING` làm giảm cả `stockOnHand` và `reservedQuantity`.
+- Không được điều chỉnh `stockOnHand < reservedQuantity`.
+- Sửa số lượng đơn phải cập nhật reservation trong cùng transaction.
+- Không có phân hệ phiếu nhập, serial hoặc ledger. `inventory_adjustments` tối thiểu lưu SKU, chênh lệch, lý do, actor và thời gian để giải thích thao tác Admin.
 
+<<<<<<< HEAD
 - Online giữ hàng 15 phút.
 - COD cần Staff xác nhận trong 24 giờ; quá hạn thì hủy và trả hàng giữ.
 - Customer tự hủy ở `AWAITING_PAYMENT` hoặc `AWAITING_CONFIRMATION`.
@@ -398,253 +307,177 @@ REQUESTED → RECEIVED → DIAGNOSING
 → REPAIRING → READY_FOR_RETURN → CLOSED
 
 DIAGNOSING → REJECTED → CLOSED
+=======
+### 4.6. Trạng thái đơn
+
+```mermaid
+stateDiagram-v2
+    [*] --> AWAITING_PAYMENT: VNPAY
+    [*] --> AWAITING_CONFIRMATION: COD
+    AWAITING_PAYMENT --> AWAITING_CONFIRMATION: payment verified
+    AWAITING_PAYMENT --> EXPIRED: 15 minutes
+    AWAITING_PAYMENT --> CANCELLED: customer cancels
+    AWAITING_CONFIRMATION --> CONFIRMED: admin confirms
+    AWAITING_CONFIRMATION --> CANCELLED: COD PENDING only; customer or admin
+    CONFIRMED --> SHIPPING: admin ships
+    SHIPPING --> DELIVERED: admin confirms delivery
+>>>>>>> a21950f3162c293621563247ab472bc31a1b2c79
 ```
 
-- Customer chỉ truy cập máy thuộc tài khoản mình.
-- Không công khai lịch sử mua hoặc bảo hành chỉ bằng số điện thoại.
-- QR dẫn tới trang yêu cầu đăng nhập và kiểm tra quyền.
-- Hết thời hạn vẫn có thể tiếp nhận yêu cầu hỗ trợ nhưng phải ghi rõ ngoài bảo hành.
-- Thay máy nguyên chiếc và hoàn tiền tự động nằm ngoài P1; không dùng trạng thái “đã sửa” để che nghiệp vụ thay máy chưa hỗ trợ.
+- Không cho chọn trạng thái bất kỳ từ dropdown; UI chỉ đưa action chuyển hợp lệ.
+- Customer tự hủy VNPAY chưa trả hoặc COD đang chờ xác nhận.
+- Đơn online đã trả tiền không tự hủy trong bản nộp; Admin xử lý ngoại lệ thủ công ngoài hệ thống.
+- Admin chỉ sửa số lượng đơn COD, chưa thanh toán, đang `AWAITING_CONFIRMATION`.
+- Sửa số lượng cần lý do; không cho đơn rỗng; giữ đơn giá/phí snapshot, tính lại tổng và cập nhật amount của COD attempt PENDING; chỉ tăng lượng PC còn ACTIVE.
+- Mỗi thay đổi trạng thái và số lượng ghi lịch sử actor, thời gian, dữ liệu trước-sau và lý do.
+- Order của Customer chỉ được đọc bởi chính Customer hoặc Admin.
 
----
+### 4.7. Thanh toán
 
-## 4. Điểm khác biệt của sản phẩm
+Trạng thái payment: `PENDING`, `PAID`, `FAILED`, `EXPIRED`, `CANCELLED`, `REVIEW_REQUIRED`.
 
-### 4.1. Tư vấn PC có giải thích
+**COD:** đơn được tạo ở `AWAITING_CONFIRMATION`; payment ở `PENDING`. Bản nộp coi COD hoàn tất khi đơn `DELIVERED`, không xây quy trình đối soát riêng.
 
-Đầu vào:
+**VNPAY sandbox:** mỗi attempt có merchant reference duy nhất. Return URL chỉ hiển thị trạng thái đọc từ server. IPN xác minh chữ ký, merchant, reference, response code, transaction status và số tiền trước khi cập nhật `PAID`. Callback trùng không được cập nhật lần hai. Callback sai không thay đổi trạng thái tài chính. Payment thành công sau khi order đã `EXPIRED` chuyển `REVIEW_REQUIRED`, giữ order hết hạn và cảnh báo Admin. Job hết hạn khóa order/payment trước khi chuyển trạng thái để tránh race với IPN.
 
-- Ngân sách tối đa.
-- Một nhu cầu chính: văn phòng/học tập, lập trình, gaming, sáng tạo nội dung.
-- RAM và lưu trữ tối thiểu nếu khách có yêu cầu.
-- Yêu cầu hệ điều hành hoặc GPU rời.
+### 4.8. Tư vấn PC
 
-Cơ chế phiên bản đầu:
+- Hồ sơ nhu cầu: `OFFICE_STUDY`, `PROGRAMMING`, `GAMING`, `CONTENT_CREATION`.
+- Mỗi PC có score 1–5, lý do và hạn chế cho từng nhu cầu áp dụng.
+- Lọc điều kiện bắt buộc trước, sau đó sort theo score giảm dần, giá tăng dần và SKU tăng dần.
+- Chỉ trả PC `ACTIVE`, `available > 0`, không vượt ngân sách, đủ RAM và storage.
+- Không có kết quả thì giải thích điều kiện nào đang giới hạn kết quả.
+- Dữ liệu đánh giá do Admin nhập trong form PC; không có trang quản trị rule riêng.
 
-1. Lọc sản phẩm đang bán, còn hàng, không vượt ngân sách.
-2. Áp dụng điều kiện bắt buộc của hồ sơ nhu cầu.
-3. Xếp hạng bằng điểm phù hợp do nhóm biên soạn có nguồn và phiên bản.
-4. Ưu tiên điểm phù hợp cao hơn; bằng điểm thì giá thấp hơn; sau cùng SKU để kết quả ổn định.
-5. Trả tối đa ba máy.
+### 4.9. Bảo hành tối giản
 
-Mỗi gợi ý phải hiển thị:
+Phạm vi bảo hành dựa trên mặt hàng đã mua, không theo serial:
 
-- Lý do phù hợp.
-- Điểm đánh đổi.
-- Giá và phần ngân sách còn lại.
-- Những dữ liệu chưa có.
-- Nút so sánh và thêm giỏ.
+- Chỉ order `DELIVERED` mới bắt đầu bảo hành.
+- `warrantyStartAt = deliveredAt`.
+- `warrantyExpiresAt = deliveredAt + warrantyMonthsSnapshot`.
+- Customer chỉ xem và gửi yêu cầu cho order item thuộc đơn của chính mình.
+- Với order item có quantity lớn hơn 1, UI cho chọn vị trí máy `1..quantity`; hệ thống lưu `itemUnitIndex` để phân biệt tương đối mà không quản lý serial.
+- Chỉ cho tạo yêu cầu khi còn hạn và không có yêu cầu đang mở cho cùng `orderItem + itemUnitIndex`.
+- Customer nhập mô tả lỗi bắt buộc và tối đa ba ảnh minh họa; ảnh dùng cùng cơ chế media nội bộ với ảnh sản phẩm nhưng tách thư mục/quyền truy cập.
+- Customer có thể hủy yêu cầu khi còn `REQUESTED`.
+- Admin cập nhật theo đúng state machine; Customer chỉ thấy ghi chú công khai.
 
-**Không có kết quả:** thông báo rõ không có PC thỏa điều kiện; cho khách tự điều chỉnh ngân sách hoặc bộ lọc. Không âm thầm vượt ngân sách.
+```mermaid
+stateDiagram-v2
+    [*] --> REQUESTED
+    REQUESTED --> RECEIVED: admin tiếp nhận
+    REQUESTED --> CANCELLED: customer hủy
+    RECEIVED --> PROCESSING: bắt đầu xử lý
+    RECEIVED --> REJECTED: từ chối có lý do
+    PROCESSING --> COMPLETED: hoàn tất có kết quả
+    PROCESSING --> REJECTED: kết luận không đủ điều kiện
+```
 
-**Không tuyên bố:** điểm phù hợp là benchmark, FPS thực tế hoặc cam kết chạy tốt mọi phần mềm.
+- `REJECTED` cần lý do công khai.
+- `COMPLETED` cần kết quả xử lý công khai.
+- Yêu cầu hết hạn bảo hành bị từ chối ngay khi tạo; Admin không dùng status để kéo dài thời hạn.
+- Không tự phát sinh shipment, refund, replacement hoặc inventory adjustment từ yêu cầu bảo hành.
+- Khi tạo yêu cầu hoặc đổi trạng thái, hệ thống gửi email nếu tài khoản có email; lỗi gửi mail không rollback thay đổi nghiệp vụ.
 
-### 4.2. Quản trị dữ liệu tư vấn
-
-Bảng đánh giá lưu:
-
-- SKU và nhu cầu.
-- Mức phù hợp từ 1–5.
-- Lý do và hạn chế.
-- URL nguồn, ngày tham khảo.
-- Người biên soạn, người kiểm tra.
-- Phiên bản bộ quy tắc.
-
-Danh sách 20–30 cấu hình mẫu phải được một thành viên nhập và một thành viên kiểm tra. Dữ liệu thiếu bằng chứng không được sử dụng để đưa ra lời khẳng định hiệu năng.
-
-### 4.3. So sánh và hồ sơ máy
-
-- So sánh tối đa ba PC.
-- Đồng nhất đơn vị RAM, lưu trữ và công suất.
-- Làm nổi bật khác biệt cấu hình; không tô “mạnh hơn” khi chưa có căn cứ.
-- Sau mua, khách xem serial, cấu hình đã mua, checklist, bảo hành và lịch sử hỗ trợ.
-
-Giá trị thực tế nằm ở việc nối liền **chọn đúng máy → nhận đúng máy → có dữ liệu hậu mãi**.
-
----
+`warranty_requests` lưu tối thiểu request code, user ID, order item ID, unit index, thời hạn snapshot, mô tả lỗi, trạng thái, public resolution, internal note, version và timestamps. Ảnh tách sang `warranty_request_images`; timeline tách sang `warranty_request_events`.
 
 ## 5. Kiến trúc và công nghệ
 
-### 5.1. Kiến trúc tổng thể
+### 5.1. Kiến trúc
+
+Ứng dụng là modular monolith, một Spring Boot process và một PostgreSQL database.
 
 ```text
 Browser
-  │
-  ├── Trang HTML / Form / JavaScript
-  ▼
-Spring MVC Controllers + Thymeleaf
-  │
-  ├── REST Controllers cho AJAX và Web Services
-  ▼
-Application Services
-  ▼
-Domain Rules + Repositories + Provider Ports
-  │
-  ├── PostgreSQL
-  ├── Redis Session
-  ├── Google OIDC
-  ├── VNPAY Sandbox
-  ├── SMTP / Mailpit
-  └── OTP và Shipping adapters
+  ├── Thymeleaf HTML + Bootstrap + JavaScript
+  └── JSON requests cho tương tác cần AJAX
+              ↓
+Spring MVC controllers / REST controllers
+              ↓
+Application services + domain rules
+              ↓
+JPA repositories / provider adapters
+              ↓
+PostgreSQL, Google OIDC, VNPAY sandbox, SMTP
 ```
 
-Controller MVC và REST gọi chung application service. Không để MVC controller gọi HTTP vào REST controller của chính ứng dụng.
+MVC và REST controller gọi chung application service; không gọi HTTP nội bộ. Transaction boundary đặt ở application service. Không bắt buộc Spring Modulith; có thể dùng ArchUnit hoặc test package dependency khi cần.
 
-### 5.2. Stack chốt
+### 5.2. Stack
 
 | Thành phần | Công nghệ | Vai trò |
 |---|---|---|
-| Ngôn ngữ | Java 21 | Backend |
-| Framework | Spring Boot 4.1.1 | Cấu hình và runtime |
-| Web | Spring MVC | Routing, binding, controller, REST |
-| View | Thymeleaf theo BOM của Boot | Server-rendered HTML |
-| UI | Bootstrap 5.3, CSS, JavaScript ES modules | Responsive, form, tương tác |
-| Security | Spring Security | Session, RBAC, CSRF, BCrypt |
-| Google | Spring OAuth2 Client | OIDC login |
-| Validation | Jakarta Bean Validation | Validate DTO/form |
-| Persistence | Spring Data JPA/Hibernate | Mapping và truy vấn |
-| Database | PostgreSQL 18 | Dữ liệu giao dịch |
-| Migration | Flyway | Lịch sử schema |
-| Session | Spring Session Data Redis | Session đăng nhập và giỏ |
-| Module checks | Spring Modulith 2.1.x, test scope | Kiểm tra ranh giới module |
-| HTTP client | Spring RestClient | Tích hợp provider |
-| Email | Spring Mail + Mailpit local | SMTP và demo email |
-| Jobs | Spring scheduling + DB job records | Hết hạn, retry, đối soát |
-| Theo dõi | Actuator, Micrometer, structured logs | Health và chỉ số vận hành |
-| Kiểm thử | JUnit theo BOM, Mockito, MockMvc, Testcontainers | Unit/integration |
-| E2E | Playwright | Luồng trình duyệt |
-| Build | Maven Wrapper | Build lặp lại được |
-| Vận hành | Docker Compose, Caddy, GitHub Actions | Local/demo, HTTPS, CI |
+| Runtime | Java 21 | Ngôn ngữ backend LTS |
+| Framework | Spring Boot 4.1.x | Application framework |
+| Web/View | Spring MVC + Thymeleaf | Server-rendered UI và Web services |
+| UI | Bootstrap 5.3 + CSS + JavaScript modules | Responsive và tương tác trình duyệt |
+| Persistence | Spring Data JPA/Hibernate | ORM và repository |
+| Database | PostgreSQL 18 | Dữ liệu quan hệ |
+| Migration | Flyway | Version schema |
+| Security | Spring Security + OAuth2 Client | Session, RBAC, CSRF, Google login |
+| Validation | Jakarta Bean Validation | Validate form/request phía server |
+| Payment | VNPAY sandbox adapter | Thanh toán online demo |
+| Email | Spring Mail; Mailpit local | Email đăng ký/đơn hàng |
+| API docs | springdoc OpenAPI | REST/Web service documentation |
+| Test | JUnit, Mockito, MockMvc, Testcontainers, Playwright | Unit, integration và E2E |
+| Build | Maven Wrapper | Build nhất quán |
+| Local | Docker Compose | PostgreSQL và Mailpit |
+| CI | GitHub Actions | Build/test trên pull request |
 
-Tài liệu Spring hiện được kiểm tra công bố Boot 4.1.1 hỗ trợ Java 21. Dependency của Spring phải đi theo BOM thay vì tự pin từng thư viện. [Spring Boot system requirements](https://docs.spring.io/spring-boot/system-requirements.html)
+HTTP Session lưu trong memory của một instance. Redis và Spring Session là hướng mở rộng nếu triển khai nhiều instance.
 
-Thymeleaf là lựa chọn tích hợp với Spring MVC; phiên bản cụ thể dùng từ dependency management và xác minh bằng trang form/security thử nghiệm ở tuần đầu. [Thymeleaf documentation](https://www.thymeleaf.org/documentation)
+### 5.3. Bảy module nghiệp vụ
 
-Spring Modulith chỉ dùng phần kiểm tra cấu trúc và tài liệu hóa cần thiết; không cần đưa toàn bộ cơ chế runtime của thư viện vào đồ án. [Spring Modulith](https://docs.spring.io/spring-modulith/reference/)
+| Module | Trách nhiệm |
+|---|---|
+| `identity` | Tài khoản, credential, external identity, OTP, profile, địa chỉ và quản lý user |
+| `catalog` | PC, loại, ảnh, cấu hình, đánh giá tư vấn, số dư và giữ tồn |
+| `cart` | Giỏ hàng trong HTTP Session |
+| `advisory` | Nhận tiêu chí, lọc, xếp hạng và giải thích kết quả |
+| `sales` | Checkout, order, revision, lịch sử trạng thái và email đơn |
+| `payment` | COD, VNPAY attempt, callback và payment state |
+| `aftersales` | Hiệu lực bảo hành theo order item, yêu cầu bảo hành và timeline xử lý |
 
-### 5.3. Những công nghệ không đưa vào bản đầu
+Quy tắc module:
 
-- React, Vite, TanStack Query.
-- JWT cho browser.
-- Microservices, Kafka, Kubernetes.
-- Elasticsearch.
-- LLM hoặc Spring AI cho bộ tư vấn.
-- Nhiều cổng thanh toán.
-- Redis product cache khi chưa có bằng chứng cần tối ưu.
-- MapStruct nếu mapping thủ công vẫn ngắn và rõ.
+- Module sở hữu entity và repository của mình.
+- Module khác chỉ gọi public application service hoặc contract trong `api`.
+- `sales` điều phối checkout qua public service của catalog và payment.
+- `aftersales` lấy order item đã giao và snapshot bảo hành qua public contract của `sales`, không truy cập order repository trực tiếp.
+- Tích hợp ngoài đi qua port/adapter.
+- Không tạo `common`, `utils` hoặc abstraction chưa có nhu cầu.
 
-### 5.4. Module và trách nhiệm
-
-| Module | Sở hữu nghiệp vụ | Thành viên chủ trì hiện thực |
-|---|---|---|
-| `identity` | User, credentials, external identity, OTP, hồ sơ và phân quyền | Võ Văn Nhựt |
-| `catalog` | Product, category, brand, specification và ảnh | Bùi Ngọc Bửu |
-| `advisory` | Hồ sơ nhu cầu, đánh giá, gợi ý và so sánh | Huỳnh Đoàn Nhân |
-| `inventory` | Số dư, ledger, reservation và máy vật lý | Bùi Ngọc Bửu |
-| `cart` | Giỏ hàng trong HTTP Session | Huỳnh Đoàn Nhân |
-| `sales` | Checkout, order, revision và điều phối giao dịch | Võ Văn Cảnh |
-| `payment` | Attempts, receipts, events, reconciliation và refund cases | Võ Văn Cảnh |
-| `fulfillment` | Phân bổ serial, checklist, shipment và hàng hoàn | Lê Thị Kim Ngân |
-| `aftersales` | Warranty entitlement và service request | Lê Thị Kim Ngân |
-| `notification` | In-app notification, outbox và email | Huỳnh Đoàn Nhân |
-| `audit` | Nhật ký thay đổi nghiệp vụ | Võ Văn Nhựt |
-
-“Chủ trì” nghĩa là chịu trách nhiệm trọn chiều dọc của module: thiết kế, code, migration thuộc module, giao diện liên quan, test, tài liệu và demo. Chi tiết phân bổ và ranh giới phối hợp nằm tại mục 8.1.
-
-Quy tắc phụ thuộc:
-
-- Module gọi public service/port của nhau; không truy cập repository nội bộ.
-- `sales` điều phối checkout; không dồn nghiệp vụ vào `common`.
-- Giao dịch quan trọng dùng lời gọi đồng bộ trong transaction.
-- Thông báo dùng outbox được ghi cùng transaction.
-- Tác vụ mạng không chạy khi đang giữ khóa tồn kho.
-- Callback thanh toán chuyển sự kiện đã xác minh cho bộ điều phối xử lý order và inventory.
-
-### 5.5. Cấu trúc repository
-
-```text
-pc-store/
-├── pom.xml
-├── mvnw / mvnw.cmd
-├── src/
-│   ├── main/
-│   │   ├── java/iuh/fit/nhom16/pcstore/
-│   │   │   ├── identity/
-│   │   │   ├── catalog/
-│   │   │   ├── advisory/
-│   │   │   ├── inventory/
-│   │   │   ├── cart/
-│   │   │   ├── sales/
-│   │   │   ├── payment/
-│   │   │   ├── fulfillment/
-│   │   │   ├── aftersales/
-│   │   │   ├── notification/
-│   │   │   ├── audit/
-│   │   │   └── configuration/
-│   │   └── resources/
-│   │       ├── templates/
-│   │       │   ├── fragments/
-│   │       │   ├── storefront/
-│   │       │   ├── account/
-│   │       │   └── admin/
-│   │       ├── static/
-│   │       └── db/migration/
-│   └── test/
-├── e2e/
-├── docs/
-├── ops/
-├── compose.yaml
-├── .env.example
-└── .github/workflows/
-```
-
-Trong module: `api`, `application`, `domain`, `infrastructure`, `web`. Chỉ tạo lớp khi có trách nhiệm thực tế; không tạo interface cho mọi service theo thói quen.
-
----
-
-## 6. Dữ liệu và giao diện hệ thống
+## 6. Mô hình dữ liệu
 
 ### 6.1. Nhóm bảng
 
-| Nhóm | Bảng chính |
+| Module | Bảng chính |
 |---|---|
-| Identity | `users`, `user_roles`, `external_identities`, `user_addresses`, `verification_tokens` |
-| Catalog | `products`, `categories`, `brands`, `product_specs`, `product_images` |
-| Advisory | `usage_profiles`, `product_suitability`, `advisory_rule_versions` |
-| Inventory | `inventory_balances`, `inventory_movements`, `stock_reservations`, `product_units` |
+| Identity | `users`, `user_roles`, `external_identities`, `verification_challenges` |
+| Catalog | `categories`, `products`, `product_specs`, `product_images`, `product_suitability`, `inventory_adjustments` |
 | Sales | `orders`, `order_items`, `order_revisions`, `order_status_history`, `idempotency_records` |
-| Payment | `payment_attempts`, `payment_receipts`, `payment_events`, `refund_cases` |
-| Fulfillment | `unit_allocations`, `inspection_records`, `shipments`, `shipment_events` |
-| Aftersales | `warranty_entitlements`, `service_requests`, `service_request_events` |
-| Platform | `outbox_events`, `notifications`, `audit_logs` |
+| Payment | `payment_attempts`, `payment_events` |
+| Aftersales | `warranty_requests`, `warranty_request_images`, `warranty_request_events` |
+
+`users` chứa email, password hash, phone, phone verified time, full name, địa chỉ mặc định, status và timestamps. `products` chứa `stock_on_hand`, `reserved_quantity` và `version` để bảo vệ cập nhật cạnh tranh.
 
 ### 6.2. Quy ước dữ liệu
 
-- ID nghiệp vụ nội bộ dùng UUID.
-- Mã đơn hiển thị duy nhất; không thay thế kiểm tra quyền.
-- Thời gian lưu UTC, hiển thị múi giờ Việt Nam.
-- Order snapshot tên, SKU, cấu hình, giá, chính sách bảo hành, điện thoại và địa chỉ.
-- Đơn cũ không phụ thuộc giá hoặc hồ sơ hiện tại.
-- Số dư kho cập nhật qua service chuyên trách.
-- FK không cascade xóa lịch sử đơn hàng.
-- Trường cần lọc thường xuyên dùng cột có kiểu rõ ràng; JSONB dành cho snapshot và payload đã lọc nhạy cảm.
-- Không dùng stored procedure, function hoặc CHECK để thực hiện validation nghiệp vụ theo ràng buộc đề.
-- Dùng PK, FK, UNIQUE, NOT NULL và index bảo vệ toàn vẹn.
-- Production/demo bền vững dùng `ddl-auto=validate`.
+- ID nội bộ dùng UUID; mã đơn hiển thị duy nhất và không thay cho authorization.
+- Thời gian lưu UTC, hiển thị Asia/Ho_Chi_Minh.
+- Email/phone/SKU/slug/reference dùng unique constraint phù hợp.
+- Order và item dùng snapshot để lịch sử không đổi theo catalog/profile.
+- Foreign key không cascade xóa lịch sử giao dịch.
+- JSONB chỉ dùng cho callback đã loại secret hoặc snapshot khó chuẩn hóa; trường tìm kiếm thường xuyên dùng cột rõ ràng.
+- Migration đã merge là bất biến; thay đổi dùng migration mới.
+- Staging/demo dùng `spring.jpa.hibernate.ddl-auto=validate`.
 
-### 6.3. Quan hệ quan trọng
+## 7. Giao diện và contract
 
-```text
-User 1—N Order 1—N OrderItem N—1 Product
-Product 1—N ProductUnit
-OrderItem 1—N UnitAllocation N—1 ProductUnit
-Order 1—N PaymentAttempt
-Order 1—N StockReservation
-Order 1—0..1 Shipment
-ProductUnit 1—N WarrantyEntitlement
-WarrantyEntitlement 1—N ServiceRequest
-```
+### 7.1. Danh mục 24 màn hình
 
+<<<<<<< HEAD
 Phân bổ máy và bảo hành giữ lịch sử, không ghi đè mất quan hệ khi có hàng hoàn.
 
 ### 6.4. Hợp đồng API tối thiểu
@@ -751,42 +584,64 @@ Tuần dưới đây là **tuần dự án**, cần ánh xạ sang lịch môn h
 | **12** | Triển khai demo, HTTPS, backup/restore, load smoke, tài liệu vận hành | Người khác dựng được; phục hồi DB và ảnh thành công |
 | **13** | Báo cáo, sơ đồ cuối, bảng truy vết, diễn tập và regression | Chứng cứ cho từng chức năng và từng thành viên |
 | **14** | Đóng băng tính năng, sửa lỗi cuối, release, đóng gói nộp | Tag final; source, báo cáo, hướng dẫn và kịch bản demo thống nhất |
+=======
+| Nhóm | ID | Màn hình |
+|---|---|---|
+| Storefront | S01–S05 | Trang chủ; danh sách PC; chi tiết PC; tư vấn/kết quả; giỏ hàng |
+| Xác thực | A01–A05 | Đăng nhập; đăng ký; OTP; quên mật khẩu; đặt lại mật khẩu |
+| Customer | C01–C07 | Hồ sơ; checkout; kết quả; danh sách đơn; chi tiết đơn; bảo hành của tôi; chi tiết/tạo yêu cầu |
+| Admin | M01–M07 | Danh sách PC; form PC; loại; danh sách đơn; chi tiết đơn; tài khoản; yêu cầu bảo hành |
+>>>>>>> a21950f3162c293621563247ab472bc31a1b2c79
 
-### 7.1. Đường găng
+Chi tiết field, route, state và responsive contract nằm trong `docs/ux/UI_SCREEN_SPEC.md`.
 
-```text
-Identity + Catalog
-→ Cart + Inventory
-→ Checkout COD
-→ Order lifecycle
-→ Payment
-→ Fulfillment + Serial
-→ Warranty
-→ Regression + Release
-```
-
-Advisory triển khai song song sau khi catalog và bộ thông số ổn định.
-
-### 7.2. Nếu chỉ còn 10 tuần
-
-- Gộp tuần 1–2.
-- Làm identity và catalog song song.
-- Gộp phần hoàn thiện COD và quản trị đơn.
-- Advisory và warranty giao cho hai luồng khác nhau.
-- Hai tuần cuối dành riêng cho kiểm thử, báo cáo và release.
-- Giữ giao hàng/OTP giả lập; bỏ P2, biểu đồ dashboard và tùy biến giao diện không cần thiết.
-- Không cắt kiểm thử tồn kho, phân quyền, thanh toán hoặc yêu cầu bắt buộc.
-
-### 7.3. Cấu trúc mỗi task
-
-Mỗi ticket phải có:
+### 7.2. REST/Web service tối thiểu
 
 ```text
-Mã yêu cầu → mục tiêu → đầu vào/đầu ra
-→ quy tắc nghiệp vụ → người làm/người review
-→ phụ thuộc → tiêu chí nghiệm thu → bằng chứng kiểm thử
+GET    /api/v1/products
+GET    /api/v1/products/{slug}
+POST   /api/v1/recommendations
+GET    /api/v1/cart
+POST   /api/v1/cart/items
+PATCH  /api/v1/cart/items/{productId}
+DELETE /api/v1/cart/items/{productId}
+POST   /api/v1/checkout/preview
+POST   /api/v1/orders
+GET    /api/v1/me/orders
+GET    /api/v1/me/orders/{orderCode}
+POST   /api/v1/me/orders/{orderCode}/cancel
+GET    /api/v1/me/warranties
+GET    /api/v1/me/warranty-requests/{requestCode}
+POST   /api/v1/me/warranty-requests
+POST   /api/v1/me/warranty-requests/{requestCode}/cancel
+POST   /api/v1/auth/otp/challenges
+POST   /api/v1/auth/otp/verifications
+GET    /api/v1/auth/me
+GET    /integrations/vnpay/ipn
+GET    /payments/vnpay/return
 ```
 
+Admin ưu tiên MVC form vì giao diện Thymeleaf. Endpoint mutation dùng POST theo Post/Redirect/Get; REST dùng Problem Details.
+
+### 7.3. Provider ports
+
+```java
+public interface OtpProvider {
+    OtpSendResult send(OtpSendCommand command);
+    OtpVerificationResult verify(OtpVerifyCommand command);
+}
+
+public interface PaymentGateway {
+    PaymentInitiationResult initiate(PaymentInitiation command);
+    VerifiedPaymentEvent verifyCallback(Map<String, String> parameters);
+}
+
+public interface MailSender {
+    void send(MailMessage message);
+}
+```
+
+<<<<<<< HEAD
 Một task nên hoàn thành trong 0,5–2 ngày làm việc tập trung. Task lớn hơn phải tách theo kết quả người dùng nhìn thấy.
 
 ---
@@ -995,48 +850,84 @@ Vòng review chính là: **Bửu review Cảnh → Ngân review Bửu → Nhựt
 | Hàng hoàn | Ngân (`fulfillment`) | Ngân tiếp nhận và inspection; Bửu chỉ tăng lại `on_hand` sau kết quả đạt; Cảnh cập nhật trạng thái order khi cần |
 | Kích hoạt bảo hành | Ngân (`aftersales`) | Ngân tạo entitlement từ unit đã giao; Bửu cung cấp thông tin product unit; Cảnh cung cấp order snapshot |
 | Audit thao tác Staff/Admin | Nhựt (`audit`) | Mỗi module phát thông tin audit đã lọc; Nhựt lưu, bảo vệ và chỉ cung cấp màn hình tra cứu toàn hệ thống cho Admin |
+=======
+Không tạo shipping, external warranty, replacement hoặc refund provider trong bản nộp.
 
-#### 8.1.9. Kiểm soát cân bằng đóng góp
+## 8. Bảo mật và xử lý lỗi
 
-- Năm gói công việc được cân theo độ khó, không theo số module: `sales/payment`, `catalog/inventory`, `cart/advisory/notification`, `identity/audit`, `fulfillment/aftersales`.
-- Mỗi gói đều có nghiệp vụ P0/P1, database hoặc state storage, MVC/REST, template/UI, integration, test và tài liệu/demo.
-- `cart` không có PostgreSQL và `audit` nhỏ hơn các module giao dịch, nên được ghép lần lượt với advisory/notification và identity/security.
-- Cuối tuần 2, 6 và 10, nhóm ước lượng lại ticket theo độ phức tạp và thời gian; mục tiêu mỗi thành viên giữ khoảng 18–22% tổng effort còn lại.
-- Nếu một người vượt ngưỡng, chuyển một feature trọn chiều dọc hoặc một nhóm test/UI có acceptance criteria rõ ràng; không chia đôi entity/repository của một module cho hai người cùng sở hữu.
-- Đóng góp được đánh giá bằng feature hoàn thành, chất lượng PR/review, migration, test, tài liệu và khả năng demo/giải thích; số commit hoặc số dòng code không phải thước đo chính.
+- Session cookie `HttpOnly`, `Secure` khi HTTPS và `SameSite=Lax`.
+- Giữ CSRF cho form và API dùng cookie; endpoint VNPAY được loại khỏi browser CSRF và bắt buộc verify chữ ký.
+- Đổi session ID sau login để chống session fixation.
+- Phân quyền ở route và application service; nút ẩn/disabled không thay authorization.
+- Không bind entity trực tiếp từ form; dùng form/command riêng.
+- HTML render bằng escaping mặc định của Thymeleaf.
+- Upload ảnh chỉ nhận JPEG/PNG/WebP, tối đa 5 MB, kiểm tra MIME thực và đặt tên server-side.
+- Ảnh yêu cầu bảo hành không đặt trong thư mục public; chỉ chủ yêu cầu và Admin được truy cập qua endpoint có authorization.
+- Không log password, OTP, session ID, OAuth token, VNPAY secret hoặc callback nhạy cảm.
+- REST trả Problem Detail kèm `errorCode`, `fieldErrors`, `traceId`; MVC hiển thị error summary và lỗi field.
+- `409 Conflict` dùng cho duplicate, stale version, stock conflict và idempotency mismatch.
+- Mọi list có pagination; query catalog/order tránh N+1.
 
-### 8.2. Git và review
+## 9. Phân công nhóm
 
-- `main` luôn build được.
-- Feature branch ngắn theo ticket.
-- Một PR cần ít nhất một người review và CI pass; tác giả không tự approve PR của mình.
-- PR thay đổi module phải có owner hoặc reviewer chính của module tham gia review; PR liên module cần review từ các owner bị ảnh hưởng.
-- Không chờ hoàn thành cả module mới tích hợp.
-- Migration thuộc trách nhiệm owner của module; Bửu điều phối version và hỗ trợ review migration liên module. Migration đã merge không sửa lại; tạo migration tiếp theo.
-- Nhân điều phối tính nhất quán UI/UX, Ngân điều phối E2E/báo cáo và Cảnh điều phối CI/tích hợp; mỗi thành viên vẫn tự hoàn thành UI, test, tài liệu và sửa build của phần mình.
-- Mỗi tuần có demo tích hợp và cập nhật rủi ro.
-- Đánh giá đóng góp bằng chức năng, PR, test, tài liệu và khả năng trình bày; không chỉ đếm commit.
+| Thành viên | Phạm vi chính | Đầu ra bắt buộc |
+|---|---|---|
+| Võ Văn Cảnh | Checkout, payment và tích hợp | COD/VNPAY, idempotency, callback, cấu hình nền tảng, test và UI kết quả |
+| Bùi Ngọc Bửu | Catalog và tồn kho | Schema/migration, PC/category/image/spec, stock/reservation, Admin catalog và test |
+| Huỳnh Đoàn Nhân | Storefront, cart và advisory | Thymeleaf storefront, Session cart, bộ tư vấn, responsive UI và test |
+| Võ Văn Nhựt | Identity và quản lý tài khoản | Security, email/OTP/Google, profile, Admin user và security test |
+| Lê Thị Kim Ngân | Quản lý/theo dõi đơn và chất lượng | Customer/Admin order UI, transition/history, E2E, traceability và báo cáo |
+>>>>>>> a21950f3162c293621563247ab472bc31a1b2c79
 
-### 8.3. Definition of Done
+Ngân đồng thời chủ trì module `aftersales` tối giản: eligibility, request state machine, ba màn hình bảo hành và test tương ứng.
 
-Một chức năng hoàn thành khi:
+`sales` do Cảnh chủ trì contract checkout; Ngân sở hữu các use case quản lý và theo dõi order qua ticket rõ ràng. Mỗi người tự làm backend, UI, test và tài liệu của phạm vi mình.
 
-- Đạt acceptance criteria.
-- UI và backend hoạt động cùng nhau.
-- Validation, phân quyền và trạng thái lỗi được xử lý.
-- Migration và tài liệu liên quan được cập nhật.
-- Test phù hợp pass.
-- Không có secret trong Git.
-- PR được review.
-- Chạy được trên nhánh chung.
-- Người phụ trách giải thích được dữ liệu và luồng xử lý.
+Review chính: Bửu review Cảnh; Ngân review Bửu; Nhựt review Nhân; Cảnh review Nhựt; Nhân review Ngân.
 
----
+## 10. Lộ trình 10 tuần
 
-## 9. Kiểm thử, triển khai và bàn giao
+| Tuần | Mục tiêu | Kết quả kiểm tra được |
+|---|---|---|
+| 1 | Chốt v2, bootstrap Spring Boot/Maven, Compose, Flyway, CI | App khởi động; migration DB rỗng; CI xanh |
+| 2 | ERD, security skeleton, design system và route skeleton | Login page, layout, schema v1 và contract được review |
+| 3 | Email auth, OTP/Google, profile, Admin user | Ba phương thức đăng nhập và phân quyền chạy được |
+| 4 | Catalog, category, ảnh, tìm/lọc và Admin catalog | Guest duyệt PC; Admin CRUD đúng ràng buộc |
+| 5 | Session cart, stock/reservation và checkout preview | Cart và authoritative preview hoạt động |
+| 6 | COD, order history, Admin order và email | Luồng COD xuyên suốt; sửa quantity đúng điều kiện |
+| 7 | VNPAY sandbox; nền tảng bảo hành theo order item | Callback có test; eligibility và schema bảo hành hoàn thành |
+| 8 | Tư vấn PC, UI bảo hành và responsive | Top 3 ổn định; request/timeline bảo hành chạy xuyên suốt |
+| 9 | Integration/E2E, dữ liệu demo, security và concurrency | Mua hàng và bảo hành tối giản pass; không oversell |
+| 10 | Regression, báo cáo, deployment và diễn tập | Release candidate, tài liệu và demo thống nhất |
 
-### 9.1. Kiểm thử bắt buộc
+Tuần 11–14 là dự phòng theo lịch môn học: sửa lỗi, hoàn thiện UX, cập nhật báo cáo và luyện bảo vệ. Không tự đưa chức năng đã cắt trở lại khi P0 chưa ổn định.
 
+## 11. Kiểm thử và nghiệm thu
+
+### 11.1. Unit và integration
+
+- Email/phone trùng; OTP hết hạn, dùng lại và sai mục đích.
+- Google email trùng không tự gộp.
+- Product/category delete constraint.
+- Cart quantity, sản phẩm inactive, giá và tồn thay đổi.
+- Guest/thiếu phone/giỏ rỗng bị chặn checkout.
+- Hai checkout tranh sản phẩm cuối không oversell.
+- Submit lặp chỉ tạo một order.
+- Sửa quantity COD cập nhật reservation và tổng tiền; online/paid bị chặn.
+- Customer không đọc/hủy order của người khác.
+- Callback VNPAY sai chữ ký/số tiền bị từ chối.
+- Callback trùng chỉ xử lý một lần.
+- IPN và expiry chạy đồng thời kết thúc ở trạng thái hợp lệ.
+- Payment đến muộn chuyển `REVIEW_REQUIRED`, không hồi sinh order.
+- Advisory không vượt budget/RAM/storage; bỏ hàng hết/ngừng bán; tie-break ổn định.
+- Chỉ order đã giao mới có hiệu lực bảo hành; ngày hết hạn dùng snapshot.
+- Customer không xem/tạo yêu cầu từ order item của người khác.
+- Không tạo hai yêu cầu đang mở cho cùng item và unit index.
+- Chuyển trạng thái bảo hành sai bị chặn; từ chối/hoàn tất thiếu lý do hoặc kết quả bị chặn.
+
+Dùng PostgreSQL Testcontainers cho transaction/concurrency. Không dùng H2 để kết luận hành vi khóa.
+
+<<<<<<< HEAD
 | Nhóm | Kịch bản quan trọng |
 |---|---|
 | Identity | Email/phone trùng; OTP hết hạn, dùng lại, sai mục đích; Google trùng email; khóa user đang đăng nhập; Staff bị chặn khỏi quản lý role/audit; Admin quản lý Staff đúng quyền |
@@ -1049,11 +940,21 @@ Một chức năng hoàn thành khi:
 | Advisory | Không vượt ngân sách; không gợi ý hàng hết; dữ liệu thiếu; thứ tự ổn định; giải thích đúng |
 | Warranty | Người khác đoán QR; một dòng nhiều máy; hết hạn; yêu cầu trùng; chuyển trạng thái sai |
 | Reliability | Email lỗi không rollback đơn; app dừng sau commit; outbox retry; phục hồi backup |
+=======
+### 11.2. E2E tối thiểu
+>>>>>>> a21950f3162c293621563247ab472bc31a1b2c79
 
-Dùng PostgreSQL Testcontainers cho kiểm thử transaction; không dùng H2 để kết luận tính đúng của khóa và concurrency.
+1. Guest → tư vấn → chi tiết → giỏ.
+2. Email login → xác minh phone → COD → xem đơn.
+3. Google login → phone OTP → VNPAY sandbox → kết quả.
+4. Admin tạo/sửa/ngừng bán PC và bị chặn xóa PC đã có đơn.
+5. Admin sửa quantity COD, xác nhận, chuyển đang giao và đã giao.
+6. Admin khóa user; user không tiếp tục thao tác được bảo vệ.
+7. Customer xem bảo hành từ đơn đã giao, gửi yêu cầu; Admin tiếp nhận/xử lý; Customer xem timeline.
 
-E2E tối thiểu:
+### 11.3. Dữ liệu demo
 
+<<<<<<< HEAD
 1. Guest → tư vấn → so sánh → giỏ.
 2. Email login → xác minh điện thoại → COD.
 3. Google login → bổ sung điện thoại → VNPAY sandbox.
@@ -1062,9 +963,19 @@ E2E tối thiểu:
 6. Staff tiếp nhận → xử lý → đóng yêu cầu.
 7. Admin thử xóa dữ liệu đang được đơn tham chiếu và nhận lỗi đúng.
 8. Staff thử truy cập quản lý vai trò/audit toàn hệ thống và bị từ chối; Admin thực hiện được cùng chức năng.
+=======
+- 5 loại, 5–8 hãng dạng text và 20–30 PC.
+- Bốn hồ sơ nhu cầu; mỗi PC có dữ liệu tư vấn cần thiết.
+- Tồn đủ tạo tình huống còn hàng, hết hàng và tranh sản phẩm cuối.
+- Ba Customer đại diện email, phone và Google.
+- Đơn COD/VNPAY ở các trạng thái chính và một payment `REVIEW_REQUIRED`.
+- Một đơn đã giao còn bảo hành, một item hết hạn và các yêu cầu ở `REQUESTED`, `PROCESSING`, `COMPLETED`.
+- Toàn bộ dữ liệu cá nhân là giả; giá/cấu hình ghi rõ là fixture demo nếu chưa kiểm chứng.
+>>>>>>> a21950f3162c293621563247ab472bc31a1b2c79
 
-### 9.2. Dữ liệu demo
+## 12. Môi trường và bàn giao
 
+<<<<<<< HEAD
 - 20–30 SKU PC.
 - Bốn nhóm nhu cầu tư vấn.
 - Ít nhất 40 máy vật lý có mã riêng.
@@ -1079,66 +990,55 @@ Dữ liệu giá/cấu hình phải ghi ngày tham khảo; tài khoản và khá
 ### 9.3. Triển khai
 
 **Local bắt buộc**
+=======
+Local bắt buộc:
+>>>>>>> a21950f3162c293621563247ab472bc31a1b2c79
 
 ```text
-Spring Boot
+Spring Boot application
 PostgreSQL
-Redis
 Mailpit
-Thư mục media có volume
+Local media directory
 ```
 
-**Demo public khi có máy chủ**
+Profile:
 
-- Cùng Docker Compose trên máy chủ Linux.
-- Caddy làm HTTPS reverse proxy.
-- Không mở PostgreSQL/Redis ra Internet.
-- Google/VNPAY dùng URL callback của môi trường demo.
-- Secrets lấy từ biến môi trường.
-- Media lưu volume; `MediaStorage` cho phép chuyển cloud về sau.
+- `local`: OTP giả lập, Mailpit, VNPAY sandbox tùy credential.
+- `test`: Testcontainers và fake providers xác định được kết quả.
+- `demo`: HTTPS, Google/VNPAY sandbox, SMTP cấu hình bằng environment.
 
-Không gắn điều kiện hoàn thành đồ án vào việc mua hosting. Bản local phải chạy độc lập; Google và VNPAY là những luồng cần mạng.
+Không commit `.env`, credential hoặc secret. README phải đủ để thành viên mới chạy database, migration và application.
 
-### 9.4. Vận hành tối thiểu
+### Definition of Done
 
-- Theo dõi health, request error, outbox thất bại, payment chưa đối soát, reservation quá hạn.
-- Backup PostgreSQL và media trước mỗi release/demo.
-- Thử restore ít nhất một lần.
-- Release lưu image tag, migration version và cấu hình cần thiết.
-- Migration ưu tiên thêm mới tương thích; không giả định rollback code có thể tự hoàn tác schema.
+Một feature hoàn thành khi đạt acceptance criteria; backend/UI hoạt động cùng nhau; validation và authorization đúng; migration/tài liệu được cập nhật; test phù hợp pass; không chứa secret; PR được review và CI pass; owner giải thích và demo được luồng của mình.
 
-Mục tiêu hiệu năng kiểm thử: 20 người dùng đồng thời, dữ liệu 1.000 sản phẩm giả lập; p95 API đọc nội bộ dưới 800 ms trên cấu hình máy được ghi nhận, không tính thời gian provider ngoài. Đây là mục tiêu đo, không phải kết quả đã đạt.
+## 13. Kịch bản bảo vệ
 
-### 9.5. Bộ tài liệu bàn giao
+1. Giới thiệu vấn đề chọn PC và phạm vi đồ án.
+2. Guest nhập nhu cầu/ngân sách và xem gợi ý có giải thích.
+3. Mở chi tiết, thêm giỏ và đăng nhập.
+4. Chứng minh yêu cầu số điện thoại đã xác minh.
+5. Checkout COD hoặc VNPAY; nêu server tính lại giá và giữ tồn.
+6. Customer xem đơn.
+7. Admin sửa quantity COD hợp lệ, xác nhận và cập nhật giao hàng.
+8. Customer mở “Bảo hành của tôi”, gửi yêu cầu; Admin tiếp nhận và cập nhật; Customer xem timeline.
+9. Thử xóa PC đã có đơn và nhận lỗi nghiệp vụ.
+10. Trình bày test tranh sản phẩm cuối hoặc callback trùng, rồi mở CI và bảng truy vết.
 
-Bản đặc tả viết lại cần có:
+Tiêu chí kết thúc: người ngoài nhóm có thể dựng ứng dụng theo README, thực hiện trọn luồng tư vấn và mua hàng bằng dữ liệu demo, còn từng thành viên giải thích được phần backend, dữ liệu, UI và kiểm thử mình phụ trách.
 
-1. Mục tiêu, phạm vi và bảng đối chiếu tài liệu nguồn.
-2. Actor, functional requirements và acceptance criteria.
-3. Business rules và state machines.
-4. Kiến trúc, stack và quyết định thiết kế.
-5. ERD, data dictionary và migration strategy.
-6. MVC routes, REST contracts và provider ports.
-7. Wireframe và UI flows.
-8. Backlog, phụ thuộc, phân công và lịch triển khai.
-9. Test plan, dữ liệu demo, runbook và kịch bản bảo vệ.
-10. Nguồn nghiên cứu và các giới hạn còn lại.
+## Đồng bộ báo cáo lần 1 — v2.1
 
-Bảng truy vết dùng dạng:
+Báo cáo nhóm chức năng thành **12 use case chính**, không tách mỗi nút CRUD, OTP hoặc callback thành tính năng. Phạm vi vẫn **7 module, 24 màn hình, 20 bảng**; chưa code ứng dụng.
 
-```text
-Yêu cầu đăng ký
-→ Use case
-→ Business rule
-→ Module
-→ Màn hình/API
-→ Test case
-→ Người phụ trách
-→ Bằng chứng demo
-```
+- [Đặc tả 12 chức năng](requirements/FUNCTIONAL_SPECIFICATION.md): bảng đặc tả, luồng con, activity và tiêu chí nghiệm thu.
+- [Quy tắc nghiệp vụ](requirements/BUSINESS_RULES.md): BR01–BR15 và quyết định đồng bộ.
+- [Thiết kế dữ liệu](data/DATABASE_DESIGN.md), [ma trận truy vết](requirements/TRACEABILITY_MATRIX.md), [báo cáo lần 1](reports/REPORT_01_ANALYSIS_AND_DESIGN.md).
 
-Báo cáo môn học lấy dữ liệu từ bộ đặc tả này để tránh sơ đồ, code và mô tả mâu thuẫn.
+Chốt chi tiết: S03 chỉ công bố ACTIVE; category không status; Admin user không có UI đổi role. Giá PC dương. Một order/một attempt, chỉ mở lại VNPAY PENDING cùng reference/deadline; FAILED cần hủy/đặt lại hoặc chờ hết hạn. Success đến sau hạn/hủy chuyển REVIEW_REQUIRED, không hồi sinh đơn. Bảo hành cộng tháng lịch tại Asia/Ho_Chi_Minh, có hiệu lực start≤now<end; yêu cầu đã gửi hợp lệ được xử lý sau end. District là trường địa chỉ tùy chọn. Reservation có HELD/RELEASED/CONSUMED để cập nhật tồn đúng một lần. User làm actor lịch sử không hard-delete.
 
+<<<<<<< HEAD
 ### 9.6. Kịch bản bảo vệ
 
 Trong khoảng 12–15 phút:
@@ -1155,3 +1055,6 @@ Trong khoảng 12–15 phút:
 10. Mở test report, CI và bảng đóng góp.
 
 **Tiêu chí hoàn thành cuối cùng:** một người ngoài nhóm có thể dựng ứng dụng theo README, thực hiện trọn vẹn luồng mua và hậu mãi bằng dữ liệu demo, đồng thời nhóm giải thích được vì sao các quy tắc tồn kho, thanh toán, xác thực và bảo hành hoạt động đúng.
+=======
+Các quyết định trên bổ sung độ rõ cho v2.0, không mở rộng module/màn hình. Tài liệu thiết kế ghi rõ hiện trạng trước triển khai; không coi render diagram là nghiệm thu ứng dụng.
+>>>>>>> a21950f3162c293621563247ab472bc31a1b2c79
