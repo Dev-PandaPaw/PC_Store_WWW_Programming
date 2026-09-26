@@ -72,7 +72,7 @@ Chốt các mặc định:
 
 | Mức | Chức năng |
 |---|---|
-| **P0 — Bắt buộc theo đề tài** | Catalog, chi tiết PC, giỏ Session, đăng nhập Email/điện thoại/Google, hồ sơ, số điện thoại trước đặt hàng, tạo đơn, thông báo, quản trị sản phẩm/loại/tài khoản/đơn, sửa số lượng theo điều kiện, ràng buộc xóa |
+| **P0 — Bắt buộc theo đề tài** | Catalog, chi tiết PC, giỏ Session, đăng nhập Email/điện thoại/Google, hồ sơ, số điện thoại trước đặt hàng, tạo đơn, thông báo, Staff vận hành sản phẩm/loại/đơn, Admin quản trị tài khoản/phân quyền, sửa số lượng theo điều kiện, ràng buộc xóa |
 | **P1 — Hoàn thiện nghiệp vụ và điểm khác biệt** | Giữ tồn kho, COD, VNPAY sandbox, lịch sử trạng thái, vận chuyển giả lập, tư vấn có giải thích, so sánh PC, serial, checklist kiểm tra, hồ sơ bảo hành và yêu cầu hậu mãi |
 | **P2 — Sau khi bản nộp ổn định** | SMS thật, GHN thật, hoàn tiền tự động, khuyến mãi, tích điểm, đánh giá, bảo hành từng linh kiện nâng cao, dashboard vận hành mở rộng |
 
@@ -80,13 +80,34 @@ P0 và P1 là đích của kế hoạch 14 tuần. P2 không nằm trên đườ
 
 ### 2.4. Vai trò
 
-| Vai trò | Quyền chính |
-|---|---|
-| Guest | Xem, tìm kiếm, lọc, so sánh, nhận tư vấn, sử dụng giỏ Session, đăng ký/đăng nhập |
-| Customer | Quyền Guest; quản lý hồ sơ, xác minh điện thoại, đặt hàng, thanh toán, theo dõi đơn, xem máy đã mua, gửi yêu cầu bảo hành |
-| Admin | Có quyền Customer theo phiếu đăng ký; quản lý catalog, tài khoản, kho, đơn, giao hàng, serial, bảo hành và nhật ký thao tác |
+| Vai trò | Trách nhiệm chính | Không được phép |
+|---|---|---|
+| Guest | Khám phá sản phẩm: xem/tìm/lọc PC, nhận tư vấn, so sánh, dùng giỏ Session và đăng ký/đăng nhập | Checkout, xem đơn, hồ sơ máy hoặc bảo hành của bất kỳ tài khoản nào |
+| Customer | Thực hiện hành trình mua và hậu mãi cá nhân: hồ sơ, địa chỉ, xác minh điện thoại, checkout, thanh toán, đơn hàng, máy đã mua, thông báo và yêu cầu bảo hành | Truy cập dữ liệu khách khác hoặc chức năng back-office |
+| Staff | Vận hành cửa hàng: catalog, dữ liệu tư vấn, kho, đơn, đối soát thanh toán, serial, checklist, giao hàng, hàng hoàn và xử lý bảo hành | Quản lý tài khoản nội bộ, vai trò, cấu hình bảo mật, phát hành quy tắc tư vấn hoặc xem audit toàn hệ thống |
+| Admin | Quản trị hệ thống: tài khoản Customer/Staff, vai trò, cấu hình, phê duyệt/phát hành quy tắc tư vấn, audit và xử lý ngoại lệ; kế thừa quyền Staff và có quyền Customer theo phiếu đăng ký | Không được tự nâng quyền qua hồ sơ hoặc vô hiệu hóa Admin hoạt động cuối cùng |
 
-Trong bản nộp chỉ có ba vai trò. Các màn hình quản trị chia theo công việc để có thể tách Sales/Warehouse/Technician về sau.
+Trong bản nộp có bốn vai trò phân biệt. Chức năng chính được phân theo owner nghiệp vụ như sau:
+
+| Nhóm chức năng | Guest | Customer | Staff | Admin |
+|---|---|---|---|---|
+| Storefront và catalog | Xem, tìm kiếm, lọc | Như Guest | Tạo/cập nhật/ngừng bán sản phẩm, category, brand, ảnh và thông số | Kế thừa Staff; xử lý ngoại lệ dữ liệu |
+| Tư vấn và so sánh | Sử dụng | Sử dụng | Nhập/cập nhật điểm phù hợp, lý do, hạn chế và nguồn | Duyệt dữ liệu, phát hành/khóa phiên bản quy tắc |
+| Giỏ hàng Session | Thêm/sửa/xóa | Tiếp tục giỏ sau đăng nhập | Không quản lý giỏ của khách | Không quản lý giỏ của khách |
+| Tài khoản và địa chỉ | Đăng ký/đăng nhập/quên mật khẩu | Quản lý hồ sơ, địa chỉ và phương thức đăng nhập của mình | Chỉ xem thông tin liên hệ cần cho đơn/bảo hành được xử lý | Quản lý tài khoản, trạng thái khóa và vai trò |
+| Checkout và thanh toán | Bị yêu cầu đăng nhập | Preview, đặt hàng, COD/VNPAY và xem trạng thái của mình | Hỗ trợ giao dịch, ghi nhận COD, đối soát và lập hồ sơ hoàn tiền | Giám sát, xử lý ngoại lệ và cấu hình tích hợp |
+| Đơn hàng | Không truy cập | Xem/hủy/gửi yêu cầu hủy đơn của mình theo điều kiện | Xác nhận, sửa COD, chuyển trạng thái, xử lý hủy và hàng hoàn | Can thiệp ngoại lệ, xem audit và bảo vệ ràng buộc lịch sử |
+| Kho và máy vật lý | Chỉ thấy còn/hết hàng | Chỉ thấy còn/hết hàng và máy đã mua | Nhập/điều chỉnh kho, reservation, ledger, serial và phân bổ máy | Giám sát, đối chiếu và xử lý sai lệch đặc biệt |
+| Checklist và giao hàng | Không truy cập | Theo dõi vận đơn và xem checklist máy của mình | Kiểm tra máy, đóng gói, tạo/cập nhật vận đơn và tiếp nhận hàng hoàn | Giám sát và xử lý sự kiện bất thường |
+| Bảo hành/hậu mãi | Bị yêu cầu đăng nhập | Tạo/theo dõi yêu cầu cho máy của mình | Tiếp nhận, chẩn đoán, sửa chữa/từ chối và đóng yêu cầu | Quản lý chính sách và xử lý khiếu nại/ngoại lệ |
+| Thông báo | Chỉ thông báo giao diện công khai | Nhận và đánh dấu đã đọc thông báo của mình | Nhận thông báo công việc; không quản lý outbox toàn hệ thống | Theo dõi outbox lỗi, retry và cấu hình mẫu thông báo |
+| Phân quyền, cấu hình và audit | Không truy cập | Không truy cập | Không truy cập | Toàn quyền có audit bắt buộc |
+
+Staff chỉ được xem dữ liệu khách hàng trong ngữ cảnh đơn hàng, thanh toán, giao hàng hoặc bảo hành mà họ đang xử lý; không có chức năng duyệt toàn bộ hồ sơ khách như Admin. Admin kế thừa quyền Staff để có thể can thiệp khi cần, nhưng mọi thao tác đặc quyền phải được ghi audit. Các màn hình vận hành tiếp tục chia theo công việc để có thể tách `SALES_STAFF`, `WAREHOUSE_STAFF` và `TECHNICIAN` về sau.
+
+Các trang dưới `templates/admin/` là namespace kỹ thuật chung cho back-office, không đồng nghĩa mọi trang đều yêu cầu role `Admin`. Mỗi endpoint và application service phải kiểm tra quyền Staff hoặc Admin theo đúng nhóm nghiệp vụ.
+
+Về kỹ thuật, Guest là actor chưa xác thực nên không cần bản ghi trong `user_roles`. Các quyền đăng nhập dùng `ROLE_CUSTOMER`, `ROLE_STAFF`, `ROLE_ADMIN`; role hierarchy cho phép Admin kế thừa cả Staff và Customer, còn Staff không mặc nhiên có quyền Customer.
 
 ---
 
@@ -132,7 +153,9 @@ Các quy tắc dưới đây là **chính sách thiết kế của đồ án**, 
 
 **Phân quyền**
 
-- Admin không tự nâng quyền qua form cập nhật hồ sơ.
+- Chỉ Admin được tạo tài khoản nội bộ, khóa/mở tài khoản và gán hoặc thu hồi vai trò.
+- Staff không được quản lý tài khoản nội bộ, thay đổi vai trò, cấu hình bảo mật hoặc xem audit toàn hệ thống.
+- Staff và Admin không tự nâng quyền qua form cập nhật hồ sơ.
 - Không vô hiệu hóa hoặc xóa Admin hoạt động cuối cùng.
 - Tài khoản bị khóa phải mất khả năng thực hiện thao tác được bảo vệ, kể cả đang có Session.
 
@@ -261,16 +284,16 @@ SHIPPED → RETURNING → RETURNED
 Không dùng một enum duy nhất cho cả đơn, tiền và vận chuyển.
 
 - Online giữ hàng 15 phút.
-- COD cần Admin xác nhận trong 24 giờ; quá hạn thì hủy và trả hàng giữ.
+- COD cần Staff xác nhận trong 24 giờ; quá hạn thì hủy và trả hàng giữ.
 - Customer tự hủy ở `AWAITING_PAYMENT` hoặc `AWAITING_CONFIRMATION`.
-- Sau xác nhận, Customer gửi yêu cầu; Admin xử lý trước bàn giao.
+- Sau xác nhận, Customer gửi yêu cầu; Staff xử lý trước bàn giao.
 - Đơn đã trả tiền và bị hủy phải sinh nghĩa vụ hoàn tiền.
 - Đã giao không quay ngược về “đang chuẩn bị”; đổi trả/bảo hành là hồ sơ riêng.
 - Mỗi chuyển trạng thái lưu actor, thời điểm, lý do và trạng thái trước/sau.
 
 **Sửa số lượng theo yêu cầu đề tài**
 
-Chỉ cho Admin sửa đơn **COD, chưa thanh toán, đang `AWAITING_CONFIRMATION`**:
+Chỉ cho Staff sửa đơn **COD, chưa thanh toán, đang `AWAITING_CONFIRMATION`**; Admin có cùng quyền do kế thừa vai trò vận hành:
 
 1. Nhập lý do và ghi nhận khách đã đồng ý.
 2. Khóa order và tồn kho.
@@ -328,7 +351,7 @@ Mặc định demo:
 
 - Phí 50.000 VND/đơn, công khai là chính sách dữ liệu mẫu.
 - Không chia đơn thành nhiều kiện/vận đơn.
-- Trạng thái do Admin điều khiển qua màn hình mô phỏng có nhãn rõ ràng.
+- Trạng thái do Staff điều khiển qua màn hình mô phỏng có nhãn rõ ràng.
 - Không cam kết ngày giao thực tế.
 
 Dữ liệu địa chỉ lưu nội dung chuẩn hóa và mapping provider riêng; không gắn toàn bộ mô hình địa chỉ vào mã GHN.
@@ -700,7 +723,9 @@ Spring Security bảo vệ CSRF cho các phương thức thay đổi dữ liệu
 
 **Hậu mãi:** máy đã mua, hồ sơ máy, tạo yêu cầu, theo dõi yêu cầu.
 
-**Admin:** dashboard, catalog, kho, serial, đơn, checklist, vận đơn, đối soát, tài khoản, bảo hành, quy tắc tư vấn, audit.
+**Back-office — Staff:** dashboard vận hành, catalog, dữ liệu tư vấn, kho, serial, đơn, checklist, vận đơn, đối soát và bảo hành.
+
+**Back-office — Admin:** tài khoản, vai trò, cấu hình hệ thống, quy tắc tư vấn, audit; đồng thời có thể truy cập màn hình Staff khi cần can thiệp.
 
 Mỗi màn hình phải thiết kế đủ trạng thái rỗng, lỗi, dữ liệu không hợp lệ, hết quyền và thao tác thành công.
 
@@ -715,9 +740,9 @@ Tuần dưới đây là **tuần dự án**, cần ánh xạ sang lịch môn h
 | **1** | Chốt phạm vi, ma trận yêu cầu, stack spike, đăng ký Google/VNPAY, wireframe sơ bộ | Boot + Thymeleaf + Security + DB chạy; ghi rõ provider đã có/thiếu |
 | **2** | Use case, ERD, trạng thái đơn/tiền/kho, UI flow, Maven/Compose/CI/Flyway | CI xanh; migration chạy DB rỗng; review được các luồng chính |
 | **3** | Email auth, OTP adapter, Google, profile, CSRF, Session | Ba phương thức login; kiểm thử tài khoản trùng và phân quyền |
-| **4** | Catalog, thông số, ảnh, category/brand, search/filter; giỏ Session | Guest duyệt và thêm giỏ; Admin CRUD đúng ràng buộc |
+| **4** | Catalog, thông số, ảnh, category/brand, search/filter; giỏ Session | Guest duyệt và thêm giỏ; Staff CRUD đúng ràng buộc |
 | **5** | Nhập kho, ledger, reservation, checkout preview, tạo đơn COD | Luồng mua COD chạy xuyên suốt; không oversell |
-| **6** | Admin xác nhận/sửa lượng/hủy, customer orders, snapshot, outbox | P0 cơ bản hoàn thành; có email/thông báo và audit |
+| **6** | Staff xác nhận/sửa lượng/hủy, customer orders, snapshot, outbox | P0 cơ bản hoàn thành; có email/thông báo và audit |
 | **7** | VNPAY sandbox, IPN, expiry, idempotency, late payment | Test callback trùng/sai/đến muộn; trả hàng giữ chính xác |
 | **8** | Serial, allocation, checklist, shipment giả lập, hàng hoàn | Chỉ xuất khi đủ serial và kiểm tra; ledger đúng khi giao/hoàn |
 | **9** | Hồ sơ nhu cầu, dữ liệu tư vấn, xếp hạng, giải thích, so sánh | Có bộ dữ liệu được review và kết quả xác định |
@@ -922,9 +947,9 @@ Vòng review chính là: **Bửu review Cảnh → Ngân review Bửu → Nhựt
 **Kiểm thử, tài liệu và demo**
 
 - Test email/phone trùng, OTP hết hạn/dùng lại/sai mục đích, rate limit, Google trùng email, đổi số và phương thức đăng nhập cuối.
-- Test RBAC, CSRF, xem dữ liệu người khác, khóa user đang đăng nhập, Admin cuối cùng và lọc dữ liệu nhạy cảm trong audit.
+- Test RBAC, CSRF, xem dữ liệu người khác, Staff bị chặn khỏi quản lý role/audit toàn hệ thống, khóa user đang đăng nhập, Admin cuối cùng và lọc dữ liệu nhạy cảm trong audit.
 - Viết auth flow, ma trận quyền, threat/security checklist và hướng dẫn cấu hình Google/OTP.
-- Demo ba phương thức đăng nhập, bước xác minh điện thoại trước checkout và truy vết một thao tác Admin trong audit.
+- Demo ba phương thức đăng nhập, bước xác minh điện thoại trước checkout và truy vết một thao tác đặc quyền của Admin trong audit.
 
 #### 8.1.7. Lê Thị Kim Ngân — `fulfillment`, `aftersales` và chất lượng đầu cuối
 
@@ -958,7 +983,7 @@ Vòng review chính là: **Bửu review Cảnh → Ngân review Bửu → Nhựt
 - Test serial trùng/thiếu, phân bổ một order item nhiều máy, chưa checklist vẫn giao, shipment event trùng và hàng hoàn chưa đạt kiểm tra.
 - Test quyền sở hữu thiết bị, QR khó đoán, thời hạn bảo hành, service request trùng và state transition sai.
 - Duy trì E2E matrix, test evidence, runbook demo và bảng truy vết yêu cầu → module → màn hình/API → test → người phụ trách.
-- Demo luồng Admin phân bổ máy → kiểm tra → giao; Customer xem đúng serial → gửi bảo hành; Admin xử lý và đóng yêu cầu.
+- Demo luồng Staff phân bổ máy → kiểm tra → giao; Customer xem đúng serial → gửi bảo hành; Staff xử lý và đóng yêu cầu.
 
 #### 8.1.8. Ranh giới phối hợp liên module
 
@@ -969,7 +994,7 @@ Vòng review chính là: **Bửu review Cảnh → Ngân review Bửu → Nhựt
 | Xuất kho và giao hàng | Ngân (`fulfillment`) | Bửu quản lý product unit/ledger; Cảnh quản lý order transition; Ngân quản lý allocation/checklist/shipment |
 | Hàng hoàn | Ngân (`fulfillment`) | Ngân tiếp nhận và inspection; Bửu chỉ tăng lại `on_hand` sau kết quả đạt; Cảnh cập nhật trạng thái order khi cần |
 | Kích hoạt bảo hành | Ngân (`aftersales`) | Ngân tạo entitlement từ unit đã giao; Bửu cung cấp thông tin product unit; Cảnh cung cấp order snapshot |
-| Audit thao tác Admin | Nhựt (`audit`) | Mỗi module phát thông tin audit đã lọc; Nhựt lưu, bảo vệ và cung cấp màn hình tra cứu |
+| Audit thao tác Staff/Admin | Nhựt (`audit`) | Mỗi module phát thông tin audit đã lọc; Nhựt lưu, bảo vệ và chỉ cung cấp màn hình tra cứu toàn hệ thống cho Admin |
 
 #### 8.1.9. Kiểm soát cân bằng đóng góp
 
@@ -1014,7 +1039,7 @@ Một chức năng hoàn thành khi:
 
 | Nhóm | Kịch bản quan trọng |
 |---|---|
-| Identity | Email/phone trùng; OTP hết hạn, dùng lại, sai mục đích; Google trùng email; khóa user đang đăng nhập |
+| Identity | Email/phone trùng; OTP hết hạn, dùng lại, sai mục đích; Google trùng email; khóa user đang đăng nhập; Staff bị chặn khỏi quản lý role/audit; Admin quản lý Staff đúng quyền |
 | Cart | Giữ giỏ khi login; lượng âm; sản phẩm ngừng bán; giá đổi; hai tab thay đổi giỏ |
 | Checkout | Guest bị chặn; thiếu điện thoại; preview hết hạn; submit lặp; cùng key khác payload |
 | Inventory | Hai khách tranh máy cuối; tăng số lượng thiếu hàng; hủy hai lần; rollback không lệch ledger |
@@ -1032,17 +1057,18 @@ E2E tối thiểu:
 1. Guest → tư vấn → so sánh → giỏ.
 2. Email login → xác minh điện thoại → COD.
 3. Google login → bổ sung điện thoại → VNPAY sandbox.
-4. Admin sửa lượng COD → xác nhận → phân bổ máy → giao.
+4. Staff sửa lượng COD → xác nhận → phân bổ máy → giao.
 5. Customer mở hồ sơ máy → tạo bảo hành.
-6. Admin tiếp nhận → xử lý → đóng yêu cầu.
+6. Staff tiếp nhận → xử lý → đóng yêu cầu.
 7. Admin thử xóa dữ liệu đang được đơn tham chiếu và nhận lỗi đúng.
+8. Staff thử truy cập quản lý vai trò/audit toàn hệ thống và bị từ chối; Admin thực hiện được cùng chức năng.
 
 ### 9.2. Dữ liệu demo
 
 - 20–30 SKU PC.
 - Bốn nhóm nhu cầu tư vấn.
 - Ít nhất 40 máy vật lý có mã riêng.
-- Customer bằng email, điện thoại và Google.
+- Customer bằng email, điện thoại và Google; ít nhất một tài khoản Staff và hai tài khoản Admin để kiểm thử ràng buộc Admin hoạt động cuối cùng.
 - Đơn ở các trạng thái chờ, đã trả tiền, hết hạn, đang giao, hoàn.
 - Một trường hợp thanh toán muộn cần đối soát.
 - Một hàng hoàn đang cách ly kiểm tra.
@@ -1123,7 +1149,7 @@ Trong khoảng 12–15 phút:
 4. Chứng minh bắt buộc xác minh điện thoại.
 5. Đặt đơn, trình bày giữ tồn kho.
 6. Demo thanh toán sandbox hoặc COD.
-7. Admin gán serial, hoàn tất checklist và giao.
+7. Staff gán serial, hoàn tất checklist và giao.
 8. Customer xem đúng chiếc máy của mình và gửi bảo hành.
 9. Trình bày một lỗi nghiệp vụ đã được xử lý: callback trùng hoặc tranh sản phẩm cuối.
 10. Mở test report, CI và bảng đóng góp.
