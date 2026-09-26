@@ -12,7 +12,7 @@ Ví dụ:
 
 ```text
 feat(cart): thêm kiểm tra số lượng sản phẩm
-fix(inventory): ngăn giữ hàng vượt tồn khả dụng
+fix(catalog): ngăn giữ hàng vượt tồn khả dụng
 docs(project): bổ sung quy ước commit
 chore(scaffold): khởi tạo cấu trúc module
 ```
@@ -43,14 +43,10 @@ Không tự tạo type mới nếu chưa thống nhất với nhóm.
 identity
 catalog
 advisory
-inventory
 cart
 sales
 payment
-fulfillment
 aftersales
-notification
-audit
 ui
 api
 data
@@ -128,10 +124,11 @@ Không dùng breaking change cho migration thông thường vẫn tương thích
 feat(identity): thêm đăng nhập bằng email
 feat(catalog): thêm bộ lọc theo CPU và GPU
 fix(cart): giữ nguyên giỏ hàng sau khi đăng nhập
-fix(inventory): giải phóng reservation khi đơn hết hạn
+fix(catalog): giải phóng lượng giữ khi đơn hết hạn
 feat(payment): xử lý callback VNPAY trùng lặp
 test(sales): kiểm tra idempotency khi tạo đơn
-feat(db): thêm bảng inventory_movements
+feat(aftersales): thêm yêu cầu bảo hành theo mặt hàng đã mua
+feat(db): thêm bảng warranty_requests
 docs(api): mô tả contract checkout
 ci: chạy test với PostgreSQL Testcontainers
 ```
