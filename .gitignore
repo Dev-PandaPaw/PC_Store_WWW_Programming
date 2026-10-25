@@ -33,10 +33,14 @@ tmp/
 
 # E2E / Node tooling
 node_modules/
+dist/
+.vite/
 playwright-report/
 test-results/
 blob-report/
+*.bak*
 
 # Local test artifacts
 coverage/
 *.pid
+
