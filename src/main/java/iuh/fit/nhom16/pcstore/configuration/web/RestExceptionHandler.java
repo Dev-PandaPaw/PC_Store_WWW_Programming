@@ -1,7 +1,9 @@
 package iuh.fit.nhom16.pcstore.configuration.web;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.HttpStatus;
+import iuh.fit.nhom16.pcstore.catalog.CatalogConflictException;
+import iuh.fit.nhom16.pcstore.catalog.CatalogNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,6 +15,20 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
+
+    @ExceptionHandler(CatalogNotFoundException.class)
+    public ProblemDetail handleCatalogNotFound(CatalogNotFoundException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problem.setTitle("Resource Not Found");
+        return problem;
+    }
+
+    @ExceptionHandler(CatalogConflictException.class)
+    public ProblemDetail handleCatalogConflict(CatalogConflictException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+        problem.setTitle("Catalog Conflict");
+        return problem;
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail handleValidationException(MethodArgumentNotValidException ex) {

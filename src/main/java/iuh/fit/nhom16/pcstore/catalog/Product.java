@@ -1,6 +1,7 @@
 package iuh.fit.nhom16.pcstore.catalog;
 
 import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -47,7 +48,7 @@ public class Product {
     @Column(name = "reserved_quantity", nullable = false)
     private Integer reservedQuantity = 0;
 
-    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private ProductSpec spec;
 
     @Version
@@ -59,35 +60,126 @@ public class Product {
     @Column(name = "updated_at", nullable = false)
     private OffsetDateTime updatedAt = OffsetDateTime.now();
 
-    public Product() {}
+    public Product() {
+    }
 
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; }
-    public Category getCategory() { return category; }
-    public void setCategory(Category category) { this.category = category; }
-    public String getSku() { return sku; }
-    public void setSku(String sku) { this.sku = sku; }
-    public String getSlug() { return slug; }
-    public void setSlug(String slug) { this.slug = slug; }
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public String getBrand() { return brand; }
-    public void setBrand(String brand) { this.brand = brand; }
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-    public BigDecimal getPrice() { return price; }
-    public void setPrice(BigDecimal price) { this.price = price; }
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
-    public Short getWarrantyMonths() { return warrantyMonths; }
-    public void setWarrantyMonths(Short warrantyMonths) { this.warrantyMonths = warrantyMonths; }
-    public Integer getStockOnHand() { return stockOnHand; }
-    public void setStockOnHand(Integer stockOnHand) { this.stockOnHand = stockOnHand; }
-    public Integer getReservedQuantity() { return reservedQuantity; }
-    public void setReservedQuantity(Integer reservedQuantity) { this.reservedQuantity = reservedQuantity; }
-    public ProductSpec getSpec() { return spec; }
-    public void setSpec(ProductSpec spec) { this.spec = spec; }
-    public Long getVersion() { return version; }
-    public OffsetDateTime getCreatedAt() { return createdAt; }
-    public OffsetDateTime getUpdatedAt() { return updatedAt; }
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Short getWarrantyMonths() {
+        return warrantyMonths;
+    }
+
+    public void setWarrantyMonths(Short warrantyMonths) {
+        this.warrantyMonths = warrantyMonths;
+    }
+
+    public Integer getStockOnHand() {
+        return stockOnHand;
+    }
+
+    public void setStockOnHand(Integer stockOnHand) {
+        this.stockOnHand = stockOnHand;
+    }
+
+    public Integer getReservedQuantity() {
+        return reservedQuantity;
+    }
+
+    public void setReservedQuantity(Integer reservedQuantity) {
+        this.reservedQuantity = reservedQuantity;
+    }
+
+    public ProductSpec getSpec() {
+        return spec;
+    }
+
+    public void setSpec(ProductSpec spec) {
+        this.spec = spec;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public OffsetDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(OffsetDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }
