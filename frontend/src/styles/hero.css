@@ -51,14 +51,14 @@
   gap: 2rem;
   width: calc(100% - 3rem);
   max-width: 1300px;
-  min-height: clamp(420px, 38vw, 650px);
+  min-height: clamp(340px, 30vw, 520px);
   margin-inline: auto;
 }
 
 .pc-hero__content {
   position: relative;
   z-index: 1;
-  padding-block: 3rem;
+  padding-block: 2rem;
 }
 
 .pc-hero__eyebrow {
@@ -85,7 +85,7 @@
   position: relative;
   width: 100%;
   max-width: 600px;
-  margin-block: 2.25rem 1.75rem;
+  margin-block: 1.75rem 1.25rem;
   line-height: 0;
 }
 
@@ -220,7 +220,7 @@
   }
 
   .pc-hero__content {
-    padding-block: 2.5rem 0;
+    padding-block: 1.75rem 0;
   }
 
   .pc-hero__eyebrow {
@@ -231,7 +231,7 @@
 
   .pc-hero__title {
     max-width: 460px;
-    margin: 1.5rem auto;
+    margin: 1.25rem auto;
   }
 
   .pc-hero__actions {
@@ -251,7 +251,7 @@
   }
 
   .pc-hero__showcase {
-    height: clamp(280px, 85vw, 430px);
+    height: clamp(220px, 65vw, 340px);
   }
 }
 
