@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { useCart } from '../contexts/CartContext'
 import http from '../services/http'
 
@@ -7,9 +7,20 @@ export default function CatalogPage() {
   const { addItem } = useCart()
   const [categories, setCategories] = useState([])
   const [products, setProducts] = useState([])
-  const [activeCategory, setActiveCategory] = useState('ALL')
-  const [keyword, setKeyword] = useState('')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const activeCategory = searchParams.get('category') || 'ALL'
+  const keyword = searchParams.get('keyword') || ''
   const [loading, setLoading] = useState(true)
+
+  const updateFilter = (name, value) => {
+    setSearchParams(previous => {
+      const next = new URLSearchParams(previous)
+      if (value && value !== 'ALL') next.set(name, value)
+      else next.delete(name)
+      next.delete(name === 'category' ? 'keyword' : 'category')
+      return next
+    }, { replace: true })
+  }
 
   useEffect(() => {
     http.get('/catalog/categories')
@@ -47,14 +58,14 @@ export default function CatalogPage() {
           type="text"
           placeholder="Tìm theo tên sản phẩm, mã SKU..."
           value={keyword}
-          onChange={e => setKeyword(e.target.value)}
-          style={{ padding: '0.6rem 1rem', border: '1px solid var(--pc-border)', borderRadius: 'var(--pc-radius-sm)', minWidth: '280px' }}
+          onChange={e => updateFilter('keyword', e.target.value)}
+          style={{ padding: '0.6rem 1rem', border: '1px solid var(--pc-border)', borderRadius: 'var(--pc-radius-sm)', width: 'min(100%, 340px)', minWidth: 0 }}
         />
       </div>
 
       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
         <button
-          onClick={() => setActiveCategory('ALL')}
+          onClick={() => updateFilter('category', 'ALL')}
           className={`btn ${activeCategory === 'ALL' ? 'btn-primary' : 'btn-outline'}`}
           style={{ fontSize: '0.85rem', padding: '0.4rem 0.85rem' }}
         >
@@ -63,7 +74,7 @@ export default function CatalogPage() {
         {categories.map(c => (
           <button
             key={c.id}
-            onClick={() => setActiveCategory(c.slug)}
+            onClick={() => updateFilter('category', c.slug)}
             className={`btn ${activeCategory === c.slug ? 'btn-primary' : 'btn-outline'}`}
             style={{ fontSize: '0.85rem', padding: '0.4rem 0.85rem' }}
           >
@@ -81,7 +92,7 @@ export default function CatalogPage() {
           Không tìm thấy sản phẩm nào phù hợp với bộ lọc.
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: '1.5rem' }}>
           {products.map(product => {
             const displayPrice = product.salePrice || product.basePrice
             return (

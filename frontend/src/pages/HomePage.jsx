@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import http from '../services/http'
+import HeroBanner from '../components/HeroBanner'
 
 export default function HomePage() {
   const [categories, setCategories] = useState([])
@@ -17,25 +18,10 @@ export default function HomePage() {
   }, [])
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
-      <section className="card" style={{ padding: '3.5rem 2.5rem', background: 'linear-gradient(135deg, #1e293b, #0f172a)', color: '#fff', borderRadius: 'var(--pc-radius-lg)' }}>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, marginBottom: '1rem' }}>
-          Hệ Thống PC & Linh Kiện Hiệu Năng Cao
-        </h1>
-        <p style={{ color: '#94a3b8', fontSize: '1.1rem', maxWidth: '640px', marginBottom: '1.75rem' }}>
-          Cung cấp máy tính chơi game, làm việc đồ họa và hệ thống tư vấn cấu hình tự động thông minh theo ngân sách. Toàn bộ dữ liệu kết nối cơ sở dữ liệu Supabase PostgreSQL.
-        </p>
-        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-          <Link to="/catalog" className="btn btn-primary" style={{ padding: '0.75rem 1.5rem', fontSize: '1rem' }}>
-            Xem sản phẩm thật
-          </Link>
-          <Link to="/advisory" className="btn btn-outline" style={{ padding: '0.75rem 1.5rem', fontSize: '1rem', background: 'rgba(255,255,255,0.1)', borderColor: '#475569', color: '#fff' }}>
-            Tư vấn cấu hình PC
-          </Link>
-        </div>
-      </section>
+    <div className="home-page">
+      <HeroBanner />
 
-      <section>
+      <section className="home-section">
         <h2 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '1.25rem' }}>
           Danh mục linh kiện chính hãng ({categories.length})
         </h2>
@@ -50,7 +36,7 @@ export default function HomePage() {
       </section>
 
       {featuredProducts.length > 0 && (
-        <section>
+        <section className="home-section">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
             <h2 style={{ fontSize: '1.4rem', fontWeight: 700 }}>Sản phẩm mới lên kệ</h2>
             <Link to="/catalog" style={{ color: 'var(--pc-primary)', fontWeight: 600 }}>Xem tất cả →</Link>

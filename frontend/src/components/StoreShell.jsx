@@ -1,47 +1,15 @@
 import React from 'react'
-import { Link, Outlet } from 'react-router-dom'
-import { useCart } from '../contexts/CartContext'
-import { useAuth } from '../contexts/AuthContext'
+import { Outlet, useLocation } from 'react-router-dom'
+import StoreHeader from './StoreHeader'
 
 export default function StoreShell() {
-  const { totalCount } = useCart()
-  const { user, logout } = useAuth()
+  const { pathname } = useLocation()
 
   return (
     <div className="app-shell">
-      <header className="site-header">
-        <div className="nav-container">
-          <Link to="/" className="brand-logo">
-            <span>💻</span> PC Store
-          </Link>
-          <nav className="nav-links">
-            <Link to="/">Trang chủ</Link>
-            <Link to="/catalog">Sản phẩm</Link>
-            <Link to="/advisory">Tư vấn PC</Link>
-          </nav>
-          <div className="nav-actions">
-            <Link to="/cart" className="btn btn-outline">
-              🛒 Giỏ hàng ({totalCount})
-            </Link>
-            {user ? (
-              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-                <Link to="/account/orders" style={{ fontWeight: 500 }}>
-                  {user.fullName || user.username}
-                </Link>
-                <button onClick={logout} className="btn btn-outline" style={{ padding: '0.35rem 0.75rem' }}>
-                  Đăng xuất
-                </button>
-              </div>
-            ) : (
-              <Link to="/login" className="btn btn-primary">
-                Đăng nhập
-              </Link>
-            )}
-          </div>
-        </div>
-      </header>
+      <StoreHeader />
 
-      <main className="main-content">
+      <main className={`main-content${pathname === '/' ? ' main-content--home' : ''}`}>
         <Outlet />
       </main>
 

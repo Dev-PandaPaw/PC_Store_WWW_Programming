@@ -4,6 +4,16 @@
   padding: 0;
 }
 
+html,
+body {
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
+
 body {
   font-family: var(--pc-font-sans);
   background-color: var(--pc-bg);
