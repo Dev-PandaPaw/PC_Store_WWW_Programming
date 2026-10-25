@@ -1,6 +1,7 @@
 import React from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import StoreHeader from './StoreHeader'
+import StoreFooter from './StoreFooter'
 
 export default function StoreShell() {
   const { pathname } = useLocation()
@@ -13,9 +14,7 @@ export default function StoreShell() {
         <Outlet />
       </main>
 
-      <footer className="site-footer">
-        <p>© 2026 PC Store - Đồ án tốt nghiệp WWW Nhóm 16. Mọi quyền được bảo lưu.</p>
-      </footer>
+      <StoreFooter />
     </div>
   )
 }

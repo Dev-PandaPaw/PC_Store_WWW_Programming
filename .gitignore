@@ -44,3 +44,7 @@ blob-report/
 coverage/
 *.pid
 
+# Temporary UI export folder
+UI/
+
+

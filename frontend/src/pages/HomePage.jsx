@@ -1,59 +1,87 @@
-import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import http from '../services/http'
-import HeroBanner from '../components/HeroBanner'
+import React, { useState } from 'react'
+import { HeroSection } from '../components/gear/HeroSection'
+import { FlashDeal } from '../components/gear/FlashDeal'
+import { PromoBanners } from '../components/gear/PromoBanners'
+import { ProductSectionPC } from '../components/gear/ProductSectionPC'
+import { ProductSectionLaptopGaming } from '../components/gear/ProductSectionLaptopGaming'
+import { ProductSectionLaptopOffice } from '../components/gear/ProductSectionLaptopOffice'
+import { ProductSectionMouse } from '../components/gear/ProductSectionMouse'
+import { ProductSectionKeyboard } from '../components/gear/ProductSectionKeyboard'
+import { MidPromoBanners } from '../components/gear/MidPromoBanners'
+import { ProductSectionMonitor } from '../components/gear/ProductSectionMonitor'
+import { NewsSection } from '../components/gear/NewsSection'
+import { CartDrawer } from '../components/gear/CartDrawer'
+import { useCart } from '../contexts/CartContext'
 
 export default function HomePage() {
-  const [categories, setCategories] = useState([])
-  const [featuredProducts, setFeaturedProducts] = useState([])
+  const { items, addItem, removeItem, clearCart } = useCart()
+  const [isCartOpen, setIsCartOpen] = useState(false)
 
-  useEffect(() => {
-    http.get('/catalog/categories')
-      .then(res => setCategories(res.data))
-      .catch(err => console.error('Lỗi tải danh mục:', err))
+  const handleAddToCart = (product) => {
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+    }, 1)
+    setIsCartOpen(true)
+  }
 
-    http.get('/catalog/products')
-      .then(res => setFeaturedProducts(res.data.slice(0, 4)))
-      .catch(err => console.error('Lỗi tải sản phẩm nổi bật:', err))
-  }, [])
+  const handleUpdateQuantity = (id, delta) => {
+    const item = items.find(i => i.id === id)
+    if (item) {
+      if (item.quantity + delta <= 0) {
+        removeItem(id)
+      } else {
+        addItem(item, delta)
+      }
+    }
+  }
 
   return (
-    <div className="home-page">
-      <HeroBanner />
+    <div className="min-h-screen bg-[#f4f4f4] text-gray-900 font-sans pb-10">
+      {/* 1. Hero Section: 16 Danh mục + Banner chính diện ô vừa (Video Neon Nhut_dev) + 2 Side Banners + 4 Mini Banners */}
+      <HeroSection />
 
-      <section className="home-section">
-        <h2 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '1.25rem' }}>
-          Danh mục linh kiện chính hãng ({categories.length})
-        </h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
-          {categories.map(cat => (
-            <Link key={cat.id} to="/catalog" className="card" style={{ display: 'block', textAlign: 'center', padding: '1.5rem', transition: 'transform 0.2s' }}>
-              <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>⚡</div>
-              <h3 style={{ fontSize: '1.05rem', fontWeight: 600 }}>{cat.name}</h3>
-            </Link>
-          ))}
-        </div>
-      </section>
+      {/* 2. Flash Deal Laptop & PC có đồng hồ đếm ngược */}
+      <FlashDeal onAddToCart={handleAddToCart} />
 
-      {featuredProducts.length > 0 && (
-        <section className="home-section">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-            <h2 style={{ fontSize: '1.4rem', fontWeight: 700 }}>Sản phẩm mới lên kệ</h2>
-            <Link to="/catalog" style={{ color: 'var(--pc-primary)', fontWeight: 600 }}>Xem tất cả →</Link>
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.5rem' }}>
-            {featuredProducts.map(p => (
-              <div key={p.id} className="card">
-                <span className="badge badge-primary" style={{ marginBottom: '0.5rem' }}>{p.category?.name}</span>
-                <h4 style={{ fontSize: '1.05rem', fontWeight: 600, marginBottom: '0.5rem' }}>{p.name}</h4>
-                <p style={{ color: 'var(--pc-primary)', fontSize: '1.2rem', fontWeight: 700 }}>
-                  {Number(p.salePrice || p.basePrice).toLocaleString('vi-VN')} đ
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+      {/* 3. Promo Banners: Build PC Tặng Màn Hình & Sắm Laptop Tặng Phụ Kiện */}
+      <PromoBanners />
+
+      {/* 4. Khối PC Bán Chạy (5 card/hàng, tabs bộ lọc) */}
+      <ProductSectionPC onAddToCart={handleAddToCart} />
+
+      {/* 5. Khối Laptop Gaming Bán Chạy (5 card/hàng) */}
+      <ProductSectionLaptopGaming onAddToCart={handleAddToCart} />
+
+      {/* 6. Khối Laptop Văn Phòng Bán Chạy (5 card/hàng) */}
+      <ProductSectionLaptopOffice onAddToCart={handleAddToCart} />
+
+      {/* 7. Khối Chuột Máy Tính Bán Chạy (5 card/hàng) */}
+      <ProductSectionMouse onAddToCart={handleAddToCart} />
+
+      {/* 8. Khối Bàn Phím Cơ Bán Chạy (5 card/hàng) */}
+      <ProductSectionKeyboard onAddToCart={handleAddToCart} />
+
+      {/* 9. Mid Promo Banners: Đêm Huyền Ảo & Combo Streaming */}
+      <MidPromoBanners />
+
+      {/* 10. Khối Màn Hình Chính Hãng (10 sản phẩm = 2 hàng x 5 card) */}
+      <ProductSectionMonitor onAddToCart={handleAddToCart} />
+
+      {/* 11. Khối Tin Tức Công Nghệ & Video Highlights */}
+      <NewsSection />
+
+      {/* 12. Slide-out Cart Drawer bên phải (Khớp popup giỏ hàng trong ảnh mẫu) */}
+      <CartDrawer
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
+        items={items}
+        onUpdateQuantity={handleUpdateQuantity}
+        onRemoveItem={removeItem}
+        onClearCart={clearCart}
+      />
     </div>
   )
 }
