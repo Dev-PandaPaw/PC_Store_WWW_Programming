@@ -10,7 +10,7 @@ export default function AdminShell() {
       <header className="site-header" style={{ borderBottomColor: '#cbd5e1', background: '#0f172a', color: '#fff' }}>
         <div className="nav-container">
           <Link to="/admin/products" className="brand-logo" style={{ color: '#38bdf8' }}>
-            <span>⚙️</span> PC Store Admin
+            <span>⚙️</span> PixelCore Admin
           </Link>
           <nav className="nav-links">
             <Link to="/admin/products" style={{ color: '#e2e8f0' }}>Sản phẩm</Link>

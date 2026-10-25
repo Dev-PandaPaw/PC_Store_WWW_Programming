@@ -1,29 +1,45 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+@import 'tailwindcss';
 
-body {
-  font-family: var(--pc-font-sans);
-  background-color: var(--pc-bg);
-  color: var(--pc-text);
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-}
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+  html,
+  body {
+    scrollbar-width: none;
+  }
 
-button {
-  cursor: pointer;
-  font-family: inherit;
-  border: none;
-  background: none;
-}
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    display: none;
+  }
 
-input, select, textarea {
-  font-family: inherit;
+  body {
+    font-family: var(--pc-font-sans);
+    background-color: var(--pc-bg);
+    color: var(--pc-text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button {
+    cursor: pointer;
+    font-family: inherit;
+    border: none;
+    background: none;
+  }
+
+  input,
+  select,
+  textarea {
+    font-family: inherit;
+  }
 }

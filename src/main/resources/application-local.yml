@@ -33,3 +33,9 @@ spring:
 app:
   cors:
     allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
+
+management:
+  health:
+    mail:
+      enabled: false
+
