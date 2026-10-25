@@ -1,0 +1,76 @@
+openapi: 3.0.3
+info:
+  title: PixelCore storefront
+  version: 1.0.0
+  description: Database-backed public catalog. Product images are logical keys resolved by the frontend asset bundle.
+paths:
+  /api/catalog/storefront:
+    get:
+      operationId: getStorefront
+      summary: Read active imported products, their categories, and published articles
+      description: Reads PostgreSQL on every request. No local JSON fallback. Existing catalog endpoints remain unchanged. No authentication is required.
+      responses:
+        '200':
+          description: Current storefront data, sorted in presentation order
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [products, categories, articles]
+                properties:
+                  products:
+                    type: array
+                    items:
+                      type: object
+                      required: [id, slug, name, category, brand, description, price, originalPrice, image, specs, stockOnHand]
+                      properties:
+                        id: {type: string, format: uuid}
+                        catalogKey: {type: string, description: Stable import identifier for migrating older saved carts}
+                        slug: {type: string}
+                        name: {type: string}
+                        category: {type: string, description: Category slug}
+                        brand: {type: string}
+                        description: {type: string}
+                        price: {type: number, minimum: 0}
+                        originalPrice: {type: number, minimum: 0}
+                        image: {type: string, example: 'products/cpu-intel-core-i5-14400f.png'}
+                        stockOnHand: {type: integer, minimum: 0}
+                        specs:
+                          type: array
+                          items:
+                            type: object
+                            required: [label]
+                            properties:
+                              label: {type: string}
+                  categories:
+                    type: array
+                    items:
+                      type: object
+                      required: [id, slug, name]
+                      properties:
+                        id: {type: string, format: uuid}
+                        slug: {type: string}
+                        name: {type: string}
+                  articles:
+                    type: array
+                    items:
+                      type: object
+                      required: [slug, title, excerpt, category, imageCategory, readMinutes, date, intro, takeaway, sections, relatedCategories]
+                      properties:
+                        slug: {type: string}
+                        title: {type: string}
+                        excerpt: {type: string}
+                        category: {type: string}
+                        imageCategory: {type: string}
+                        readMinutes: {type: integer}
+                        date: {type: string, format: date}
+                        intro: {type: string}
+                        takeaway: {type: string}
+                        sections:
+                          type: array
+                          items: {type: object}
+                        relatedCategories:
+                          type: array
+                          items: {type: string}
+        '500':
+          description: Database unavailable or invalid server configuration. Clients must show an error and allow retry.

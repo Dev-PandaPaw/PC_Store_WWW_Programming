@@ -4,7 +4,7 @@ import performanceTitle from '../assets/hero/performance-neon.png'
 import pcShowcase from '../assets/hero/pc-showcase.webm'
 import '../styles/hero.css'
 
-export default function HeroBanner() {
+export default function HeroBanner({ compact = false }) {
   const videoRef = useRef(null)
   const [isPaused, setIsPaused] = useState(() =>
     window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -27,7 +27,7 @@ export default function HeroBanner() {
   }, [isPaused])
 
   return (
-    <section className="pc-hero" aria-labelledby="hero-title">
+    <section className={`pc-hero${compact ? ' pc-hero--compact' : ''}`} aria-labelledby="hero-title">
       <div className="pc-hero__inner">
         <div className="pc-hero__content">
           <p className="pc-hero__eyebrow">Thiết kế cho đam mê. Tạo nên khác biệt.</p>

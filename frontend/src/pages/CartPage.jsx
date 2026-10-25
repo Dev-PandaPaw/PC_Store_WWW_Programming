@@ -1,65 +1,93 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { ArrowRight, ShoppingBag, Minus, Plus, Trash2 } from 'lucide-react'
 import { useCart } from '../contexts/CartContext'
+import { formatVND } from '../utils/cart'
 
 export default function CartPage() {
-  const { items, removeItem, clearCart, totalAmount } = useCart()
-
-  if (items.length === 0) {
-    return (
-      <div className="card" style={{ textAlign: 'center', padding: '3rem' }}>
-        <h2 style={{ fontSize: '1.5rem', marginBottom: '0.75rem' }}>Giỏ hàng của bạn đang trống</h2>
-        <p style={{ color: 'var(--pc-text-muted)', marginBottom: '1.5rem' }}>Hãy dạo qua cửa hàng và chọn các sản phẩm ưng ý.</p>
-        <Link to="/catalog" className="btn btn-primary">Mua sắm ngay</Link>
-      </div>
-    )
-  }
-
+  const { items, addItem, removeItem, clearCart, totalAmount, totalCount } =
+    useCart()
+  const update = (item, delta) =>
+    item.quantity + delta <= 0 ? removeItem(item.id) : addItem(item, delta)
   return (
-    <div>
-      <h1 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '1.5rem' }}>Giỏ Hàng Của Bạn</h1>
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.5rem' }}>
-        <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {items.map(item => (
-            <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '1rem', borderBottom: '1px solid var(--pc-border)' }}>
-              <div>
-                <h4 style={{ fontWeight: 600 }}>{item.name}</h4>
-                <p style={{ color: 'var(--pc-text-muted)', fontSize: '0.9rem' }}>
-                  Số lượng: {item.quantity} × {item.price.toLocaleString('vi-VN')} đ
-                </p>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <span style={{ fontWeight: 700 }}>
-                  {(item.price * item.quantity).toLocaleString('vi-VN')} đ
-                </span>
-                <button onClick={() => removeItem(item.id)} style={{ color: 'var(--pc-danger)', fontWeight: 600 }}>
-                  Xóa
-                </button>
-              </div>
-            </div>
-          ))}
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.5rem' }}>
-            <button onClick={clearCart} style={{ color: 'var(--pc-text-muted)', fontSize: '0.85rem' }}>
-              Xóa toàn bộ giỏ
-            </button>
-          </div>
-        </div>
-
-        <div className="card" style={{ height: 'fit-content', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 700, borderBottom: '1px solid var(--pc-border)', paddingBottom: '0.75rem' }}>
-            Tóm tắt đơn hàng
-          </h3>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <span>Tạm tính:</span>
-            <span style={{ fontWeight: 700, fontSize: '1.2rem', color: 'var(--pc-primary)' }}>
-              {totalAmount.toLocaleString('vi-VN')} đ
-            </span>
-          </div>
-          <Link to="/checkout" className="btn btn-primary" style={{ width: '100%', padding: '0.75rem' }}>
-            Tiến hành đặt hàng
+    <div className="cart-page">
+      <nav className="breadcrumbs" aria-label="Đường dẫn">
+        <Link to="/">Trang chủ</Link>
+        <span>/</span>
+        <span>Giỏ hàng</span>
+      </nav>
+      <div className="page-heading">
+        <p className="section-eyebrow">GÓC MÁY TIẾP THEO CỦA BẠN</p>
+        <h1>Giỏ hàng ({totalCount}).</h1>
+      </div>
+      {items.length === 0 ? (
+        <div className="store-empty">
+          <ShoppingBag size={42} />
+          <h2>Giỏ hàng của bạn đang trống</h2>
+          <p>Khám phá PC và các linh kiện để bắt đầu.</p>
+          <Link className="store-button" to="/catalog">
+            Khám phá sản phẩm <ArrowRight size={16} />
           </Link>
         </div>
-      </div>
+      ) : (
+        <div className="cart-layout">
+          <div className="cart-items">
+            {items.map((item) => (
+              <article className="cart-item" key={item.id}>
+                <img src={item.image} alt="" width="100" height="100" />
+                <div className="cart-item__info">
+                  <h2>{item.name}</h2>
+                  <span>{formatVND(item.price)}</span>
+                  <div className="cart-quantity">
+                    <button
+                      onClick={() => update(item, -1)}
+                      aria-label={`Giảm số lượng ${item.name}`}
+                    >
+                      <Minus size={14} />
+                    </button>
+                    <span>{item.quantity}</span>
+                    <button
+                      onClick={() => update(item, 1)}
+                      aria-label={`Tăng số lượng ${item.name}`}
+                    >
+                      <Plus size={14} />
+                    </button>
+                  </div>
+                </div>
+                <div className="cart-item__total">
+                  <strong>{formatVND(item.price * item.quantity)}</strong>
+                  <button
+                    aria-label={`Xóa ${item.name}`}
+                    onClick={() => removeItem(item.id)}
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              </article>
+            ))}
+            <button className="cart-clear" onClick={clearCart}>
+              Xóa toàn bộ giỏ hàng
+            </button>
+          </div>
+          <aside className="cart-summary">
+            <h2>Tổng quan giỏ hàng</h2>
+            <div>
+              <span>Sản phẩm</span>
+              <strong>{totalCount}</strong>
+            </div>
+            <div className="cart-summary__total">
+              <span>Tạm tính</span>
+              <strong>{formatVND(totalAmount)}</strong>
+            </div>
+            <Link className="store-button" to="/catalog">
+              Tiếp tục mua sắm <ArrowRight size={16} />
+            </Link>
+            <Link className="text-link" to="/advisory">
+              Tìm cấu hình phù hợp <ArrowRight size={15} />
+            </Link>
+          </aside>
+        </div>
+      )}
     </div>
   )
 }

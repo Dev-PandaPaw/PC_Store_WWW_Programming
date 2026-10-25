@@ -18,7 +18,11 @@
 .store-header__top {
   background:
     radial-gradient(ellipse at 0% 100%, rgb(31 121 161 / 30%), transparent 45%),
-    radial-gradient(ellipse at 100% 100%, rgb(31 121 161 / 25%), transparent 45%),
+    radial-gradient(
+      ellipse at 100% 100%,
+      rgb(31 121 161 / 25%),
+      transparent 45%
+    ),
     linear-gradient(110deg, var(--header-bg), #051c2e 55%, #092a42);
 }
 
@@ -27,7 +31,7 @@
   align-items: center;
   gap: 1rem;
   min-height: 88px;
-  padding-block: 1rem;
+  padding-block: 0.5rem;
 }
 
 .store-icon {
@@ -41,52 +45,8 @@
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
-  gap: 0.7rem;
   margin-right: auto;
-  padding-right: 1.75rem;
-}
-
-.store-brand__mark {
-  display: grid;
-  place-items: center;
-  width: 45px;
-  height: 45px;
-  border: 1px solid #2794b7;
-  border-radius: 5px;
-  color: var(--header-accent);
-  background: linear-gradient(145deg, #103c55, #082438);
-  box-shadow: inset 0 0 16px rgb(21 183 224 / 10%), 0 0 14px rgb(27 179 218 / 8%);
-}
-
-.store-brand__mark .store-icon {
-  width: 28px;
-  height: 28px;
-  filter: drop-shadow(0 0 5px rgb(43 220 242 / 30%));
-}
-
-.store-brand__wordmark {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  line-height: 1;
-}
-
-.store-brand__wordmark > span {
-  font-size: 1.7rem;
-  font-weight: 850;
-  letter-spacing: -0.045em;
-}
-
-.store-brand__accent {
-  margin-left: 4px;
-  color: var(--header-accent);
-}
-
-.store-brand__wordmark small {
-  color: #c0ddee;
-  font-size: 0.47rem;
-  font-weight: 600;
-  letter-spacing: 0.15em;
+  padding-right: 1.25rem;
 }
 
 .store-search {
@@ -380,28 +340,6 @@ a.store-account:hover {
 @media (max-width: 480px) {
   .store-header__inner {
     width: calc(100% - 2rem);
-  }
-
-  .store-brand {
-    gap: 0.5rem;
-  }
-
-  .store-brand__mark {
-    width: 36px;
-    height: 36px;
-  }
-
-  .store-brand__mark .store-icon {
-    width: 24px;
-    height: 24px;
-  }
-
-  .store-brand__wordmark > span {
-    font-size: 1.35rem;
-  }
-
-  .store-brand__wordmark small {
-    font-size: 0.38rem;
   }
 
   .store-cart,

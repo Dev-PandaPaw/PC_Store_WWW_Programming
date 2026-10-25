@@ -1,8 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import { useCatalog } from './CatalogContext'
 
 const CartContext = createContext(null)
 
 export function CartProvider({ children }) {
+  const { PRODUCTS } = useCatalog()
   const [items, setItems] = useState(() => {
     try {
       const saved = localStorage.getItem('pc_cart')
@@ -11,6 +13,16 @@ export function CartProvider({ children }) {
       return []
     }
   })
+
+  // Refresh old carts with current database IDs, prices and portable bundled photos.
+  useEffect(() => {
+    if (!PRODUCTS.length) return
+    setItems(previous => previous.map(item => {
+      const current = PRODUCTS.find(product => product.id === item.id || product.catalogKey === item.id)
+      return current ? { ...item, id: current.id, name: current.name, price: current.price,
+        image: current.image, imageKey: current.imageKey } : item
+    }))
+  }, [PRODUCTS])
 
   useEffect(() => {
     try {
@@ -21,6 +33,8 @@ export function CartProvider({ children }) {
   }, [items])
 
   const addItem = (product, quantity = 1) => {
+    const current = PRODUCTS.find(item => item.id === product.id)
+    if (current) product = { ...product, image: current.image, imageKey: current.imageKey }
     setItems(prev => {
       const existing = prev.find(i => i.id === product.id)
       if (existing) {

@@ -1,140 +1,150 @@
-import React, { useState, useEffect } from 'react'
-import { useSearchParams } from 'react-router-dom'
-import { useCart } from '../contexts/CartContext'
-import http from '../services/http'
+import React, { useMemo } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
+import { SlidersHorizontal, Search, ArrowLeft } from 'lucide-react'
+import {
+  CATEGORIES,
+  CATEGORY_LABELS,
+  matchesCategory,
+  normalizeSearch,
+} from '../data/storeData'
+import CategoryIcon from '../components/CategoryIcon'
+import { ProductCard } from '../components/gear/ProductCard'
+import { useCatalog, CatalogBoundary } from '../contexts/CatalogContext'
 
 export default function CatalogPage() {
-  const { addItem } = useCart()
-  const [categories, setCategories] = useState([])
-  const [products, setProducts] = useState([])
-  const [searchParams, setSearchParams] = useSearchParams()
-  const activeCategory = searchParams.get('category') || 'ALL'
-  const keyword = searchParams.get('keyword') || ''
-  const [loading, setLoading] = useState(true)
+  return <CatalogBoundary><CatalogContent /></CatalogBoundary>
+}
 
-  const updateFilter = (name, value) => {
-    setSearchParams(previous => {
-      const next = new URLSearchParams(previous)
-      if (value && value !== 'ALL') next.set(name, value)
-      else next.delete(name)
-      next.delete(name === 'category' ? 'keyword' : 'category')
-      return next
-    }, { replace: true })
-  }
-
-  useEffect(() => {
-    http.get('/catalog/categories')
-      .then(res => setCategories(res.data))
-      .catch(err => console.error('Lỗi tải danh mục:', err))
-  }, [])
-
-  useEffect(() => {
-    setLoading(true)
-    const params = {}
-    if (activeCategory !== 'ALL') {
-      params.category = activeCategory
-    }
-    if (keyword.trim()) {
-      params.keyword = keyword.trim()
-    }
-
-    http.get('/catalog/products', { params })
-      .then(res => setProducts(res.data))
-      .catch(err => console.error('Lỗi tải sản phẩm:', err))
-      .finally(() => setLoading(false))
-  }, [activeCategory, keyword])
+function CatalogContent() {
+  const { PRODUCTS } = useCatalog()
+  const [params, setParams] = useSearchParams()
+  const category = params.get('category') || 'ALL'
+  const keyword = params.get('keyword') || ''
+  const sort = params.get('sort') || 'featured'
+  const dealsOnly = params.get('deals') === '1'
+  const title = dealsOnly
+    ? 'Flash Deal PC & linh kiện'
+    : CATEGORY_LABELS[category] || 'Sản phẩm'
+  const update = (key, value) =>
+    setParams(
+      (previous) => {
+        const next = new URLSearchParams(previous)
+        if (value && value !== 'ALL' && value !== 'featured')
+          next.set(key, value)
+        else next.delete(key)
+        return next
+      },
+      { replace: true },
+    )
+  const products = useMemo(() => {
+    const tokens = normalizeSearch(keyword).trim().split(/\s+/).filter(Boolean)
+    const result = PRODUCTS.filter(
+      (product) =>
+        matchesCategory(product, category) &&
+        (!dealsOnly || product.originalPrice > product.price) &&
+        tokens.every((token) =>
+          normalizeSearch(
+            `${product.name} ${product.brand} ${CATEGORY_LABELS[product.category]} ${product.specs.map((spec) => spec.label).join(' ')}`,
+          ).includes(token),
+        ),
+    )
+    if (sort === 'price-asc') result.sort((a, b) => a.price - b.price)
+    if (sort === 'price-desc') result.sort((a, b) => b.price - a.price)
+    if (sort === 'name')
+      result.sort((a, b) => a.name.localeCompare(b.name, 'vi'))
+    if (sort === 'featured' && dealsOnly)
+      result.sort(
+        (a, b) =>
+          1 - b.price / b.originalPrice - (1 - a.price / a.originalPrice),
+      )
+    return result
+  }, [PRODUCTS, category, keyword, sort, dealsOnly])
 
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
-        <div>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 700 }}>Danh Mục Sản Phẩm</h1>
-          <p style={{ color: 'var(--pc-text-muted)', fontSize: '0.9rem' }}>
-            Dữ liệu tải trực tiếp từ cơ sở dữ liệu Supabase PostgreSQL
-          </p>
-        </div>
-
-        <input
-          type="text"
-          placeholder="Tìm theo tên sản phẩm, mã SKU..."
-          value={keyword}
-          onChange={e => updateFilter('keyword', e.target.value)}
-          style={{ padding: '0.6rem 1rem', border: '1px solid var(--pc-border)', borderRadius: 'var(--pc-radius-sm)', width: 'min(100%, 340px)', minWidth: 0 }}
-        />
+    <div className="catalog-page">
+      <nav className="breadcrumbs" aria-label="Đường dẫn">
+        <Link to="/">Trang chủ</Link>
+        <span>/</span>
+        <span>{title}</span>
+      </nav>
+      <div className="page-heading">
+        <p className="section-eyebrow">PIXELCORE COLLECTION</p>
+        <h1>{title}</h1>
+        <p>
+          {dealsOnly
+            ? 'Ưu đãi cho PC, linh kiện và thiết bị trong góc máy của bạn.'
+            : 'PC bộ, linh kiện và thiết bị cho góc máy của bạn.'}
+        </p>
       </div>
-
-      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
-        <button
-          onClick={() => updateFilter('category', 'ALL')}
-          className={`btn ${activeCategory === 'ALL' ? 'btn-primary' : 'btn-outline'}`}
-          style={{ fontSize: '0.85rem', padding: '0.4rem 0.85rem' }}
-        >
-          Tất cả
-        </button>
-        {categories.map(c => (
+      <div className="catalog-layout">
+        <aside className="catalog-filters">
+          <h2>
+            <SlidersHorizontal size={18} /> Danh mục
+          </h2>
           <button
-            key={c.id}
-            onClick={() => updateFilter('category', c.slug)}
-            className={`btn ${activeCategory === c.slug ? 'btn-primary' : 'btn-outline'}`}
-            style={{ fontSize: '0.85rem', padding: '0.4rem 0.85rem' }}
+            className={category === 'ALL' ? 'is-active' : ''}
+            onClick={() => update('category', 'ALL')}
           >
-            {c.name}
+            Tất cả sản phẩm <span>{PRODUCTS.length}</span>
           </button>
-        ))}
+          {CATEGORIES.map((item) => (
+            <button
+              key={item.id}
+              className={category === item.id ? 'is-active' : ''}
+              onClick={() => update('category', item.id)}
+            >
+              <CategoryIcon name={item.icon} />
+              <span>{item.name}</span>
+            </button>
+          ))}
+        </aside>
+        <div className="catalog-results">
+          <div className="catalog-toolbar">
+            <label className="catalog-search">
+              <Search size={18} />
+              <input
+                aria-label="Tìm trong danh mục"
+                placeholder="Tên sản phẩm, thương hiệu..."
+                value={keyword}
+                onChange={(event) => update('keyword', event.target.value)}
+              />
+            </label>
+            <label className="catalog-sort">
+              <span>Sắp xếp</span>
+              <select
+                aria-label="Sắp xếp sản phẩm"
+                value={sort}
+                onChange={(event) => update('sort', event.target.value)}
+              >
+                <option value="featured">Nổi bật</option>
+                <option value="price-asc">Giá tăng dần</option>
+                <option value="price-desc">Giá giảm dần</option>
+                <option value="name">Tên A–Z</option>
+              </select>
+            </label>
+          </div>
+          <p className="catalog-count">
+            {products.length} sản phẩm
+            {keyword.trim() && <> cho “{keyword.trim()}”</>}
+          </p>
+          {products.length ? (
+            <div className="product-grid product-grid--catalog">
+              {products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          ) : (
+            <div className="store-empty">
+              <Search size={36} />
+              <h2>Chưa tìm thấy sản phẩm phù hợp</h2>
+              <p>Thử từ khóa ngắn hơn hoặc chọn danh mục khác.</p>
+              <button className="store-button" onClick={() => setParams({})}>
+                <ArrowLeft size={16} /> Xem tất cả sản phẩm
+              </button>
+            </div>
+          )}
+        </div>
       </div>
-
-      {loading ? (
-        <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--pc-text-muted)' }}>
-          Đang tải dữ liệu từ database...
-        </div>
-      ) : products.length === 0 ? (
-        <div className="card" style={{ textAlign: 'center', padding: '3rem', color: 'var(--pc-text-muted)' }}>
-          Không tìm thấy sản phẩm nào phù hợp với bộ lọc.
-        </div>
-      ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: '1.5rem' }}>
-          {products.map(product => {
-            const displayPrice = product.salePrice || product.basePrice
-            return (
-              <div key={product.id} className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                <div>
-                  <div style={{ height: '140px', background: 'var(--pc-surface-subtle)', borderRadius: 'var(--pc-radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '3rem', marginBottom: '1rem' }}>
-                    🖥️
-                  </div>
-                  {product.category && (
-                    <span className="badge badge-primary" style={{ marginBottom: '0.5rem' }}>
-                      {product.category.name}
-                    </span>
-                  )}
-                  <h3 style={{ fontSize: '1.05rem', fontWeight: 600, marginBottom: '0.5rem', lineHeight: 1.35 }}>
-                    {product.name}
-                  </h3>
-                  <p style={{ color: 'var(--pc-text-muted)', fontSize: '0.85rem', marginBottom: '0.75rem', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                    {product.summary || product.description}
-                  </p>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', marginBottom: '1rem' }}>
-                    <span style={{ color: 'var(--pc-primary)', fontSize: '1.25rem', fontWeight: 700 }}>
-                      {Number(displayPrice).toLocaleString('vi-VN')} đ
-                    </span>
-                    {product.salePrice && (
-                      <span style={{ textDecoration: 'line-through', color: 'var(--pc-text-muted)', fontSize: '0.9rem' }}>
-                        {Number(product.basePrice).toLocaleString('vi-VN')} đ
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <button
-                  onClick={() => addItem({ id: product.id, name: product.name, price: Number(displayPrice) }, 1)}
-                  className="btn btn-primary"
-                  style={{ width: '100%' }}
-                >
-                  Thêm vào giỏ
-                </button>
-              </div>
-            )
-          })}
-        </div>
-      )}
     </div>
   )
 }

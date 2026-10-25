@@ -2,6 +2,7 @@ import React from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import StoreHeader from './StoreHeader'
 import StoreFooter from './StoreFooter'
+import { CatalogBoundary } from '../contexts/CatalogContext'
 
 export default function StoreShell() {
   const { pathname } = useLocation()
@@ -11,7 +12,7 @@ export default function StoreShell() {
       <StoreHeader />
 
       <main className={`main-content${pathname === '/' ? ' main-content--home' : ''}`}>
-        <Outlet />
+        <CatalogBoundary><Outlet /></CatalogBoundary>
       </main>
 
       <StoreFooter />

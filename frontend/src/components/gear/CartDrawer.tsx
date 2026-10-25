@@ -1,14 +1,14 @@
-import React from 'react';
-import { X, ShoppingBag, Trash2, Plus, Minus, ArrowRight } from 'lucide-react';
-import { CartItem, formatVND } from '../../utils/cart';
+import React, { useEffect, useRef } from 'react'
+import { X, ShoppingBag, Trash2, Plus, Minus, ArrowRight } from 'lucide-react'
+import { CartItem, formatVND } from '../../utils/cart'
 
 interface CartDrawerProps {
-  isOpen: boolean;
-  onClose: () => void;
-  items: CartItem[];
-  onUpdateQuantity: (id: string, delta: number) => void;
-  onRemoveItem: (id: string) => void;
-  onClearCart: () => void;
+  isOpen: boolean
+  onClose: () => void
+  items: CartItem[]
+  onUpdateQuantity: (id: string, delta: number) => void
+  onRemoveItem: (id: string) => void
+  onClearCart: () => void
 }
 
 export const CartDrawer: React.FC<CartDrawerProps> = ({
@@ -19,17 +19,60 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   onRemoveItem,
   onClearCart,
 }) => {
-  if (!isOpen) return null;
+  const panelRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!isOpen) return
+    const previousFocus = document.activeElement as HTMLElement | null
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    panelRef.current?.querySelector('button')?.focus()
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        onClose()
+      }
+      if (event.key !== 'Tab') return
+      const targets = panelRef.current?.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), [tabindex="0"]',
+      )
+      if (!targets?.length) return
+      const first = targets[0]
+      const last = targets[targets.length - 1]
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first.focus()
+      }
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.body.style.overflow = previousOverflow
+      document.removeEventListener('keydown', onKeyDown)
+      if (previousFocus?.isConnected) previousFocus.focus()
+    }
+  }, [isOpen, onClose])
+  if (!isOpen) return null
 
-  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const subtotal = items.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0,
+  )
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-xs transition-opacity duration-300">
+    <div className="fixed inset-0 z-[60] flex justify-end bg-black/40 backdrop-blur-xs transition-opacity duration-300">
       {/* Background click to dismiss */}
       <div className="absolute inset-0" onClick={onClose} />
 
       {/* Slide-out Drawer Panel */}
-      <div className="relative z-10 flex h-full w-full max-w-sm flex-col bg-white shadow-2xl transition-transform duration-300 animate-in slide-in-from-right">
+      <div
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Giỏ hàng"
+        className="relative z-10 flex h-full w-full max-w-sm flex-col bg-white shadow-2xl transition-transform duration-300 animate-in slide-in-from-right"
+      >
         {/* Drawer Header */}
         <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3.5">
           <h2 className="text-base font-black text-gray-900">
@@ -47,16 +90,14 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
         {/* Drawer Content */}
         {items.length === 0 ? (
-          /* Empty State exactly matching the Figma screenshot */
+          /* Empty cart */
           <div className="flex flex-1 flex-col items-center justify-center p-6 text-center">
             {/* Shopping Cart Outline Icon with wheels */}
             <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gray-50 text-gray-300">
               <ShoppingBag className="h-10 w-10 stroke-[1.5]" />
             </div>
 
-            <h3 className="text-sm font-bold text-gray-800">
-              Giỏ hàng trống
-            </h3>
+            <h3 className="text-sm font-bold text-gray-800">Giỏ hàng trống</h3>
             <p className="mt-1 text-xs text-gray-500">
               Hãy thêm sản phẩm vào giỏ hàng nhé!
             </p>
@@ -74,7 +115,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           <div className="flex flex-1 flex-col justify-between overflow-hidden">
             <div className="flex-1 overflow-y-auto p-4 space-y-3 divide-y divide-gray-100">
               {items.map((item) => (
-                <div key={item.id} className="pt-3 first:pt-0 flex gap-3 items-center">
+                <div
+                  key={item.id}
+                  className="pt-3 first:pt-0 flex gap-3 items-center"
+                >
                   <img
                     src={item.image}
                     alt={item.name}
@@ -97,7 +141,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                         >
                           <Minus className="h-3 w-3" />
                         </button>
-                        <span className="px-2 text-xs font-bold">{item.quantity}</span>
+                        <span className="px-2 text-xs font-bold">
+                          {item.quantity}
+                        </span>
                         <button
                           type="button"
                           onClick={() => onUpdateQuantity(item.id, 1)}
@@ -122,7 +168,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               ))}
             </div>
 
-            {/* Footer Summary & Checkout */}
+            {/* Cart summary */}
             <div className="border-t border-gray-200 p-4 bg-gray-50 space-y-3">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-gray-600 font-medium">Tổng tiền:</span>
@@ -136,7 +182,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   href="/cart"
                   className="w-full rounded bg-[#2563eb] hover:bg-blue-700 py-2.5 text-xs font-bold text-white transition-colors flex items-center justify-center gap-1.5 shadow text-center"
                 >
-                  <span>Tiến hành đặt hàng</span>
+                  <span>Xem giỏ hàng</span>
                   <ArrowRight className="h-4 w-4" />
                 </a>
 
@@ -162,5 +208,5 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
         )}
       </div>
     </div>
-  );
-};
+  )
+}

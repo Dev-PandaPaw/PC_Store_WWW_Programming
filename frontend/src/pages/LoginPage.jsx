@@ -27,7 +27,7 @@ export default function LoginPage() {
           Đăng Nhập
         </h1>
         <p style={{ color: 'var(--pc-text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem', textAlign: 'center' }}>
-          Chào mừng bạn quay trở lại với PC Store
+          Chào mừng bạn quay trở lại với PixelCore
         </p>
 
         {error && (

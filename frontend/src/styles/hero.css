@@ -1,21 +1,3 @@
-.main-content.main-content--home {
-  max-width: none;
-  padding: 0 0 2.5rem;
-}
-
-.home-page {
-  display: flex;
-  flex-direction: column;
-  gap: 2.5rem;
-}
-
-.home-section {
-  width: 100%;
-  max-width: 1200px;
-  margin-inline: auto;
-  padding-inline: 1.5rem;
-}
-
 .pc-hero {
   position: relative;
   isolation: isolate;
@@ -252,6 +234,85 @@
 
   .pc-hero__showcase {
     height: clamp(220px, 65vw, 340px);
+  }
+}
+
+.pc-hero--compact {
+  container-type: inline-size;
+  height: 100%;
+  min-width: 0;
+  border: 0;
+  border-radius: 6px;
+}
+
+.pc-hero--compact .pc-hero__inner {
+  grid-template-columns: 1.15fr 1fr;
+  gap: 0.5rem;
+  width: calc(100% - 2rem);
+  max-width: none;
+  height: 100%;
+  min-height: 0;
+}
+
+.pc-hero--compact .pc-hero__content {
+  min-width: 0;
+  padding-block: 0.75rem;
+}
+
+.pc-hero--compact .pc-hero__eyebrow {
+  gap: 0.35rem;
+  font-size: clamp(0.4rem, 1.2cqi, 0.6rem);
+  letter-spacing: 0.04em;
+}
+
+.pc-hero--compact .pc-hero__eyebrow::before {
+  width: 12px;
+}
+
+.pc-hero--compact .pc-hero__title {
+  max-width: none;
+  margin: 0.875rem 0 0.75rem;
+}
+
+.pc-hero--compact .pc-hero__actions {
+  flex-wrap: nowrap;
+  gap: 0.4rem;
+  padding-left: 0;
+}
+
+.pc-hero--compact .pc-hero__button {
+  max-width: none;
+  min-height: 32px;
+  padding: 0.35rem 0.5rem;
+  gap: 0.25rem;
+  font-size: clamp(0.5rem, 1.6cqi, 0.7rem);
+}
+
+.pc-hero--compact .pc-hero__arrow {
+  font-size: 0.875rem;
+}
+
+.pc-hero--compact .pc-hero__showcase {
+  height: auto;
+}
+
+@container (max-width: 480px) {
+  .pc-hero--compact .pc-hero__title {
+    margin-block: 0.5rem;
+  }
+
+  .pc-hero--compact .pc-hero__actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+
+  .pc-hero--compact .pc-hero__button {
+    flex: none;
+    width: 100%;
+    max-width: 155px;
+    min-height: 28px;
+    font-size: 0.6rem;
   }
 }
 
