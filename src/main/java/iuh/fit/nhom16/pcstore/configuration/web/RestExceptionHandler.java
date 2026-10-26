@@ -11,8 +11,19 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import iuh.fit.nhom16.pcstore.cart.exception.CartException;
+
 @RestControllerAdvice
 public class RestExceptionHandler {
+
+    @ExceptionHandler(CartException.class)
+    public ProblemDetail handleCartException(CartException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(ex.getStatus(), ex.getMessage());
+        problem.setType(URI.create("urn:problem-type:" + ex.getErrorCode().toLowerCase().replace('_', '-')));
+        problem.setTitle("Cart request failed");
+        problem.setProperty("errorCode", ex.getErrorCode());
+        return problem;
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail handleValidationException(MethodArgumentNotValidException ex) {

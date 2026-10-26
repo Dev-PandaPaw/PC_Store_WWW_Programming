@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, ShoppingCart, Check } from 'lucide-react'
 import {
@@ -13,10 +13,13 @@ export default function ProductDetailPage() {
   const { findProduct, productsInCategory } = useCatalog()
   const { slug } = useParams()
   const product = findProduct(slug)
-  const { addItem } = useCart()
+  const { addItem, ready } = useCart()
   const [added, setAdded] = useState(false)
+  const [feedback, setFeedback] = useState('')
+  const attempt = useRef(0)
   useEffect(() => {
     setAdded(false)
+    setFeedback('')
     document.title = product
       ? `${product.name} | PixelCore`
       : 'Không tìm thấy sản phẩm | PixelCore'
@@ -36,17 +39,28 @@ export default function ProductDetailPage() {
   const related = productsInCategory(product.category)
     .filter((item) => item.id !== product.id)
     .slice(0, 4)
-  const handleAdd = () => {
-    addItem(
-      {
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image,
-      },
-      1,
-    )
+  const handleAdd = async () => {
+    const current = ++attempt.current
     setAdded(true)
+    setFeedback('')
+    try {
+      const result = await addItem(
+        {
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image: product.image,
+        },
+        1,
+      )
+      if (current !== attempt.current) return
+      setAdded(result.success)
+      setFeedback(result.success ? 'Đã thêm sản phẩm vào giỏ hàng.' : result.message)
+    } catch {
+      if (current !== attempt.current) return
+      setAdded(false)
+      setFeedback('Không thể thêm vào giỏ hàng. Vui lòng thử lại.')
+    }
   }
   return (
     <div className="product-page">
@@ -82,13 +96,13 @@ export default function ProductDetailPage() {
               <span key={index}>{spec.label}</span>
             ))}
           </div>
-          <button className="store-button" onClick={handleAdd}>
+          <button className="store-button" onClick={handleAdd} disabled={!ready}>
             {added ? <Check size={18} /> : <ShoppingCart size={18} />}
             {added ? 'Đã thêm · Thêm một sản phẩm nữa' : 'Thêm vào giỏ hàng'}
           </button>
-          {added && (
-            <p className="product-detail__added" role="status">
-              Sản phẩm đã ở trong giỏ. <Link to="/cart">Xem giỏ hàng →</Link>
+          {feedback && (
+            <p className="product-detail__added" role={added ? 'status' : 'alert'}>
+              {added ? <><span>{feedback}</span> <Link to="/cart">Xem giỏ hàng →</Link></> : feedback}
             </p>
           )}
         </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ShoppingCart, Check } from 'lucide-react'
 import type { StoreProduct } from '../../data/storeData'
@@ -7,29 +7,40 @@ import { useCart } from '../../contexts/CartContext'
 
 interface ProductCardProps {
   product: StoreProduct
-  onAddToCart?: (product: StoreProduct) => void
+  onAddToCart?: (product: StoreProduct) => Promise<{ success: boolean, message?: string }> | { success: boolean, message?: string }
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({
   product,
   onAddToCart,
 }) => {
-  const { addItem } = useCart()
+  const { addItem, ready } = useCart()
   const [added, setAdded] = useState(false)
+  const [feedback, setFeedback] = useState('')
+  const attempt = useRef(0)
   const discount = calculateDiscount(product.originalPrice, product.price)
-  const handleAdd = () => {
-    if (onAddToCart) onAddToCart(product)
-    else
-      addItem(
-        {
-          id: product.id,
-          name: product.name,
-          price: product.price,
-          image: product.image,
-        },
-        1,
-      )
+  const handleAdd = async () => {
+    const current = ++attempt.current
     setAdded(true)
+    setFeedback('')
+    try {
+      const result = onAddToCart ? await onAddToCart(product) : await addItem(
+          {
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.image,
+          },
+          1,
+        )
+      if (current !== attempt.current) return
+      setAdded(result.success)
+      setFeedback(result.success ? `Đã thêm ${product.name} vào giỏ hàng.` : (result.message || 'Không thể thêm vào giỏ hàng.'))
+    } catch {
+      if (current !== attempt.current) return
+      setAdded(false)
+      setFeedback('Không thể thêm vào giỏ hàng. Vui lòng thử lại.')
+    }
   }
 
   return (
@@ -73,13 +84,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             type="button"
             className={`product-card__add${added ? ' product-card__add--added' : ''}`}
             onClick={handleAdd}
+            disabled={!ready}
             aria-label={`Thêm ${product.name} vào giỏ`}
           >
             {added ? <Check size={18} /> : <ShoppingCart size={18} />}
           </button>
         </div>
-        <span className="sr-only" role="status">
-          {added ? `Đã thêm ${product.name} vào giỏ hàng` : ''}
+        <span className="sr-only" role={added ? 'status' : 'alert'}>
+          {feedback}
         </span>
       </div>
     </article>

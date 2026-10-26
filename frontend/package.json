@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "test:cart": "node --test scripts/optimistic-cart.test.mjs",
     "test:catalog": "node --test scripts/catalog.test.mjs",
     "dev": "vite",
     "build": "vite build",
