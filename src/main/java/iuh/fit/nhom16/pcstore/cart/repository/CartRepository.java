@@ -39,13 +39,14 @@ public class CartRepository {
             jdbc.update("DELETE FROM cart_items WHERE cart_id = ? AND product_id NOT IN (" + placeholders + ")",
                     parameters.toArray());
             jdbc.batchUpdate("""
-                    INSERT INTO cart_items(cart_id, product_id, quantity) VALUES (?, ?, ?)
+                    INSERT INTO cart_items(id, cart_id, product_id, quantity) VALUES (?, ?, ?, ?)
                     ON CONFLICT (cart_id, product_id) DO UPDATE SET quantity = EXCLUDED.quantity
                     WHERE cart_items.quantity IS DISTINCT FROM EXCLUDED.quantity
                     """, cart.quantities().entrySet(), 20, (statement, entry) -> {
-                statement.setObject(1, cart.mergeId());
-                statement.setObject(2, entry.getKey());
-                statement.setInt(3, entry.getValue());
+                statement.setObject(1, UUID.randomUUID());
+                statement.setObject(2, cart.mergeId());
+                statement.setObject(3, entry.getKey());
+                statement.setInt(4, entry.getValue());
             });
         }
         jdbc.update("UPDATE carts SET version = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",

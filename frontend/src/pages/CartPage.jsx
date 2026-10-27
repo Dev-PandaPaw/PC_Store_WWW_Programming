@@ -22,6 +22,7 @@ export default function CartPage() {
   return (
     <div className="cart-page">
       <CartDemoPanel />
+      <Link className="text-link" to="/orders">Đơn hàng của tôi</Link>
       <nav className="breadcrumbs" aria-label="Đường dẫn">
         <Link to="/">Trang chủ</Link>
         <span>/</span>
@@ -72,6 +73,7 @@ export default function CartPage() {
             </button>
           </div>
           <aside className="cart-summary">
+            <Link className="store-button" to="/checkout">Đặt hàng</Link>
             <h2>Tổng quan giỏ hàng</h2>
             <div>
               <span>Sản phẩm</span>

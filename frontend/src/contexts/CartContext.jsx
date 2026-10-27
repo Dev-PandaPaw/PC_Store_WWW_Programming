@@ -3,6 +3,7 @@ import { cartApi } from '../services/cart'
 import { useCatalog } from './CatalogContext'
 import { useAuth } from './AuthContext'
 import { projectCart } from '../utils/optimisticCart'
+import { cartFromLogin } from '../utils/loginCart'
 
 const CartContext = createContext(null)
 const emptyCart = () => ({ cartVersion: 0, items: [], totalQuantity: 0, subtotal: 0 })
@@ -10,7 +11,7 @@ const messageFor = error => error?.response?.data?.detail || 'Không thể cập
 
 export function CartProvider({ children }) {
   const { PRODUCTS } = useCatalog()
-  const { user, loading: authLoading } = useAuth()
+  const { user, loginCart, login: authenticate, loading: authLoading } = useAuth()
   const [cart, setCart] = useState(emptyCart)
   const [ready, setReady] = useState(false)
   const [notice, setNotice] = useState('')
@@ -19,6 +20,7 @@ export function CartProvider({ children }) {
   const pending = useRef([])
   const queue = useRef(Promise.resolve())
   const generation = useRef(0)
+  const authenticating = useRef(false)
   const enqueue = useCallback(work => {
     const result = queue.current.catch(() => undefined).then(work)
     queue.current = result.catch(() => undefined)
@@ -36,21 +38,23 @@ export function CartProvider({ children }) {
   useEffect(() => {
     const current = ++generation.current
     let active = true
-    setReady(false)
     pending.current = []
+    const merged = cartFromLogin(user, loginCart)
+    if (!authLoading && merged) {
+      apply(merged)
+      setReady(true)
+      setNotice('')
+      setDemo(null)
+      return () => { active = false }
+    }
+    setReady(false)
     apply(emptyCart())
     if (authLoading) return () => { active = false }
     enqueue(async () => {
       if (!active) return
       try {
         await cartApi.csrf()
-        let merged
-        if (user?.id) {
-          try { merged = await cartApi.merge() } catch (error) {
-            if (active) setNotice(messageFor(error))
-          }
-        }
-        const { data } = merged || await cartApi.get()
+        const { data } = await cartApi.get()
         if (active && current === generation.current) {
           apply(data)
           setReady(true)
@@ -66,11 +70,12 @@ export function CartProvider({ children }) {
       }
     })
     return () => { active = false }
-  }, [user?.id, authLoading, apply, enqueue])
+  }, [user?.id, loginCart, authLoading, apply, enqueue])
 
   const mutate = useCallback((request, operation = 'cart.mutation', optimistic = null) => {
     const current = generation.current
     const queuedAt = performance.now()
+    if (authenticating.current) return Promise.resolve({ success: false, message: 'Đang đăng nhập. Vui lòng chờ trong giây lát.' })
     if (!ready) return Promise.resolve({ success: false, message: 'Giỏ hàng chưa sẵn sàng. Vui lòng tải lại.' })
     const previous = pending.current.at(-1)
     if (optimistic?.type === 'quantity' && previous?.type === 'quantity' &&
@@ -104,7 +109,7 @@ export function CartProvider({ children }) {
           setNotice(messageFor(error))
           if (error?.response?.data?.code === 'CART_VERSION_CONFLICT' ||
               error?.response?.data?.errorCode === 'CART_VERSION_CONFLICT' ||
-              !error?.response || error.response.status >= 500) {
+              !error?.response || error.response.status === 409 || error.response.status >= 500) {
             try {
               const { data } = await cartApi.get()
               if (current === generation.current) apply(data)
@@ -118,6 +123,12 @@ export function CartProvider({ children }) {
     })
     return entry.promise
   }, [ready, enqueue, apply])
+  const login = async (username, password) => {
+    // Complete guest mutations before the server merges that session into the account cart.
+    authenticating.current = true
+    try { return await enqueue(() => authenticate(username, password)) }
+    finally { authenticating.current = false }
+  }
   const addItem = (product, quantity = 1) => {
     if (!Number.isInteger(quantity) || quantity < 1 || quantity > 99) {
       return Promise.resolve({ success: false, message: 'Số lượng phải là số nguyên từ 1 đến 99.' })
@@ -156,13 +167,15 @@ export function CartProvider({ children }) {
       items, addItem, setQuantity, removeItem: id => mutate(version => cartApi.remove(id, version), 'cart.remove', { type: 'remove', id }),
       clearCart: () => mutate(cartApi.clear, 'cart.clear', { type: 'clear' }), totalCount: cart.totalQuantity, totalAmount: Number(cart.subtotal),
       ready, refresh, cartVersion: cart.cartVersion, notice, demo, selectDemo,
+      login,
       mergeCart: () => mutate(cartApi.merge),
     }}>
       {children}
       {notice && <div role="alert" style={{ position: 'fixed', bottom: 16, left: 16, right: 16,
-        zIndex: 100, padding: 16, background: '#fff4ed', color: '#9a3412', border: '1px solid #fdba74' }}>
-        {notice} <button type="button" onClick={refresh}>Tải lại giỏ</button>
-        <button type="button" onClick={() => setNotice('')}>Đóng</button>
+        zIndex: 100, padding: 16, display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'center',
+        background: '#fff4ed', color: '#9a3412', border: '1px solid #fdba74' }}>
+        <span>{notice}</span><button type="button" onClick={refresh}>Tải lại giỏ</button>
+        <button type="button" aria-label="Đóng thông báo" onClick={() => setNotice('')}>Đóng</button>
       </div>}
     </CartContext.Provider>
   )

@@ -12,6 +12,8 @@ import BlogPage from './pages/BlogPage'
 import ArticlePage from './pages/ArticlePage'
 import ProductDetailPage from './pages/ProductDetailPage'
 import NotFoundPage from './pages/NotFoundPage'
+import CheckoutPage from './pages/CheckoutPage'
+import OrdersPage from './pages/OrdersPage'
 
 export default function App() {
   const { pathname } = useLocation()
@@ -29,6 +31,9 @@ export default function App() {
         <Route path="/blog/:slug" element={<ArticlePage />} />
         <Route path="/advisory" element={<AdvisoryPage />} />
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/orders" element={<OrdersPage />} />
+        <Route path="/manage-orders" element={<OrdersPage management />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>

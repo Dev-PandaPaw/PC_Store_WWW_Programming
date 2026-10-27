@@ -33,9 +33,10 @@ class CartRepositoryTest {
                     ParameterizedPreparedStatementSetter<Map.Entry<UUID, Integer>> setter = call.getArgument(3);
                     PreparedStatement statement = mock(PreparedStatement.class);
                     setter.setValues(statement, entries.iterator().next());
-                    verify(statement).setObject(1, cart.mergeId());
-                    verify(statement).setObject(2, product);
-                    verify(statement).setInt(3, 4);
+                    verify(statement).setObject(eq(1), any(UUID.class));
+                    verify(statement).setObject(2, cart.mergeId());
+                    verify(statement).setObject(3, product);
+                    verify(statement).setInt(4, 4);
                     return new int[][] {{1}};
                 });
 

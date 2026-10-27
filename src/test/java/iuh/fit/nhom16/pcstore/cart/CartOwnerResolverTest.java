@@ -14,6 +14,24 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class CartOwnerResolverTest {
+    @Test void normalStartupKeepsGuestAnonymousUntilLogin() {
+        var repository = mock(CartRepository.class);
+        var environment = new MockEnvironment();
+        var session = new MockHttpSession();
+        var resolver = new CartOwnerResolver(environment, repository);
+        assertNull(resolver.resolve(null, session));
+        verifyNoInteractions(repository);
+    }
+
+    @Test void oldOrderDemoProfileDoesNotAutoLogin() {
+        var repository = mock(CartRepository.class);
+        var environment = new MockEnvironment();
+        environment.setActiveProfiles("order-demo");
+        var resolver = new CartOwnerResolver(environment, repository);
+        assertNull(resolver.resolve(null, new MockHttpSession()));
+        verifyNoInteractions(repository);
+    }
+
     @Test void ignoresDemoIdentityUnlessExplicitProfileIsEnabled() {
         var repository = mock(CartRepository.class);
         var environment = new MockEnvironment();

@@ -14,7 +14,7 @@ import org.springframework.web.util.WebUtils;
 import java.util.UUID;
 
 /** Development simulation only. Never activate cart-demo on public/shared production servers. */
-@Profile("cart-demo")
+@Profile("cart-demo & !order-demo")
 @RestController
 @RequestMapping("/api/v1/cart/demo")
 public class CartDemoController {

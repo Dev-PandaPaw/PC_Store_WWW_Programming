@@ -1,0 +1,18 @@
+# Optional isolated fixture database for integration tests. Not the hardcoded user profile.
+spring:
+  datasource:
+    url: ${ORDER_DEMO_DB_URL:jdbc:postgresql://localhost:5432/pc_store}
+    username: ${ORDER_DEMO_DB_USER:postgres}
+    password: ${ORDER_DEMO_DB_PASSWORD:postgres}
+  flyway:
+    locations: classpath:db/order-demo,classpath:db/orders
+    baseline-on-migrate: false
+    validate-on-migrate: true
+  mail:
+    host: localhost
+    port: 1025
+    properties:
+      mail.smtp.connectiontimeout: 3000
+      mail.smtp.timeout: 3000
+      mail.smtp.writetimeout: 3000
+

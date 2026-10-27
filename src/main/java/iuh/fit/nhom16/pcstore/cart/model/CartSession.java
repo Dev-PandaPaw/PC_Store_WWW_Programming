@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
-/** Cart aggregate used by both session and database storage; never reserves inventory. */
+
 public final class CartSession implements Serializable {
     public static final String ATTRIBUTE = CartSession.class.getName();
 
