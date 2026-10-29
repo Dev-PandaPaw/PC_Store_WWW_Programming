@@ -13,7 +13,7 @@ public class CartRepository {
     private final JdbcTemplate jdbc;
     public CartRepository(JdbcTemplate jdbc) { this.jdbc = jdbc; }
 
-    /** Must be called inside a transaction; all writes lock the owner row first. */
+
     public CartSession lock(UUID userId) {
         jdbc.update("INSERT INTO carts(id, user_id) VALUES (?, ?) ON CONFLICT (user_id) DO NOTHING",
                 UUID.randomUUID(), userId);

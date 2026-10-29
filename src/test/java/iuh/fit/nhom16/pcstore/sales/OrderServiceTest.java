@@ -51,6 +51,10 @@ class OrderServiceTest {
         assertEquals("+84912345678", result.phone());
         verify(orders, never()).reserve(any(), anyInt());
     }
+    @Test void adminAccountRequiresAdminRole() {
+        assertEquals(actor, service.adminAccount(actor).id());
+        verify(actors).require(actor, "ADMIN");
+    }
     @Test void staleCartCannotQuote() {
         assertEquals("CART_VERSION_CONFLICT", assertThrows(OrderException.class, () -> service.quote(actor,
                 new QuoteRequest(2, new Shipping("Customer", "0912345678", "City", "Ward", "123 Street")))).code());

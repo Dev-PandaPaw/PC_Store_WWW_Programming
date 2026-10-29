@@ -1,9 +1,10 @@
-import React, { useRef, useState } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
-import { ShoppingCart, Check } from 'lucide-react'
+import { ShoppingCart } from 'lucide-react'
 import type { StoreProduct } from '../../data/storeData'
 import { formatVND, calculateDiscount } from '../../utils/cart'
 import { useCart } from '../../contexts/CartContext'
+import ProductStock from '../ProductStock'
 
 interface ProductCardProps {
   product: StoreProduct
@@ -14,32 +15,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   product,
   onAddToCart,
 }) => {
-  const { addItem, ready } = useCart()
-  const [added, setAdded] = useState(false)
-  const [feedback, setFeedback] = useState('')
-  const attempt = useRef(0)
+  const { addItem, ready, productState, reportCartError } = useCart()
+  const availability = productState(product)
   const discount = calculateDiscount(product.originalPrice, product.price)
   const handleAdd = async () => {
-    const current = ++attempt.current
-    setAdded(true)
-    setFeedback('')
     try {
-      const result = onAddToCart ? await onAddToCart(product) : await addItem(
-          {
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            image: product.image,
-          },
-          1,
-        )
-      if (current !== attempt.current) return
-      setAdded(result.success)
-      setFeedback(result.success ? `Đã thêm ${product.name} vào giỏ hàng.` : (result.message || 'Không thể thêm vào giỏ hàng.'))
+      const result = onAddToCart ? await onAddToCart(product) : await addItem(product, 1)
+      if (!result.success) reportCartError(result.message || 'Không thể thêm vào giỏ hàng.')
     } catch {
-      if (current !== attempt.current) return
-      setAdded(false)
-      setFeedback('Không thể thêm vào giỏ hàng. Vui lòng thử lại.')
+      reportCartError('Không thể thêm vào giỏ hàng. Vui lòng thử lại.')
     }
   }
 
@@ -82,17 +66,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           </div>
           <button
             type="button"
-            className={`product-card__add${added ? ' product-card__add--added' : ''}`}
+            className="product-card__add"
             onClick={handleAdd}
-            disabled={!ready}
-            aria-label={`Thêm ${product.name} vào giỏ`}
+            disabled={!ready || !availability.canAdd}
+            aria-label={availability.canAdd ? `Thêm ${product.name} vào giỏ` : `${product.name}: ${availability.label}`}
+            title={availability.canAdd ? "Thêm vào giỏ hàng" : availability.label}
           >
-            {added ? <Check size={18} /> : <ShoppingCart size={18} />}
+            <ShoppingCart size={18} />
           </button>
         </div>
-        <span className="sr-only" role={added ? 'status' : 'alert'}>
-          {feedback}
-        </span>
+        <ProductStock product={product} />
       </div>
     </article>
   )

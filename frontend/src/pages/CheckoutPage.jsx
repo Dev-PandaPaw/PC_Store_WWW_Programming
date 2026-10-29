@@ -1,89 +1,164 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { ArrowLeft, ArrowRight, Check, CheckCircle2, CreditCard, MapPin, Package, ShieldCheck, ShoppingBag, Truck, UserRound } from 'lucide-react'
 import { useCart } from '../contexts/CartContext'
+import { useAuth } from '../contexts/AuthContext'
 import CartDemoPanel from '../components/CartDemoPanel'
+import OrderReference from '../components/OrderReference'
 import { orderApi, orderError } from '../services/orders'
 import { formatVND } from '../utils/cart'
+import { shippingFromCustomer, mergeCustomerShipping } from '../utils/checkout'
 import '../styles/orders.css'
 
+const fields = [
+  ['recipient', 'Họ và tên người nhận', 'Nhập họ và tên', 100, 'name'],
+  ['phone', 'Số điện thoại', 'Số điện thoại đã xác minh', 16, 'tel'],
+  ['province', 'Tỉnh / thành phố', 'Ví dụ: TP. Hồ Chí Minh', 100, 'address-level1'],
+  ['ward', 'Phường / xã', 'Nhập phường hoặc xã', 100, 'address-level2'],
+  ['addressLine', 'Địa chỉ nhận hàng', 'Số nhà, tên đường, tòa nhà…', 255, 'street-address'],
+]
+
+function CheckoutSteps({ step }) {
+  return <ol className="checkout-steps" aria-label="Tiến trình đặt hàng">
+    {['Thông tin nhận hàng', 'Kiểm tra & đặt hàng', 'Hoàn tất'].map((label, index) => <li key={label}
+      className={index < step ? 'is-complete' : index === step ? 'is-current' : ''} aria-current={index === step ? 'step' : undefined}>
+      <span>{index < step ? <Check size={15} /> : String(index + 1).padStart(2, '0')}</span><strong>{label}</strong>
+    </li>)}
+  </ol>
+}
+
 export default function CheckoutPage() {
-  const { cartVersion, demo, ready, refresh } = useCart()
-  const navigate = useNavigate()
-  const [shipping, setShipping] = useState({ recipient: '', phone: '', province: '', ward: '', addressLine: '' })
+  const { cartVersion, demo, ready, syncing, refresh, items, totalAmount, totalCount } = useCart()
+  const { user, loading: authLoading } = useAuth()
+  const customerIdentity = demo?.userId || user?.id || ''
+  const [shipping, setShipping] = useState(() => shippingFromCustomer(user))
   const [quote, setQuote] = useState(null)
+  const [created, setCreated] = useState(null)
   const [method, setMethod] = useState('COD')
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
+  const [accountLoading, setAccountLoading] = useState(false)
   const [now, setNow] = useState(Date.now())
   const sending = useRef(false)
+  const edited = useRef(new Set())
+  const identityRevision = useRef(0)
+  const heading = useRef(null)
   useEffect(() => {
     let active = true
-    setQuote(null)
+    edited.current = new Set()
+    setQuote(null); setCreated(null); setError('')
+    // Render the authenticated customer's information immediately; revalidate in the background.
+    setShipping(shippingFromCustomer(user))
+    if (authLoading) return
+    setAccountLoading(true)
     orderApi.account().then(({ data }) => {
-      if (active) { setShipping(value => ({ ...value, recipient: data.name, phone: data.phone || '' })); setError('') }
+      if (active) setShipping(value => mergeCustomerShipping(value, data, edited.current))
     }).catch(error => { if (active) setError(orderError(error)) })
-    return () => { active = false }
-  }, [demo?.userId])
-  useEffect(() => { const timer = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(timer) }, [])
+      .finally(() => { if (active) setAccountLoading(false) })
+    return () => { active = false; identityRevision.current++ }
+  }, [customerIdentity, user, authLoading])
+  useEffect(() => {
+    if (!quote) return
+    const timer = setInterval(() => setNow(Date.now()), 1000)
+    return () => clearInterval(timer)
+  }, [quote?.id])
+  useEffect(() => { setQuote(null) }, [cartVersion])
+  useEffect(() => { heading.current?.focus() }, [quote?.id, created?.id])
   const remaining = quote ? Math.max(0, Math.ceil((new Date(quote.expiresAt).getTime() - now) / 1000)) : 0
   const preview = async event => {
     event.preventDefault()
-    if (sending.current) return
-    sending.current = true; setBusy(true); setError(''); setQuote(null)
-    try { const { data } = await orderApi.quote({ cartVersion, shipping }); setQuote(data); setNow(Date.now()) }
-    catch (error) { setError(orderError(error)); await refresh() }
-    finally { sending.current = false; setBusy(false) }
+    if (sending.current || syncing || !ready || !items.length) return
+    sending.current = true; setBusy(true); setError('')
+    const revision = identityRevision.current
+    try {
+      const { data } = await orderApi.quote({ cartVersion, shipping })
+      if (revision === identityRevision.current) { setQuote(data); setNow(Date.now()); window.scrollTo(0, 0) }
+    } catch (error) {
+      if (revision === identityRevision.current) { setError(orderError(error)); void refresh() }
+    } finally { sending.current = false; setBusy(false) }
   }
   const place = async () => {
-    if (sending.current || !quote || !remaining) return
+    if (sending.current || !quote || !remaining || quote.cartVersion !== cartVersion) return
     sending.current = true; setBusy(true); setError('')
-    // Keep the same key for retries, including when the first response is lost.
-    const storageKey = `order-key:${quote.id}:${method}`
-    const key = sessionStorage.getItem(storageKey) || crypto.randomUUID()
-    sessionStorage.setItem(storageKey, key)
+    const revision = identityRevision.current
     try {
+      // Retain the same key if a response is lost and the customer retries.
+      const storageKey = `order-key:${quote.id}:${method}`
+      const key = sessionStorage.getItem(storageKey) || crypto.randomUUID()
+      sessionStorage.setItem(storageKey, key)
       const { data } = await orderApi.place({ quoteId: quote.id, paymentMethod: method }, key)
-      await refresh()
-      if (data.paymentUrl && data.status === 'PENDING_PAYMENT') window.location.assign(data.paymentUrl)
-      else navigate('/orders', { state: { created: data.code } })
-    } catch (error) { setError(orderError(error)) }
+      if (revision !== identityRevision.current) return
+      setCreated(data); void refresh(); window.scrollTo(0, 0)
+    } catch (error) { if (revision === identityRevision.current) setError(orderError(error)) }
     finally { sending.current = false; setBusy(false) }
   }
-  return <div className="orders-page">
+  const step = created ? 2 : quote ? 1 : 0
+  return <div className="orders-page checkout-page">
     <CartDemoPanel />
-    <nav className="order-actions"><Link to="/cart">← Giỏ hàng</Link><Link to="/orders">Đơn của tôi</Link></nav>
-    <h1>Đặt hàng</h1>
-    <p>Phí vận chuyển cố định 50.000đ. Số nhận hàng phải trùng số đã xác minh.</p>
+    <nav className="checkout-nav"><Link to="/cart"><ArrowLeft size={16} /> Giỏ hàng</Link><span><ShieldCheck size={16} /> Mua sắm an tâm</span></nav>
+    <header className="checkout-hero">
+      <div><p className="checkout-eyebrow">PIXELCORE / CHECKOUT</p><h1>Hoàn thiện góc máy của bạn.</h1><p>Chỉ vài bước nữa, đơn hàng sẽ sẵn sàng.</p></div>
+      <ShoppingBag size={48} strokeWidth={1.2} aria-hidden="true" />
+    </header>
+    <CheckoutSteps step={step} />
     {error && <p className="order-error" role="alert">{error}</p>}
-    <div className="checkout-grid">
-      <form className="order-card" onSubmit={preview}>
-        <h2>Thông tin nhận hàng</h2>
-        <fieldset disabled={busy}>
-          {[
-            ['recipient', 'Tên người nhận', 100], ['phone', 'Số điện thoại đã xác minh', 16],
-            ['province', 'Tỉnh / thành phố', 100], ['ward', 'Phường / xã', 100], ['addressLine', 'Số nhà, tên đường', 255],
-          ].map(([key, label, maxLength]) => <label key={key}>{label}
-            <input required maxLength={maxLength} minLength={key === 'addressLine' ? 5 : key === 'recipient' ? 2 : undefined}
-              type={key === 'phone' ? 'tel' : 'text'} value={shipping[key]}
-              onChange={event => { setShipping({ ...shipping, [key]: event.target.value }); setQuote(null) }} />
-          </label>)}
-          <button className="store-button" disabled={!ready} type="submit">{busy ? 'Đang xử lý…' : 'Xem trước đơn hàng'}</button>
+    {created ? <section className="checkout-panel order-success" aria-labelledby="order-success-title">
+      <div className="order-success__icon"><CheckCircle2 size={34} aria-hidden="true" /></div>
+      <p className="checkout-eyebrow">CẢM ƠN BẠN ĐÃ CHỌN PIXELCORE</p>
+      <h2 id="order-success-title" ref={heading} tabIndex={-1}>Đặt hàng thành công!</h2>
+      <p>Chúng mình đã nhận được đơn hàng của bạn.</p>
+      <OrderReference code={created.code} />
+      <div className="checkout-delivery"><MapPin size={21} aria-hidden="true" /><div><strong>{created.recipient}</strong><span>{created.phone}</span><p>{created.address}</p></div></div>
+      <div className="checkout-total"><span>Tổng thanh toán</span><strong>{formatVND(Number(created.total))}</strong></div>
+      <p className="checkout-note">{created.status === 'PENDING_PAYMENT' ? 'Đơn hàng đang chờ thanh toán. Tiếp tục với VNPAY để hoàn tất.' : 'Cửa hàng sẽ liên hệ xác nhận và chuẩn bị giao hàng cho bạn.'}</p>
+      <div className="checkout-footer">
+        {created.status === 'PENDING_PAYMENT' && created.paymentUrl && <a className="store-button" href={created.paymentUrl}>Thanh toán VNPAY <ArrowRight size={16} /></a>}
+        <Link className="store-button" to="/orders">Theo dõi đơn hàng <ArrowRight size={16} /></Link>
+        <Link className="checkout-back" to="/catalog">Tiếp tục mua sắm</Link>
+      </div>
+    </section> : ready && !items.length ? <section className="checkout-panel checkout-empty"><Package size={40} /><h2>Giỏ hàng đang trống</h2><Link className="store-button" to="/catalog">Khám phá sản phẩm</Link></section> : !quote ?
+    <form className="checkout-panel" onSubmit={preview} aria-busy={busy}>
+      <div className="checkout-section-title"><span><UserRound size={21} /></span><div><p>BƯỚC 01</p><h2 ref={heading} tabIndex={-1}>Thông tin nhận hàng</h2></div></div>
+      <p className="checkout-note">Kiểm tra thông tin của bạn và bổ sung địa chỉ giao hàng.</p>
+      {accountLoading && !user && <p className="checkout-status" role="status">Đang lấy thông tin tài khoản…</p>}
+      <fieldset disabled={busy || authLoading} className="checkout-fields">
+        {fields.map(([key, label, placeholder, maxLength, autoComplete]) => <label key={key} className={key === 'addressLine' ? 'checkout-field--wide' : ''}>
+          {label}<span aria-hidden="true"> *</span>
+          <input required maxLength={maxLength} minLength={key === 'addressLine' ? 5 : key === 'recipient' ? 2 : undefined}
+            type={key === 'phone' ? 'tel' : 'text'} autoComplete={autoComplete} placeholder={placeholder} value={shipping[key]}
+            onChange={event => { edited.current.add(key); setShipping(value => ({ ...value, [key]: event.target.value })) }} />
+        </label>)}
+      </fieldset>
+      <p className="checkout-help"><ShieldCheck size={15} /> Sử dụng số điện thoại đã xác minh của tài khoản.</p>
+      <div className="checkout-mini-summary"><span><Package size={19} /> {totalCount} sản phẩm</span><div><span>Tạm tính</span><strong>{formatVND(Number(totalAmount))}</strong></div></div>
+      <div className="checkout-footer"><Link className="checkout-back" to="/cart"><ArrowLeft size={16} /> Quay lại giỏ hàng</Link>
+        <button className="store-button" disabled={busy || syncing || authLoading || !ready || !items.length} type="submit">Xác nhận <ArrowRight size={17} /></button></div>
+      {syncing && !busy && <p className="checkout-status" role="status">Đang lưu giỏ hàng…</p>}
+      {busy && <p className="checkout-status" role="status">Đang xác nhận thông tin và tồn kho…</p>}
+    </form> :
+    <section className="checkout-panel" aria-labelledby="confirmation-title" aria-busy={busy}>
+      <div className="checkout-section-title"><span><ShieldCheck size={21} /></span><div><p>BƯỚC 02</p><h2 id="confirmation-title" ref={heading} tabIndex={-1}>Kiểm tra đơn hàng</h2></div></div>
+      <p className="checkout-note">Mọi thứ đã sẵn sàng. Kiểm tra lần cuối trước khi đặt hàng.</p>
+      <div className="checkout-review-grid">
+        <div className="checkout-delivery"><MapPin size={21} aria-hidden="true" /><div><small>GIAO ĐẾN</small><strong>{quote.recipient}</strong><span>{quote.phone}</span><p>{quote.address}</p></div></div>
+        <fieldset disabled={busy} className="checkout-payment"><legend><CreditCard size={17} /> Thanh toán</legend>
+          {[['COD', 'Thanh toán khi nhận hàng', 'Trả tiền khi giao thành công'], ['VNPAY', 'VNPAY', 'Thanh toán trực tuyến · Sandbox']].map(([value, label, note]) =>
+            <label className={method === value ? 'is-selected' : ''} key={value}><input type="radio" name="payment" value={value} checked={method === value} onChange={() => setMethod(value)} /><span><strong>{label}</strong><small>{note}</small></span></label>)}
         </fieldset>
-      </form>
-      <section className="order-card" aria-live="polite">
-        <h2>Xác nhận đơn hàng</h2>
-        {!quote ? <p>Nhập thông tin nhận hàng để lấy giá và tồn kho từ cửa hàng.</p> : <>
-          <p>Hiệu lực còn {Math.floor(remaining / 60)}:{String(remaining % 60).padStart(2, '0')}</p>
-          {quote.items.map(item => <div className="order-row" key={item.productId}><span>{item.name} × {item.quantity}</span><strong>{formatVND(Number(item.unitPrice) * item.quantity)}</strong></div>)}
-          <div className="order-row"><span>Tạm tính</span><span>{formatVND(Number(quote.subtotal))}</span></div>
-          <div className="order-row"><span>Vận chuyển</span><span>{formatVND(Number(quote.shippingFee))}</span></div>
-          <div className="order-row"><strong>Tổng cộng</strong><strong>{formatVND(Number(quote.total))}</strong></div>
-          <label>Phương thức thanh toán<select value={method} disabled={busy} onChange={event => setMethod(event.target.value)}>
-            <option value="COD">COD — trả tiền khi giao thành công</option><option value="VNPAY">VNPAY sandbox</option>
-          </select></label>
-          <button className="store-button" onClick={place} disabled={busy || !remaining}>{busy ? 'Đang tạo đơn…' : remaining ? 'Đặt hàng' : 'Bản xem trước đã hết hạn'}</button>
-        </>}
-      </section>
-    </div>
+      </div>
+      <div className="checkout-items"><div className="checkout-items__heading"><h3>Sản phẩm của bạn</h3><span>{quote.items.reduce((sum, item) => sum + item.quantity, 0)} sản phẩm</span></div>
+        {quote.items.map(item => <div className="checkout-item" key={item.productId}>
+          {items.find(product => product.id === item.productId)?.image ? <img src={items.find(product => product.id === item.productId).image} alt="" width="56" height="56" /> : <span className="checkout-item__placeholder"><Package size={24} /></span>}
+          <div><strong>{item.name}</strong><span>Số lượng: {item.quantity}</span></div><strong>{formatVND(Number(item.unitPrice) * item.quantity)}</strong>
+        </div>)}
+      </div>
+      <div className="checkout-totals"><div><span>Tạm tính</span><span>{formatVND(Number(quote.subtotal))}</span></div><div><span><Truck size={16} /> Phí vận chuyển</span><span>{formatVND(Number(quote.shippingFee))}</span></div></div>
+      <div className="checkout-total"><span>Tổng thanh toán</span><strong>{formatVND(Number(quote.total))}</strong></div>
+      <p className="checkout-help">{remaining ? 'Thông tin đã được xác nhận. Bạn có thể đặt hàng.' : 'Thông tin đã hết hạn. Vui lòng quay lại và xác nhận lại.'}</p>
+      <div className="checkout-footer"><button className="checkout-back" type="button" disabled={busy} onClick={() => { setQuote(null); setError('') }}><ArrowLeft size={16} /> Chỉnh sửa thông tin</button>
+        <button className="store-button" type="button" onClick={place} disabled={busy || !remaining || quote.cartVersion !== cartVersion}>Đặt hàng <ArrowRight size={17} /></button></div>
+      {busy && <p className="checkout-status" role="status">Đang tạo đơn hàng…</p>}
+    </section>}
+    <p className="checkout-assurance"><ShieldCheck size={15} /> Thông tin của bạn chỉ được sử dụng để xử lý và giao đơn hàng.</p>
   </div>
 }

@@ -5,17 +5,20 @@ import CartDemoPanel from '../components/CartDemoPanel'
 import { orderApi, orderError, orderLabels } from '../services/orders'
 import { formatVND } from '../utils/cart'
 import '../styles/orders.css'
+import useAdminAccess from '../hooks/useAdminAccess'
+import OrderReference from '../components/OrderReference'
+import { MapPin, Package, CalendarDays } from 'lucide-react'
 
 function OrderCard({ order, management, busy, run }) {
   const [reason, setReason] = useState('')
   const [quantities, setQuantities] = useState({})
   const next = { PENDING_CONFIRMATION: 'CONFIRMED', CONFIRMED: 'SHIPPING', SHIPPING: 'COMPLETED' }[order.status]
   const cancellable = ['PENDING_PAYMENT', 'PENDING_CONFIRMATION'].includes(order.status) && order.paymentStatus !== 'PAID'
-  return <article className="order-card">
-    <h2>{order.code}</h2>
-    <p>{orderLabels[order.status]} · {order.paymentMethod} · {orderLabels[order.paymentStatus] || order.paymentStatus}</p>
-    <p>{new Date(order.createdAt).toLocaleString('vi-VN')} · {order.recipient} · {order.phone}</p>
-    <p>{order.address}</p>
+  return <article className="order-card order-list-card" aria-label={`Đơn hàng của ${order.recipient}`}>
+    <div className="order-list-card__header"><div className="order-list-card__identity"><span className="order-list-card__icon"><Package size={22} /></span><div><span className="order-list-card__label">ĐƠN HÀNG</span><OrderReference code={order.code} /></div></div>
+      <span className={`order-status order-status--${order.status.toLowerCase()}`}>{orderLabels[order.status]}</span></div>
+    <div className="order-list-card__meta"><span><CalendarDays size={14} />{new Date(order.createdAt).toLocaleString('vi-VN')}</span><span>{order.paymentMethod} · {orderLabels[order.paymentStatus] || order.paymentStatus}</span></div>
+    <div className="order-list-card__address"><MapPin size={17} /><div><strong>{order.recipient}</strong><span> · {order.phone}</span><p>{order.address}</p></div></div>
     {order.items.map(item => <div className="order-row" key={item.productId}>
       <span>{item.name} × {item.quantity} · {formatVND(Number(item.unitPrice))}</span>
       {management && order.paymentMethod === 'COD' && order.status === 'PENDING_CONFIRMATION' && <div>
@@ -42,6 +45,7 @@ function OrderCard({ order, management, busy, run }) {
 }
 
 export default function OrdersPage({ management = false }) {
+  const adminAccess = useAdminAccess(!management)
   const { demo } = useCart()
   const location = useLocation()
   const [orders, setOrders] = useState([])
@@ -67,10 +71,11 @@ export default function OrdersPage({ management = false }) {
   }
   return <div className="orders-page">
     <CartDemoPanel />
-    <nav className="order-actions"><Link to="/cart">Giỏ hàng</Link><Link to={management ? '/orders' : '/manage-orders'}>{management ? 'Đơn của tôi' : 'Quản trị đơn'}</Link>
+    <nav className="order-actions"><Link to="/cart">Giỏ hàng</Link>
+      {management ? <Link to="/orders">Đơn của tôi</Link> : adminAccess.account && <Link to="/admin/orders">Quản trị đơn</Link>}
       <button disabled={busy || loading} onClick={load}>Tải lại</button></nav>
     <h1>{management ? 'Quản trị đơn hàng' : 'Đơn hàng của tôi'}</h1>
-    {location.state?.created && <p role="status">Đã tạo đơn {location.state.created}.</p>}
+    {location.state?.created && <div className="order-created-notice"><p role="status">Đơn hàng đã được tạo thành công.</p><OrderReference code={location.state.created} /></div>}
     {location.search.includes('vnp_') && <p role="status">Đã trở về từ VNPAY. Trạng thái sẽ cập nhật khi cửa hàng nhận IPN. Hãy tải lại để kiểm tra.</p>}
     {error && <p className="order-error" role="alert">{error}</p>}
     {loading ? <p role="status">Đang tải đơn hàng…</p> : orders.length === 0 && !error ? <p>Chưa có đơn hàng ở trang này.</p> :

@@ -4,8 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "test:cart": "node --test scripts/optimistic-cart.test.mjs scripts/login-cart.test.mjs",
+    "test:cart": "node --test scripts/optimistic-cart.test.mjs scripts/login-cart.test.mjs scripts/cart-stock.test.mjs",
     "test:catalog": "node --test scripts/catalog.test.mjs",
+    "test:checkout": "node --test scripts/checkout.test.mjs",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"

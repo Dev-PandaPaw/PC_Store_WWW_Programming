@@ -179,6 +179,11 @@ class OrderPostgresTest {
         MockHttpSession session = new MockHttpSession(); session.setAttribute(CartOwnerResolver.DEMO_OWNER, CUSTOMER);
         mvc.perform(get("/api/v1/orders")).andExpect(status().isUnauthorized());
         mvc.perform(get("/api/v1/admin/orders").session(session)).andExpect(status().isForbidden());
+        mvc.perform(get("/api/v1/admin/orders/account")).andExpect(status().isUnauthorized());
+        mvc.perform(get("/api/v1/admin/orders/account").session(session)).andExpect(status().isForbidden());
+        MockHttpSession admin = new MockHttpSession(); admin.setAttribute(CartOwnerResolver.DEMO_OWNER, ADMIN);
+        mvc.perform(get("/api/v1/admin/orders/account").session(admin))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.id").value(ADMIN.toString()));
         var request = new QuoteRequest(0, new Shipping("Customer", "0912345678", "City", "Ward", "123 Street"));
         mvc.perform(post("/api/v1/orders/quotes").session(session).contentType("application/json").content(json.writeValueAsString(request)))
                 .andExpect(status().isForbidden());

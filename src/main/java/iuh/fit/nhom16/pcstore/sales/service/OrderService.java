@@ -33,6 +33,7 @@ public class OrderService {
         this.orders = orders; this.carts = carts; this.actors = actors; this.gateway = gateway; this.events = events; this.clock = clock;
     }
     public Account account(UUID actor) { return actors.require(actor, "CUSTOMER"); }
+    public Account adminAccount(UUID actor) { return actors.require(actor, "ADMIN"); }
     public Quote quote(UUID actor, QuoteRequest request) {
         Account customer = actors.require(actor, "CUSTOMER");
         requirePhone(customer, request.shipping().normalizedPhone());

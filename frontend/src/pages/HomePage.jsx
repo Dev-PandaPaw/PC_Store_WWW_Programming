@@ -13,19 +13,7 @@ export default function HomePage() {
   const { items, addItem, setQuantity, removeItem, clearCart } = useCart()
   const [isCartOpen, setIsCartOpen] = useState(false)
   const closeCart = useCallback(() => setIsCartOpen(false), [])
-  const handleAddToCart = async (product) => {
-    const result = addItem(
-      {
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image,
-      },
-      1,
-    )
-    setIsCartOpen(true)
-    return result
-  }
+  const handleAddToCart = product => addItem(product, 1, () => setIsCartOpen(true))
 
   return (
     <div className="storefront">

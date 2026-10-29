@@ -3,6 +3,7 @@ import http from './http'
 const customer = '/v1/orders'
 const admin = '/v1/admin/orders'
 export const orderApi = {
+  adminAccount: () => http.get(`${admin}/account`),
   account: () => http.get(`${customer}/account`),
   quote: body => http.post(`${customer}/quotes`, body),
   place: (body, key) => http.post(customer, body, { headers: { 'Idempotency-Key': key }, timeout: 20000 }),

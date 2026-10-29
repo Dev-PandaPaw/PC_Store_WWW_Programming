@@ -16,6 +16,10 @@ public class AdminOrderController {
     private final OrderService service;
     private final OrderActorResolver actors;
     public AdminOrderController(OrderService service, OrderActorResolver actors) { this.service = service; this.actors = actors; }
+    @GetMapping("/account")
+    public Account account(Authentication auth, HttpServletRequest request) {
+        return service.adminAccount(actors.resolve(auth, request.getSession()));
+    }
     @GetMapping
     public List<Order> list(Authentication auth, HttpServletRequest request, @RequestParam(defaultValue="0") int page) {
         return service.list(actors.resolve(auth, request.getSession()), true, page);

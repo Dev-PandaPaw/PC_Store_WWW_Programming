@@ -1,5 +1,5 @@
 import React from 'react'
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
 import StoreShell from './components/StoreShell'
 import AdminShell from './components/AdminShell'
 
@@ -33,7 +33,7 @@ export default function App() {
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/orders" element={<OrdersPage />} />
-        <Route path="/manage-orders" element={<OrdersPage management />} />
+        <Route path="/manage-orders" element={<Navigate to="/admin/orders" replace />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
@@ -42,6 +42,7 @@ export default function App() {
       <Route path="/admin" element={<AdminShell />}>
         <Route index element={<CatalogPage />} />
         <Route path="products" element={<CatalogPage />} />
+        <Route path="orders" element={<OrdersPage management />} />
       </Route>
     </Routes>
   )
