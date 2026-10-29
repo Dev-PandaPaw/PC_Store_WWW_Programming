@@ -12,6 +12,9 @@ import BlogPage from './pages/BlogPage'
 import ArticlePage from './pages/ArticlePage'
 import ProductDetailPage from './pages/ProductDetailPage'
 import NotFoundPage from './pages/NotFoundPage'
+import OrderHistoryPage from './pages/OrderHistoryPage'
+import PaymentPage from './pages/PaymentPage'
+import PaymentCompletePage from './pages/PaymentCompletePage'
 
 export default function App() {
   const { pathname } = useLocation()
@@ -29,7 +32,10 @@ export default function App() {
         <Route path="/blog/:slug" element={<ArticlePage />} />
         <Route path="/advisory" element={<AdvisoryPage />} />
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/checkout/payment/:orderId" element={<PaymentPage />} />
+        <Route path="/checkout/complete" element={<PaymentCompletePage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/account/orders" element={<OrderHistoryPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
 

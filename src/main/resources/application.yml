@@ -38,3 +38,11 @@ springdoc:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
+
+
+vnpay:
+  tmn-code: "YZEE4138"
+  hash-secret: "OLTADMKAFDQDSFLAKWATGGNEGCIAPJQW"
+  pay-url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
+  return-url: "http://localhost:5173/checkout/complete"
+  api-url: "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction"

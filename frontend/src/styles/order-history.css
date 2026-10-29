@@ -1,0 +1,450 @@
+/* ============================================================
+   C04 — Đơn hàng của tôi — Scoped styles
+   Tất cả selectors đều bắt đầu bằng .order-history để tránh
+   xung đột với các trang khác.
+   ============================================================ */
+
+.order-history {
+  color: var(--pc-text);
+  min-width: 0;
+  --oh-secondary: var(--pc-secondary);
+}
+
+/* ── Heading ─────────────────────────────────────────────── */
+.order-history .oh-heading {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 24px 0;
+}
+.order-history .oh-heading__icon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  border-radius: 16px;
+  color: var(--pc-primary);
+  background: var(--pc-primary-light);
+}
+.order-history .oh-eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  color: var(--pc-primary);
+  margin-bottom: 4px;
+}
+.order-history h1 {
+  font-size: 32px;
+  line-height: 1.25;
+  font-weight: 750;
+  margin-bottom: 8px;
+}
+.order-history .oh-heading p:last-child {
+  color: var(--oh-secondary);
+}
+
+/* ── Demo banner ─────────────────────────────────────────── */
+.order-history .oh-demo {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 20px;
+  border: 1px solid var(--pc-border);
+  border-left: 4px solid var(--pc-primary);
+  border-radius: 12px;
+  background: var(--pc-primary-light);
+  margin-bottom: 24px;
+}
+.order-history .oh-demo > svg {
+  color: var(--pc-primary);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.order-history .oh-demo strong { font-size: 15px; }
+.order-history .oh-demo p {
+  font-size: 14px;
+  color: var(--oh-secondary);
+  margin-top: 4px;
+  max-width: 90ch;
+}
+
+/* ── Filter bar ──────────────────────────────────────────── */
+.order-history .oh-filters {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(180px, .65fr) minmax(160px, .55fr) auto;
+  align-items: end;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid var(--pc-border);
+  border-radius: 12px;
+  background: var(--pc-surface);
+}
+.order-history .oh-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+.order-history input,
+.order-history select {
+  color: var(--pc-text);
+  background: var(--pc-surface);
+  font-size: 15px;
+  font-weight: 400;
+  min-height: 44px;
+  min-width: 0;
+  border: 1px solid var(--pc-border);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+.order-history .oh-search-control {
+  position: relative;
+}
+.order-history .oh-search-control svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--oh-secondary);
+  pointer-events: none;
+}
+.order-history .oh-search-control input {
+  width: 100%;
+  padding-left: 36px;
+}
+
+/* ── Focus ───────────────────────────────────────────────── */
+.order-history :is(button, input, select, a):focus-visible {
+  outline: 3px solid var(--pc-primary);
+  outline-offset: 3px;
+}
+
+/* ── Buttons ─────────────────────────────────────────────── */
+.order-history .oh-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 8px 16px;
+  border: 1px solid var(--pc-border);
+  border-radius: 8px;
+  background: var(--pc-surface);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--pc-text);
+  cursor: pointer;
+  transition: color .15s, border-color .15s, background .15s;
+}
+.order-history .oh-button:hover:not(:disabled) {
+  color: var(--pc-primary);
+  border-color: var(--pc-primary);
+  background: var(--pc-primary-light);
+}
+.order-history .oh-button:disabled {
+  color: var(--oh-secondary);
+  background: var(--pc-surface-subtle);
+  cursor: not-allowed;
+  opacity: .65;
+}
+.order-history .oh-button--primary {
+  background: var(--pc-primary);
+  color: white;
+  border-color: var(--pc-primary);
+}
+.order-history .oh-button--primary:hover:not(:disabled) {
+  background: var(--pc-primary-hover);
+  color: white;
+}
+
+/* ── Results bar ─────────────────────────────────────────── */
+.order-history .oh-results-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin: 24px 0 16px;
+  font-size: 14px;
+  color: var(--oh-secondary);
+}
+.order-history .oh-results-bar strong { color: var(--pc-text); }
+.order-history .oh-sort-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── Order list ──────────────────────────────────────────── */
+.order-history .oh-list {
+  display: grid;
+  gap: 16px;
+}
+
+/* ── Order card ──────────────────────────────────────────── */
+.order-history .oh-order {
+  background: var(--pc-surface);
+  border: 1px solid var(--pc-border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: box-shadow .2s, border-color .2s;
+}
+.order-history .oh-order:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+  border-color: #b6c9e8;
+}
+
+/* Card header */
+.order-history .oh-order__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px 24px;
+  background: var(--pc-surface-subtle);
+  border-bottom: 1px solid var(--pc-border);
+}
+.order-history .oh-order__code {
+  font-size: 16px;
+  font-weight: 700;
+  font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+  letter-spacing: .02em;
+  overflow-wrap: anywhere;
+}
+.order-history .oh-order__date {
+  font-size: 13px;
+  color: var(--oh-secondary);
+  margin-top: 4px;
+  font-variant-numeric: tabular-nums;
+}
+.order-history .oh-order__status-col {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.order-history .oh-label-sm {
+  font-size: 13px;
+  color: var(--oh-secondary);
+  white-space: nowrap;
+}
+
+/* Card body — 3-column grid */
+.order-history .oh-order__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, .8fr) minmax(180px, .6fr);
+  gap: 24px;
+  padding: 24px;
+}
+
+/* Labels */
+.order-history .oh-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--oh-secondary);
+  margin-bottom: 8px;
+}
+.order-history dt {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--oh-secondary);
+  margin-bottom: 4px;
+}
+.order-history dd {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* Products column */
+.order-history .oh-products ul {
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.order-history .oh-products li {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  overflow-wrap: anywhere;
+}
+.order-history .oh-qty {
+  color: var(--oh-secondary);
+  font-weight: 400;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.order-history .oh-sku {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--oh-secondary);
+  font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+  background: var(--pc-surface-subtle);
+  border: 1px solid var(--pc-border);
+  border-radius: 4px;
+  padding: 1px 6px;
+  white-space: nowrap;
+}
+.order-history .oh-item-count {
+  color: var(--oh-secondary);
+  font-size: 13px;
+  margin-top: 12px;
+}
+
+/* Payment column */
+.order-history .oh-payment {
+  display: grid;
+  align-content: start;
+  gap: 16px;
+}
+
+/* Badges */
+.order-history .oh-badge {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid;
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+.order-history .oh-badge--warning { color: #92400e; background: #fffbeb; border-color: #fde68a; }
+.order-history .oh-badge--info    { color: #1e40af; background: #eff6ff; border-color: #bfdbfe; }
+.order-history .oh-badge--success { color: #166534; background: #f0fdf4; border-color: #bbf7d0; }
+.order-history .oh-badge--danger  { color: #b91c1c; background: #fef2f2; border-color: #fecaca; }
+.order-history .oh-badge--neutral { color: #475569; background: #f1f5f9; border-color: #cbd5e1; }
+
+/* Total column */
+.order-history .oh-total {
+  font-variant-numeric: tabular-nums;
+}
+.order-history .oh-total__rows {
+  display: grid;
+  gap: 6px;
+}
+.order-history .oh-total__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--oh-secondary);
+}
+.order-history .oh-total__row--grand {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  padding-top: 8px;
+  margin-top: 4px;
+  border-top: 1px solid var(--pc-border);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--pc-text);
+}
+.order-history .oh-total__row--grand strong {
+  font-size: 20px;
+  font-weight: 750;
+  color: var(--pc-primary-hover);
+  white-space: nowrap;
+}
+
+/* Card footer */
+.order-history .oh-order__footer {
+  padding: 12px 24px;
+  border-top: 1px solid var(--pc-border);
+  background: var(--pc-surface-subtle);
+}
+.order-history .oh-detail-note {
+  font-size: 13px;
+  color: var(--oh-secondary);
+  font-style: italic;
+}
+
+/* ── Empty state ─────────────────────────────────────────── */
+.order-history .oh-empty {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+  text-align: center;
+  padding: 48px 24px;
+  background: var(--pc-surface);
+  border: 1px dashed var(--pc-border);
+  border-radius: 12px;
+}
+.order-history .oh-empty > svg { color: var(--pc-primary); }
+.order-history .oh-empty h2 { font-size: 22px; font-weight: 700; }
+.order-history .oh-empty p  { color: var(--oh-secondary); max-width: 52ch; }
+
+/* ── Pagination ──────────────────────────────────────────── */
+.order-history .oh-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 24px 0;
+  font-size: 14px;
+}
+.order-history .oh-page-size,
+.order-history .oh-page-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.order-history .oh-page-controls {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Responsive: tablet ──────────────────────────────────── */
+@media (max-width: 1023px) {
+  .order-history .oh-filters {
+    grid-template-columns: 1fr 1fr;
+  }
+  .order-history .oh-order__body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .order-history .oh-total {
+    grid-column: 1 / -1;
+    padding-top: 16px;
+    border-top: 1px solid var(--pc-border);
+  }
+  .order-history .oh-total__row--grand strong {
+    font-size: 18px;
+  }
+}
+
+/* ── Responsive: mobile ──────────────────────────────────── */
+@media (max-width: 599px) {
+  .order-history .oh-heading { align-items: flex-start; }
+  .order-history .oh-heading__icon { width: 44px; height: 44px; border-radius: 12px; }
+  .order-history h1 { font-size: 26px; }
+  .order-history .oh-heading p:last-child { font-size: 14px; }
+  .order-history .oh-demo { padding: 16px; }
+  .order-history .oh-filters { grid-template-columns: minmax(0, 1fr); padding: 16px; }
+  .order-history .oh-order__header { padding: 16px; }
+  .order-history .oh-order__body { grid-template-columns: minmax(0, 1fr); padding: 16px; gap: 20px; }
+  .order-history .oh-total { grid-column: auto; border-top: 1px solid var(--pc-border); padding-top: 16px; }
+  .order-history .oh-order__status-col { width: 100%; }
+  .order-history .oh-order__footer { padding: 12px 16px; }
+  .order-history .oh-pagination { justify-content: center; }
+  .order-history .oh-page-size,
+  .order-history .oh-page-controls { justify-content: center; width: 100%; }
+}
+
+/* ── Reduced motion ──────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .order-history .oh-order { transition: none; }
+  .order-history .oh-button { transition: none; }
+}
+
