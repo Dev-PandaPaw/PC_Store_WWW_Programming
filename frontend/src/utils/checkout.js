@@ -1,8 +1,12 @@
 export function shippingFromCustomer(customer) {
   return {
     recipient: customer?.fullName || customer?.name || '',
-    phone: customer?.phone || '', province: '', ward: '', addressLine: '',
+    phone: customer?.phone || '', province: '', district: '', ward: '', addressLine: '',
   }
+}
+
+export function loginDestination(from) {
+  return typeof from === 'string' && /^\/(?!\/|\\)/.test(from) && !from.startsWith('/login') ? from : '/'
 }
 
 // A late account response must never replace what the customer is typing.

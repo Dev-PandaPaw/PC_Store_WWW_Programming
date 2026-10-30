@@ -28,7 +28,7 @@ export function CartProvider({ children }) {
   const authenticating = useRef(false)
   useEffect(() => {
     if (!successNotice) return
-    const timer = setTimeout(() => setSuccessNotice(null), 4500)
+    const timer = setTimeout(() => setSuccessNotice(null), 500)
     return () => clearTimeout(timer)
   }, [successNotice])
   const enqueue = useCallback(work => {

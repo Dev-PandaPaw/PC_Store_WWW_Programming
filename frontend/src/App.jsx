@@ -14,6 +14,7 @@ import ProductDetailPage from './pages/ProductDetailPage'
 import NotFoundPage from './pages/NotFoundPage'
 import CheckoutPage from './pages/CheckoutPage'
 import OrdersPage from './pages/OrdersPage'
+import RequireLogin from './components/RequireLogin'
 
 export default function App() {
   const { pathname } = useLocation()
@@ -31,7 +32,7 @@ export default function App() {
         <Route path="/blog/:slug" element={<ArticlePage />} />
         <Route path="/advisory" element={<AdvisoryPage />} />
         <Route path="/cart" element={<CartPage />} />
-        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/checkout" element={<RequireLogin><CheckoutPage /></RequireLogin>} />
         <Route path="/orders" element={<OrdersPage />} />
         <Route path="/manage-orders" element={<Navigate to="/admin/orders" replace />} />
         <Route path="/login" element={<LoginPage />} />

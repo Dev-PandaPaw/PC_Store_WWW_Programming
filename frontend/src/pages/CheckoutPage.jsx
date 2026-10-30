@@ -1,10 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { ArrowLeft, ArrowRight, Check, CheckCircle2, CreditCard, MapPin, Package, ShieldCheck, ShoppingBag, Truck, UserRound } from 'lucide-react'
 import { useCart } from '../contexts/CartContext'
 import { useAuth } from '../contexts/AuthContext'
 import CartDemoPanel from '../components/CartDemoPanel'
 import OrderReference from '../components/OrderReference'
+import AddressSelect from '../components/AddressSelect'
+import provinces from '../data/vietnamDistricts.json'
+import { selectedAddress, changeProvince, changeDistrict } from '../utils/addresses'
 import { orderApi, orderError } from '../services/orders'
 import { formatVND } from '../utils/cart'
 import { shippingFromCustomer, mergeCustomerShipping } from '../utils/checkout'
@@ -14,7 +17,8 @@ const fields = [
   ['recipient', 'Họ và tên người nhận', 'Nhập họ và tên', 100, 'name'],
   ['phone', 'Số điện thoại', 'Số điện thoại đã xác minh', 16, 'tel'],
   ['province', 'Tỉnh / thành phố', 'Ví dụ: TP. Hồ Chí Minh', 100, 'address-level1'],
-  ['ward', 'Phường / xã', 'Nhập phường hoặc xã', 100, 'address-level2'],
+  ['district', 'Quận / huyện', 'Chọn tỉnh / thành phố trước', 100, 'address-level2'],
+  ['ward', 'Phường / xã', 'Nhập phường hoặc xã', 100, 'address-level3'],
   ['addressLine', 'Địa chỉ nhận hàng', 'Số nhà, tên đường, tòa nhà…', 255, 'street-address'],
 ]
 
@@ -30,6 +34,7 @@ function CheckoutSteps({ step }) {
 export default function CheckoutPage() {
   const { cartVersion, demo, ready, syncing, refresh, items, totalAmount, totalCount } = useCart()
   const { user, loading: authLoading } = useAuth()
+  const navigate = useNavigate()
   const customerIdentity = demo?.userId || user?.id || ''
   const [shipping, setShipping] = useState(() => shippingFromCustomer(user))
   const [quote, setQuote] = useState(null)
@@ -43,17 +48,23 @@ export default function CheckoutPage() {
   const edited = useRef(new Set())
   const identityRevision = useRef(0)
   const heading = useRef(null)
+  const province = selectedAddress(provinces, shipping.province)
+  const districts = province?.districts || []
+  const handleError = error => {
+    if (error?.response?.status === 401) navigate('/login', { replace: true, state: { from: '/checkout' } })
+    else setError(orderError(error))
+  }
   useEffect(() => {
     let active = true
     edited.current = new Set()
     setQuote(null); setCreated(null); setError('')
     // Render the authenticated customer's information immediately; revalidate in the background.
     setShipping(shippingFromCustomer(user))
-    if (authLoading) return
+    if (authLoading || !user) return
     setAccountLoading(true)
     orderApi.account().then(({ data }) => {
       if (active) setShipping(value => mergeCustomerShipping(value, data, edited.current))
-    }).catch(error => { if (active) setError(orderError(error)) })
+    }).catch(error => { if (active) handleError(error) })
       .finally(() => { if (active) setAccountLoading(false) })
     return () => { active = false; identityRevision.current++ }
   }, [customerIdentity, user, authLoading])
@@ -68,13 +79,16 @@ export default function CheckoutPage() {
   const preview = async event => {
     event.preventDefault()
     if (sending.current || syncing || !ready || !items.length) return
+    if (!province || !selectedAddress(districts, shipping.district)) {
+      setError('Vui lòng chọn tỉnh / thành phố và quận / huyện từ danh sách.'); return
+    }
     sending.current = true; setBusy(true); setError('')
     const revision = identityRevision.current
     try {
       const { data } = await orderApi.quote({ cartVersion, shipping })
       if (revision === identityRevision.current) { setQuote(data); setNow(Date.now()); window.scrollTo(0, 0) }
     } catch (error) {
-      if (revision === identityRevision.current) { setError(orderError(error)); void refresh() }
+      if (revision === identityRevision.current) { handleError(error); if (error?.response?.status !== 401) void refresh() }
     } finally { sending.current = false; setBusy(false) }
   }
   const place = async () => {
@@ -89,7 +103,7 @@ export default function CheckoutPage() {
       const { data } = await orderApi.place({ quoteId: quote.id, paymentMethod: method }, key)
       if (revision !== identityRevision.current) return
       setCreated(data); void refresh(); window.scrollTo(0, 0)
-    } catch (error) { if (revision === identityRevision.current) setError(orderError(error)) }
+    } catch (error) { if (revision === identityRevision.current) handleError(error) }
     finally { sending.current = false; setBusy(false) }
   }
   const step = created ? 2 : quote ? 1 : 0
@@ -122,13 +136,20 @@ export default function CheckoutPage() {
       <p className="checkout-note">Kiểm tra thông tin của bạn và bổ sung địa chỉ giao hàng.</p>
       {accountLoading && !user && <p className="checkout-status" role="status">Đang lấy thông tin tài khoản…</p>}
       <fieldset disabled={busy || authLoading} className="checkout-fields">
-        {fields.map(([key, label, placeholder, maxLength, autoComplete]) => <label key={key} className={key === 'addressLine' ? 'checkout-field--wide' : ''}>
+        {fields.map(([key, label, placeholder, maxLength, autoComplete]) => key === 'province' ?
+          <AddressSelect key={`province:${customerIdentity}`} label={label} placeholder="Gõ để tìm tỉnh / thành phố" options={provinces}
+            value={shipping.province} disabled={busy || authLoading} onChange={value => setShipping(previous => changeProvince(previous, value))} /> : key === 'district' ?
+          <AddressSelect key={`district:${customerIdentity}:${shipping.province}`} label={label}
+            placeholder={province ? 'Gõ để tìm quận / huyện' : placeholder} options={districts} value={shipping.district} disabled={!province || busy || authLoading}
+            onChange={value => setShipping(previous => changeDistrict(previous, value))} /> :
+          <label key={key} className={key === 'addressLine' ? 'checkout-field--wide' : ''}>
           {label}<span aria-hidden="true"> *</span>
           <input required maxLength={maxLength} minLength={key === 'addressLine' ? 5 : key === 'recipient' ? 2 : undefined}
             type={key === 'phone' ? 'tel' : 'text'} autoComplete={autoComplete} placeholder={placeholder} value={shipping[key]}
             onChange={event => { edited.current.add(key); setShipping(value => ({ ...value, [key]: event.target.value })) }} />
         </label>)}
       </fieldset>
+      <p className="checkout-help">Danh sách tỉnh và quận/huyện theo địa giới trước tháng 7/2025.</p>
       <p className="checkout-help"><ShieldCheck size={15} /> Sử dụng số điện thoại đã xác minh của tài khoản.</p>
       <div className="checkout-mini-summary"><span><Package size={19} /> {totalCount} sản phẩm</span><div><span>Tạm tính</span><strong>{formatVND(Number(totalAmount))}</strong></div></div>
       <div className="checkout-footer"><Link className="checkout-back" to="/cart"><ArrowLeft size={16} /> Quay lại giỏ hàng</Link>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { loginDestination } from '../utils/checkout'
 import { useCart } from '../contexts/CartContext'
 
 export default function LoginPage() {
@@ -9,6 +10,7 @@ export default function LoginPage() {
   const [busy, setBusy] = useState(false)
   const { login } = useCart()
   const navigate = useNavigate()
+  const location = useLocation()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -17,7 +19,7 @@ export default function LoginPage() {
     setBusy(true)
     try {
       await login(username, password)
-      navigate('/')
+      navigate(loginDestination(location.state?.from), { replace: true })
     } catch (err) {
       setError(err.response?.data?.detail || 'Đăng nhập không thành công. Vui lòng kiểm tra lại thông tin.')
     } finally {

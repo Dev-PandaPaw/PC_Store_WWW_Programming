@@ -15,8 +15,15 @@ public final class OrderDtos {
                            @NotBlank @Pattern(regexp="(?:0[35789][0-9]{8}|\\+84[35789][0-9]{8})") String phone,
                            @NotBlank @Size(max=100) String province,
                            @NotBlank @Size(max=100) String ward,
-                           @NotBlank @Size(min=5,max=255) String addressLine) {
-        public String address() { return addressLine.trim() + ", " + ward.trim() + ", " + province.trim(); }
+                           @NotBlank @Size(min=5,max=255) String addressLine,
+                           @Size(max=100) String district) {
+        public Shipping(String recipient, String phone, String province, String ward, String addressLine) {
+            this(recipient, phone, province, ward, addressLine, null);
+        }
+        public String address() {
+            return addressLine.trim() + ", " + ward.trim()
+                    + (district == null || district.isBlank() ? "" : ", " + district.trim()) + ", " + province.trim();
+        }
         public String normalizedPhone() { return phone.startsWith("0") ? "+84" + phone.substring(1) : phone; }
     }
     public record QuoteRequest(@PositiveOrZero long cartVersion, @NotNull @Valid Shipping shipping) { }

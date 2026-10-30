@@ -45,6 +45,17 @@
 .checkout-fields label { font-size: 13px; font-weight: 650; color: #334155; }
 .checkout-fields label > span { color: #ef4444; }
 .checkout-field--wide { grid-column: 1 / -1; }
+.address-select { position: relative; min-width: 0; }
+.address-select > label { display: block; }
+.address-select > label > span { color: #ef4444; }
+.address-select__input { position: relative; }
+.address-select__input > input { padding-right: 38px; }
+.address-select__input > svg { position: absolute; right: 13px; top: 50%; transform: translateY(-50%); pointer-events: none; color: #64748b; }
+.address-select__input > input:disabled { background: #f1f5f9; cursor: not-allowed; color: #94a3b8; }
+.address-select__list { position: absolute; z-index: 30; left: 0; right: 0; max-height: 250px; overflow-y: auto; overscroll-behavior: contain; list-style: none; padding: 6px; margin: 5px 0 0; border: 1px solid #cbd5e1; border-radius: 10px; background: white; box-shadow: 0 12px 28px #0f172a1a; }
+.address-select__list > li { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 11px 10px; border-radius: 6px; font-size: 13px; color: #334155; cursor: pointer; }
+.address-select__list > li:hover, .address-select__list > .is-active, .address-select__list > [aria-selected=true] { background: #eff6ff; color: #1d4ed8; }
+.address-select__list > .address-select__empty { color: #64748b; cursor: default; }
 .checkout-fields input { display: block; width: 100%; margin-top: 9px; border: 1px solid #d7e0eb; border-radius: 10px; padding: 13px 15px; font-size: 14px; background: #fcfdff; transition: border-color .15s, box-shadow .15s; }
 .checkout-fields input::placeholder { color: #94a3b8; font-weight: 400; }
 .checkout-fields input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px #eff6ff; }
