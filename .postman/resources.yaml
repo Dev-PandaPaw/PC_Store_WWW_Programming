@@ -1,5 +1,7 @@
 localResources:
   specs:
     - ../postman/specs/storefront.openapi.yaml
+    - ../postman/specs/ai-advisor.openapi.yaml
+    - ../postman/specs/smart-search.openapi.yaml
 workspace:
   id: ''

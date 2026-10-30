@@ -2,9 +2,11 @@
 
 Kho mã nguồn cho đồ án website giới thiệu và bán máy PC trực tuyến.
 
+AI chạy trực tiếp trong backend Java bằng **Spring AI 2.0.2 + Google GenAI**, gồm tìm kiếm sản phẩm theo nhu cầu và tư vấn cấu hình. Xem [hướng dẫn cấu hình, chạy và kiểm tra AI](docs/AI.md). Không cần service Node.js riêng cho AI.
+
 ## Trạng thái hiện tại
 
-Repository đang ở giai đoạn **scaffold kiến trúc phiên bản 2.0**. Phạm vi đã được thu gọn cho đồ án nhóm 5 người; chưa có mã Java, giao diện, migration, cấu hình chạy, dependency hay pipeline thực thi.
+Repository đã có backend Spring Boot, frontend React, migration danh mục sản phẩm, tìm kiếm thông minh và tư vấn AI. Các tài liệu kế hoạch bên dưới mô tả phạm vi đồ án tổng thể, gồm cả những module chưa triển khai.
 
 Java group và base package của dự án: `iuh.fit.nhom16.pcstore`.
 
@@ -27,4 +29,4 @@ Khung hiện tại bao gồm:
 
 Luồng chính của sản phẩm là tư vấn PC theo nhu cầu → giỏ Session → COD/VNPAY sandbox → Admin xử lý đơn → Customer theo dõi bảo hành tối giản. Đặc tả UI có 24 màn hình chức năng.
 
-Các tệp triển khai như `pom.xml`, Maven Wrapper, `compose.yaml`, `.env.example`, workflow CI và cấu hình Spring sẽ được tạo trong bước bootstrap kỹ thuật, khi nhóm bắt đầu hiện thực và chốt được cấu hình chạy thực tế.
+Chạy backend bằng Maven Wrapper tại thư mục gốc và frontend bằng `npm run dev` trong `frontend/`. Cấu hình mẫu nằm trong `.env.example`; Docker cho dịch vụ hỗ trợ nằm trong `ops/`.

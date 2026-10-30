@@ -1,11 +1,10 @@
 import React from 'react'
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Navigate, Routes, Route, useLocation } from 'react-router-dom'
 import StoreShell from './components/StoreShell'
 import AdminShell from './components/AdminShell'
 
 import HomePage from './pages/HomePage'
 import CatalogPage from './pages/CatalogPage'
-import AdvisoryPage from './pages/AdvisoryPage'
 import CartPage from './pages/CartPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
@@ -14,6 +13,7 @@ import ArticlePage from './pages/ArticlePage'
 import ProductDetailPage from './pages/ProductDetailPage'
 import NotFoundPage from './pages/NotFoundPage'
 import TopProgressBar from './components/TopProgressBar'
+import AiChatPage from './pages/AiChatPage'
 
 export default function App() {
   const { pathname } = useLocation()
@@ -31,7 +31,8 @@ export default function App() {
         <Route path="/products/:slug" element={<ProductDetailPage />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/blog/:slug" element={<ArticlePage />} />
-        <Route path="/advisory" element={<AdvisoryPage />} />
+        <Route path="/advisory" element={<AiChatPage />} />
+        <Route path="/advisory/ai" element={<Navigate to="/advisory" replace />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
