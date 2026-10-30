@@ -8,10 +8,12 @@ import CatalogPage from './pages/CatalogPage'
 import AdvisoryPage from './pages/AdvisoryPage'
 import CartPage from './pages/CartPage'
 import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
 import BlogPage from './pages/BlogPage'
 import ArticlePage from './pages/ArticlePage'
 import ProductDetailPage from './pages/ProductDetailPage'
 import NotFoundPage from './pages/NotFoundPage'
+import TopProgressBar from './components/TopProgressBar'
 
 export default function App() {
   const { pathname } = useLocation()
@@ -19,7 +21,9 @@ export default function App() {
     window.scrollTo(0, 0)
   }, [pathname])
   return (
-    <Routes>
+    <>
+      <TopProgressBar />
+      <Routes>
       {/* Storefront Routes */}
       <Route element={<StoreShell />}>
         <Route path="/" element={<HomePage />} />
@@ -30,6 +34,7 @@ export default function App() {
         <Route path="/advisory" element={<AdvisoryPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
 
@@ -39,5 +44,6 @@ export default function App() {
         <Route path="products" element={<CatalogPage />} />
       </Route>
     </Routes>
+    </>
   )
 }
