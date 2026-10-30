@@ -17,6 +17,7 @@ class TestLoginServiceTest {
     @Test void wrongCredentialsCannotProvisionOrAuthenticate() {
         assertEquals(401, assertThrows(OrderException.class, () -> service.login("test", "wrong")).status().value());
         assertThrows(OrderException.class, () -> service.login("someone", "1234"));
+        assertThrows(OrderException.class, () -> service.login("test2", "wrong"));
         verifyNoInteractions(jdbc, passwords);
     }
     @Test void fixedCredentialsProvisionOnlyDedicatedTestAccount() {
@@ -38,5 +39,24 @@ class TestLoginServiceTest {
         assertEquals(TestUser.ID, service.login("test", "1234").id());
         verifyNoInteractions(passwords);
         verify(jdbc, never()).update(anyString(), any(Object[].class));
+    }
+    @Test void secondAccountHasIndependentIdentityAndOnlyCustomerRole() {
+        when(passwords.encode("1234")).thenReturn("encoded-test-password");
+        when(jdbc.queryForObject(anyString(), eq(Boolean.class), eq(TestUser.SECOND_ID))).thenReturn(false, true);
+        TestUser user = service.login("test2", "1234");
+        assertEquals(TestUser.SECOND_ID, user.id());
+        assertNotEquals(TestUser.ID, user.id());
+        assertNotEquals(TestUser.account().phone(), user.phone());
+        assertEquals(java.util.List.of("CUSTOMER"), user.roles());
+        verify(jdbc).update(contains("ON CONFLICT (id) DO NOTHING"), eq(user.id()), eq("test2@pcstore.example"),
+                eq("encoded-test-password"), eq(user.phone()), eq(user.fullName()));
+        verify(jdbc).update(contains("INSERT INTO user_roles"), eq(user.id()), eq("ROLE_CUSTOMER"));
+        verify(jdbc, never()).update(contains("INSERT INTO user_roles"), eq(user.id()), eq("ROLE_ADMIN"));
+    }
+    @Test void returningSecondAccountDoesNotReuseFirstAccount() {
+        when(jdbc.queryForObject(anyString(), eq(Boolean.class), eq(TestUser.SECOND_ID))).thenReturn(true);
+        assertEquals(TestUser.SECOND_ID, service.login("test2", "1234").id());
+        verifyNoInteractions(passwords);
+        verify(jdbc, never()).queryForObject(anyString(), eq(Boolean.class), eq(TestUser.ID));
     }
 }

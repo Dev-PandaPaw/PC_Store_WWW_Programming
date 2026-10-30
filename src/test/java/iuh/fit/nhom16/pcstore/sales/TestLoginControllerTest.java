@@ -48,4 +48,21 @@ class TestLoginControllerTest {
         assertNull(SecurityContextHolder.getContext().getAuthentication());
         assertNull(session.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY));
     }
+    @Test void secondLoginMergesIntoSecondAccountAndDoesNotGrantAdmin() {
+        TestUser user = TestUser.customerAccount();
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpSession session = new MockHttpSession(); request.setSession(session);
+        CartResponse merged = new CartResponse(1, List.of(), 0, BigDecimal.ZERO);
+        when(service.login("test2", "1234")).thenReturn(user);
+        when(carts.merge(session, user.id())).thenReturn(merged);
+
+        var response = controller.login(new TestLoginController.LoginRequest("test2", "1234"), request, new MockHttpServletResponse());
+
+        assertEquals(TestUser.SECOND_ID, response.id());
+        assertSame(merged, response.cart());
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        assertEquals(List.of("ROLE_CUSTOMER"), auth.getAuthorities().stream().map(a -> a.getAuthority()).toList());
+        verify(carts).merge(session, TestUser.SECOND_ID);
+        verify(carts, never()).merge(session, TestUser.ID);
+    }
 }

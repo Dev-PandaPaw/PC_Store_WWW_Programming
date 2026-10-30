@@ -18,12 +18,12 @@ public class TestLoginService {
 
     @Transactional
     public TestUser login(String username, String password) {
-        if (!TestUser.USERNAME.equals(username) || !TestUser.PASSWORD.equals(password))
+        TestUser user = TestUser.accounts().stream().filter(account -> account.username().equals(username)).findFirst().orElse(null);
+        if (user == null || !TestUser.PASSWORD.equals(password))
             throw new OrderException(HttpStatus.UNAUTHORIZED, "INVALID_CREDENTIALS", "Tên đăng nhập hoặc mật khẩu không đúng.");
-        TestUser user = TestUser.account();
         // Returning users need one status read, not another BCrypt calculation and three no-op inserts.
         if (active(user)) return user;
-        // Provision only this new test account; never overwrite an existing customer's profile or verification.
+        // Provision only the selected test account; never overwrite another customer's profile or verification.
         jdbc.update("""
                 INSERT INTO users(id,email,password_hash,phone,full_name,status,phone_verified_at)
                 VALUES (?,?,?,?,?,'ACTIVE',CURRENT_TIMESTAMP) ON CONFLICT (id) DO NOTHING

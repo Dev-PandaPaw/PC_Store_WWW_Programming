@@ -2,7 +2,7 @@
 
 ## Chạy demo
 
-Yêu cầu Java 21, Maven, Node.js và kết nối PostgreSQL hiện có. Chạy ứng dụng bình thường; không cần đổi profile, database hay tạo Docker image. Tài khoản đăng nhập kiểm thử được gán cứng: **test / 1234**. Ứng dụng vẫn dùng danh mục sản phẩm hiện tại.
+Yêu cầu Java 21, Maven, Node.js và kết nối PostgreSQL hiện có. Chạy ứng dụng bình thường; không cần đổi profile, database hay tạo Docker image. Hai tài khoản kiểm thử: **test / 1234** (CUSTOMER + ADMIN) và **test2 / 1234** (chỉ CUSTOMER). Ứng dụng vẫn dùng danh mục sản phẩm hiện tại.
 
 ```powershell
 mvn spring-boot:run
@@ -29,6 +29,8 @@ public static final String PASSWORD = "1234";
 
 Khi nhập đúng thông tin, backend tạo tài khoản kiểm thử riêng có UUID `a0000000-0000-0000-0000-000000000005` nếu chưa có, với số điện thoại mẫu đã xác minh **0987654321**, quyền CUSTOMER và ADMIN để thử các chức năng. Không ghi đè thông tin hay xác minh số của tài khoản khách hàng khác. Tài khoản bị khóa vẫn bị từ chối đăng nhập. Đây là đăng nhập mẫu, chưa có đăng ký, OTP hay xác thực mật khẩu người dùng bất kỳ.
 
+Tài khoản **test2 / 1234** dùng UUID `a0000000-0000-0000-0000-000000000006`, email `test2@pcstore.example`, số điện thoại **0976543210** và chỉ có quyền CUSTOMER. Tài khoản được tạo tự động trong lần đăng nhập đầu, số điện thoại mẫu được xác minh để thử checkout. Giỏ và đơn hàng tách theo UUID của từng tài khoản. Có thể dùng cửa sổ ẩn danh để thử song song; đăng xuất rồi đăng nhập tài khoản còn lại để kiểm tra giỏ được giữ riêng. Không cấp quyền admin cho test2.
+
 Danh tính `TestUser` thực hiện `CartUserIdentity`, lưu trong Spring Security session sau khi đổi session ID. Không tự đăng nhập khi mở trang. `GET /api/auth/me` khôi phục trạng thái sau khi tải lại; `POST /api/auth/logout` kết thúc session, không xóa giỏ tài khoản trong database. Các API ghi, gồm login/logout, được bảo vệ CSRF. Tắt tài khoản mẫu khi triển khai công khai bằng `TEST_LOGIN_ENABLED=false`.
 
 Kết nối dùng `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` từ cấu hình mặc định `local`; Spring không tự đọc `.env`, cần đặt biến môi trường trong terminal hoặc IDE. Nếu đã dùng bộ database hai PC từ lần chạy cũ, chuyển kết nối về database chứa danh mục đầy đủ. Mailpit/Docker chỉ là lựa chọn chạy dịch vụ local, không phải cơ chế giả lập user. Xóa `order-demo` khỏi Active profiles/VM options cũ của IDE và khởi động lại backend.
@@ -41,7 +43,7 @@ Lỗi giỏ trong ảnh được xác định bằng kiểm tra schema đang dù
 src/main/java/iuh/fit/nhom16/pcstore/
   identity/
     controller/     TestLoginController: login/me/logout, session
-    model/          TestUser: một tài khoản test/1234 gán cứng
+    model/          TestUser: hai tài khoản test/1234 và test2/1234
     service/        TestLoginService: kiểm tra tài khoản mẫu, tạo bản ghi nếu thiếu
   sales/
     controller/     OrderController, AdminOrderController: HTTP + validation

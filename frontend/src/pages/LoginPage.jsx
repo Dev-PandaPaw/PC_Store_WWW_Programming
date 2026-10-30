@@ -37,7 +37,10 @@ export default function LoginPage() {
           Chào mừng bạn quay trở lại với PixelCore
         </p>
 
-        <p style={{ marginBottom: '1rem', fontSize: '0.9rem' }}>Tài khoản kiểm thử: <strong>test</strong> · Mật khẩu: <strong>1234</strong></p>
+        <div style={{ marginBottom: '1rem', fontSize: '0.9rem', lineHeight: 1.8 }}>
+          <p>Admin: <strong>test</strong> · Mật khẩu: <strong>1234</strong></p>
+          <p>Khách hàng: <strong>test2</strong> · Mật khẩu: <strong>1234</strong></p>
+        </div>
 
         {error && (
           <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#b91c1c', padding: '0.75rem', borderRadius: 'var(--pc-radius-sm)', marginBottom: '1rem', fontSize: '0.9rem' }}>
