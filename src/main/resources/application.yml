@@ -13,7 +13,7 @@ spring:
     enabled: true
     baseline-on-migrate: true
     validate-on-migrate: false
-    locations: classpath:db/migration
+    locations: classpath:db/migration,classpath:db/orders
 
 server:
   port: ${SERVER_PORT:8080}
@@ -51,3 +51,5 @@ app:
     per-day: ${AI_RATE_LIMIT_PER_DAY:100}
     global-per-day: ${AI_GLOBAL_LIMIT_PER_DAY:1000}
     allow-local-mocks: ${AI_ALLOW_LOCAL_MOCKS:false}
+  test-login:
+    enabled: ${TEST_LOGIN_ENABLED:false}

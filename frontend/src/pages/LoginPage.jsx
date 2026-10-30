@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { useCart } from '../contexts/CartContext'
+import { loginDestination } from '../utils/checkout'
 
 export default function LoginPage() {
   const [username, setUsername] = useState('')
@@ -8,11 +10,12 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
-  const { login, user, loading } = useAuth()
+  const { user, loading } = useAuth()
+  const { login } = useCart()
   const navigate = useNavigate()
   const location = useLocation()
 
-  const redirectPath = location.state?.from?.pathname || '/'
+  const redirectPath = loginDestination(location.state?.from)
 
   React.useEffect(() => {
     if (user && !loading) {
@@ -22,6 +25,7 @@ export default function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (submitting) return
     setError('')
     setSubmitting(true)
     try {
@@ -94,6 +98,8 @@ export default function LoginPage() {
               type="text"
               required
               autoFocus
+              autoComplete="username"
+              disabled={submitting}
               value={username}
               onChange={(e) => {
                 setUsername(e.target.value)
@@ -139,6 +145,8 @@ export default function LoginPage() {
             <input
               id="login-password"
               type="password"
+              autoComplete="current-password"
+              disabled={submitting}
               required
               value={password}
               onChange={(e) => {

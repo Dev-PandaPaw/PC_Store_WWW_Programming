@@ -5,7 +5,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "verification_challenges")
+@Table(name = "identity_verification_challenges")
 public class VerificationChallenge {
 
     @Id

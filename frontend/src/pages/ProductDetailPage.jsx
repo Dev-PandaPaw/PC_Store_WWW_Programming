@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, ShoppingCart, Check } from 'lucide-react'
+import { ArrowLeft, ShoppingCart } from 'lucide-react'
 import {
   CATEGORY_LABELS,
 } from '../data/storeData'
@@ -8,15 +8,14 @@ import { formatVND } from '../utils/cart'
 import { useCart } from '../contexts/CartContext'
 import { ProductCard } from '../components/gear/ProductCard'
 import { useCatalog } from '../contexts/CatalogContext'
+import ProductStock from '../components/ProductStock'
 
 export default function ProductDetailPage() {
   const { findProduct, productsInCategory, loading } = useCatalog()
   const { slug } = useParams()
   const product = findProduct(slug)
-  const { addItem } = useCart()
-  const [added, setAdded] = useState(false)
+  const { addItem, ready, productState, reportCartError } = useCart()
   useEffect(() => {
-    setAdded(false)
     document.title = product
       ? `${product.name} | PixelCore`
       : 'Không tìm thấy sản phẩm | PixelCore'
@@ -69,18 +68,14 @@ export default function ProductDetailPage() {
   const related = productsInCategory(product.category)
     .filter((item) => item.id !== product.id)
     .slice(0, 4)
-  const handleAdd = () => {
-    addItem(
-      {
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image,
-      },
-      1,
-    )
-    setAdded(true)
+  const availability = productState(product)
+  const handleAdd = async () => {
+    try {
+      const result = await addItem(product, 1)
+      if (!result.success) reportCartError(result.message)
+    } catch { reportCartError('Không thể thêm vào giỏ hàng. Vui lòng thử lại.') }
   }
+
   return (
     <div className="product-page">
       <nav className="breadcrumbs" aria-label="Đường dẫn">
@@ -115,15 +110,11 @@ export default function ProductDetailPage() {
               <span key={index}>{spec.label}</span>
             ))}
           </div>
-          <button className="store-button" onClick={handleAdd}>
-            {added ? <Check size={18} /> : <ShoppingCart size={18} />}
-            {added ? 'Đã thêm · Thêm một sản phẩm nữa' : 'Thêm vào giỏ hàng'}
+          <button className="store-button" onClick={handleAdd} disabled={!ready || !availability.canAdd}>
+            <ShoppingCart size={18} />
+            Thêm vào giỏ hàng
           </button>
-          {added && (
-            <p className="product-detail__added" role="status">
-              Sản phẩm đã ở trong giỏ. <Link to="/cart">Xem giỏ hàng →</Link>
-            </p>
-          )}
+          <ProductStock product={product} />
         </div>
       </div>
       {related.length > 0 && (

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { useCart } from '../contexts/CartContext'
 
 export default function RegisterPage() {
   const [fullName, setFullName] = useState('')
@@ -12,7 +13,8 @@ export default function RegisterPage() {
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
-  const { register, login, user, loading } = useAuth()
+  const { register, user, loading } = useAuth()
+  const { login } = useCart()
   const navigate = useNavigate()
 
   React.useEffect(() => {

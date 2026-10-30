@@ -1,12 +1,14 @@
 import React, { useEffect, useRef } from 'react'
-import { X, ShoppingBag, Trash2, Plus, Minus, ArrowRight } from 'lucide-react'
+import { X, ShoppingBag, Trash2, ArrowRight } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import CartQuantity from '../CartQuantity'
 import { CartItem, formatVND } from '../../utils/cart'
 
 interface CartDrawerProps {
   isOpen: boolean
   onClose: () => void
   items: CartItem[]
-  onUpdateQuantity: (id: string, delta: number) => void
+  onUpdateQuantity: (id: string, quantity: number) => Promise<{ success: boolean; message?: string }>
   onRemoveItem: (id: string) => void
   onClearCart: () => void
 }
@@ -132,27 +134,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                       {formatVND(item.price)}
                     </span>
                     <div className="mt-1.5 flex items-center gap-2">
-                      <div className="flex items-center rounded border border-gray-200">
-                        <button
-                          type="button"
-                          onClick={() => onUpdateQuantity(item.id, -1)}
-                          className="px-1.5 py-0.5 text-gray-600 hover:bg-gray-100"
-                          aria-label="Giảm số lượng"
-                        >
-                          <Minus className="h-3 w-3" />
-                        </button>
-                        <span className="px-2 text-xs font-bold">
-                          {item.quantity}
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => onUpdateQuantity(item.id, 1)}
-                          className="px-1.5 py-0.5 text-gray-600 hover:bg-gray-100"
-                          aria-label="Tăng số lượng"
-                        >
-                          <Plus className="h-3 w-3" />
-                        </button>
-                      </div>
+                      <CartQuantity {...item} onUpdate={onUpdateQuantity} />
 
                       <button
                         type="button"
@@ -178,13 +160,14 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               </div>
 
               <div className="space-y-2">
-                <a
-                  href="/cart"
+                <Link
+                  to="/cart"
+                  onClick={onClose}
                   className="w-full rounded bg-[#2563eb] hover:bg-blue-700 py-2.5 text-xs font-bold text-white transition-colors flex items-center justify-center gap-1.5 shadow text-center"
                 >
                   <span>Xem giỏ hàng</span>
                   <ArrowRight className="h-4 w-4" />
-                </a>
+                </Link>
 
                 <div className="flex gap-2">
                   <button

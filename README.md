@@ -1,5 +1,7 @@
 # PC Store
 
+Luồng đặt hàng ORD01–ORD15 đã được bổ sung theo MVC, với checkout COD và đăng nhập từ development. Xem [hướng dẫn chạy và kiểm thử chức năng đặt hàng](docs/reports/ORDER_FEATURE_IMPLEMENTATION.md).
+
 Kho mã nguồn cho đồ án website giới thiệu và bán máy PC trực tuyến.
 
 AI chạy trực tiếp trong backend Java bằng **Spring AI 2.0.2 + Google GenAI**, gồm tìm kiếm sản phẩm theo nhu cầu và tư vấn cấu hình. Xem [hướng dẫn cấu hình, chạy và kiểm tra AI](docs/AI.md). Không cần service Node.js riêng cho AI.
@@ -21,12 +23,12 @@ Java group và base package của dự án: `iuh.fit.nhom16.pcstore`.
 
 Khung hiện tại bao gồm:
 
-- 7 module nghiệp vụ: `identity`, `catalog`, `cart`, `advisory`, `sales`, `payment`, `aftersales`;
+- 6 module nghiệp vụ: `identity`, `catalog`, `cart`, `advisory`, `sales`, `aftersales`;
 - cấu trúc tài nguyên Thymeleaf, static asset và Flyway;
 - cấu trúc unit/integration/architecture test và E2E;
 - khu vực tài liệu, vận hành và CI;
 - tệp giữ chỗ để toàn bộ cấu trúc được Git theo dõi.
 
-Luồng chính của sản phẩm là tư vấn PC theo nhu cầu → giỏ Session → COD/VNPAY sandbox → Admin xử lý đơn → Customer theo dõi bảo hành tối giản. Đặc tả UI có 24 màn hình chức năng.
+Luồng chính của sản phẩm là tư vấn PC theo nhu cầu → giỏ Session → đặt hàng COD → Admin xử lý đơn → Customer theo dõi bảo hành tối giản. Đặc tả UI có 24 màn hình chức năng.
 
 Chạy backend bằng Maven Wrapper tại thư mục gốc và frontend bằng `npm run dev` trong `frontend/`. Cấu hình mẫu nằm trong `.env.example`; Docker cho dịch vụ hỗ trợ nằm trong `ops/`.

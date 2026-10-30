@@ -4,6 +4,7 @@ import iuh.fit.nhom16.pcstore.identity.domain.User;
 import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
+import iuh.fit.nhom16.pcstore.cart.dto.CartDtos.CartResponse;
 
 public record UserDto(
     UUID id,
@@ -17,7 +18,8 @@ public record UserDto(
     String addressLine,
     String status,
     Set<String> roles,
-    Instant createdAt
+    Instant createdAt,
+    CartResponse cart
 ) {
     public static UserDto fromEntity(User user) {
         if (user == null) return null;
@@ -33,7 +35,11 @@ public record UserDto(
             user.getAddressLine(),
             user.getStatus(),
             user.getRoles(),
-            user.getCreatedAt()
+            user.getCreatedAt(), null
         );
+    }
+    public UserDto withCart(CartResponse cart) {
+        return new UserDto(id, email, fullName, phone, recipientName, province, district, ward,
+                addressLine, status, roles, createdAt, cart);
     }
 }

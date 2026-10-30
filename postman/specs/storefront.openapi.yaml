@@ -4,6 +4,129 @@ info:
   version: 1.0.0
   description: Database-backed public catalog. Product images are logical keys resolved by the frontend asset bundle.
 paths:
+  /api/v1/cart/merge:
+    post:
+      operationId: mergeGuestCart
+      summary: Atomically merge the session guest cart into the authenticated user's persistent cart
+      description: Requires CSRF. Same SKU quantities accumulate. A conflict preserves both original carts. Retrying an already committed merge does not double-count items.
+      responses:
+        '200':
+          description: Current cart after merge
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Cart' }
+        '401': { description: Missing supported user identity or inactive user }
+        '409': { $ref: '#/components/responses/CartConflict' }
+  /api/v1/cart/demo:
+    get:
+      operationId: getCartDemoOwner
+      summary: Development only, available exclusively with the cart-demo Spring profile
+      responses:
+        '200':
+          description: Current simulated owner; null means guest
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId: { type: string, format: uuid, nullable: true }
+        '404': { description: Demo profile is disabled }
+    post:
+      operationId: selectCartDemoOwner
+      summary: Simulate a cart owner without implementing authentication
+      description: Development only. Requires CSRF and an existing ACTIVE database user. Null switches back to guest; saved user cart remains. Cannot be used in a truly authenticated session.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId]
+              properties:
+                userId: { type: string, format: uuid, nullable: true }
+      responses:
+        '200':
+          description: Selected owner's cart
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Cart' }
+        '404': { description: Demo disabled or user not found/active }
+        '409': { $ref: '#/components/responses/CartConflict' }
+  /api/v1/cart:
+    get:
+      operationId: getCart
+      summary: Read the session guest cart or authenticated user's database cart
+      description: User ownership comes from the authenticated principal; no userId parameter is accepted. Prices and availability are read from the current catalog.
+      responses:
+        '200':
+          description: Current cart
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Cart' }
+    delete:
+      operationId: clearCart
+      summary: Clear the current cart
+      parameters:
+        - $ref: '#/components/parameters/cartVersion'
+      responses:
+        '200':
+          description: Cleared cart
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Cart' }
+        '409': { $ref: '#/components/responses/CartConflict' }
+  /api/v1/cart/items:
+    post:
+      operationId: addCartItem
+      summary: Add an active SKU to the cart or accumulate its quantity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AddCartItemRequest' }
+      responses:
+        '200':
+          description: Updated cart
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Cart' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '404': { $ref: '#/components/responses/CartNotFound' }
+        '409': { $ref: '#/components/responses/CartConflict' }
+  /api/v1/cart/items/{productId}:
+    patch:
+      operationId: updateCartItem
+      summary: Replace a cart line quantity
+      parameters:
+        - $ref: '#/components/parameters/productId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateCartItemRequest' }
+      responses:
+        '200':
+          description: Updated cart
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Cart' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '404': { $ref: '#/components/responses/CartNotFound' }
+        '409': { $ref: '#/components/responses/CartConflict' }
+    delete:
+      operationId: removeCartItem
+      summary: Remove one cart line
+      parameters:
+        - $ref: '#/components/parameters/productId'
+        - $ref: '#/components/parameters/cartVersion'
+      responses:
+        '200':
+          description: Updated cart
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Cart' }
+        '404': { $ref: '#/components/responses/CartNotFound' }
+        '409': { $ref: '#/components/responses/CartConflict' }
   /api/catalog/storefront:
     get:
       operationId: getStorefront
@@ -74,3 +197,75 @@ paths:
                           items: {type: string}
         '500':
           description: Database unavailable or invalid server configuration. Clients must show an error and allow retry.
+components:
+  parameters:
+    productId:
+      name: productId
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    cartVersion:
+      name: cartVersion
+      in: query
+      required: true
+      schema: { type: integer, minimum: 0 }
+  responses:
+    CartConflict:
+      description: Stale cart, unavailable product, quantity limit, or insufficient stock
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    CartNotFound:
+      description: Cart product or item was not found
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    ValidationError:
+      description: Invalid request fields
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+  schemas:
+    AddCartItemRequest:
+      type: object
+      required: [productId, quantity, cartVersion]
+      properties:
+        productId: { type: string, format: uuid }
+        quantity: { type: integer, minimum: 1, maximum: 99 }
+        cartVersion: { type: integer, minimum: 0 }
+    UpdateCartItemRequest:
+      type: object
+      required: [quantity, cartVersion]
+      properties:
+        quantity: { type: integer, minimum: 1, maximum: 99 }
+        cartVersion: { type: integer, minimum: 0 }
+    CartItem:
+      type: object
+      required: [productId, name, unitPrice, quantity, availableQuantity, purchasable]
+      properties:
+        productId: { type: string, format: uuid }
+        sku: { type: string }
+        name: { type: string }
+        unitPrice: { type: number }
+        quantity: { type: integer }
+        availableQuantity: { type: integer, minimum: 0 }
+        purchasable: { type: boolean }
+    Cart:
+      type: object
+      required: [cartVersion, items, totalQuantity, subtotal]
+      properties:
+        cartVersion: { type: integer, minimum: 0 }
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/CartItem' }
+        totalQuantity: { type: integer, minimum: 0 }
+        subtotal: { type: number }
+    Problem:
+      type: object
+      required: [type, title, status, detail]
+      properties:
+        type: { type: string, format: uri }
+        title: { type: string }
+        status: { type: integer }
+        detail: { type: string }
+        errorCode: { type: string }

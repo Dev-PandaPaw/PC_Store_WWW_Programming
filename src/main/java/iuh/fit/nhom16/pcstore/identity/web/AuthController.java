@@ -8,6 +8,11 @@ import iuh.fit.nhom16.pcstore.identity.web.dto.LoginRequest;
 import iuh.fit.nhom16.pcstore.identity.web.dto.RegisterRequest;
 import iuh.fit.nhom16.pcstore.identity.web.dto.ResetPasswordRequest;
 import iuh.fit.nhom16.pcstore.identity.web.dto.UserDto;
+import iuh.fit.nhom16.pcstore.identity.model.AuthenticatedAccount;
+import iuh.fit.nhom16.pcstore.cart.service.CartStorageService;
+import iuh.fit.nhom16.pcstore.cart.security.CartOwnerResolver;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.web.util.WebUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -28,14 +33,17 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
+@ConditionalOnProperty(name="app.test-login.enabled", havingValue="false", matchIfMissing=true)
 public class AuthController {
 
     private final AuthService authService;
     private final UserRepository userRepository;
+    private final CartStorageService carts;
 
-    public AuthController(AuthService authService, UserRepository userRepository) {
+    public AuthController(AuthService authService, UserRepository userRepository, CartStorageService carts) {
         this.authService = authService;
         this.userRepository = userRepository;
+        this.carts = carts;
     }
 
     @PostMapping("/register")
@@ -53,18 +61,20 @@ public class AuthController {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toSet());
 
-        UsernamePasswordAuthenticationToken authentication =
-                new UsernamePasswordAuthenticationToken(user.getEmail(), null, authorities);
-
-        // Lưu Authentication vào SecurityContext và HttpSession
-        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-        securityContext.setAuthentication(authentication);
-        SecurityContextHolder.setContext(securityContext);
-
         HttpSession session = request.getSession(true);
-        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
-
-        return ResponseEntity.ok(UserDto.fromEntity(user));
+        synchronized (WebUtils.getSessionMutex(session)) {
+            // Merge must commit before the session is authenticated or a success response is published.
+            var cart = carts.merge(session, user.getId());
+            request.changeSessionId();
+            session.removeAttribute(CartOwnerResolver.DEMO_OWNER);
+            var identity = new AuthenticatedAccount(user.getId(), user.getEmail());
+            var authentication = UsernamePasswordAuthenticationToken.authenticated(identity, null, authorities);
+            SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+            securityContext.setAuthentication(authentication);
+            SecurityContextHolder.setContext(securityContext);
+            session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
+            return ResponseEntity.ok(UserDto.fromEntity(user).withCart(cart));
+        }
     }
 
     @PostMapping("/logout")

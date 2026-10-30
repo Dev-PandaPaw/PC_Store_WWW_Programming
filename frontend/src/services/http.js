@@ -18,3 +18,7 @@ http.interceptors.request.use((config) => {
 })
 
 export default http
+
+export async function ensureCsrfToken() {
+  if (!document.cookie.match(/(?:^|;\s*)XSRF-TOKEN=([^;]+)/)) await http.get('/csrf')
+}
