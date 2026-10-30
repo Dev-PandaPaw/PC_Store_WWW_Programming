@@ -11,7 +11,16 @@ export default function PromoBanner({
   priority = false,
 }) {
   return (
-    <Link to={to} className={`promo-banner ${className}`}>
+    <Link
+      to={to}
+      className={`promo-banner ${className}`}
+      style={{
+        position: 'relative',
+        background: '#f1f5f9',
+        overflow: 'hidden',
+        display: 'block',
+      }}
+    >
       <img
         src={src}
         alt={alt}
@@ -19,6 +28,12 @@ export default function PromoBanner({
         height={height}
         loading={priority ? 'eager' : 'lazy'}
         decoding="async"
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          display: 'block',
+        }}
       />
     </Link>
   )

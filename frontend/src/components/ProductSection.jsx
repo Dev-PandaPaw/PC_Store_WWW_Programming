@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { useCatalog } from '../contexts/CatalogContext'
-import { ProductCard } from './gear/ProductCard'
+import { ProductCard, ProductCardSkeleton } from './gear/ProductCard'
 
 export default function ProductSection({
   id,
@@ -44,13 +44,17 @@ export default function ProductSection({
         </div>
       )}
       <div className="product-grid">
-        {products.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            onAddToCart={onAddToCart}
-          />
-        ))}
+        {products.length > 0
+          ? products.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onAddToCart={onAddToCart}
+              />
+            ))
+          : Array.from({ length: limit }).map((_, index) => (
+              <ProductCardSkeleton key={index} />
+            ))}
       </div>
     </section>
   )

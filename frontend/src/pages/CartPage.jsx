@@ -7,6 +7,14 @@ import { formatVND } from '../utils/cart'
 export default function CartPage() {
   const { items, addItem, removeItem, clearCart, totalAmount, totalCount } =
     useCart()
+
+  React.useEffect(() => {
+    document.title = `Giỏ hàng (${totalCount}) | PixelCore`
+    return () => {
+      document.title = 'PixelCore - Cửa Hàng PC & Linh Kiện'
+    }
+  }, [totalCount])
+
   const update = (item, delta) =>
     item.quantity + delta <= 0 ? removeItem(item.id) : addItem(item, delta)
   return (

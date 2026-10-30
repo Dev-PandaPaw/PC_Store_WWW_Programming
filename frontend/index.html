@@ -4,9 +4,461 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PixelCore - Cửa Hàng PC & Linh Kiện</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232563eb'><path d='M4 6h16M4 12h16M4 18h16'/></svg>" />
+    
+    <!-- Tải trực tiếp CSS từ head để trình duyệt dựng Header và Khung sườn NGAY TỨC THÌ, chống 100% màn hình trắng xóa -->
+    <link rel="stylesheet" href="/src/styles/tokens.css" />
+    <link rel="stylesheet" href="/src/styles/base.css" />
+    <link rel="stylesheet" href="/src/styles/layout.css" />
+    <link rel="stylesheet" href="/src/styles/store-header.css" />
+    <link rel="stylesheet" href="/src/styles/brand-logo.css" />
+    <link rel="stylesheet" href="/src/styles/storefront.css" />
+    <style>
+      .sk-box {
+        background: #e2e8f0;
+        border-radius: 6px;
+        animation: sk-pulse 1.4s ease-in-out infinite;
+      }
+      @keyframes sk-pulse {
+        0%, 100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.45;
+        }
+      }
+      .shell-spinner {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border: 2px solid rgba(255, 255, 255, 0.25);
+        border-top-color: #ffffff;
+        border-radius: 50%;
+        animation: shell-spin 0.75s linear infinite;
+        flex-shrink: 0;
+      }
+      @keyframes shell-spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
   </head>
   <body>
+    <!-- 
+      Bộ khung UI & Skeleton đồng bộ chính xác theo từng Route (0ms Zero-blank, chống giật nhảy trang).
+      Đoạn script inline chạy đồng bộ tức thì khi parse HTML để dựng đúng giao diện sườn của route hiện tại.
+    -->
     <div id="root"></div>
+
+    <script>
+      (function() {
+        var root = document.getElementById('root');
+        if (!root) return;
+        var path = window.location.pathname || '/';
+
+        // 1. Phân biệt giao diện Admin
+        if (path.indexOf('/admin') === 0) {
+          root.innerHTML = '<div class="app-shell">' +
+            '<header class="site-header" style="border-bottom-color:#cbd5e1;background:#0f172a;color:#fff;">' +
+              '<div class="nav-container">' +
+                '<span class="brand-logo" style="color:#38bdf8;">⚙️ PixelCore Admin</span>' +
+              '</div>' +
+            '</header>' +
+            '<main class="main-content" style="padding:24px;">' +
+              '<div class="sk-box" style="height:36px;width:240px;margin-bottom:24px;"></div>' +
+              '<div class="sk-box" style="height:360px;border-radius:10px;"></div>' +
+            '</main>' +
+          '</div>';
+          return;
+        }
+
+        // 2. Lấy dữ liệu Giỏ hàng & User từ localStorage để tránh giật số
+        var cartCount = 0;
+        try {
+          var cart = JSON.parse(localStorage.getItem('pc_cart') || '[]');
+          if (Array.isArray(cart)) {
+            cartCount = cart.reduce(function(sum, item) { return sum + (item.quantity || 1); }, 0);
+          }
+        } catch (e) {}
+
+        var authHtml = '<div class="store-account" style="pointer-events:none;cursor:default;" aria-disabled="true">' +
+          '<span class="shell-spinner" aria-hidden="true"></span>' +
+          '<span>Đăng nhập</span>' +
+        '</div>';
+        try {
+          var user = JSON.parse(localStorage.getItem('pc_auth_user') || 'null');
+          if (user && user.fullName) {
+            var shortName = user.fullName.split(' ').pop();
+            authHtml = '<div class="store-account" style="pointer-events:none;cursor:default;">' +
+              '<span style="font-weight:600;">' + shortName + '</span>' +
+            '</div>';
+          }
+        } catch (e) {}
+
+        // 3. Từ điển nhãn danh mục & parse query parameters
+        var CATEGORY_LABELS = {
+          'ALL': 'Tất cả sản phẩm',
+          'pc': 'PC bộ',
+          'pc-gaming': 'PC Gaming',
+          'pc-office': 'PC văn phòng',
+          'pc-workstation': 'PC đồ họa',
+          'components': 'Linh kiện PC',
+          'cpu': 'Bộ vi xử lý',
+          'mainboard': 'Bo mạch chủ',
+          'vga': 'Card đồ họa',
+          'memory': 'RAM & SSD',
+          'ram': 'Bộ nhớ RAM',
+          'storage': 'Ổ cứng SSD',
+          'build': 'Case, nguồn & tản nhiệt',
+          'cooling': 'Tản nhiệt',
+          'case': 'Vỏ case',
+          'psu': 'Nguồn máy tính',
+          'monitor': 'Màn hình máy tính',
+          'gear': 'Chuột & bàn phím',
+          'keyboard': 'Bàn phím',
+          'mouse': 'Chuột máy tính'
+        };
+
+        var searchParams = {};
+        try {
+          var qs = (window.location.search || '').replace(/^\?/, '');
+          if (qs) {
+            var pairs = qs.split('&');
+            for (var i = 0; i < pairs.length; i++) {
+              var parts = pairs[i].split('=');
+              if (parts[0]) {
+                searchParams[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1] || '');
+              }
+            }
+          }
+        } catch (e) {}
+
+        var catKey = searchParams.category || 'ALL';
+        var isDeals = searchParams.deals === '1';
+        var catalogTitle = isDeals ? 'Flash Deal PC & linh kiện' : (CATEGORY_LABELS[catKey] || 'Tất cả sản phẩm');
+        var catalogDesc = isDeals
+          ? 'Ưu đãi cho PC, linh kiện và thiết bị trong góc máy của bạn.'
+          : 'PC bộ, linh kiện và thiết bị cho góc máy của bạn.';
+
+        // 4. Header Storefront dùng chung & active state
+        var isHome = path === '/' || path === '';
+        var isPC = catKey === 'pc' || catKey === 'pc-gaming' || catKey === 'pc-office' || catKey === 'pc-workstation';
+        var isComponents = catKey === 'components' || catKey === 'cpu' || catKey === 'mainboard' || catKey === 'vga';
+        var isGear = catKey === 'gear' || catKey === 'keyboard' || catKey === 'mouse';
+        var isBlog = path.indexOf('/blog') === 0;
+        var isAdvisory = path.indexOf('/advisory') === 0;
+        var isCart = path.indexOf('/cart') === 0;
+        var isProduct = path.indexOf('/products/') === 0;
+        var isCatalog = path.indexOf('/catalog') === 0;
+
+        // 5. Cập nhật ngay lập tức tiêu đề tab trình duyệt (document.title) theo đúng trang hiện tại
+        var cachedProduct = null;
+        if (isProduct) {
+          var slug = path.replace('/products/', '').replace(/\/$/, '');
+          try {
+            var catCache = JSON.parse(localStorage.getItem('pc_catalog_cache') || '{}');
+            if (Array.isArray(catCache.products)) {
+              for (var i = 0; i < catCache.products.length; i++) {
+                if (catCache.products[i].slug === slug) {
+                  cachedProduct = catCache.products[i];
+                  break;
+                }
+              }
+            }
+          } catch (e) {}
+
+          if (cachedProduct) {
+            document.title = cachedProduct.name + ' | PixelCore';
+          } else {
+            document.title = 'Chi tiết sản phẩm | PixelCore';
+          }
+        } else if (isCatalog) {
+          document.title = catalogTitle + ' | PixelCore';
+        } else if (isCart) {
+          document.title = 'Giỏ hàng (' + cartCount + ') | PixelCore';
+        } else if (path === '/login') {
+          document.title = 'Đăng nhập | PixelCore';
+        } else if (path === '/register') {
+          document.title = 'Đăng ký tài khoản | PixelCore';
+        } else if (isBlog) {
+          document.title = 'Góc kiến thức | PixelCore';
+        } else if (isAdvisory) {
+          document.title = 'Tư vấn cấu hình | PixelCore';
+        } else {
+          document.title = 'PixelCore - Cửa Hàng PC & Linh Kiện';
+        }
+
+        var headerHtml = '<header class="store-header">' +
+          '<div class="store-header__top">' +
+            '<div class="store-header__inner store-header__toolbar">' +
+              '<a href="/" class="pixelcore-brand store-brand" aria-label="PixelCore — Trang chủ">' +
+                '<span class="pixelcore-brand__art">' +
+                  '<img src="/src/assets/branding/pixel-core.png" alt="PixelCore" width="1981" height="793" decoding="async" />' +
+                '</span>' +
+              '</a>' +
+              '<div class="store-search">' +
+                '<input type="search" placeholder="Bạn đang tìm PC, linh kiện nào?" disabled style="background:#fff;cursor:default;" />' +
+                '<button type="button" aria-label="Tìm kiếm">' +
+                  '<svg class="store-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>' +
+                '</button>' +
+              '</div>' +
+              '<div class="store-header__actions">' +
+                '<a href="/cart" class="store-cart" id="shell-cart-action">' +
+                  '<svg class="store-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 3h2l2.5 12h11l2-8H6M8 18h10"/><circle cx="9" cy="21" r=".6"/><circle cx="18" cy="21" r=".6"/></svg>' +
+                  '<span class="store-cart__count" id="shell-cart-count">' + cartCount + '</span>' +
+                '</a>' +
+                authHtml +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="store-header__bottom">' +
+            '<nav class="store-header__inner store-nav" aria-label="Điều hướng chính">' +
+              '<a href="/" class="store-nav__link ' + (isHome ? 'store-nav__link--active' : '') + '">' +
+                '<svg class="store-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m3 10 9-7 9 7M5 9v12h14V9"/><path d="M9 21v-7h6v7"/></svg>' +
+                '<span>Trang chủ</span>' +
+              '</a>' +
+              '<a href="/catalog?category=pc" class="store-nav__link ' + (isPC ? 'store-nav__link--active' : '') + '">' +
+                '<svg class="store-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4M8 8l-2 2 2 2m8-4 2 2-2 2"/></svg>' +
+                '<span>PC bộ</span>' +
+              '</a>' +
+              '<a href="/catalog?category=components" class="store-nav__link ' + (isComponents ? 'store-nav__link--active' : '') + '">' +
+                '<svg class="store-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="13" rx="2"/><circle cx="12" cy="11.5" r="4"/><path d="m10 9 4 5m0-5-4 5M7 18v3m4-3v3m4-3v3M3 8H1"/></svg>' +
+                '<span>Linh kiện PC</span>' +
+              '</a>' +
+              '<a href="/catalog?category=gear" class="store-nav__link ' + (isGear ? 'store-nav__link--active' : '') + '">' +
+                '<svg class="store-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M6 9h.01M10 9h.01M14 9h.01M18 9h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M7 16h10"/></svg>' +
+                '<span>Chuột & bàn phím</span>' +
+              '</a>' +
+              '<a href="/blog" class="store-nav__link ' + (isBlog ? 'store-nav__link--active' : '') + '">' +
+                '<svg class="store-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 5c-3-2-7-2-10-1v15c3-1 7-1 10 1 3-2 7-2 10-1V4c-3-1-7-1-10 1Zm0 0v15"/></svg>' +
+                '<span>Góc kiến thức</span>' +
+              '</a>' +
+              '<a href="/advisory" class="store-nav__link ' + (isAdvisory ? 'store-nav__link--active' : '') + '">' +
+                '<svg class="store-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m14 6 4 4m-3-7a6 6 0 0 0-7 8L3.5 16.5a2.8 2.8 0 0 0 4 4L13 15a6 6 0 0 0 8-7l-4 4-5-5 4-4Z"/></svg>' +
+                '<span>Tư vấn cấu hình</span>' +
+              '</a>' +
+            '</nav>' +
+          '</div>' +
+        '</header>';
+
+        function renderCardSk(count) {
+          var h = '';
+          for (var i = 0; i < count; i++) {
+            h += '<article class="product-card" style="border:1px solid #f1f5f9;border-radius:10px;padding:12px;background:#fff;">' +
+              '<div class="sk-box" style="width:100%;aspect-ratio:1/1;border-radius:8px;margin-bottom:12px;"></div>' +
+              '<div class="sk-box" style="height:14px;width:40%;margin-bottom:8px;"></div>' +
+              '<div class="sk-box" style="height:16px;width:85%;margin-bottom:6px;"></div>' +
+              '<div class="sk-box" style="height:16px;width:60%;margin-bottom:16px;"></div>' +
+              '<div class="sk-box" style="height:20px;width:45%;"></div>' +
+            '</article>';
+          }
+          return h;
+        }
+
+        var mainHtml = '';
+        var mainClass = 'main-content';
+
+        // 6. Khớp layout sườn chính xác theo route
+        if (isProduct) {
+          // --- SKELETON TRANG CHI TIẾT SẢN PHẨM ---
+          var prodCategoryName = cachedProduct ? (CATEGORY_LABELS[cachedProduct.category] || 'Sản phẩm') : '';
+          var breadcrumbCatHtml = prodCategoryName
+            ? '<span>' + prodCategoryName + '</span>'
+            : '<span class="sk-box" style="display:inline-block;width:90px;height:14px;vertical-align:middle;"></span>';
+
+          var prodEyebrow = cachedProduct
+            ? '<p class="section-eyebrow" style="margin-bottom:10px;">' + (cachedProduct.brand || 'PIXELCORE') + '</p>'
+            : '<div class="sk-box" style="width:80px;height:14px;margin-bottom:10px;"></div>';
+
+          var prodHeading = cachedProduct
+            ? '<h1 style="font-size:clamp(23px,2.5vw,32px);font-weight:750;line-height:1.45;margin-bottom:16px;">' + cachedProduct.name + '</h1>'
+            : '<div class="sk-box" style="width:90%;height:32px;margin-bottom:12px;border-radius:6px;"></div><div class="sk-box" style="width:65%;height:26px;margin-bottom:18px;border-radius:6px;"></div>';
+
+          mainHtml = '<div class="product-page">' +
+            '<nav class="breadcrumbs" aria-label="Đường dẫn">' +
+              '<a href="/">Trang chủ</a>' +
+              '<span>/</span>' +
+              breadcrumbCatHtml +
+            '</nav>' +
+            '<div class="product-detail">' +
+              '<div class="product-detail__image">' +
+                '<div class="sk-box" style="width:100%;aspect-ratio:1/1;border-radius:12px;"></div>' +
+              '</div>' +
+              '<div class="product-detail__info">' +
+                prodEyebrow +
+                prodHeading +
+                '<div class="sk-box" style="width:100%;height:48px;margin-bottom:24px;border-radius:6px;"></div>' +
+                '<div class="product-detail__price" style="margin-bottom:22px;">' +
+                  '<span class="sk-box" style="width:50px;height:12px;margin-bottom:6px;"></span>' +
+                  '<div class="sk-box" style="width:200px;height:36px;border-radius:6px;"></div>' +
+                '</div>' +
+                '<div class="product-detail__specs" style="margin-bottom:24px;">' +
+                  '<span class="sk-box" style="width:80px;height:30px;border-radius:6px;"></span>' +
+                  '<span class="sk-box" style="width:100px;height:30px;border-radius:6px;"></span>' +
+                  '<span class="sk-box" style="width:90px;height:30px;border-radius:6px;"></span>' +
+                '</div>' +
+                '<div class="sk-box" style="width:190px;height:46px;border-radius:8px;background:#2563eb;opacity:0.65;"></div>' +
+              '</div>' +
+            '</div>' +
+            '<section class="store-section" style="margin-top:40px;">' +
+              '<div class="store-section__heading">' +
+                '<div>' +
+                  '<p class="section-eyebrow">CÙNG NHÓM SẢN PHẨM</p>' +
+                  '<h2>Có thể bạn cũng thích.</h2>' +
+                '</div>' +
+              '</div>' +
+              '<div class="product-grid">' + renderCardSk(4) + '</div>' +
+            '</section>' +
+          '</div>';
+        } else if (isCatalog) {
+          // --- SKELETON TRANG DANH MỤC SẢN PHẨM ---
+          mainHtml = '<div class="catalog-page">' +
+            '<nav class="breadcrumbs" aria-label="Đường dẫn">' +
+              '<a href="/">Trang chủ</a>' +
+              '<span>/</span>' +
+              '<span>' + catalogTitle + '</span>' +
+            '</nav>' +
+            '<div class="page-heading">' +
+              '<p class="section-eyebrow">PIXELCORE COLLECTION</p>' +
+              '<h1>' + catalogTitle + '</h1>' +
+              '<p>' + catalogDesc + '</p>' +
+            '</div>' +
+            '<div class="catalog-layout">' +
+              '<aside class="catalog-filters">' +
+                '<div class="sk-box" style="width:100px;height:20px;margin-bottom:16px;"></div>' +
+                '<div class="sk-box" style="width:100%;height:36px;margin-bottom:8px;border-radius:6px;"></div>' +
+                '<div class="sk-box" style="width:100%;height:36px;margin-bottom:8px;border-radius:6px;"></div>' +
+                '<div class="sk-box" style="width:100%;height:36px;margin-bottom:8px;border-radius:6px;"></div>' +
+                '<div class="sk-box" style="width:100%;height:36px;margin-bottom:8px;border-radius:6px;"></div>' +
+              '</aside>' +
+              '<div class="catalog-results">' +
+                '<div class="catalog-toolbar">' +
+                  '<div class="sk-box" style="flex:1;height:42px;border-radius:8px;"></div>' +
+                  '<div class="sk-box" style="width:140px;height:42px;border-radius:8px;"></div>' +
+                '</div>' +
+                '<div class="product-grid">' + renderCardSk(8) + '</div>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+        } else if (isCart) {
+          // --- SKELETON TRANG GIỎ HÀNG ---
+          mainHtml = '<div class="cart-page">' +
+            '<nav class="breadcrumbs">' +
+              '<a href="/">Trang chủ</a>' +
+              '<span>/</span>' +
+              '<span>Giỏ hàng</span>' +
+            '</nav>' +
+            '<div class="page-heading">' +
+              '<p class="section-eyebrow">GÓC MÁY TIẾP THEO CỦA BẠN</p>' +
+              '<h1>Giỏ hàng (' + cartCount + ').</h1>' +
+            '</div>' +
+            '<div style="display:grid;grid-template-columns:2fr 1fr;gap:28px;">' +
+              '<div style="display:flex;flex-direction:column;gap:14px;">' +
+                '<div class="sk-box" style="height:96px;border-radius:12px;"></div>' +
+                '<div class="sk-box" style="height:96px;border-radius:12px;"></div>' +
+              '</div>' +
+              '<div class="sk-box" style="height:220px;border-radius:12px;"></div>' +
+            '</div>' +
+          '</div>';
+        } else if (path === '/login' || path === '/register') {
+          // --- SKELETON TRANG AUTH (LOGIN / REGISTER) ---
+          mainHtml = '<div style="max-width:440px;margin:40px auto;padding:32px;background:#fff;border-radius:14px;border:1px solid #e2e8f0;box-shadow:0 4px 16px rgba(0,0,0,0.04);">' +
+            '<div class="sk-box" style="width:160px;height:28px;margin:0 auto 24px auto;"></div>' +
+            '<div class="sk-box" style="width:100%;height:44px;margin-bottom:16px;border-radius:8px;"></div>' +
+            '<div class="sk-box" style="width:100%;height:44px;margin-bottom:24px;border-radius:8px;"></div>' +
+            '<div class="sk-box" style="width:100%;height:46px;border-radius:8px;background:#2563eb;opacity:0.65;"></div>' +
+          '</div>';
+        } else if (isHome) {
+          // --- SKELETON TRANG CHỦ ---
+          mainClass = 'main-content main-content--home';
+          mainHtml = '<div class="storefront">' +
+            '<section class="store-hero-layout" aria-label="Khám phá PixelCore">' +
+              '<aside class="category-menu">' +
+                '<a href="/catalog" class="category-menu__heading">' +
+                  'Danh mục sản phẩm' +
+                  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>' +
+                '</a>' +
+                '<nav aria-label="Nhóm sản phẩm">' +
+                  '<a href="/catalog?category=pc-gaming">' +
+                    '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="6" x2="10" y1="12" y2="12"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="15" x2="15.01" y1="13" y2="13"/><line x1="18" x2="18.01" y1="11" y2="11"/><rect width="20" height="12" x="2" y="6" rx="2"/></svg>' +
+                    '<span>PC Gaming</span>' +
+                    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>' +
+                  '</a>' +
+                  '<a href="/catalog?category=pc-office">' +
+                    '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>' +
+                    '<span>PC văn phòng</span>' +
+                    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>' +
+                  '</a>' +
+                  '<a href="/catalog?category=pc-workstation">' +
+                    '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2M15 20v2M2 15h2M2 9h2M20 15h2M20 9h2M9 2v2M9 20v2"/></svg>' +
+                    '<span>PC đồ họa & làm việc</span>' +
+                    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>' +
+                  '</a>' +
+                  '<a href="/catalog?category=components">' +
+                    '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M11 9h4a2 2 0 0 0 2-2V3M9 15v4M15 15h2M9 9H7M5 19v2M19 13v2"/></svg>' +
+                    '<span>CPU, Mainboard & VGA</span>' +
+                    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>' +
+                  '</a>' +
+                  '<a href="/catalog?category=memory">' +
+                    '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 19v-3M10 19v-3M14 19v-3M18 19v-3M2 8v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/></svg>' +
+                    '<span>RAM & ổ cứng SSD</span>' +
+                    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>' +
+                  '</a>' +
+                  '<a href="/catalog?category=build">' +
+                    '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10.827 16.379a6.082 6.082 0 0 1-8.618-7.002l5.412 1.45a6.082 6.082 0 0 1 7.002-8.618l-1.45 5.412a6.082 6.082 0 0 1 8.618 7.002l-5.412-1.45a6.082 6.082 0 0 1-7.002 8.618l1.45-5.412Z"/><circle cx="12" cy="12" r="2"/></svg>' +
+                    '<span>Case, nguồn & tản nhiệt</span>' +
+                    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>' +
+                  '</a>' +
+                  '<a href="/catalog?category=monitor">' +
+                    '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>' +
+                    '<span>Màn hình máy tính</span>' +
+                    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>' +
+                  '</a>' +
+                  '<a href="/catalog?category=gear">' +
+                    '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 8h.001M10 8h.001M14 8h.001M18 8h.001M6 12h.001M10 12h.001M14 12h.001M18 12h.001M7 16h10"/></svg>' +
+                    '<span>Chuột & bàn phím</span>' +
+                    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>' +
+                  '</a>' +
+                '</nav>' +
+              '</aside>' +
+              '<div class="store-hero-main">' +
+                '<div class="sk-box" style="background:linear-gradient(135deg,#0a1a2f 0%,#152744 100%);border-radius:12px;min-height:380px;width:100%;"></div>' +
+                '<div class="hero-promos">' +
+                  '<div class="sk-box" style="border-radius:10px;height:180px;width:100%;"></div>' +
+                  '<div class="sk-box" style="border-radius:10px;height:180px;width:100%;"></div>' +
+                '</div>' +
+              '</div>' +
+            '</section>' +
+            '<section class="store-section">' +
+              '<div class="store-section__heading">' +
+                '<div>' +
+                  '<p class="section-eyebrow">SẴN SÀNG CHO ĐAM MÊ</p>' +
+                  '<h2>Một bộ PC. Cả thế giới của bạn.</h2>' +
+                '</div>' +
+              '</div>' +
+              '<div class="product-grid">' + renderCardSk(4) + '</div>' +
+            '</section>' +
+          '</div>';
+        } else {
+          // --- SKELETON CHO CÁC TRANG KHÁC (Blog, Advisory, ...) ---
+          mainHtml = '<div style="max-width:1080px;margin:30px auto;padding:0 16px;">' +
+            '<div class="sk-box" style="width:280px;height:36px;margin-bottom:24px;border-radius:8px;"></div>' +
+            '<div class="sk-box" style="width:100%;height:260px;margin-bottom:24px;border-radius:12px;"></div>' +
+            '<div class="sk-box" style="width:100%;height:180px;border-radius:12px;"></div>' +
+          '</div>';
+        }
+
+        root.innerHTML = '<div class="app-shell">' +
+          headerHtml +
+          '<main class="' + mainClass + '">' +
+            mainHtml +
+          '</main>' +
+        '</div>';
+      })();
+    </script>
+
+
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
