@@ -4,7 +4,7 @@
 2. Từ giỏ hàng bấm **Đặt hàng** để mở `/checkout`. Chưa đăng nhập sẽ chuyển `/login`, đăng nhập xong trở về `/checkout`; phiên hết hạn khi gọi API cũng chuyển login. Form nhận hàng điền ngay tên và số điện thoại từ phiên đăng nhập; API cập nhật ở nền và không ghi đè những ô khách đã sửa.
    Tỉnh/thành phố có dropdown tìm kiếm có/không dấu; chọn tỉnh mới mở ô quận/huyện tương ứng. Thay tỉnh xóa quận/huyện và phường/xã cũ. Phải chọn giá trị hợp lệ từ danh sách trước khi xác nhận. Bộ dữ liệu địa giới trước 07/2025 được lưu trong frontend, xem `frontend/src/data/vietnamDistricts.source.md`. API nhận thêm trường tùy chọn `shipping.district`; địa chỉ lưu trên đơn bao gồm quận/huyện.
 3. Bấm **Xác nhận** để kiểm tra thông tin, giá và tồn kho qua `POST /api/v1/orders/quotes`. Khi thành công, form nhận hàng được thay bằng màn hình kiểm tra đơn hàng. Hai form không xuất hiện đồng thời. Bấm **Chỉnh sửa thông tin** để quay lại, giữ dữ liệu đã nhập. Khi giỏ hàng thay đổi, phải xác nhận lại.
-4. Bấm **Đặt hàng** để tạo đơn. Màn hình thành công hiện mã đơn rút gọn, địa chỉ, tổng tiền và liên kết xem đơn. Mở **Chi tiết** ở mã đơn để xem/sao chép mã đầy đủ; mã thật trong database và API giữ nguyên. Với VNPAY, màn hình này có nút tiếp tục thanh toán; đơn vẫn chờ thanh toán.
+4. Bấm **Đặt hàng** để tạo đơn COD (thanh toán khi nhận hàng). Luồng kết thúc ở màn hình **Đặt hàng thành công**, hiện mã đơn rút gọn, địa chỉ, tổng tiền và liên kết xem đơn. Mở **Chi tiết** ở mã đơn để xem/sao chép mã đầy đủ; mã thật trong database và API giữ nguyên. Checkout không có lựa chọn VNPAY hoặc bước chuyển sang cổng thanh toán.
 5. Đăng nhập admin rồi mở `/admin/orders`. Trang chỉ hiển thị sau khi `GET /api/v1/admin/orders/account` trả về thành công. Khách hàng không thấy liên kết quản trị trên trang đơn hàng.
 
 ## API mẫu
@@ -57,5 +57,5 @@ Sau đó có thể chuyển `CONFIRMED` → `SHIPPING` → `COMPLETED`, mỗi l�
 - Chỉ thấy form nhận hàng ở bước 1. Xác nhận thành công mới thấy màn hình kiểm tra đơn ở bước 2. Các nhãn nút giữ nguyên trong khi xử lý.
 - Xác nhận rồi bấm chỉnh sửa: dữ liệu cũ vẫn còn. Sửa địa chỉ phải xác nhận lại; xác nhận hết hạn cũng phải xác nhận lại.
 - Mã đơn hiển thị ngắn gọn; mở Chi tiết và Sao chép phải nhận đúng mã đầy đủ từ API.
-- Đặt COD: kiểm tra màn hình thành công và đơn xuất hiện trong lịch sử; VNPAY có liên kết thanh toán.
+- Đặt hàng: request luôn gửi `paymentMethod: "COD"`; kiểm tra màn hình thành công và đơn xuất hiện trong lịch sử. Không có nút VNPAY, liên kết tiếp tục thanh toán hoặc điều hướng sang cổng thanh toán trong luồng này.
 - Mở `/admin/orders` bằng khách và admin: chỉ admin thấy danh sách và thao tác quản lý.

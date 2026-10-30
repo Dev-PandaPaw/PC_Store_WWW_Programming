@@ -59,18 +59,16 @@ public class OrderRepository {
             return rs.getObject("order_id", UUID.class);
         }, customer, key).stream().findFirst();
     }
-    public void create(UUID id, Quote quote, String email, PaymentMethod method, Instant expiry, String url) {
+    public void create(UUID id, Quote quote, String email, Instant expiry) {
         String reference = id.toString().replace("-", "");
         jdbc.update("""
                 INSERT INTO sales_orders(id,code,customer_id,quote_id,email,recipient,phone,address,shipping_fee,total,
                   payment_method,status,expires_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
                 """, id, "PC-" + reference, quote.customerId(), quote.id(), email, quote.recipient(), quote.phone(),
-                quote.address(), quote.shippingFee(), quote.total(), method.name(),
-                method == PaymentMethod.COD ? "PENDING_CONFIRMATION" : "PENDING_PAYMENT", Timestamp.from(expiry));
+                quote.address(), quote.shippingFee(), quote.total(), PaymentMethod.COD.name(),
+                "PENDING_CONFIRMATION", Timestamp.from(expiry));
         for (Line line : quote.items()) jdbc.update("INSERT INTO sales_order_items VALUES (?,?,?,?,?,?,?)",
                 id, line.productId(), line.name(), line.sku(), line.unitPrice(), line.quantity(), line.warrantyMonths());
-        jdbc.update("INSERT INTO sales_payment_attempts(order_id,reference,amount,payment_url) VALUES (?,?,?,?)",
-                id, reference, quote.total(), url);
         jdbc.update("UPDATE sales_quotes SET consumed = TRUE WHERE id = ?", quote.id());
     }
     public void remember(UUID customer, String key, PlaceRequest request, UUID order) {
@@ -78,14 +76,12 @@ public class OrderRepository {
     }
     public Order get(UUID id, boolean lock) {
         var rows = jdbc.query("SELECT * FROM sales_orders WHERE id = ?" + (lock ? " FOR UPDATE" : ""), (rs, n) -> {
-            var payment = jdbc.queryForMap("SELECT * FROM sales_payment_attempts WHERE order_id = ?", id);
             return new Order(id, rs.getString("code"), rs.getObject("customer_id", UUID.class), rs.getString("email"),
                     rs.getString("recipient"), rs.getString("phone"), rs.getString("address"),
                     PaymentMethod.valueOf(rs.getString("payment_method")), OrderStatus.valueOf(rs.getString("status")),
                     rs.getString("payment_status"), rs.getString("reservation_status"), rs.getLong("version"),
                     rs.getTimestamp("expires_at").toInstant(), rs.getTimestamp("created_at").toInstant(),
-                    rs.getBigDecimal("shipping_fee"), rs.getBigDecimal("total"), (String) payment.get("reference"),
-                    (String) payment.get("payment_url"), orderLines(id), history(id));
+                    rs.getBigDecimal("shipping_fee"), rs.getBigDecimal("total"), orderLines(id), history(id));
         }, id);
         if (rows.isEmpty()) throw OrderException.missing();
         return rows.getFirst();
@@ -131,16 +127,8 @@ public class OrderRepository {
     public void quantity(Order order, UUID product, int quantity, BigDecimal total) {
         jdbc.update("UPDATE sales_order_items SET quantity=? WHERE order_id=? AND product_id=?", quantity, order.id(), product);
         jdbc.update("UPDATE sales_orders SET total=?, version=version+1, updated_at=CURRENT_TIMESTAMP WHERE id=?", total, order.id());
-        jdbc.update("UPDATE sales_payment_attempts SET amount=? WHERE order_id=?", total, order.id());
     }
-    public Optional<UUID> findPayment(String reference) {
-        return jdbc.queryForList("SELECT order_id FROM sales_payment_attempts WHERE reference=?", UUID.class, reference).stream().findFirst();
-    }
-    public void payment(Order order, String status, String transaction) {
+    public void paymentStatus(Order order, String status) {
         jdbc.update("UPDATE sales_orders SET payment_status=?, version=version+1, updated_at=CURRENT_TIMESTAMP WHERE id=?", status, order.id());
-        jdbc.update("UPDATE sales_payment_attempts SET status=?, transaction_code=? WHERE order_id=?", status, transaction, order.id());
-    }
-    public void paymentEvent(UUID id, String transaction, String response, String status) {
-        jdbc.update("INSERT INTO sales_payment_events(order_id,transaction_code,response_code,transaction_status) VALUES (?,?,?,?)", id, transaction, response, status);
     }
 }

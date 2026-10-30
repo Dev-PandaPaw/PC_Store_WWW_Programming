@@ -28,7 +28,7 @@ public class OrderController {
     @PostMapping
     public Order place(Authentication auth, HttpServletRequest request, @RequestHeader("Idempotency-Key") String key,
                        @Valid @RequestBody PlaceRequest body) {
-        return service.place(actors.resolve(auth, request.getSession()), key, body, request.getRemoteAddr());
+        return service.place(actors.resolve(auth, request.getSession()), key, body);
     }
     @GetMapping
     public List<Order> list(Authentication auth, HttpServletRequest request, @RequestParam(defaultValue="0") int page) {

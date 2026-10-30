@@ -50,7 +50,7 @@ public class SecurityConfig {
                 ).permitAll()
                 // Sales resolves the session identity and rechecks ACTIVE + database roles in its service transaction.
                 // Identity comes from the login session; CSRF protects all sales writes.
-                .requestMatchers("/api/v1/orders/**", "/api/v1/admin/orders/**", "/api/v1/payments/vnpay/ipn").permitAll()
+                .requestMatchers("/api/v1/orders/**", "/api/v1/admin/orders/**").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/staff/**").hasAnyRole("ADMIN", "STAFF")
                 .requestMatchers("/api/account/**", "/api/orders/**", "/api/warranties/**").authenticated()

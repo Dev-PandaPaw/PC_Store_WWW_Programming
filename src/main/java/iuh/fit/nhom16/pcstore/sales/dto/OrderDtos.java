@@ -10,6 +10,7 @@ import java.util.UUID;
 
 public final class OrderDtos {
     private OrderDtos() { }
+    // VNPAY is retained only to read historical orders; new orders accept COD exclusively.
     public enum PaymentMethod { COD, VNPAY }
     public record Shipping(@NotBlank @Size(min=2,max=100) String recipient,
                            @NotBlank @Pattern(regexp="(?:0[35789][0-9]{8}|\\+84[35789][0-9]{8})") String phone,
@@ -45,7 +46,7 @@ public final class OrderDtos {
     public record Order(UUID id, String code, UUID customerId, String email, String recipient, String phone,
                         String address, PaymentMethod paymentMethod, OrderStatus status, String paymentStatus,
                         String reservationStatus, long version, Instant expiresAt, Instant createdAt,
-                        BigDecimal shippingFee, BigDecimal total, String paymentReference, String paymentUrl,
+                        BigDecimal shippingFee, BigDecimal total,
                         List<Line> items, List<History> history) { }
     public record History(String fromStatus, String toStatus, UUID actorId, String reason, Instant createdAt) { }
     public record Account(UUID id, String name, String email, String phone, boolean phoneVerified,

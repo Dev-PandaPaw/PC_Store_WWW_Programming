@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { ArrowLeft, ArrowRight, Check, CheckCircle2, CreditCard, MapPin, Package, ShieldCheck, ShoppingBag, Truck, UserRound } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Check, CheckCircle2, Banknote, MapPin, Package, ShieldCheck, ShoppingBag, Truck, UserRound } from 'lucide-react'
 import { useCart } from '../contexts/CartContext'
 import { useAuth } from '../contexts/AuthContext'
 import CartDemoPanel from '../components/CartDemoPanel'
@@ -39,7 +39,6 @@ export default function CheckoutPage() {
   const [shipping, setShipping] = useState(() => shippingFromCustomer(user))
   const [quote, setQuote] = useState(null)
   const [created, setCreated] = useState(null)
-  const [method, setMethod] = useState('COD')
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
   const [accountLoading, setAccountLoading] = useState(false)
@@ -97,10 +96,10 @@ export default function CheckoutPage() {
     const revision = identityRevision.current
     try {
       // Retain the same key if a response is lost and the customer retries.
-      const storageKey = `order-key:${quote.id}:${method}`
+      const storageKey = `order-key:${quote.id}:COD`
       const key = sessionStorage.getItem(storageKey) || crypto.randomUUID()
       sessionStorage.setItem(storageKey, key)
-      const { data } = await orderApi.place({ quoteId: quote.id, paymentMethod: method }, key)
+      const { data } = await orderApi.place({ quoteId: quote.id, paymentMethod: 'COD' }, key)
       if (revision !== identityRevision.current) return
       setCreated(data); void refresh(); window.scrollTo(0, 0)
     } catch (error) { if (revision === identityRevision.current) handleError(error) }
@@ -124,9 +123,8 @@ export default function CheckoutPage() {
       <OrderReference code={created.code} />
       <div className="checkout-delivery"><MapPin size={21} aria-hidden="true" /><div><strong>{created.recipient}</strong><span>{created.phone}</span><p>{created.address}</p></div></div>
       <div className="checkout-total"><span>Tổng thanh toán</span><strong>{formatVND(Number(created.total))}</strong></div>
-      <p className="checkout-note">{created.status === 'PENDING_PAYMENT' ? 'Đơn hàng đang chờ thanh toán. Tiếp tục với VNPAY để hoàn tất.' : 'Cửa hàng sẽ liên hệ xác nhận và chuẩn bị giao hàng cho bạn.'}</p>
+      <p className="checkout-note">Cửa hàng sẽ liên hệ xác nhận và chuẩn bị giao hàng cho bạn. Bạn thanh toán khi nhận hàng.</p>
       <div className="checkout-footer">
-        {created.status === 'PENDING_PAYMENT' && created.paymentUrl && <a className="store-button" href={created.paymentUrl}>Thanh toán VNPAY <ArrowRight size={16} /></a>}
         <Link className="store-button" to="/orders">Theo dõi đơn hàng <ArrowRight size={16} /></Link>
         <Link className="checkout-back" to="/catalog">Tiếp tục mua sắm</Link>
       </div>
@@ -162,10 +160,10 @@ export default function CheckoutPage() {
       <p className="checkout-note">Mọi thứ đã sẵn sàng. Kiểm tra lần cuối trước khi đặt hàng.</p>
       <div className="checkout-review-grid">
         <div className="checkout-delivery"><MapPin size={21} aria-hidden="true" /><div><small>GIAO ĐẾN</small><strong>{quote.recipient}</strong><span>{quote.phone}</span><p>{quote.address}</p></div></div>
-        <fieldset disabled={busy} className="checkout-payment"><legend><CreditCard size={17} /> Thanh toán</legend>
-          {[['COD', 'Thanh toán khi nhận hàng', 'Trả tiền khi giao thành công'], ['VNPAY', 'VNPAY', 'Thanh toán trực tuyến · Sandbox']].map(([value, label, note]) =>
-            <label className={method === value ? 'is-selected' : ''} key={value}><input type="radio" name="payment" value={value} checked={method === value} onChange={() => setMethod(value)} /><span><strong>{label}</strong><small>{note}</small></span></label>)}
-        </fieldset>
+        <section className="checkout-payment" aria-label="Thanh toán khi nhận hàng">
+          <h3 className="checkout-payment__title"><Banknote size={17} /> Thanh toán</h3>
+          <div className="checkout-payment__summary"><CheckCircle2 size={20} aria-hidden="true" /><div><strong>Thanh toán khi nhận hàng</strong><small>Nhận hàng và thanh toán trực tiếp cho người giao hàng.</small></div></div>
+        </section>
       </div>
       <div className="checkout-items"><div className="checkout-items__heading"><h3>Sản phẩm của bạn</h3><span>{quote.items.reduce((sum, item) => sum + item.quantity, 0)} sản phẩm</span></div>
         {quote.items.map(item => <div className="checkout-item" key={item.productId}>

@@ -2,7 +2,6 @@ package iuh.fit.nhom16.pcstore.sales;
 
 import iuh.fit.nhom16.pcstore.cart.model.CartSession;
 import iuh.fit.nhom16.pcstore.cart.repository.CartRepository;
-import iuh.fit.nhom16.pcstore.payment.service.VnpayGateway;
 import iuh.fit.nhom16.pcstore.sales.dto.OrderDtos.*;
 import iuh.fit.nhom16.pcstore.sales.exception.OrderException;
 import iuh.fit.nhom16.pcstore.sales.model.OrderStatus;
@@ -23,13 +22,12 @@ class OrderServiceTest {
     final OrderRepository orders = mock(OrderRepository.class);
     final CartRepository carts = mock(CartRepository.class);
     final OrderActorResolver actors = mock(OrderActorResolver.class);
-    final VnpayGateway gateway = mock(VnpayGateway.class);
     final ApplicationEventPublisher events = mock(ApplicationEventPublisher.class);
     final Instant now = Instant.parse("2026-10-28T08:00:00Z");
     final UUID actor = UUID.randomUUID(), product = UUID.randomUUID(), id = UUID.randomUUID(), quoteId = UUID.randomUUID();
     final Line line = new Line(product, "PC", "PC-01", BigDecimal.valueOf(100_000), 2, 36);
     final CartSession cart = new CartSession(UUID.randomUUID(), 3, Map.of(product, 2));
-    final OrderService service = new OrderService(orders, carts, actors, gateway, events, Clock.fixed(now, ZoneOffset.UTC));
+    final OrderService service = new OrderService(orders, carts, actors, events, Clock.fixed(now, ZoneOffset.UTC));
     @BeforeEach void setup() {
         when(actors.require(eq(actor), anyString())).thenReturn(new Account(actor, "Customer", "demo@example.test", "+84912345678", true, List.of("CUSTOMER", "ADMIN")));
         when(carts.lock(actor)).thenReturn(cart);
@@ -42,7 +40,12 @@ class OrderServiceTest {
     Quote quote(Instant expiry) { return new Quote(quoteId, actor, 3, "Customer", "+84912345678", "123 Street, Ward, City", expiry, List.of(line), OrderService.SHIPPING_FEE); }
     Order order(OrderStatus status, PaymentMethod method, String payment, String reservation, Instant expiry) {
         return new Order(id, "PC-01", actor, "demo@example.test", "Customer", "+84912345678", "Address", method,
-                status, payment, reservation, 4, expiry, now, OrderService.SHIPPING_FEE, BigDecimal.valueOf(250_000), "ref", null, List.of(line), List.of());
+                status, payment, reservation, 4, expiry, now, OrderService.SHIPPING_FEE, BigDecimal.valueOf(250_000), List.of(line), List.of());
+    }
+    @Test void onlinePaymentCannotCreateAnOrderOrReserveStock() {
+        var error = assertThrows(OrderException.class, () -> service.place(actor, "request-123", new PlaceRequest(quoteId, PaymentMethod.VNPAY)));
+        assertEquals("PAYMENT_METHOD_UNSUPPORTED", error.code());
+        verifyNoInteractions(orders, carts);
     }
     @Test void quoteUsesServerPriceAndDoesNotReserve() {
         Quote result = service.quote(actor, new QuoteRequest(3, new Shipping("Customer", "0912345678", "City", "Ward", "123 Street")));
@@ -62,33 +65,33 @@ class OrderServiceTest {
     }
     @Test void unverifiedPhoneCannotCheckout() {
         when(actors.require(actor, "CUSTOMER")).thenReturn(new Account(actor, "Customer", "mail", "+84912345678", false, List.of("CUSTOMER")));
-        assertEquals("PHONE_NOT_VERIFIED", assertThrows(OrderException.class, () -> service.place(actor, "request-123", new PlaceRequest(quoteId, PaymentMethod.COD), "127.0.0.1")).code());
+        assertEquals("PHONE_NOT_VERIFIED", assertThrows(OrderException.class, () -> service.place(actor, "request-123", new PlaceRequest(quoteId, PaymentMethod.COD))).code());
         verify(orders, never()).reserve(any(), anyInt());
     }
     @Test void expiredQuoteCannotReserve() {
         when(orders.lockQuote(quoteId, actor)).thenReturn(quote(now));
-        assertEquals("QUOTE_EXPIRED", assertThrows(OrderException.class, () -> service.place(actor, "request-123", new PlaceRequest(quoteId, PaymentMethod.COD), "127.0.0.1")).code());
+        assertEquals("QUOTE_EXPIRED", assertThrows(OrderException.class, () -> service.place(actor, "request-123", new PlaceRequest(quoteId, PaymentMethod.COD))).code());
         verify(orders, never()).reserve(any(), anyInt());
     }
     @Test void replayDoesNotCreateOrReserveAgain() {
         when(orders.replay(eq(actor), anyString(), any())).thenReturn(Optional.of(id));
-        assertEquals(id, service.place(actor, "request-123", new PlaceRequest(quoteId, PaymentMethod.COD), "127.0.0.1").id());
+        assertEquals(id, service.place(actor, "request-123", new PlaceRequest(quoteId, PaymentMethod.COD)).id());
         verify(orders, never()).lockQuote(any(), any()); verify(orders, never()).reserve(any(), anyInt());
         verify(carts, never()).save(any());
     }
     @Test void placementReservesAndClearsCartAndKeepsQuotePrice() {
         // A catalog price change during quote validity must not change the accepted price snapshot.
         when(orders.lockProduct(product, 2)).thenReturn(new OrderRepository.Stock(new Line(product, "New name", "PC-01", BigDecimal.valueOf(150_000), 2, 36), 5, "ACTIVE"));
-        service.place(actor, "request-123", new PlaceRequest(quoteId, PaymentMethod.COD), "127.0.0.1");
+        service.place(actor, "request-123", new PlaceRequest(quoteId, PaymentMethod.COD));
         verify(orders).reserve(product, 2);
-        verify(orders).create(any(), argThat(q -> q.total().equals(BigDecimal.valueOf(250_000))), anyString(), eq(PaymentMethod.COD), eq(now.plus(Duration.ofHours(24))), isNull());
+        verify(orders).create(any(), argThat(q -> q.total().equals(BigDecimal.valueOf(250_000))), anyString(), eq(now.plus(Duration.ofHours(24))));
         assertTrue(cart.quantities().isEmpty()); assertEquals(4, cart.version());
         verify(carts).save(cart); verify(events).publishEvent(any(Object.class));
     }
     @Test void insufficientStockDoesNotCreateOrder() {
         when(orders.lockProduct(product, 2)).thenReturn(new OrderRepository.Stock(line, 1, "ACTIVE"));
-        assertThrows(OrderException.class, () -> service.place(actor, "request-123", new PlaceRequest(quoteId, PaymentMethod.COD), "127.0.0.1"));
-        verify(orders, never()).create(any(), any(), any(), any(), any(), any());
+        assertThrows(OrderException.class, () -> service.place(actor, "request-123", new PlaceRequest(quoteId, PaymentMethod.COD)));
+        verify(orders, never()).create(any(), any(), any(), any());
     }
     @Test void cancellationReleasesReservation() {
         service.transition(actor, id, false, new TransitionRequest(4, OrderStatus.CANCELLED, "Cancel"));
@@ -97,20 +100,20 @@ class OrderServiceTest {
     @Test void shippingConsumesStockAndCodOnlyPaidOnCompletion() {
         when(orders.get(id, true)).thenReturn(order(OrderStatus.CONFIRMED, PaymentMethod.COD, "UNPAID", "HELD", now.minusSeconds(1)));
         service.transition(actor, id, true, new TransitionRequest(4, OrderStatus.SHIPPING, "Ship"));
-        verify(orders).consume(product, 2); verify(orders, never()).payment(any(), eq("PAID"), any());
+        verify(orders).consume(product, 2); verify(orders, never()).paymentStatus(any(), eq("PAID"));
         when(orders.get(id, true)).thenReturn(order(OrderStatus.SHIPPING, PaymentMethod.COD, "UNPAID", "CONSUMED", now.minusSeconds(1)));
         service.transition(actor, id, true, new TransitionRequest(4, OrderStatus.COMPLETED, "Delivered"));
-        verify(orders).payment(any(), eq("PAID"), anyString());
+        verify(orders).paymentStatus(any(), eq("PAID"));
     }
-    @Test void paidVnpayOrderNeverExpiresWhileWaitingForConfirmation() {
-        when(orders.get(id, true)).thenReturn(order(OrderStatus.PENDING_CONFIRMATION, PaymentMethod.VNPAY, "PAID", "HELD", now.minusSeconds(1)));
+    @Test void paidOrderNeverExpiresWhileWaitingForConfirmation() {
+        when(orders.get(id, true)).thenReturn(order(OrderStatus.PENDING_CONFIRMATION, PaymentMethod.COD, "PAID", "HELD", now.minusSeconds(1)));
         service.expire(id);
-        verify(orders, never()).reserve(any(), anyInt()); verify(orders, never()).payment(any(), any(), any());
+        verify(orders, never()).reserve(any(), anyInt()); verify(orders, never()).paymentStatus(any(), any());
         service.transition(actor, id, true, new TransitionRequest(4, OrderStatus.CONFIRMED, "Confirm"));
         verify(orders).state(any(), eq(OrderStatus.CONFIRMED), eq("HELD"));
     }
     @Test void expiryReleasesUnpaidOrder() {
-        when(orders.get(id, true)).thenReturn(order(OrderStatus.PENDING_PAYMENT, PaymentMethod.VNPAY, "UNPAID", "HELD", now));
+        when(orders.get(id, true)).thenReturn(order(OrderStatus.PENDING_CONFIRMATION, PaymentMethod.COD, "UNPAID", "HELD", now));
         service.expire(id);
         verify(orders).reserve(product, -2); verify(orders).state(any(), eq(OrderStatus.EXPIRED), eq("RELEASED"));
     }

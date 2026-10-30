@@ -2,7 +2,6 @@ package iuh.fit.nhom16.pcstore.sales.service;
 
 import iuh.fit.nhom16.pcstore.cart.model.CartSession;
 import iuh.fit.nhom16.pcstore.cart.repository.CartRepository;
-import iuh.fit.nhom16.pcstore.payment.service.VnpayGateway;
 import iuh.fit.nhom16.pcstore.sales.dto.OrderDtos.*;
 import iuh.fit.nhom16.pcstore.sales.exception.OrderException;
 import iuh.fit.nhom16.pcstore.sales.model.OrderStatus;
@@ -25,12 +24,11 @@ public class OrderService {
     private final OrderRepository orders;
     private final CartRepository carts;
     private final OrderActorResolver actors;
-    private final VnpayGateway gateway;
     private final ApplicationEventPublisher events;
     private final Clock clock;
     public OrderService(OrderRepository orders, CartRepository carts, OrderActorResolver actors,
-                        VnpayGateway gateway, ApplicationEventPublisher events, Clock clock) {
-        this.orders = orders; this.carts = carts; this.actors = actors; this.gateway = gateway; this.events = events; this.clock = clock;
+                        ApplicationEventPublisher events, Clock clock) {
+        this.orders = orders; this.carts = carts; this.actors = actors; this.events = events; this.clock = clock;
     }
     public Account account(UUID actor) { return actors.require(actor, "CUSTOMER"); }
     public Account adminAccount(UUID actor) { return actors.require(actor, "ADMIN"); }
@@ -52,7 +50,9 @@ public class OrderService {
         orders.saveQuote(quote);
         return quote;
     }
-    public Order place(UUID actor, String key, PlaceRequest request, String ip) {
+    public Order place(UUID actor, String key, PlaceRequest request) {
+        if (request.paymentMethod() != PaymentMethod.COD) throw new OrderException(HttpStatus.BAD_REQUEST,
+                "PAYMENT_METHOD_UNSUPPORTED", "Đặt hàng chỉ hỗ trợ thanh toán khi nhận hàng (COD).");
         if (key == null || !key.matches("[a-zA-Z0-9_-]{8,100}")) throw new OrderException(HttpStatus.BAD_REQUEST,
                 "INVALID_IDEMPOTENCY_KEY", "Idempotency-Key phải dài 8–100 ký tự chữ, số, _ hoặc -.");
         Account customer = actors.require(actor, "CUSTOMER");
@@ -73,10 +73,9 @@ public class OrderService {
             orders.reserve(line.productId(), line.quantity());
         }
         UUID id = UUID.randomUUID();
-        Instant expiry = now.plus(request.paymentMethod() == PaymentMethod.COD ? Duration.ofHours(24) : Duration.ofMinutes(15));
-        String url = request.paymentMethod() == PaymentMethod.VNPAY ? gateway.paymentUrl(id, quote.total(), now, expiry, ip) : null;
-        orders.create(id, quote, customer.email(), request.paymentMethod(), expiry, url);
-        orders.history(id, null, request.paymentMethod() == PaymentMethod.COD ? "PENDING_CONFIRMATION" : "PENDING_PAYMENT", actor, "Tạo đơn hàng");
+        Instant expiry = now.plus(Duration.ofHours(24));
+        orders.create(id, quote, customer.email(), expiry);
+        orders.history(id, null, "PENDING_CONFIRMATION", actor, "Tạo đơn hàng");
         orders.remember(actor, key, request, id);
         cart.quantities().clear(); cart.incrementVersion(); carts.save(cart);
         Order order = orders.get(id, false);
@@ -105,12 +104,12 @@ public class OrderService {
         String reservation = order.reservationStatus();
         if (request.status() == OrderStatus.CANCELLED) {
             release(order); reservation = "RELEASED";
-            orders.payment(order, "CANCELLED", null);
+            orders.paymentStatus(order, "CANCELLED");
         } else if (request.status() == OrderStatus.SHIPPING) {
             for (Line line : sorted(order.items())) { orders.lockProduct(line.productId(), line.quantity()); orders.consume(line.productId(), line.quantity()); }
             reservation = "CONSUMED";
         } else if (request.status() == OrderStatus.COMPLETED && order.paymentMethod() == PaymentMethod.COD) {
-            orders.payment(order, "PAID", "COD-" + order.paymentReference());
+            orders.paymentStatus(order, "PAID");
         }
         orders.state(order, request.status(), reservation);
         orders.history(id, order.status().name(), request.status().name(), actor, request.reason());
@@ -140,7 +139,7 @@ public class OrderService {
                 && !clock.instant().isBefore(order.expiresAt())) {
             release(order);
             orders.state(order, OrderStatus.EXPIRED, "RELEASED");
-            orders.payment(order, "EXPIRED", null);
+            orders.paymentStatus(order, "EXPIRED");
             orders.history(id, order.status().name(), "EXPIRED", null, "Hết thời gian chờ");
             events.publishEvent(new OrderNotification(order.email(), order.code(), "EXPIRED"));
         }

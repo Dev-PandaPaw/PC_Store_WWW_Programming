@@ -49,8 +49,6 @@ class OrderPostgresTest {
         properties.add("spring.flyway.default-schema", () -> SCHEMA);
         properties.add("spring.jpa.properties.hibernate.default_schema", () -> SCHEMA);
         properties.add("app.orders.expiry-delay-ms", () -> "3600000");
-        properties.add("app.vnpay.tmn-code", () -> "");
-        properties.add("app.vnpay.hash-secret", () -> "");
     }
     @Autowired OrderService service;
     @Autowired CartRepository carts;
@@ -74,7 +72,7 @@ class OrderPostgresTest {
         String phone = customer.equals(SECOND) ? "0923456789" : "0912345678";
         return service.quote(customer, new QuoteRequest(1, new Shipping("Customer", phone, "Hồ Chí Minh", "Phường 1", "123 Nguyễn Huệ")));
     }
-    Order place(Quote quote, String key) { return service.place(quote.customerId(), key, new PlaceRequest(quote.id(), PaymentMethod.COD), "127.0.0.1"); }
+    Order place(Quote quote, String key) { return service.place(quote.customerId(), key, new PlaceRequest(quote.id(), PaymentMethod.COD)); }
     @Test void deployedCartItemIdWithoutDefaultStillSavesAndUpdatesOneLine() {
         jdbc.execute("ALTER TABLE cart_items ALTER COLUMN id DROP DEFAULT");
         try {
@@ -123,7 +121,7 @@ class OrderPostgresTest {
             assertEquals(first.get(15, TimeUnit.SECONDS).id(), second.get(15, TimeUnit.SECONDS).id());
         }
         assertEquals(1, jdbc.queryForObject("SELECT count(*) FROM sales_orders", Integer.class));
-        assertEquals(1, jdbc.queryForObject("SELECT count(*) FROM sales_payment_attempts", Integer.class));
+        assertEquals(0, jdbc.queryForObject("SELECT count(*) FROM sales_payment_attempts", Integer.class));
         assertEquals(1, jdbc.queryForObject("SELECT count(*) FROM sales_history", Integer.class));
         assertEquals(1, jdbc.queryForObject("SELECT reserved_quantity FROM products WHERE id=?", Integer.class, PRODUCT));
     }
@@ -153,8 +151,14 @@ class OrderPostgresTest {
     }
     @Test void failureAfterReservingRollsBackOrderStockQuoteAndCart() {
         Quote quote = quote(CUSTOMER);
-        // Empty VNPAY configuration fails after the reservation update, inside the same transaction.
-        assertThrows(OrderException.class, () -> service.place(CUSTOMER, "rollback-123", new PlaceRequest(quote.id(), PaymentMethod.VNPAY), "127.0.0.1"));
+        // Force persistence to fail after inventory is reserved, inside the same transaction.
+        jdbc.execute("ALTER TABLE sales_orders ADD CONSTRAINT reject_test_order CHECK (false) NOT VALID");
+        try {
+            assertThrows(org.springframework.dao.DataIntegrityViolationException.class,
+                    () -> place(quote, "rollback-123"));
+        } finally {
+            jdbc.execute("ALTER TABLE sales_orders DROP CONSTRAINT reject_test_order");
+        }
         assertEquals(0, jdbc.queryForObject("SELECT reserved_quantity FROM products WHERE id=?", Integer.class, PRODUCT));
         assertEquals(0, jdbc.queryForObject("SELECT count(*) FROM sales_orders", Integer.class));
         assertEquals(1, jdbc.queryForObject("SELECT count(*) FROM cart_items", Integer.class));

@@ -52,9 +52,6 @@ src/main/java/iuh/fit/nhom16/pcstore/
     security/       OrderActorResolver: ACTIVE + role từ database
     exception/      OrderException: mã lỗi nghiệp vụ
     configuration/ Clock UTC, scheduling, async email
-  payment/
-    controller/     IPN endpoint
-    service/        VnpayGateway: ký/xác minh; VnpayIpnService: cập nhật payment
 frontend/src/
   pages/            CheckoutPage.jsx, OrdersPage.jsx (customer/admin)
   services/         orders.js: HTTP API
@@ -73,17 +70,17 @@ React là View của Spring MVC REST. Controller không chứa SQL; service khô
 | ORD04 | Snapshot tên, SKU, đơn giá, số lượng, bảo hành, địa chỉ; phí 50.000đ; BigDecimal. Giá snapshot được giữ trong hiệu lực quote, kể cả catalog đổi giá. |
 | ORD05 | Validate tên/địa chỉ, số điện thoại Việt Nam; chuẩn hóa E.164 và so với phone_verified_at của tài khoản ở cả quote và đặt đơn. |
 | ORD06 | Giữ reserved_quantity khi tạo đơn, khóa product theo UUID tăng dần; giao hàng trừ stock_on_hand và reserved_quantity; hủy/hết hạn giải phóng giữ tồn. |
-| ORD07 | Order, items, payment attempt, history, idempotency, consumed quote, tồn kho và xóa giỏ nằm cùng transaction. |
+| ORD07 | Order, items, history, idempotency, consumed quote, tồn kho và xóa giỏ nằm cùng transaction. |
 | ORD08 | Idempotency-Key theo customer, so quoteId + paymentMethod; khóa cart serialize request cùng customer trên nhiều instance; unique quote_id bảo vệ một quote/một order. Retry trả đơn đã tạo, key dùng cho nội dung khác trả 409. |
 | ORD09 | COD bắt đầu PENDING_CONFIRMATION/UNPAID; chỉ PAID khi Admin đánh dấu giao thành công COMPLETED. |
-| ORD10 | URL VNPAY 2.1.0, HMAC-SHA512, amount ×100; IPN kiểm chữ ký, merchant, reference, số tiền, trạng thái giao dịch. Browser return chỉ hiển thị, không cập nhật payment. IPN lặp không ghi thanh toán hai lần. |
-| ORD11 | PENDING_PAYMENT/PENDING_CONFIRMATION → CANCELLED hoặc EXPIRED; PENDING_CONFIRMATION → CONFIRMED → SHIPPING → COMPLETED. COD chờ xác nhận tối đa 24 giờ; VNPAY chờ thanh toán 15 phút. Scheduler quét mỗi phút; không hết hạn đơn VNPAY đã PAID. |
-| ORD12 | Admin xác nhận/giao/hoàn tất; chỉ sửa lượng COD UNPAID/PENDING_CONFIRMATION. Điều chỉnh delta tồn, tổng và amount attempt bằng giá snapshot; ghi lượng cũ/mới và lý do vào history. |
+| ORD10 | Thanh toán online đã bỏ khỏi phạm vi. Đặt hàng chỉ nhận COD và kết thúc ở màn hình đặt hàng thành công. Không có gateway, ký giao dịch hoặc endpoint IPN. |
+| ORD11 | PENDING_PAYMENT/PENDING_CONFIRMATION → CANCELLED hoặc EXPIRED; PENDING_CONFIRMATION → CONFIRMED → SHIPPING → COMPLETED. COD chờ xác nhận tối đa 24 giờ. Scheduler quét mỗi phút; đơn đã PAID không hết hạn. |
+| ORD12 | Admin xác nhận/giao/hoàn tất; chỉ sửa lượng COD UNPAID/PENDING_CONFIRMATION. Điều chỉnh delta tồn và tổng đơn bằng giá snapshot; ghi lượng cũ/mới và lý do vào history. |
 | ORD13 | Customer chỉ thấy đơn của mình (404 nếu UUID thuộc người khác); Admin có API riêng; phân trang 20 đơn, lịch sử theo thứ tự ghi. |
 | ORD14 | Event phát trong transaction, listener AFTER_COMMIT gửi async; lỗi SMTP được bắt, không rollback. Không lưu secret/PII vào log gửi email. |
-| ORD15 | CSRF cookie/header giữ nguyên cho mọi API ghi; IPN GET xác thực chữ ký. 401/403/404/409 và lỗi validation; lỗi SQL không lộ ra response. Kiểm tra version khi sửa đơn; rollback lỗi transaction. |
+| ORD15 | CSRF cookie/header giữ nguyên cho mọi API ghi. 401/403/404/409 và lỗi validation; lỗi SQL không lộ ra response. Kiểm tra version khi sửa đơn; rollback lỗi transaction. |
 
-Email gửi theo best effort sau commit, chưa có outbox/retry bền vững khi process dừng. Thanh toán thành công đến sau khi hủy/hết hạn được ghi `REVIEW_REQUIRED`; không tái giữ hàng. Đối soát/hoàn tiền thực hiện ngoài phạm vi luồng đặt hàng; hệ thống chặn hủy đơn đã PAID.
+Email gửi theo best effort sau commit, chưa có outbox/retry bền vững khi process dừng. Hệ thống chặn hủy đơn đã PAID.
 
 ## API
 
@@ -93,7 +90,7 @@ Gọi `GET /api/csrf` trước các API ghi, giữ session cookie và gửi `X-X
 |---|---|---|
 | GET | /api/v1/orders/account | Tài khoản đang chọn |
 | POST | /api/v1/orders/quotes | `{cartVersion, shipping:{recipient,phone,province,ward,addressLine}}` |
-| POST | /api/v1/orders | Header `Idempotency-Key`, body `{quoteId,paymentMethod:"COD" hoặc "VNPAY"}` |
+| POST | /api/v1/orders | Header `Idempotency-Key`, body `{quoteId,paymentMethod:"COD"}` |
 | GET | /api/v1/orders?page=0 | Đơn của customer |
 | GET | /api/v1/orders/{id} | Chi tiết + history |
 | POST | /api/v1/orders/{id}/cancel | `{version,status:"CANCELLED",reason}` |
@@ -101,19 +98,18 @@ Gọi `GET /api/csrf` trước các API ghi, giữ session cookie và gửi `X-X
 | GET | /api/v1/admin/orders/{id} | Chi tiết quản trị |
 | PATCH | /api/v1/admin/orders/{id}/status | `{version,status,reason}` |
 | PATCH | /api/v1/admin/orders/{id}/items/{productId} | `{version,quantity,reason}` |
-| GET | /api/v1/payments/vnpay/ipn | Tham số `vnp_*` được gateway ký |
 
 `/api/v1/orders/**` và `/api/v1/admin/orders/**` cho qua security filter để hỗ trợ identity giả lập; mỗi service entry point kiểm tra quyền từ database. Không bỏ qua CSRF. Khi tích hợp đăng nhập thật, principal phải cung cấp `CartUserIdentity`; không nhận userId/customerId/role từ body đặt hàng.
 
-## VNPAY sandbox
+## Phạm vi thanh toán
 
-Đặt `VNPAY_TMN_CODE`, `VNPAY_HASH_SECRET`, `VNPAY_RETURN_URL` trước khi chạy profile demo. Nếu chưa có thông tin merchant, VNPAY trả 503 và transaction rollback; COD chạy độc lập. Merchant cần cấu hình IPN URL HTTPS công khai trỏ về `/api/v1/payments/vnpay/ipn`. Không dùng return URL thay IPN.
+Module `payment` đã được gỡ bỏ cùng gateway, controller IPN, cấu hình merchant và biến môi trường VNPAY. OrderService không còn phụ thuộc gateway; tạo, xem và sửa đơn không đọc/ghi `sales_payment_attempts` hoặc `sales_payment_events`. Trạng thái thu tiền COD được lưu trực tiếp trên `sales_orders` khi Admin đánh dấu giao hàng hoàn tất.
 
-Tham khảo [đặc tả thanh toán VNPAY](https://sandbox.vnpayment.vn/apis/docs/thanh-toan-pay/pay.html). Chưa xác nhận giao dịch đầu cuối với merchant thật trong phiên triển khai này.
+`PaymentMethod.VNPAY` chỉ còn là giá trị tương thích khi đọc đơn lịch sử. Tạo đơn mới với phương thức này trả 400 `PAYMENT_METHOD_UNSUPPORTED` trước khi giữ tồn. Response đơn không còn trường URL hoặc mã tham chiếu giao dịch.
 
 ## Database hiện có
 
-Migration chung cho module nằm tại `db/orders/V9__checkout_orders.sql`; ứng dụng mặc định thêm location `db/orders`. Module dùng các bảng `sales_*` để không ép đổi/xóa bảng orders/payment legacy đang khác schema. Migration yêu cầu users/products UUID như code catalog/cart hiện tại. Chưa tự migrate dữ liệu đơn legacy sang module này. Migration thêm `users.phone_verified_at` nếu thiếu; không tự đánh dấu số điện thoại thật là đã xác minh.
+Migration chung cho module nằm tại `db/orders/V9__checkout_orders.sql`; ứng dụng mặc định thêm location `db/orders`. Module dùng các bảng `sales_*` để không ép đổi/xóa bảng orders/payment legacy đang khác schema. Migration yêu cầu users/products UUID như code catalog/cart hiện tại. Chưa tự migrate dữ liệu đơn legacy sang module này. Giữ nguyên các migration đã phát hành và bảng giao dịch cũ để không thay đổi checksum hoặc xóa dữ liệu; runtime đặt hàng không sử dụng các bảng giao dịch. Migration thêm `users.phone_verified_at` nếu thiếu; không tự đánh dấu số điện thoại thật là đã xác minh.
 
 Profile riêng `order-fixtures` giữ bộ schema UUID mới và hai PC tại `db/order-demo` để phục vụ integration tests trên database trống. Không cần dùng profile này để đăng nhập kiểm thử. Test PostgreSQL dùng `order-fixtures,cart-demo` để kiểm tra guest, đổi chủ sở hữu và phân quyền.
 
@@ -135,4 +131,4 @@ $env:ORDER_TEST_DB_PASSWORD='postgres'
 mvn '-Dtest=OrderPostgresTest' test
 ```
 
-Kết quả bản đăng nhập test/1234: 51 Java unit tests qua; 8 integration tests PostgreSQL qua trên schema test riêng, gồm login/session/logout, giữ giỏ sau đăng nhập lại, tương thích cột cart_items.id và cạnh tranh tồn kho/transaction. 7 frontend tests và Vite production build qua. Kiểm tra schema ứng dụng thực tế chỉ đọc, không sửa giỏ/dữ liệu hiện có; migration V10 sẽ được áp dụng khi khởi động lại backend.
+Kết quả lịch sử của bản đăng nhập test/1234 (trước khi gỡ module payment): 51 Java unit tests qua; 8 integration tests PostgreSQL qua trên schema test riêng, gồm login/session/logout, giữ giỏ sau đăng nhập lại, tương thích cột cart_items.id và cạnh tranh tồn kho/transaction. 7 frontend tests và Vite production build qua. Kiểm tra schema ứng dụng thực tế chỉ đọc, không sửa giỏ/dữ liệu hiện có; migration V10 sẽ được áp dụng khi khởi động lại backend.

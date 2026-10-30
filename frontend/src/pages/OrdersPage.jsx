@@ -36,7 +36,6 @@ function OrderCard({ order, management, busy, run }) {
         ? orderApi.transition(order, 'CANCELLED', reason) : orderApi.cancel(order))}>Hủy đơn</button>}
       {management && next && <button className="store-button" disabled={busy || !reason.trim()}
         onClick={() => run(() => orderApi.transition(order, next, reason))}>{orderLabels[next]}</button>}
-      {!management && order.status === 'PENDING_PAYMENT' && order.paymentUrl && new Date(order.expiresAt) > new Date() && <a className="store-button" href={order.paymentUrl}>Tiếp tục thanh toán</a>}
     </div>
     <details><summary>Lịch sử đơn hàng</summary><ol>{order.history.map((entry, index) => <li key={index}>
       {new Date(entry.createdAt).toLocaleString('vi-VN')} · {orderLabels[entry.toStatus]} · {entry.reason}
@@ -76,7 +75,6 @@ export default function OrdersPage({ management = false }) {
       <button disabled={busy || loading} onClick={load}>Tải lại</button></nav>
     <h1>{management ? 'Quản trị đơn hàng' : 'Đơn hàng của tôi'}</h1>
     {location.state?.created && <div className="order-created-notice"><p role="status">Đơn hàng đã được tạo thành công.</p><OrderReference code={location.state.created} /></div>}
-    {location.search.includes('vnp_') && <p role="status">Đã trở về từ VNPAY. Trạng thái sẽ cập nhật khi cửa hàng nhận IPN. Hãy tải lại để kiểm tra.</p>}
     {error && <p className="order-error" role="alert">{error}</p>}
     {loading ? <p role="status">Đang tải đơn hàng…</p> : orders.length === 0 && !error ? <p>Chưa có đơn hàng ở trang này.</p> :
       orders.map(order => <OrderCard key={`${order.id}:${order.version}`} order={order} management={management} busy={busy} run={run} />)}
