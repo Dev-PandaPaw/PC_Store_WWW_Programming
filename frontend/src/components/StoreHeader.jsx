@@ -155,7 +155,8 @@ export default function StoreHeader() {
               type="search"
               name="keyword"
               aria-label="Từ khóa tìm kiếm"
-              placeholder="Bạn đang tìm PC, linh kiện nào?"
+              placeholder="Tìm theo nhu cầu: PC cá nhân, chuột chơi game..."
+              maxLength={300}
               value={keyword}
               onChange={(event) => setKeyword(event.target.value)}
             />

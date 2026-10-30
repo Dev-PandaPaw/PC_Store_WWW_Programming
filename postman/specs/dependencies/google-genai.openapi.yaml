@@ -1,0 +1,51 @@
+openapi: 3.0.3
+info:
+  title: Google GenAI generateContent subset used by Spring AI
+  version: 1.0.0
+  description: Derived from official Spring AI Google GenAI documentation and Google Gemini generateContent reference. Orbit JSON-mode discovery was consulted; its sample model was historical, so the configured model is used instead.
+servers:
+  - url: https://generativelanguage.googleapis.com
+paths:
+  /v1beta/models/{model}:generateContent:
+    post:
+      parameters:
+        - {in: path, name: model, required: true, schema: {type: string}}
+        - {in: header, name: x-goog-api-key, required: true, schema: {type: string}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [contents, systemInstruction, generationConfig]
+              properties:
+                contents: {type: array, items: {type: object}}
+                systemInstruction: {type: object}
+                tools:
+                  type: array
+                  description: Game lookup supplies googleSearch; comparison and ordinary search/chat do not enable it.
+                  items: {type: object, properties: {googleSearch: {type: object}}}
+                generationConfig:
+                  type: object
+                  properties:
+                    responseMimeType: {type: string, enum: [application/json]}
+                    responseJsonSchema: {type: object}
+      responses:
+        '200':
+          description: Structured JSON is returned as text inside candidates[].content.parts[]
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  candidates:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        content: {type: object}
+                        groundingMetadata: {type: object, description: Grounded lookup must include actual provider groundingChunks with HTTPS web citations. An answer without citations is not a trusted requirement source.}
+        '400': {description: Invalid model request}
+        '403': {description: API key not authorized}
+        '429': {description: Quota exhausted}
+        '503': {description: Provider unavailable}

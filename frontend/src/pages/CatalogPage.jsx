@@ -1,15 +1,15 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { SlidersHorizontal, Search, ArrowLeft } from 'lucide-react'
+import { SlidersHorizontal, Search, ArrowLeft, LoaderCircle, Sparkles } from 'lucide-react'
 import {
   CATEGORIES,
   CATEGORY_LABELS,
   matchesCategory,
-  normalizeSearch,
 } from '../data/storeData'
 import CategoryIcon from '../components/CategoryIcon'
 import { ProductCard } from '../components/gear/ProductCard'
 import { useCatalog, CatalogBoundary } from '../contexts/CatalogContext'
+import { searchProducts } from '../services/productSearch'
 
 export default function CatalogPage() {
   return <CatalogBoundary><CatalogContent /></CatalogBoundary>
@@ -20,8 +20,45 @@ function CatalogContent() {
   const [params, setParams] = useSearchParams()
   const category = params.get('category') || 'ALL'
   const keyword = params.get('keyword') || ''
+  const [draft, setDraft] = useState(keyword)
   const sort = params.get('sort') || 'featured'
   const dealsOnly = params.get('deals') === '1'
+  const [searchState, setSearchState] = useState({ key: '', products: [], summary: '', mode: '', error: false, pending: false })
+  const [attempt, setAttempt] = useState(0)
+  const searchKey = JSON.stringify([draft.trim(), category, sort, dealsOnly, attempt])
+  const searching = Boolean(draft.trim()) && (searchState.key !== searchKey || searchState.pending)
+  const searchError = Boolean(draft.trim()) && searchState.key === searchKey && searchState.error
+
+  useEffect(() => { setDraft(keyword) }, [keyword])
+  useEffect(() => {
+    if (draft.trim() === keyword.trim()) return
+    const timer = setTimeout(() => {
+      setParams(previous => {
+        const next = new URLSearchParams(previous)
+        if (draft.trim()) next.set('keyword', draft.trim())
+        else next.delete('keyword')
+        return next
+      }, { replace: true })
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [draft, keyword, setParams])
+
+  useEffect(() => {
+    if (!draft.trim()) return
+    const controller = new AbortController()
+    let active = true
+    setSearchState(previous => ({ ...previous, key: searchKey, pending: true, error: false }))
+    const timer = setTimeout(() => {
+      searchProducts({ keyword: draft.trim(), category, sort, deals: dealsOnly }, controller.signal)
+        .then(result => {
+          if (active) setSearchState({ ...result, key: searchKey, pending: false, error: false })
+        })
+        .catch(() => {
+          if (active) setSearchState({ key: searchKey, products: [], summary: '', mode: '', pending: false, error: true })
+        })
+    }, 500)
+    return () => { active = false; clearTimeout(timer); controller.abort() }
+  }, [draft, category, sort, dealsOnly, searchKey])
   const title = dealsOnly
     ? 'Flash Deal PC & linh kiện'
     : CATEGORY_LABELS[category] || 'Sản phẩm'
@@ -37,16 +74,11 @@ function CatalogContent() {
       { replace: true },
     )
   const products = useMemo(() => {
-    const tokens = normalizeSearch(keyword).trim().split(/\s+/).filter(Boolean)
+    if (draft.trim()) return searchState.key === searchKey && !searchState.pending ? searchState.products : []
     const result = PRODUCTS.filter(
       (product) =>
         matchesCategory(product, category) &&
-        (!dealsOnly || product.originalPrice > product.price) &&
-        tokens.every((token) =>
-          normalizeSearch(
-            `${product.name} ${product.brand} ${CATEGORY_LABELS[product.category]} ${product.specs.map((spec) => spec.label).join(' ')}`,
-          ).includes(token),
-        ),
+        (!dealsOnly || product.originalPrice > product.price),
     )
     if (sort === 'price-asc') result.sort((a, b) => a.price - b.price)
     if (sort === 'price-desc') result.sort((a, b) => b.price - a.price)
@@ -58,7 +90,7 @@ function CatalogContent() {
           1 - b.price / b.originalPrice - (1 - a.price / a.originalPrice),
       )
     return result
-  }, [PRODUCTS, category, keyword, sort, dealsOnly])
+  }, [PRODUCTS, category, draft, sort, dealsOnly, searchState, searchKey])
 
   return (
     <div className="catalog-page">
@@ -104,9 +136,11 @@ function CatalogContent() {
               <Search size={18} />
               <input
                 aria-label="Tìm trong danh mục"
-                placeholder="Tên sản phẩm, thương hiệu..."
-                value={keyword}
-                onChange={(event) => update('keyword', event.target.value)}
+                placeholder="Thử: chuột giá rẻ chơi game, PC cá nhân dưới 20 triệu..."
+                maxLength={300}
+                value={draft}
+                onChange={(event) => setDraft(event.target.value)}
+                onKeyDown={(event) => { if (event.key === 'Enter') update('keyword', draft.trim()) }}
               />
             </label>
             <label className="catalog-sort">
@@ -123,11 +157,24 @@ function CatalogContent() {
               </select>
             </label>
           </div>
-          <p className="catalog-count">
-            {products.length} sản phẩm
-            {keyword.trim() && <> cho “{keyword.trim()}”</>}
+          <div className="catalog-search-suggestions" aria-label="Gợi ý tìm kiếm">
+            <span><Sparkles size={14} /> Tìm theo nhu cầu</span>
+            {['Chuột giá rẻ chơi game', 'PC cá nhân', 'Màn hình làm việc dưới 4 triệu'].map(query => (
+              <button type="button" key={query} onClick={() => update('keyword', query)}>{query}</button>
+            ))}
+          </div>
+          <p className="catalog-count" role="status" aria-live="polite">
+            {searching ? 'Đang tìm sản phẩm phù hợp…' : searchError ? 'Chưa tải được kết quả tìm kiếm' : `${products.length} sản phẩm`}
+            {draft.trim() && <> cho “{draft.trim()}”</>}
           </p>
-          {products.length ? (
+          {!searching && !searchError && draft.trim() && searchState.summary && (
+            <p className="catalog-search-summary"><Sparkles size={15} />{searchState.summary}</p>
+          )}
+          {searching ? (
+            <div className="store-empty" aria-busy="true"><LoaderCircle className="catalog-search-spinner" size={30} /><p>Đang tìm sản phẩm theo nhu cầu của bạn…</p></div>
+          ) : searchError ? (
+            <div className="store-empty" role="alert"><h2>Chưa tải được kết quả</h2><p>Vui lòng kiểm tra kết nối và thử lại.</p><button type="button" className="store-button" onClick={() => setAttempt(value => value + 1)}>Thử lại</button></div>
+          ) : products.length ? (
             <div className="product-grid product-grid--catalog">
               {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
@@ -137,7 +184,7 @@ function CatalogContent() {
             <div className="store-empty">
               <Search size={36} />
               <h2>Chưa tìm thấy sản phẩm phù hợp</h2>
-              <p>Thử từ khóa ngắn hơn hoặc chọn danh mục khác.</p>
+              <p>Thử điều chỉnh ngân sách, nhu cầu hoặc chọn danh mục khác.</p>
               <button className="store-button" onClick={() => setParams({})}>
                 <ArrowLeft size={16} /> Xem tất cả sản phẩm
               </button>

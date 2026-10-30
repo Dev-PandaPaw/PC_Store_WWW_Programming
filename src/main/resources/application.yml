@@ -1,4 +1,6 @@
 spring:
+  config:
+    import: optional:file:.env[.properties]
   application:
     name: pc-store
   profiles:
@@ -38,3 +40,14 @@ springdoc:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
+
+app:
+  ai:
+    api-key: ${GEMINI_API_KEY:}
+    model: ${GEMINI_MODEL:gemini-3.5-flash-lite}
+    base-url: ${GEMINI_API_BASE_URL:https://generativelanguage.googleapis.com}
+    timeout-ms: ${AI_TIMEOUT_MS:20000}
+    per-minute: ${AI_RATE_LIMIT_PER_MINUTE:20}
+    per-day: ${AI_RATE_LIMIT_PER_DAY:100}
+    global-per-day: ${AI_GLOBAL_LIMIT_PER_DAY:1000}
+    allow-local-mocks: ${AI_ALLOW_LOCAL_MOCKS:false}

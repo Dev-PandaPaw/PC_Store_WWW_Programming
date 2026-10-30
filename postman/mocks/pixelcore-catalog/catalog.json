@@ -1,0 +1,1010 @@
+{
+  "products": [
+    {
+      "id": "e481e4b7-5cc4-5272-a3b1-a641ef0f9b71",
+      "name": "PC GVN Intel i5-12400F/ VGA RTX 3050 (Main H)",
+      "slug": "pc-gvn-i5-12400f-rtx-3050",
+      "brand": "GEARVN",
+      "image": "products/pc-gvn-i5-12400f-rtx-3050.png",
+      "price": 17990000,
+      "specs": [
+        {
+          "label": "Core i5-12400F"
+        },
+        {
+          "label": "RTX 3050 6GB"
+        },
+        {
+          "label": "RAM 16GB"
+        },
+        {
+          "label": "SSD 512GB"
+        },
+        {
+          "label": "H610M"
+        }
+      ],
+      "category": "pc-gaming",
+      "catalogKey": "gvn-pc-gvn-i5-12400f-rtx-3050",
+      "description": "Bộ PC GVN kết hợp Intel Core i5-12400F và GeForce RTX 3050 6GB, đi kèm RAM 16GB và SSD 512GB. Nền tảng H610M phù hợp cho góc máy chơi game và học tập.",
+      "stockOnHand": 0,
+      "originalPrice": 19480000
+    },
+    {
+      "id": "595defdd-f6a2-58fb-ba51-3025c564a9db",
+      "name": "PC GVN Intel i5-12400F/ VGA RTX 5060 (Main H)",
+      "slug": "pc-gvn-i5-12400f-rtx-5060",
+      "brand": "GEARVN",
+      "image": "products/pc-gvn-i5-12400f-rtx-5060.png",
+      "price": 26890000,
+      "specs": [
+        {
+          "label": "Core i5-12400F"
+        },
+        {
+          "label": "RTX 5060 8GB"
+        },
+        {
+          "label": "RAM 16GB"
+        },
+        {
+          "label": "SSD 512GB"
+        },
+        {
+          "label": "H610M"
+        }
+      ],
+      "category": "pc-gaming",
+      "catalogKey": "gvn-pc-gvn-i5-12400f-rtx-5060",
+      "description": "Bộ máy sử dụng Intel Core i5-12400F, GeForce RTX 5060 8GB, RAM 16GB và SSD 512GB. Cấu hình lắp sẵn trên bo mạch chủ H610M.",
+      "stockOnHand": 0,
+      "originalPrice": 28580000
+    },
+    {
+      "id": "2dc2b0c5-103c-59ce-8a4f-9f0fc6efe35e",
+      "name": "PC GVN x Acer - Máy bộ Altos P130F7 (I5/RAM 8GB/SSD 512GB)",
+      "slug": "acer-altos-p130f7-i5",
+      "brand": "ACER",
+      "image": "products/acer-altos-p130f7-i5.jpg",
+      "price": 12990000,
+      "specs": [
+        {
+          "label": "Core i5-11600"
+        },
+        {
+          "label": "RAM 8GB"
+        },
+        {
+          "label": "SSD 512GB"
+        },
+        {
+          "label": "Đồ họa tích hợp"
+        }
+      ],
+      "category": "pc-office",
+      "catalogKey": "gvn-acer-altos-p130f7-i5",
+      "description": "Máy bộ Acer Altos P130F7 dùng Core i5-11600, RAM 8GB và SSD 512GB. Thiết kế dành cho công việc văn phòng với đồ họa tích hợp.",
+      "stockOnHand": 0,
+      "originalPrice": 15490000
+    },
+    {
+      "id": "ca87f7c5-1d3d-5bdf-bf87-2f0c81b4a01d",
+      "name": "PC GVN Intel i7-14700F/ VGA RTX 5060",
+      "slug": "pc-gvn-i7-14700f-rtx-5060",
+      "brand": "GEARVN",
+      "image": "products/pc-gvn-i7-14700f-rtx-5060.jpg",
+      "price": 42990000,
+      "specs": [
+        {
+          "label": "Core i7-14700F"
+        },
+        {
+          "label": "RTX 5060 8GB"
+        },
+        {
+          "label": "RAM 16GB"
+        },
+        {
+          "label": "SSD 512GB"
+        },
+        {
+          "label": "Z790 DDR4"
+        }
+      ],
+      "category": "pc-workstation",
+      "catalogKey": "gvn-pc-gvn-i7-14700f-rtx-5060",
+      "description": "PC GVN dùng Intel Core i7-14700F và GeForce RTX 5060 8GB, đi kèm RAM 16GB và SSD 512GB. Bộ máy phục vụ cả công việc sáng tạo nội dung và giải trí.",
+      "stockOnHand": 0,
+      "originalPrice": 43120000
+    },
+    {
+      "id": "954db6c4-ea24-5681-a8c8-d15954df3611",
+      "name": "Bộ vi xử lý Intel Core i5 12400F / 2.5GHz Turbo 4.4GHz / 6 Nhân 12 Luồng / 18MB / LGA 1700  (TRAY)",
+      "slug": "intel-core-i5-12400f-tray",
+      "brand": "Intel",
+      "image": "products/intel-core-i5-12400f-tray.png",
+      "price": 4190000,
+      "specs": [
+        {
+          "label": "6 nhân / 12 luồng"
+        },
+        {
+          "label": "LGA 1700"
+        },
+        {
+          "label": "Turbo 4.4GHz"
+        },
+        {
+          "label": "65W"
+        }
+      ],
+      "category": "cpu",
+      "catalogKey": "gvn-intel-core-i5-12400f-tray",
+      "description": "CPU Intel Core i5-12400F có 6 nhân, 12 luồng, xung Turbo tối đa 4.4GHz và socket LGA 1700. Phiên bản tray không kèm tản nhiệt; cần card đồ họa rời để xuất hình.",
+      "stockOnHand": 0,
+      "originalPrice": 5690000
+    },
+    {
+      "id": "098e06c9-bb66-5306-a01d-64196241bf25",
+      "name": "Bộ vi xử lý AMD Ryzen 5 7500F / 3.7GHz Boost 5.0GHz / 6 nhân 12 luồng / 38MB / AM5 (Tray)",
+      "slug": "amd-ryzen-5-7500f-tray",
+      "brand": "AMD",
+      "image": "products/amd-ryzen-5-7500f-tray.png",
+      "price": 4790000,
+      "specs": [
+        {
+          "label": "6 nhân / 12 luồng"
+        },
+        {
+          "label": "AM5"
+        },
+        {
+          "label": "Boost 5.0GHz"
+        },
+        {
+          "label": "DDR5"
+        }
+      ],
+      "category": "cpu",
+      "catalogKey": "gvn-amd-ryzen-5-7500f-tray",
+      "description": "AMD Ryzen 5 7500F là CPU 6 nhân, 12 luồng cho nền tảng AM5 và bộ nhớ DDR5. Xung boost tối đa 5.0GHz; phiên bản này được bán dạng tray.",
+      "stockOnHand": 0,
+      "originalPrice": 5190000
+    },
+    {
+      "id": "34491712-4dc7-51fd-b52e-e6342fbcca5e",
+      "name": "Card màn hình Zotac GeForce RTX 5060 Twin Edge OC 8GB",
+      "slug": "zotac-rtx-5060-twin-edge-oc",
+      "brand": "Zotac",
+      "image": "products/zotac-rtx-5060-twin-edge-oc.jpg",
+      "price": 11490000,
+      "specs": [
+        {
+          "label": "VRAM 8GB"
+        },
+        {
+          "label": "128-bit"
+        },
+        {
+          "label": "3840 CUDA"
+        },
+        {
+          "label": "Boost 2527MHz"
+        }
+      ],
+      "category": "vga",
+      "catalogKey": "gvn-zotac-rtx-5060-twin-edge-oc",
+      "description": "Card đồ họa Zotac RTX 5060 Twin Edge OC có bộ nhớ 8GB và bus 128-bit. Thiết kế hai quạt với xung boost được công bố 2527MHz.",
+      "stockOnHand": 0,
+      "originalPrice": 12490000
+    },
+    {
+      "id": "092a3835-6843-5ee6-8ccb-c0273f03961f",
+      "name": "Card màn hình MSI GeForce RTX 5060 Ti Shadow 2X OC Plus 8GB",
+      "slug": "msi-rtx-5060-ti-shadow-2x",
+      "brand": "MSI",
+      "image": "products/msi-rtx-5060-ti-shadow-2x.jpg",
+      "price": 16990000,
+      "specs": [
+        {
+          "label": "VRAM 8GB"
+        },
+        {
+          "label": "128-bit"
+        },
+        {
+          "label": "4608 CUDA"
+        },
+        {
+          "label": "180W"
+        }
+      ],
+      "category": "vga",
+      "catalogKey": "gvn-msi-rtx-5060-ti-shadow-2x",
+      "description": "Card đồ họa MSI GeForce RTX 5060 Ti Shadow 2X OC Plus trang bị 8GB VRAM, bus 128-bit và 4608 nhân CUDA. Thiết kế tản nhiệt hai quạt cho máy tính để bàn.",
+      "stockOnHand": 0,
+      "originalPrice": 17490000
+    },
+    {
+      "id": "ae1fe434-0434-59ea-a3bb-e619c86fdc4f",
+      "name": "Card màn hình ZOTAC GAMING GeForce RTX 5070 SOLID OC (ZT-B50700J-10P)",
+      "slug": "zotac-rtx-5070-solid-oc",
+      "brand": "Zotac",
+      "image": "products/zotac-rtx-5070-solid-oc.jpg",
+      "price": 29990000,
+      "specs": [
+        {
+          "label": "VRAM 12GB"
+        },
+        {
+          "label": "192-bit"
+        },
+        {
+          "label": "6144 CUDA"
+        },
+        {
+          "label": "250W"
+        }
+      ],
+      "category": "vga",
+      "catalogKey": "gvn-zotac-rtx-5070-solid-oc",
+      "description": "Zotac GAMING GeForce RTX 5070 SOLID OC có 12GB bộ nhớ, bus 192-bit và 6144 nhân CUDA. Công suất TDP niêm yết 250W.",
+      "stockOnHand": 0,
+      "originalPrice": 30990000
+    },
+    {
+      "id": "b6a11c1a-1aea-5495-988a-e263dbf482b8",
+      "name": "Bo mạch chủ MSI PRO B760M-A WIFI DDR4",
+      "slug": "msi-pro-b760m-a-wifi-ddr4",
+      "brand": "MSI",
+      "image": "products/msi-pro-b760m-a-wifi-ddr4.png",
+      "price": 3490000,
+      "specs": [
+        {
+          "label": "Intel B760"
+        },
+        {
+          "label": "LGA 1700"
+        },
+        {
+          "label": "DDR4"
+        },
+        {
+          "label": "Micro ATX"
+        },
+        {
+          "label": "2 khe M.2"
+        }
+      ],
+      "category": "mainboard",
+      "catalogKey": "gvn-msi-pro-b760m-a-wifi-ddr4",
+      "description": "MSI PRO B760M-A WIFI DDR4 là bo mạch chủ Micro ATX sử dụng chipset Intel B760 và socket LGA 1700. Trang bị khe RAM DDR4 và hai khe M.2.",
+      "stockOnHand": 0,
+      "originalPrice": 4190000
+    },
+    {
+      "id": "7c150d9c-b3c2-51c4-9089-0f8b5e7d74ea",
+      "name": "Bo mạch chủ ASUS TUF GAMING B760M-PLUS WIFI II DDR5",
+      "slug": "asus-tuf-b760m-plus-wifi-ii",
+      "brand": "ASUS",
+      "image": "products/asus-tuf-b760m-plus-wifi-ii.png",
+      "price": 4290000,
+      "specs": [
+        {
+          "label": "Intel B760"
+        },
+        {
+          "label": "LGA 1700"
+        },
+        {
+          "label": "DDR5"
+        },
+        {
+          "label": "Micro ATX"
+        },
+        {
+          "label": "3 khe M.2"
+        }
+      ],
+      "category": "mainboard",
+      "catalogKey": "gvn-asus-tuf-b760m-plus-wifi-ii",
+      "description": "ASUS TUF GAMING B760M-PLUS WIFI II dùng chipset Intel B760, socket LGA 1700 và bộ nhớ DDR5. Bo mạch chuẩn Micro ATX có ba khe M.2.",
+      "stockOnHand": 0,
+      "originalPrice": 4590000
+    },
+    {
+      "id": "42ee7da7-2846-59a6-9aa6-c6396faa6c60",
+      "name": "Ram Corsair Vengeance RGB White 32GB (2x16GB) 6000 DDR5 (CMH32GX5M2E6000C36W)",
+      "slug": "corsair-vengeance-rgb-32gb-ddr5-white",
+      "brand": "Corsair",
+      "image": "products/corsair-vengeance-rgb-32gb-ddr5-white.png",
+      "price": 13990000,
+      "specs": [
+        {
+          "label": "32GB (2 x 16GB)"
+        },
+        {
+          "label": "DDR5"
+        },
+        {
+          "label": "6000MHz"
+        },
+        {
+          "label": "RGB"
+        },
+        {
+          "label": "Màu trắng"
+        }
+      ],
+      "category": "ram",
+      "catalogKey": "gvn-corsair-vengeance-rgb-32gb-ddr5-white",
+      "description": "Bộ RAM Corsair Vengeance RGB màu trắng gồm hai thanh 16GB, tổng dung lượng 32GB. Chuẩn DDR5 với tốc độ công bố 6000MHz và đèn RGB.",
+      "stockOnHand": 0,
+      "originalPrice": 14990000
+    },
+    {
+      "id": "28d79c77-9dbf-5c15-9d97-5a492134feb5",
+      "name": "Ram Kingmax Blade X 1x16GB DDR4 Bus 3200Mhz",
+      "slug": "kingmax-blade-x-16gb-ddr4",
+      "brand": "KINGMAX",
+      "image": "products/kingmax-blade-x-16gb-ddr4.png",
+      "price": 3390000,
+      "specs": [
+        {
+          "label": "16GB (1 x 16GB)"
+        },
+        {
+          "label": "DDR4"
+        },
+        {
+          "label": "3200MHz"
+        },
+        {
+          "label": "RAM desktop"
+        }
+      ],
+      "category": "ram",
+      "catalogKey": "gvn-kingmax-blade-x-16gb-ddr4",
+      "description": "RAM Kingmax Blade X dung lượng 16GB trên một thanh cho máy tính để bàn. Sử dụng chuẩn DDR4, tốc độ bus 3200MHz.",
+      "stockOnHand": 0,
+      "originalPrice": 3990000
+    },
+    {
+      "id": "3a415331-1810-5b56-82c9-248e05802083",
+      "name": "Ổ cứng SSD Kingston NV3 1TB M.2 PCIe NVMe Gen4",
+      "slug": "kingston-nv3-1tb",
+      "brand": "Kingston",
+      "image": "products/kingston-nv3-1tb.png",
+      "price": 4990000,
+      "specs": [
+        {
+          "label": "1TB"
+        },
+        {
+          "label": "M.2 NVMe"
+        },
+        {
+          "label": "PCIe Gen4 x4"
+        },
+        {
+          "label": "Ghi 4000MB/s"
+        }
+      ],
+      "category": "storage",
+      "catalogKey": "gvn-kingston-nv3-1tb",
+      "description": "SSD Kingston NV3 1TB dùng giao tiếp PCIe Gen4 x4 và chuẩn M.2 NVMe. Dung lượng 1TB phù hợp để cài hệ điều hành, ứng dụng và lưu trò chơi.",
+      "stockOnHand": 0,
+      "originalPrice": 5990000
+    },
+    {
+      "id": "f16fc762-d9e5-510b-b9d6-1054563dcebb",
+      "name": "Ổ cứng SSD Samsung 9100 PRO NVMe M.2 1TB Gen5",
+      "slug": "samsung-9100-pro-1tb",
+      "brand": "Samsung",
+      "image": "products/samsung-9100-pro-1tb.png",
+      "price": 6990000,
+      "specs": [
+        {
+          "label": "1TB"
+        },
+        {
+          "label": "M.2 NVMe"
+        },
+        {
+          "label": "PCIe Gen5 x4"
+        },
+        {
+          "label": "3D V-NAND"
+        }
+      ],
+      "category": "storage",
+      "catalogKey": "gvn-samsung-9100-pro-1tb",
+      "description": "SSD Samsung 9100 PRO 1TB sử dụng giao tiếp PCIe Gen5 x4, chuẩn M.2 NVMe và chip nhớ 3D V-NAND. Cần kiểm tra khe M.2 trên bo mạch chủ trước khi lắp.",
+      "stockOnHand": 0,
+      "originalPrice": 7490000
+    },
+    {
+      "id": "55144d49-5ecf-56d3-bbf3-65bba31c9a59",
+      "name": "Ổ Cứng SSD Samsung 990 PRO 2TB PCIe Gen4 NVMe (MZ-V9P2T0BW)",
+      "slug": "samsung-990-pro-2tb",
+      "brand": "Samsung",
+      "image": "products/samsung-990-pro-2tb.png",
+      "price": 16990000,
+      "specs": [
+        {
+          "label": "2TB"
+        },
+        {
+          "label": "M.2 NVMe"
+        },
+        {
+          "label": "PCIe Gen4 x4"
+        },
+        {
+          "label": "TLC NAND"
+        }
+      ],
+      "category": "storage",
+      "catalogKey": "gvn-samsung-990-pro-2tb",
+      "description": "SSD Samsung 990 PRO 2TB, mã MZ-V9P2T0BW, sử dụng giao tiếp PCIe Gen4 x4. Bộ nhớ TLC với dung lượng 2TB dành cho hệ điều hành, ứng dụng và dữ liệu.",
+      "stockOnHand": 0,
+      "originalPrice": 17990000
+    },
+    {
+      "id": "e1fdc294-f517-509c-95a9-82ca321ca9ae",
+      "name": "Chuột Logitech G502 Hero Gaming",
+      "slug": "logitech-g502-hero",
+      "brand": "Logitech",
+      "image": "products/logitech-g502-hero.png",
+      "price": 920000,
+      "specs": [
+        {
+          "label": "HERO 25.600 DPI"
+        },
+        {
+          "label": "USB có dây"
+        },
+        {
+          "label": "1.000 Hz"
+        },
+        {
+          "label": "121 g"
+        }
+      ],
+      "category": "mouse",
+      "catalogKey": "gear-logitech-g502-hero",
+      "description": "Chuột gaming có dây với cảm biến HERO và dải độ nhạy tối đa 25.600 DPI. Thiết kế nhiều nút phù hợp người dùng cần gán thao tác nhanh trong game.",
+      "stockOnHand": 0,
+      "originalPrice": 1090000
+    },
+    {
+      "id": "2e3888db-a543-572b-a99f-5d313b9c63e3",
+      "name": "Chuột Logitech G102 LightSync Black",
+      "slug": "logitech-g102-lightsync-black",
+      "brand": "Logitech",
+      "image": "products/logitech-g102-lightsync-black.jpg",
+      "price": 400000,
+      "specs": [
+        {
+          "label": "8.000 DPI"
+        },
+        {
+          "label": "USB có dây"
+        },
+        {
+          "label": "LIGHTSYNC RGB"
+        },
+        {
+          "label": "85 g"
+        }
+      ],
+      "category": "mouse",
+      "catalogKey": "gear-logitech-g102-lightsync-black",
+      "description": "Chuột gaming phổ thông với kết nối USB và đèn LIGHTSYNC RGB. Cảm biến có thể chỉnh độ nhạy từ 200 đến 8.000 DPI.",
+      "stockOnHand": 0,
+      "originalPrice": 599000
+    },
+    {
+      "id": "28bd6a14-fb86-51e0-8060-89ba1f1fe64b",
+      "name": "Chuột Logitech G304 Wireless",
+      "slug": "logitech-g304-wireless-black",
+      "brand": "Logitech",
+      "image": "products/logitech-g304-wireless-black.png",
+      "price": 725000,
+      "specs": [
+        {
+          "label": "HERO 12.000 DPI"
+        },
+        {
+          "label": "Không dây"
+        },
+        {
+          "label": "1.000 Hz"
+        },
+        {
+          "label": "99 g"
+        }
+      ],
+      "category": "mouse",
+      "catalogKey": "gear-logitech-g304-wireless-black",
+      "description": "Chuột không dây màu đen sử dụng cảm biến HERO. Dải độ nhạy 200–12.000 DPI đáp ứng cả công việc hằng ngày và chơi game.",
+      "stockOnHand": 0,
+      "originalPrice": 1190000
+    },
+    {
+      "id": "c44f7837-82c2-58d6-831b-49510ec4ee41",
+      "name": "Bàn phím AKKO 5075B Plus Black & Gold Creamy Yellow Pro switch",
+      "slug": "akko-5075b-plus-black-gold",
+      "brand": "AKKO",
+      "image": "products/akko-5075b-plus-black-gold.jpg",
+      "price": 1290000,
+      "specs": [
+        {
+          "label": "Layout 75%"
+        },
+        {
+          "label": "Bluetooth / 2.4 GHz / có dây"
+        },
+        {
+          "label": "PBT Double-Shot"
+        },
+        {
+          "label": "RGB"
+        }
+      ],
+      "category": "keyboard",
+      "catalogKey": "gear-akko-5075b-plus-black-gold",
+      "description": "Bàn phím cơ phối đen vàng với layout 75% và switch Creamy Yellow Pro. Hỗ trợ cả kết nối có dây, Bluetooth và không dây 2.4 GHz.",
+      "stockOnHand": 0,
+      "originalPrice": 1390000
+    },
+    {
+      "id": "9994f2ad-a91d-5164-86d2-082ad795fdac",
+      "name": "Bàn phím Không dây DareU EK87 Pro RGB Đen Dream Switch",
+      "slug": "dareu-ek87-pro-black",
+      "brand": "DareU",
+      "image": "products/dareu-ek87-pro-black.png",
+      "price": 1050000,
+      "specs": [
+        {
+          "label": "TKL 87 phím"
+        },
+        {
+          "label": "Wireless / USB-C"
+        },
+        {
+          "label": "Dream Switch"
+        },
+        {
+          "label": "RGB"
+        }
+      ],
+      "category": "keyboard",
+      "catalogKey": "gear-dareu-ek87-pro-black",
+      "description": "Bàn phím cơ TKL 87 phím dùng switch DareU Dream. Bố cục bỏ cụm phím số tạo thêm không gian cho chuột trong góc chơi game.",
+      "stockOnHand": 0,
+      "originalPrice": 1390000
+    },
+    {
+      "id": "f001be14-88a9-56ea-b543-da0398dbbe04",
+      "name": "Bàn phím AKKO 5075B Plus Red World Tour VIET NAM",
+      "slug": "akko-5075b-plus-red-vietnam",
+      "brand": "AKKO",
+      "image": "products/akko-5075b-plus-red-vietnam.png",
+      "price": 1490000,
+      "specs": [
+        {
+          "label": "Layout 75%"
+        },
+        {
+          "label": "Bluetooth / 2.4 GHz / USB-C"
+        },
+        {
+          "label": "Keycap PBT"
+        },
+        {
+          "label": "RGB"
+        }
+      ],
+      "category": "keyboard",
+      "catalogKey": "gear-akko-5075b-plus-red-vietnam",
+      "description": "Phiên bản Red World Tour VIET NAM có phối màu lấy cảm hứng từ Việt Nam. Layout 75%, keycap PBT và ba chế độ kết nối phù hợp một góc máy gọn gàng.",
+      "stockOnHand": 0,
+      "originalPrice": 1790000
+    },
+    {
+      "id": "442e864a-8db4-5dd8-839a-010f3d036bac",
+      "name": "Màn hình Asus TUF GAMING VG259Q5A 25\" Fast IPS 200Hz Gsync chuyên game",
+      "slug": "asus-tuf-vg259q5a",
+      "brand": "ASUS",
+      "image": "products/asus-tuf-vg259q5a.jpg",
+      "price": 2990000,
+      "specs": [
+        {
+          "label": "Fast IPS"
+        },
+        {
+          "label": "Full HD"
+        },
+        {
+          "label": "200 Hz"
+        },
+        {
+          "label": "G-SYNC"
+        }
+      ],
+      "category": "monitor",
+      "catalogKey": "gear-asus-tuf-vg259q5a",
+      "description": "Màn hình TUF Gaming sử dụng tấm nền Fast IPS, độ phân giải Full HD và tần số quét 200 Hz. Phù hợp cấu hình PC hướng đến game có nhịp độ nhanh.",
+      "stockOnHand": 0,
+      "originalPrice": 3990000
+    },
+    {
+      "id": "1af1465c-eaf1-56fb-91d3-0ebf42fd2bd9",
+      "name": "Màn hình ViewSonic VX24G30-W 24\" IPS 240Hz chuyên game",
+      "slug": "viewsonic-vx24g30-w",
+      "brand": "ViewSonic",
+      "image": "products/viewsonic-vx24g30-w.jpg",
+      "price": 2990000,
+      "specs": [
+        {
+          "label": "24 inch"
+        },
+        {
+          "label": "IPS"
+        },
+        {
+          "label": "Full HD"
+        },
+        {
+          "label": "240 Hz"
+        }
+      ],
+      "category": "monitor",
+      "catalogKey": "gear-viewsonic-vx24g30-w",
+      "description": "Màn hình ViewSonic 24 inch màu trắng, tấm nền IPS và tần số quét 240 Hz. Độ phân giải Full HD phù hợp với nhiều bộ PC gaming phổ thông.",
+      "stockOnHand": 0,
+      "originalPrice": 3490000
+    },
+    {
+      "id": "f1dd26fb-adc6-5e86-9c59-37b591800672",
+      "name": "Màn hình Acer KG251Q Z1 25\" 240Hz chuyên game",
+      "slug": "acer-kg251q-z1",
+      "brand": "Acer",
+      "image": "products/acer-kg251q-z1.jpg",
+      "price": 3090000,
+      "specs": [
+        {
+          "label": "25 inch"
+        },
+        {
+          "label": "VA"
+        },
+        {
+          "label": "Full HD"
+        },
+        {
+          "label": "240 Hz"
+        }
+      ],
+      "category": "monitor",
+      "catalogKey": "gear-acer-kg251q-z1",
+      "description": "Màn hình gaming Acer 25 inch dùng tấm nền VA và độ phân giải Full HD. Tần số quét 240 Hz dành cho người dùng ưu tiên chuyển động mượt.",
+      "stockOnHand": 0,
+      "originalPrice": 4990000
+    },
+    {
+      "id": "ab444770-7628-5756-8a95-92a6ef804dec",
+      "name": "Tản nhiệt Cooler Master Hyper 212 Spectrum V3 ARGB",
+      "slug": "cooler-master-hyper-212-spectrum-v3",
+      "brand": "Cooler Master",
+      "image": "products/cooler-master-hyper-212-spectrum-v3.png",
+      "price": 390000,
+      "specs": [
+        {
+          "label": "Tản nhiệt khí"
+        },
+        {
+          "label": "Quạt 120 mm"
+        },
+        {
+          "label": "650–1.750 RPM"
+        },
+        {
+          "label": "ARGB"
+        }
+      ],
+      "category": "cooling",
+      "catalogKey": "gear-cooler-master-hyper-212-spectrum-v3",
+      "description": "Tản nhiệt khí một quạt 120 mm, có đèn ARGB và khả năng thay đổi tốc độ quạt. Cần kiểm tra socket CPU và khoảng trống trong case trước khi lắp.",
+      "stockOnHand": 0,
+      "originalPrice": 490000
+    },
+    {
+      "id": "aa6831c0-20cf-5b5a-bd44-34d24569e556",
+      "name": "Tản nhiệt DEEPCOOL AG400 ARGB",
+      "slug": "deepcool-ag400-argb",
+      "brand": "DeepCool",
+      "image": "products/deepcool-ag400-argb.jpg",
+      "price": 390000,
+      "specs": [
+        {
+          "label": "Tản nhiệt khí"
+        },
+        {
+          "label": "ARGB"
+        },
+        {
+          "label": "Màu đen"
+        }
+      ],
+      "category": "cooling",
+      "catalogKey": "gear-deepcool-ag400-argb",
+      "description": "Tản nhiệt khí DeepCool AG400 ARGB với phối màu đen và quạt có đèn. Là lựa chọn cho người dùng muốn bổ sung điểm nhấn ánh sáng cho PC.",
+      "stockOnHand": 0,
+      "originalPrice": 790000
+    },
+    {
+      "id": "b4e4a9d0-9bb5-59db-948c-af5bfdec1372",
+      "name": "Tản nhiệt AIO Corsair NAUTILUS 360 ARGB Black",
+      "slug": "corsair-nautilus-360-argb-black",
+      "brand": "Corsair",
+      "image": "products/corsair-nautilus-360-argb-black.jpg",
+      "price": 2490000,
+      "specs": [
+        {
+          "label": "AIO 360 mm"
+        },
+        {
+          "label": "3 quạt 120 mm"
+        },
+        {
+          "label": "ARGB"
+        },
+        {
+          "label": "LGA1700 / AM4 / AM5"
+        }
+      ],
+      "category": "cooling",
+      "catalogKey": "gear-corsair-nautilus-360-argb-black",
+      "description": "Bộ tản nhiệt nước AIO Corsair với radiator 360 mm và ba quạt ARGB. Phù hợp case có vị trí gắn radiator 360 mm tương thích.",
+      "stockOnHand": 0,
+      "originalPrice": 2990000
+    },
+    {
+      "id": "22f8539e-6c07-5ea9-ba53-c46515404601",
+      "name": "Vỏ máy tính Corsair 3500X TG Mid Tower White (CC-9011277-WW)",
+      "slug": "corsair-3500x-white",
+      "brand": "Corsair",
+      "image": "products/corsair-3500x-white.png",
+      "price": 1990000,
+      "specs": [
+        {
+          "label": "Mid Tower"
+        },
+        {
+          "label": "Kính cường lực"
+        },
+        {
+          "label": "GPU tối đa 410 mm"
+        },
+        {
+          "label": "Radiator 360 mm"
+        }
+      ],
+      "category": "case",
+      "catalogKey": "gear-corsair-3500x-white",
+      "description": "Case Mid Tower màu trắng với hai mặt kính cường lực để trưng bày linh kiện. Hỗ trợ card đồ họa dài tối đa 410 mm và radiator đến 360 mm.",
+      "stockOnHand": 0,
+      "originalPrice": 2190000
+    },
+    {
+      "id": "05555fe8-e276-511d-b150-eb79bab6fe01",
+      "name": "Vỏ máy tính Corsair FRAME 4000D Modular Mid-Tower Black (CC-9011290-WW)",
+      "slug": "corsair-frame-4000d-black",
+      "brand": "Corsair",
+      "image": "products/corsair-frame-4000d-black.png",
+      "price": 1990000,
+      "specs": [
+        {
+          "label": "Khung modular"
+        },
+        {
+          "label": "Mặt trước Airflow"
+        },
+        {
+          "label": "GPU tối đa 430 mm"
+        },
+        {
+          "label": "Radiator 360 mm"
+        }
+      ],
+      "category": "case",
+      "catalogKey": "gear-corsair-frame-4000d-black",
+      "description": "Case Corsair FRAME 4000D màu đen có kết cấu modular và mặt trước thoáng khí. Không gian lắp card đồ họa tối đa 430 mm tạo điều kiện nâng cấp linh kiện.",
+      "stockOnHand": 0,
+      "originalPrice": 2250000
+    },
+    {
+      "id": "348a00d8-40bc-559c-90c0-fa3827420f4e",
+      "name": "Vỏ máy tính Lian Li O11 Vision Compact Black",
+      "slug": "lian-li-o11-vision-compact-black",
+      "brand": "Lian Li",
+      "image": "products/lian-li-o11-vision-compact-black.png",
+      "price": 2990000,
+      "specs": [
+        {
+          "label": "Thiết kế hai khoang"
+        },
+        {
+          "label": "Kính cường lực"
+        },
+        {
+          "label": "GPU tối đa 408 mm"
+        },
+        {
+          "label": "Radiator 360 mm"
+        }
+      ],
+      "category": "case",
+      "catalogKey": "gear-lian-li-o11-vision-compact-black",
+      "description": "Case hai khoang với các mặt kính rộng để trưng bày cấu hình. O11 Vision Compact hỗ trợ mainboard ATX, Micro-ATX, Mini-ITX và E-ATX phù hợp kích thước quy định.",
+      "stockOnHand": 0,
+      "originalPrice": 3290000
+    },
+    {
+      "id": "0410bbe4-2ab8-5f02-b82e-b3ec0c79f7e7",
+      "name": "Nguồn máy tính Corsair CX650 - 80 Plus Bronze (650W) CP-9020278-NA",
+      "slug": "corsair-cx650-bronze",
+      "brand": "Corsair",
+      "image": "products/corsair-cx650-bronze.png",
+      "price": 1390000,
+      "specs": [
+        {
+          "label": "650 W"
+        },
+        {
+          "label": "80 Plus Bronze"
+        },
+        {
+          "label": "ATX"
+        },
+        {
+          "label": "Non-Modular"
+        }
+      ],
+      "category": "psu",
+      "catalogKey": "gear-corsair-cx650-bronze",
+      "description": "Nguồn ATX công suất 650 W với chứng nhận 80 Plus Bronze. Thiết kế dây liền phù hợp cấu hình cần bộ nguồn phổ thông từ Corsair.",
+      "stockOnHand": 0,
+      "originalPrice": 1690000
+    },
+    {
+      "id": "8b73246e-5a41-58e2-b67e-146453daa112",
+      "name": "Nguồn máy tính Corsair RM750e - 80 Plus Gold - Full Modular (750W) (CP-9020248-NA)",
+      "slug": "corsair-rm750e-gold",
+      "brand": "Corsair",
+      "image": "products/corsair-rm750e-gold.png",
+      "price": 2890000,
+      "specs": [
+        {
+          "label": "750 W"
+        },
+        {
+          "label": "80 Plus Gold"
+        },
+        {
+          "label": "ATX"
+        },
+        {
+          "label": "Full Modular"
+        }
+      ],
+      "category": "psu",
+      "catalogKey": "gear-corsair-rm750e-gold",
+      "description": "Nguồn Corsair RM750e công suất 750 W với chứng nhận 80 Plus Gold. Dây cáp tháo rời toàn bộ giúp sắp xếp khoang máy thuận tiện hơn.",
+      "stockOnHand": 0,
+      "originalPrice": 2890000
+    },
+    {
+      "id": "919ed44c-9594-5bb5-b313-b6a6860e718c",
+      "name": "Nguồn máy tính Corsair RM850e ATX 3.0 - 80 Plus Gold - Full Modular (850W) (CP-9020263-NA)",
+      "slug": "corsair-rm850e-gold-atx30",
+      "brand": "Corsair",
+      "image": "products/corsair-rm850e-gold-atx30.png",
+      "price": 3290000,
+      "specs": [
+        {
+          "label": "850 W"
+        },
+        {
+          "label": "ATX 3.0"
+        },
+        {
+          "label": "80 Plus Gold"
+        },
+        {
+          "label": "Full Modular"
+        }
+      ],
+      "category": "psu",
+      "catalogKey": "gear-corsair-rm850e-gold-atx30",
+      "description": "Bộ nguồn RM850e 850 W chuẩn ATX 3.0 với chứng nhận 80 Plus Gold. Thiết kế Full Modular giúp sử dụng đúng số lượng dây cáp cần cho cấu hình.",
+      "stockOnHand": 0,
+      "originalPrice": 3590000
+    }
+  ],
+  "categories": [
+    {
+      "id": "f9b7621e-d825-5ec9-b88b-c73a566c306e",
+      "name": "Bàn phím",
+      "slug": "keyboard"
+    },
+    {
+      "id": "b926120f-5d20-5945-a72c-4f943f463b68",
+      "name": "Bo mạch chủ",
+      "slug": "mainboard"
+    },
+    {
+      "id": "c0000000-0000-0000-0000-000000000005",
+      "name": "Bộ nhớ RAM",
+      "slug": "ram"
+    },
+    {
+      "id": "c0000000-0000-0000-0000-000000000003",
+      "name": "Bộ vi xử lý",
+      "slug": "cpu"
+    },
+    {
+      "id": "c0000000-0000-0000-0000-000000000004",
+      "name": "Card đồ họa",
+      "slug": "vga"
+    },
+    {
+      "id": "f12cadbf-4775-5050-9069-9a0b0486ce6f",
+      "name": "Chuột máy tính",
+      "slug": "mouse"
+    },
+    {
+      "id": "467d8a66-fd50-50cf-bf6d-02c945f131dd",
+      "name": "Màn hình",
+      "slug": "monitor"
+    },
+    {
+      "id": "955c7fa0-00bf-5139-8f13-059ead3fabc7",
+      "name": "Nguồn máy tính",
+      "slug": "psu"
+    },
+    {
+      "id": "c0000000-0000-0000-0000-000000000006",
+      "name": "Ổ cứng SSD",
+      "slug": "storage"
+    },
+    {
+      "id": "c0000000-0000-0000-0000-000000000002",
+      "name": "PC đồ họa",
+      "slug": "pc-workstation"
+    },
+    {
+      "id": "c0000000-0000-0000-0000-000000000001",
+      "name": "PC Gaming",
+      "slug": "pc-gaming"
+    },
+    {
+      "id": "414b56f1-3b8c-52d2-bf11-3033eb4de76c",
+      "name": "PC văn phòng",
+      "slug": "pc-office"
+    },
+    {
+      "id": "fc1baeb5-5f0a-5946-b90f-cf3ff1d95b10",
+      "name": "Tản nhiệt",
+      "slug": "cooling"
+    },
+    {
+      "id": "8d714553-f1b1-5563-8d67-74d4307d43b2",
+      "name": "Vỏ case",
+      "slug": "case"
+    }
+  ],
+  "articles": []
+}
