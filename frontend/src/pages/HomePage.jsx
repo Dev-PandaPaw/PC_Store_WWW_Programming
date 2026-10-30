@@ -10,27 +10,10 @@ import buildWideBanner from '../assets/promotions/build-pc-wide.webp'
 import { useCart } from '../contexts/CartContext'
 
 export default function HomePage() {
-  const { items, addItem, removeItem, clearCart } = useCart()
+  const { items, addItem, setQuantity, removeItem, clearCart } = useCart()
   const [isCartOpen, setIsCartOpen] = useState(false)
   const closeCart = useCallback(() => setIsCartOpen(false), [])
-  const handleAddToCart = (product) => {
-    addItem(
-      {
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image,
-      },
-      1,
-    )
-    setIsCartOpen(true)
-  }
-  const handleUpdateQuantity = (id, delta) => {
-    const item = items.find((item) => item.id === id)
-    if (!item) return
-    if (item.quantity + delta <= 0) removeItem(id)
-    else addItem(item, delta)
-  }
+  const handleAddToCart = product => addItem(product, 1, () => setIsCartOpen(true))
 
   return (
     <div className="storefront">
@@ -124,7 +107,7 @@ export default function HomePage() {
         isOpen={isCartOpen}
         onClose={closeCart}
         items={items}
-        onUpdateQuantity={handleUpdateQuantity}
+        onUpdateQuantity={setQuantity}
         onRemoveItem={removeItem}
         onClearCart={clearCart}
       />

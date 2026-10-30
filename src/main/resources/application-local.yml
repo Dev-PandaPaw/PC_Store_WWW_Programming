@@ -19,16 +19,17 @@ spring:
         jdbc:
           batch_size: 25
   mail:
-    host: ${MAIL_HOST:localhost}
-    port: ${MAIL_PORT:1025}
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
     username: ${MAIL_USERNAME:}
     password: ${MAIL_PASSWORD:}
     properties:
       mail:
         smtp:
-          auth: false
+          auth: ${MAIL_SMTP_AUTH:true}
           starttls:
-            enable: false
+            enable: ${MAIL_SMTP_STARTTLS:true}
+            required: false
 
 app:
   cors:

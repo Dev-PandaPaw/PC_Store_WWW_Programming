@@ -1,0 +1,55 @@
+purpose:
+  stands_in_for: Google's generateContent endpoint used by the Spring AI GoogleGenAiChatModel.
+  unblocks: Repeatable search/advisor HTTP serialization and provider-failure tests without credentials or external quota.
+assumptions:
+  - id: spring-ai-google-sdk-wire-contract
+    status: supported
+    claim: The Java caller sends a system instruction, JSON user context, x-goog-api-key and responseJsonSchema, then consumes JSON text from candidates[].content.parts[].
+    reason: The repository-owned mock checks these fields. Real Spring AI/Google SDK requests reached this member and produced validated search and chat responses in the exercised scenarios.
+    verification: On 2026-10-30, Maven tests with ai.simulation.url passed 13 tests, including 7 HTTP simulation tests. The simulation NDJSON recorded generateContent traffic with the actual google-genai-sdk user-agent. This establishes caller behavior against this subset, not full provider parity.
+    source: src/test/java/iuh/fit/nhom16/pcstore/ai/SpringAiHttpTest.java; postman/mocks/pixelcore-google-genai/default.js; postman/specs/dependencies/google-genai.openapi.yaml; docs/AI.md
+    updated_at: '2026-10-30'
+  - id: search-survives-modeled-provider-failures
+    status: supported
+    claim: Search uses deterministic Java filtering when the modeled provider fails, times out, exhausts quota or returns invalid search criteria.
+    reason: Tests asserted local mode and catalog results under provider/timeout/invalid-intent cases, and local mode during quota cooldown. Explicit budgets, product groups and stock remain server-validated.
+    verification: SpringAiHttpTest passed these injected cases on 2026-10-30. Intent caching was also checked against changed product price/stock without reusing old product data.
+    source: src/main/java/iuh/fit/nhom16/pcstore/catalog/SmartSearchService.java; src/test/java/iuh/fit/nhom16/pcstore/ai/SpringAiHttpTest.java
+    updated_at: '2026-10-30'
+  - id: live-gemini-and-current-database
+    status: supported
+    claim: The configured Gemini model accepted the Java Spring AI integration for the specific live queries checked on 2026-10-30.
+    reason: Real database-backed backend on port 8082 returned ai mode for cheap gaming mice, personal PCs, and unaccented wireless mouse queries under one million VND. Advisor returned validated cards and a 25-to-30-million follow-up.
+    verification: AI_TEST_BACKEND_URL=http://127.0.0.1:8082 node scripts/check-ai.mjs --live passed all checks on 2026-10-30, including CSRF rejection and product field comparisons. Repeated successfully against the packaged Java 21 backend restarted on port 8080. Postman request assertions passed 4 checks for live smart search. Desktop/mobile Chrome checks passed through the frontend's normal proxy, including rapid query replacement and sorting. This does not establish future quota availability or behavior for every possible query.
+    source: scripts/check-ai.mjs; src/main/java/iuh/fit/nhom16/pcstore/ai/AiGateway.java; https://docs.spring.io/spring-ai/reference/api/chat/google-genai-chat.html
+    updated_at: '2026-10-30'
+  - id: cheapest-is-a-filter
+    status: supported
+    claim: Cheap without a numerical budget, or an explicit cheapest request, returns the lowest suitable price after category, stock, deal and budget filters, keeping exact price ties.
+    reason: Deterministic Java selection implements the rule independently of model ordering. Local and HTTP tests exercise unaccented/cheapest phrasing, ties, in-stock restrictions and numeric budgets.
+    verification: On 2026-10-30 the extended Maven suite passed 20 tests (10 local and 10 Spring AI HTTP tests). Live chat and search both returned the catalog's 400000 VND mouse price. Chrome verified exactly one G102 card and the lowest-price explanation on search and chat.
+    source: src/main/java/iuh/fit/nhom16/pcstore/ai/ProductMatcher.java; src/test/java/iuh/fit/nhom16/pcstore/ai/GameAdviceTest.java; scripts/check-game-advisor.mjs
+    updated_at: '2026-10-30'
+  - id: sourced-game-comparison
+    status: supported
+    claim: For the verified Black Myth Wukong reference, the caller compares catalog CPU/GPU using Spring AI, enforces RAM/storage/SSD rules in Java, reads current products again, and distinguishes minimum from recommended.
+    reason: Live Wukong advice returned a sourced requirement report and a recommended PC. Tests reject insufficient RAM/storage even when the model approves every CPU/GPU; forged IDs and changed specs cannot be returned. CPU/GPU suitability is explicitly labeled preliminary rather than benchmark evidence.
+    verification: On 2026-10-30 live check-game-advisor passed cheapest search/chat, Wukong comparison and a budget-below-10-million follow-up with no substitute products. Desktop/mobile Chrome rendered the source, requirement levels and component comparisons through the Postman-backed backend. Cache behavior keeps only component assessments keyed by game and specs, not prices/stock.
+    source: src/main/java/iuh/fit/nhom16/pcstore/advisory/GameAdvisor.java; src/main/resources/ai/games/black-myth-wukong.json; src/test/java/iuh/fit/nhom16/pcstore/ai/SpringAiHttpTest.java; scripts/check-game-advisor.mjs
+    updated_at: '2026-10-30'
+  - id: live-grounded-game-lookup
+    status: unknown
+    claim: The configured Google model can perform a live grounded requirement lookup for arbitrary games with structured output and usable source citations under the user's current quota.
+    reason: Official Google documentation lists Search grounding and structured output support. The Postman model exercises tool requests and provider grounding metadata, including rejection of missing or unsafe citations. The attempted real Elden Ring lookup could not establish success because Google returned 429 RESOURCE_EXHAUSTED; no model fallback or invented game requirements were used.
+    verification: On 2026-10-30 the mocked Fixture Quest lookup succeeded through real Spring AI HTTP calls, and missing/unsafe citations produced clarification. A real generateContent Google Search diagnostic returned 429. Steam endpoint discovery via Orbit found no relevant requirement endpoint; direct Steam requests from the development machine also failed. Re-run node scripts/check-game-advisor.mjs --grounded once Google Search quota is available.
+    source: src/main/java/iuh/fit/nhom16/pcstore/ai/SourcedGoogleChatModel.java; src/main/java/iuh/fit/nhom16/pcstore/advisory/GameRequirementsService.java; postman/mocks/pixelcore-google-genai/default.js; https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash-lite
+    updated_at: '2026-10-30'
+fingerprints:
+  - id: game-requirements-and-cheapest
+    date: '2026-10-30'
+    commit: uncommitted extension; previous migration findings retained above
+    cli: Postman CLI 1.73.0; Spring AI 2.0.2; game/cheapest test scripts in scripts/
+  - id: spring-ai-migration
+    date: '2026-10-30'
+    commit: uncommitted workspace migration; historical pre-migration results retained in pixelcore-advisor.context.md
+    cli: Postman CLI 1.73.0; Spring AI 2.0.2; Spring Boot 4.1.2

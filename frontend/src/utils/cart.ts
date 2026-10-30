@@ -13,11 +13,14 @@ export function calculateDiscount(originalPrice: number, discountedPrice: number
 
 export interface CartItem {
   id: string;
+  sku?: string;
   name: string;
   price: number;
   originalPrice?: number;
   image: string;
   quantity: number;
+  availableQuantity?: number;
+  purchasable?: boolean;
 }
 
 export function calculateCartTotal(items: CartItem[]): { subtotal: number; totalItems: number } {
