@@ -1,6 +1,6 @@
 package iuh.fit.nhom16.pcstore.ai;
 
-import iuh.fit.nhom16.pcstore.catalog.StoreProduct;
+import iuh.fit.nhom16.pcstore.catalog.api.dto.StoreProduct;
 import java.util.*;
 
 public final class ProductMatcher {
