@@ -1,0 +1,125 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam ArrowColor #334155
+skinparam activityBackgroundColor #EFF6FF
+skinparam activityBorderColor #2563EB
+skinparam activityDiamondBackgroundColor #FFF7ED
+skinparam activityDiamondBorderColor #C2410C
+skinparam usecaseBackgroundColor #EFF6FF
+skinparam usecaseBorderColor #2563EB
+skinparam padding 8
+title ERD-SALES-PAYMENT — PC Store
+hide circle
+skinparam linetype ortho
+skinparam entityBackgroundColor #F8FAFC
+skinparam entityBorderColor #475569
+entity "orders" as orders {
+* id: uuid <<PK>>
+* code: varchar(32)
+* user_id: uuid <<FK>>
+* status: varchar(32)
+* payment_method: varchar(16)
+* reservation_status: varchar(16)
+* recipient_name: varchar(100)
+* phone_snapshot: varchar(16)
+* province_snapshot: varchar(100)
+  district_snapshot: varchar(100)
+* ward_snapshot: varchar(100)
+* address_line_snapshot: varchar(255)
+  note: varchar(500)
+* subtotal: numeric(19,0)
+* shipping_fee: numeric(19,0)
+* grand_total: numeric(19,0)
+* currency: varchar(3)
+  expires_at: timestamptz
+  shipped_at: timestamptz
+  delivered_at: timestamptz
+* version: bigint
+* created_at: timestamptz
+* updated_at: timestamptz
+}
+entity "order_items" as order_items {
+* id: uuid <<PK>>
+* order_id: uuid <<FK>>
+* product_id: uuid <<FK>>
+* sku_snapshot: varchar(50)
+* name_snapshot: varchar(180)
+* spec_snapshot: jsonb
+* unit_price_snapshot: numeric(19,0)
+* warranty_months_snapshot: smallint
+* quantity: integer
+}
+entity "order_revisions" as order_revisions {
+* id: uuid <<PK>>
+* order_id: uuid <<FK>>
+* actor_id: uuid <<FK>>
+* before_snapshot: jsonb
+* after_snapshot: jsonb
+* reason: varchar(500)
+* created_at: timestamptz
+}
+entity "order_status_history" as order_status_history {
+* id: uuid <<PK>>
+* order_id: uuid <<FK>>
+  actor_id: uuid <<FK>>
+* actor_type: varchar(16)
+  from_status: varchar(32)
+* to_status: varchar(32)
+  reason: varchar(500)
+* created_at: timestamptz
+}
+entity "idempotency_records" as idempotency_records {
+* id: uuid <<PK>>
+* user_id: uuid <<FK>>
+* request_key: uuid
+* request_hash: varchar(64)
+* order_id: uuid <<FK>>
+* created_at: timestamptz
+}
+entity "payment_attempts" as payment_attempts {
+* id: uuid <<PK>>
+* order_id: uuid <<FK>>
+* method: varchar(16)
+* merchant_reference: varchar(100)
+* amount: numeric(19,0)
+* currency: varchar(3)
+* status: varchar(24)
+  gateway_transaction_no: varchar(100)
+  paid_at: timestamptz
+* version: bigint
+* created_at: timestamptz
+* updated_at: timestamptz
+}
+entity "payment_events" as payment_events {
+* id: uuid <<PK>>
+* attempt_id: uuid <<FK>>
+* event_key: varchar(64)
+* event_type: varchar(24)
+  response_code: varchar(8)
+  transaction_status: varchar(8)
+* payload_sanitized: jsonb
+* result: varchar(32)
+* received_at: timestamptz
+}
+entity "products (tham chiếu)" as products {
+* id: uuid <<PK>>
+}
+entity "users (tham chiếu)" as users {
+* id: uuid <<PK>>
+}
+users ||--o{ orders : user_id
+orders ||--o{ order_items : order_id
+products ||--o{ order_items : product_id
+orders ||--o{ order_revisions : order_id
+users ||--o{ order_revisions : actor_id
+orders ||--o{ order_status_history : order_id
+users |o--o{ order_status_history : actor_id
+users ||--o{ idempotency_records : user_id
+orders ||--o| idempotency_records : order_id
+orders ||--o| payment_attempts : order_id
+payment_attempts ||--o{ payment_events : attempt_id
+@enduml

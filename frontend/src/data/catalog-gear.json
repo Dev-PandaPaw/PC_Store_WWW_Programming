@@ -1,0 +1,557 @@
+[
+  {
+    "id": "gear-logitech-g502-hero",
+    "slug": "logitech-g502-hero",
+    "name": "Chuột Logitech G502 Hero Gaming",
+    "category": "mouse",
+    "brand": "Logitech",
+    "price": 920000,
+    "originalPrice": 1090000,
+    "image": "products/logitech-g502-hero.png",
+    "sourceImageUrl": "https://product.hstatic.net/200000722513/product/10001_01736316d2b443d0838e5a0741434420_large.png",
+    "specs": [
+      {
+        "label": "HERO 25.600 DPI"
+      },
+      {
+        "label": "USB có dây"
+      },
+      {
+        "label": "1.000 Hz"
+      },
+      {
+        "label": "121 g"
+      }
+    ],
+    "description": "Chuột gaming có dây với cảm biến HERO và dải độ nhạy tối đa 25.600 DPI. Thiết kế nhiều nút phù hợp người dùng cần gán thao tác nhanh trong game.",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/logitech-g502-hero",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gear-logitech-g102-lightsync-black",
+    "slug": "logitech-g102-lightsync-black",
+    "name": "Chuột Logitech G102 LightSync Black",
+    "category": "mouse",
+    "brand": "Logitech",
+    "price": 400000,
+    "originalPrice": 599000,
+    "image": "products/logitech-g102-lightsync-black.jpg",
+    "sourceImageUrl": "https://product.hstatic.net/200000722513/product/logitech-g102-lightsync-rgb-black-1_bf4f5774229c4a0f81b8e8a2feebe4d8_aeb4ae49ee844c3e9d315883d4e482d4_large.jpg",
+    "specs": [
+      {
+        "label": "8.000 DPI"
+      },
+      {
+        "label": "USB có dây"
+      },
+      {
+        "label": "LIGHTSYNC RGB"
+      },
+      {
+        "label": "85 g"
+      }
+    ],
+    "description": "Chuột gaming phổ thông với kết nối USB và đèn LIGHTSYNC RGB. Cảm biến có thể chỉnh độ nhạy từ 200 đến 8.000 DPI.",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/chuot-logitech-g102-lightsync-rgb-black",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gear-logitech-g304-wireless-black",
+    "slug": "logitech-g304-wireless-black",
+    "name": "Chuột Logitech G304 Wireless",
+    "category": "mouse",
+    "brand": "Logitech",
+    "price": 725000,
+    "originalPrice": 1190000,
+    "image": "products/logitech-g304-wireless-black.png",
+    "sourceImageUrl": "https://product.hstatic.net/200000722513/product/gvn_log_g304_3df28cd60a48412b8fb1d2ff762dc6a9_1f12340f2e6b4b8892163de0a06676f2_large.png",
+    "specs": [
+      {
+        "label": "HERO 12.000 DPI"
+      },
+      {
+        "label": "Không dây"
+      },
+      {
+        "label": "1.000 Hz"
+      },
+      {
+        "label": "99 g"
+      }
+    ],
+    "description": "Chuột không dây màu đen sử dụng cảm biến HERO. Dải độ nhạy 200–12.000 DPI đáp ứng cả công việc hằng ngày và chơi game.",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/chuot-logitech-g304-lightspeed-wireless",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gear-akko-5075b-plus-black-gold",
+    "slug": "akko-5075b-plus-black-gold",
+    "name": "Bàn phím AKKO 5075B Plus Black & Gold Creamy Yellow Pro switch",
+    "category": "keyboard",
+    "brand": "AKKO",
+    "price": 1290000,
+    "originalPrice": 1390000,
+    "image": "products/akko-5075b-plus-black-gold.jpg",
+    "sourceImageUrl": "https://cdn.hstatic.net/products/200000722513/gearvn-ban-phim-akko-5075b-plus-black-gold-creamy-yellow-pro-switch-1_8cc02443cd9e4c1a868efa9c5441d425_large.jpg",
+    "specs": [
+      {
+        "label": "Layout 75%"
+      },
+      {
+        "label": "Bluetooth / 2.4 GHz / có dây"
+      },
+      {
+        "label": "PBT Double-Shot"
+      },
+      {
+        "label": "RGB"
+      }
+    ],
+    "description": "Bàn phím cơ phối đen vàng với layout 75% và switch Creamy Yellow Pro. Hỗ trợ cả kết nối có dây, Bluetooth và không dây 2.4 GHz.",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/ban-phim-akko-5075b-plus-black-gold-creamy-yellow-pro-switch",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gear-dareu-ek87-pro-black",
+    "slug": "dareu-ek87-pro-black",
+    "name": "Bàn phím Không dây DareU EK87 Pro RGB Đen Dream Switch",
+    "category": "keyboard",
+    "brand": "DareU",
+    "price": 1050000,
+    "originalPrice": 1390000,
+    "image": "products/dareu-ek87-pro-black.png",
+    "sourceImageUrl": "https://product.hstatic.net/200000722513/product/ek87_pro_-_black_golden_-_01_d8d3081ef73f4757ae8c3820e5fa92a4_large.png",
+    "specs": [
+      {
+        "label": "TKL 87 phím"
+      },
+      {
+        "label": "Wireless / USB-C"
+      },
+      {
+        "label": "Dream Switch"
+      },
+      {
+        "label": "RGB"
+      }
+    ],
+    "description": "Bàn phím cơ TKL 87 phím dùng switch DareU Dream. Bố cục bỏ cụm phím số tạo thêm không gian cho chuột trong góc chơi game.",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/ban-phim-khong-day-ek87-pro-rgb-den-dream-switch",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gear-akko-5075b-plus-red-vietnam",
+    "slug": "akko-5075b-plus-red-vietnam",
+    "name": "Bàn phím AKKO 5075B Plus Red World Tour VIET NAM",
+    "category": "keyboard",
+    "brand": "AKKO",
+    "price": 1490000,
+    "originalPrice": 1790000,
+    "image": "products/akko-5075b-plus-red-vietnam.png",
+    "sourceImageUrl": "https://cdn.hstatic.net/products/200000722513/5075b_plus________________c70818daf48842eda7b720a4abfad2a7_large.png",
+    "specs": [
+      {
+        "label": "Layout 75%"
+      },
+      {
+        "label": "Bluetooth / 2.4 GHz / USB-C"
+      },
+      {
+        "label": "Keycap PBT"
+      },
+      {
+        "label": "RGB"
+      }
+    ],
+    "description": "Phiên bản Red World Tour VIET NAM có phối màu lấy cảm hứng từ Việt Nam. Layout 75%, keycap PBT và ba chế độ kết nối phù hợp một góc máy gọn gàng.",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/ban-phim-akko-5075b-plus-red-world-tour-viet-nam",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gear-asus-tuf-vg259q5a",
+    "slug": "asus-tuf-vg259q5a",
+    "name": "Màn hình Asus TUF GAMING VG259Q5A 25\" Fast IPS 200Hz Gsync chuyên game",
+    "category": "monitor",
+    "brand": "ASUS",
+    "price": 2990000,
+    "originalPrice": 3990000,
+    "image": "products/asus-tuf-vg259q5a.jpg",
+    "sourceImageUrl": "https://product.hstatic.net/200000722513/product/asus_vg259q5a_200hz_gearvn_2c55f5c7cebe4f688f1e07e8c6f1bb48_large.jpg",
+    "specs": [
+      {
+        "label": "Fast IPS"
+      },
+      {
+        "label": "Full HD"
+      },
+      {
+        "label": "200 Hz"
+      },
+      {
+        "label": "G-SYNC"
+      }
+    ],
+    "description": "Màn hình TUF Gaming sử dụng tấm nền Fast IPS, độ phân giải Full HD và tần số quét 200 Hz. Phù hợp cấu hình PC hướng đến game có nhịp độ nhanh.",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/man-hinh-asus-tuf-gaming-vg259q5a-25-fast-ips-200hz-gsync-chuyen-game",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gear-viewsonic-vx24g30-w",
+    "slug": "viewsonic-vx24g30-w",
+    "name": "Màn hình ViewSonic VX24G30-W 24\" IPS 240Hz chuyên game",
+    "category": "monitor",
+    "brand": "ViewSonic",
+    "price": 2990000,
+    "originalPrice": 3490000,
+    "image": "products/viewsonic-vx24g30-w.jpg",
+    "sourceImageUrl": "https://cdn.hstatic.net/products/200000722513/man-hinh-viewsonic-vx24g30-w-24-ips-240hz-chuyen-game-1_093e5699780f4a3fa3016cf089a5e194_large.jpg",
+    "specs": [
+      {
+        "label": "24 inch"
+      },
+      {
+        "label": "IPS"
+      },
+      {
+        "label": "Full HD"
+      },
+      {
+        "label": "240 Hz"
+      }
+    ],
+    "description": "Màn hình ViewSonic 24 inch màu trắng, tấm nền IPS và tần số quét 240 Hz. Độ phân giải Full HD phù hợp với nhiều bộ PC gaming phổ thông.",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/man-hinh-viewsonic-vx24g30-w-24-ips-240hz-chuyen-game",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gear-acer-kg251q-z1",
+    "slug": "acer-kg251q-z1",
+    "name": "Màn hình Acer KG251Q Z1 25\" 240Hz chuyên game",
+    "category": "monitor",
+    "brand": "Acer",
+    "price": 3090000,
+    "originalPrice": 4990000,
+    "image": "products/acer-kg251q-z1.jpg",
+    "sourceImageUrl": "https://cdn.hstatic.net/products/200000722513/acer_kg241_z1_gearvn_abfd3d48d29f47e7aee71b31b0e91d34_large.jpg",
+    "specs": [
+      {
+        "label": "25 inch"
+      },
+      {
+        "label": "VA"
+      },
+      {
+        "label": "Full HD"
+      },
+      {
+        "label": "240 Hz"
+      }
+    ],
+    "description": "Màn hình gaming Acer 25 inch dùng tấm nền VA và độ phân giải Full HD. Tần số quét 240 Hz dành cho người dùng ưu tiên chuyển động mượt.",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/man-hinh-acer-kg251q-z1-25-240hz-chuyen-game",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gear-cooler-master-hyper-212-spectrum-v3",
+    "slug": "cooler-master-hyper-212-spectrum-v3",
+    "name": "Tản nhiệt Cooler Master Hyper 212 Spectrum V3 ARGB",
+    "category": "cooling",
+    "brand": "Cooler Master",
+    "price": 390000,
+    "originalPrice": 490000,
+    "image": "products/cooler-master-hyper-212-spectrum-v3.png",
+    "sourceImageUrl": "https://product.hstatic.net/200000722513/product/hyper-212-spectrum-v3-gallery-02_b7ea8c8617874fc38053534250dd767e_large.png",
+    "specs": [
+      {
+        "label": "Tản nhiệt khí"
+      },
+      {
+        "label": "Quạt 120 mm"
+      },
+      {
+        "label": "650–1.750 RPM"
+      },
+      {
+        "label": "ARGB"
+      }
+    ],
+    "description": "Tản nhiệt khí một quạt 120 mm, có đèn ARGB và khả năng thay đổi tốc độ quạt. Cần kiểm tra socket CPU và khoảng trống trong case trước khi lắp.",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/tan-nhiet-cooler-master-hyper-212-spectrum-v3-argb",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gear-deepcool-ag400-argb",
+    "slug": "deepcool-ag400-argb",
+    "name": "Tản nhiệt DEEPCOOL AG400 ARGB",
+    "category": "cooling",
+    "brand": "DeepCool",
+    "price": 390000,
+    "originalPrice": 790000,
+    "image": "products/deepcool-ag400-argb.jpg",
+    "sourceImageUrl": "https://product.hstatic.net/200000722513/product/01_a39d788b15f5476fa499fc95a3e76e9a_5e9d8e8518f34044b63104368b1aa4f1_large.jpg",
+    "specs": [
+      {
+        "label": "Tản nhiệt khí"
+      },
+      {
+        "label": "ARGB"
+      },
+      {
+        "label": "Màu đen"
+      }
+    ],
+    "description": "Tản nhiệt khí DeepCool AG400 ARGB với phối màu đen và quạt có đèn. Là lựa chọn cho người dùng muốn bổ sung điểm nhấn ánh sáng cho PC.",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/tan-nhiet-deepcool-ag400-argb",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gear-corsair-nautilus-360-argb-black",
+    "slug": "corsair-nautilus-360-argb-black",
+    "name": "Tản nhiệt AIO Corsair NAUTILUS 360 ARGB Black",
+    "category": "cooling",
+    "brand": "Corsair",
+    "price": 2490000,
+    "originalPrice": 2990000,
+    "image": "products/corsair-nautilus-360-argb-black.jpg",
+    "sourceImageUrl": "https://cdn.hstatic.net/products/200000722513/gearvn-tan-nhiet-aio-corsair-nautilus-360-argb-black-1_04d679c207eb4979aaf83a1143e02093_large.jpg",
+    "specs": [
+      {
+        "label": "AIO 360 mm"
+      },
+      {
+        "label": "3 quạt 120 mm"
+      },
+      {
+        "label": "ARGB"
+      },
+      {
+        "label": "LGA1700 / AM4 / AM5"
+      }
+    ],
+    "description": "Bộ tản nhiệt nước AIO Corsair với radiator 360 mm và ba quạt ARGB. Phù hợp case có vị trí gắn radiator 360 mm tương thích.",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/tan-nhiet-aio-corsair-nautilus-360-argb-black",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gear-corsair-3500x-white",
+    "slug": "corsair-3500x-white",
+    "name": "Vỏ máy tính Corsair 3500X TG Mid Tower White (CC-9011277-WW)",
+    "category": "case",
+    "brand": "Corsair",
+    "price": 1990000,
+    "originalPrice": 2190000,
+    "image": "products/corsair-3500x-white.png",
+    "sourceImageUrl": "https://product.hstatic.net/200000722513/product/3500x_wht_01_b6991d1686b14103b0c9c3d734a0b7a5_large.png",
+    "specs": [
+      {
+        "label": "Mid Tower"
+      },
+      {
+        "label": "Kính cường lực"
+      },
+      {
+        "label": "GPU tối đa 410 mm"
+      },
+      {
+        "label": "Radiator 360 mm"
+      }
+    ],
+    "description": "Case Mid Tower màu trắng với hai mặt kính cường lực để trưng bày linh kiện. Hỗ trợ card đồ họa dài tối đa 410 mm và radiator đến 360 mm.",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/vo-may-tinh-corsair-3500x-tg-mid-tower-white-cc-9011277-ww",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gear-corsair-frame-4000d-black",
+    "slug": "corsair-frame-4000d-black",
+    "name": "Vỏ máy tính Corsair FRAME 4000D Modular Mid-Tower Black (CC-9011290-WW)",
+    "category": "case",
+    "brand": "Corsair",
+    "price": 1990000,
+    "originalPrice": 2250000,
+    "image": "products/corsair-frame-4000d-black.png",
+    "sourceImageUrl": "https://product.hstatic.net/200000722513/product/cc-9011290-ww_01_9b0d38d4e4e340e5b186c55ba91f7dc9_large.png",
+    "specs": [
+      {
+        "label": "Khung modular"
+      },
+      {
+        "label": "Mặt trước Airflow"
+      },
+      {
+        "label": "GPU tối đa 430 mm"
+      },
+      {
+        "label": "Radiator 360 mm"
+      }
+    ],
+    "description": "Case Corsair FRAME 4000D màu đen có kết cấu modular và mặt trước thoáng khí. Không gian lắp card đồ họa tối đa 430 mm tạo điều kiện nâng cấp linh kiện.",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/vo-may-tinh-corsair-frame-4000d-modular-mid-tower-black",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gear-lian-li-o11-vision-compact-black",
+    "slug": "lian-li-o11-vision-compact-black",
+    "name": "Vỏ máy tính Lian Li O11 Vision Compact Black",
+    "category": "case",
+    "brand": "Lian Li",
+    "price": 2990000,
+    "originalPrice": 3290000,
+    "image": "products/lian-li-o11-vision-compact-black.png",
+    "sourceImageUrl": "https://product.hstatic.net/200000722513/product/o11vp_x01_ef07b2bd61ff42efa5d7a69cf027a789_large.png",
+    "specs": [
+      {
+        "label": "Thiết kế hai khoang"
+      },
+      {
+        "label": "Kính cường lực"
+      },
+      {
+        "label": "GPU tối đa 408 mm"
+      },
+      {
+        "label": "Radiator 360 mm"
+      }
+    ],
+    "description": "Case hai khoang với các mặt kính rộng để trưng bày cấu hình. O11 Vision Compact hỗ trợ mainboard ATX, Micro-ATX, Mini-ITX và E-ATX phù hợp kích thước quy định.",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/vo-may-tinh-lian-li-o11-vision-compact-bkack",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gear-corsair-cx650-bronze",
+    "slug": "corsair-cx650-bronze",
+    "name": "Nguồn máy tính Corsair CX650 - 80 Plus Bronze (650W) CP-9020278-NA",
+    "category": "psu",
+    "brand": "Corsair",
+    "price": 1390000,
+    "originalPrice": 1690000,
+    "image": "products/corsair-cx650-bronze.png",
+    "sourceImageUrl": "https://product.hstatic.net/200000722513/product/gearvn-nguon-may-tinh-corsair-cx650-80-plus-bronze-650w-1_5e2807b23e75486f9e93efc31604dcbc_large.png",
+    "specs": [
+      {
+        "label": "650 W"
+      },
+      {
+        "label": "80 Plus Bronze"
+      },
+      {
+        "label": "ATX"
+      },
+      {
+        "label": "Non-Modular"
+      }
+    ],
+    "description": "Nguồn ATX công suất 650 W với chứng nhận 80 Plus Bronze. Thiết kế dây liền phù hợp cấu hình cần bộ nguồn phổ thông từ Corsair.",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/nguon-may-tinh-corsair-cx650-80-plus-bronze-650w-cp-9020278-na",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gear-corsair-rm750e-gold",
+    "slug": "corsair-rm750e-gold",
+    "name": "Nguồn máy tính Corsair RM750e - 80 Plus Gold - Full Modular (750W) (CP-9020248-NA)",
+    "category": "psu",
+    "brand": "Corsair",
+    "price": 2890000,
+    "originalPrice": 2890000,
+    "image": "products/corsair-rm750e-gold.png",
+    "sourceImageUrl": "https://product.hstatic.net/200000722513/product/rm750e_02_cd04e35bb0a0456eafb44a053bb31930_862dc9f952134a46b278d5a7eded0e29_large.png",
+    "specs": [
+      {
+        "label": "750 W"
+      },
+      {
+        "label": "80 Plus Gold"
+      },
+      {
+        "label": "ATX"
+      },
+      {
+        "label": "Full Modular"
+      }
+    ],
+    "description": "Nguồn Corsair RM750e công suất 750 W với chứng nhận 80 Plus Gold. Dây cáp tháo rời toàn bộ giúp sắp xếp khoang máy thuận tiện hơn.",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/750w-nguon-corsair-rm750e-80-plus-gold-full-modular",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gear-corsair-rm850e-gold-atx30",
+    "slug": "corsair-rm850e-gold-atx30",
+    "name": "Nguồn máy tính Corsair RM850e ATX 3.0 - 80 Plus Gold - Full Modular (850W) (CP-9020263-NA)",
+    "category": "psu",
+    "brand": "Corsair",
+    "price": 3290000,
+    "originalPrice": 3590000,
+    "image": "products/corsair-rm850e-gold-atx30.png",
+    "sourceImageUrl": "https://product.hstatic.net/200000722513/product/thiet_ke_chua_co_ten_5e29bb919cf649ebbd6498a0867046d2_c76be5919a434100b9999bb05ea3207b_large.png",
+    "specs": [
+      {
+        "label": "850 W"
+      },
+      {
+        "label": "ATX 3.0"
+      },
+      {
+        "label": "80 Plus Gold"
+      },
+      {
+        "label": "Full Modular"
+      }
+    ],
+    "description": "Bộ nguồn RM850e 850 W chuẩn ATX 3.0 với chứng nhận 80 Plus Gold. Thiết kế Full Modular giúp sử dụng đúng số lượng dây cáp cần cho cấu hình.",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/850w-nguon-corsair-rm850e-atx-3-0-80-plus-gold-full-modular",
+      "checkedAt": "2026-10-25"
+    }
+  }
+]

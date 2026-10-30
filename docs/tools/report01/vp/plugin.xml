@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="pcstore.report01" name="PC Store Report 01 Generator" description="Create report models from documentation" provider="PC Store Group 16" class="pcstore.ReportPlugin">
+  <runtime><library path="report01.jar"/></runtime>
+</plugin>

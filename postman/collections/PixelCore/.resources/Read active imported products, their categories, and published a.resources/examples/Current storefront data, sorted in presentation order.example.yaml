@@ -1,0 +1,106 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/catalog/storefront"
+  method: GET
+  headers:
+    Accept: application/json
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "products": [
+          {
+            "id": "c5436638-b02e-13e4-2a98-0abd6a3f3201",
+            "slug": "string",
+            "name": "string",
+            "category": "string",
+            "brand": "string",
+            "description": "string",
+            "price": 7588.24065560475,
+            "originalPrice": 2586.2034200690687,
+            "image": "products/cpu-intel-core-i5-14400f.png",
+            "specs": [
+              {
+                "label": "string"
+              },
+              {
+                "label": "string"
+              }
+            ],
+            "stockOnHand": 1672
+          },
+          {
+            "id": "78639589-0e34-7546-4a55-26ede6f5ea6e",
+            "slug": "string",
+            "name": "string",
+            "category": "string",
+            "brand": "string",
+            "description": "string",
+            "price": 1269.3484360352159,
+            "originalPrice": 4824.214796535671,
+            "image": "products/cpu-intel-core-i5-14400f.png",
+            "specs": [
+              {
+                "label": "string"
+              },
+              {
+                "label": "string"
+              }
+            ],
+            "stockOnHand": 7147
+          }
+        ],
+        "categories": [
+          {
+            "id": "a1f5613e-d699-aa99-0ff6-8edbf1135351",
+            "slug": "string",
+            "name": "string"
+          },
+          {
+            "id": "6644a61d-8ad1-aaf3-c7d8-82123d774570",
+            "slug": "string",
+            "name": "string"
+          }
+        ],
+        "articles": [
+          {
+            "slug": "string",
+            "title": "string",
+            "excerpt": "string",
+            "category": "string",
+            "imageCategory": "string",
+            "readMinutes": 7898,
+            "date": "1995-03-24",
+            "intro": "string",
+            "takeaway": "string",
+            "relatedCategories": [
+              "string",
+              "string"
+            ]
+          },
+          {
+            "slug": "string",
+            "title": "string",
+            "excerpt": "string",
+            "category": "string",
+            "imageCategory": "string",
+            "readMinutes": 5747,
+            "date": "1985-01-11",
+            "intro": "string",
+            "takeaway": "string",
+            "relatedCategories": [
+              "string",
+              "string"
+            ]
+          }
+        ]
+      }
+order: 1000

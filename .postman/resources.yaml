@@ -1,0 +1,5 @@
+localResources:
+  specs:
+    - ../postman/specs/storefront.openapi.yaml
+workspace:
+  id: ''

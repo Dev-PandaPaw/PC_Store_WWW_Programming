@@ -1,0 +1,101 @@
+{
+  "use_cases": 12,
+  "tables": 20,
+  "diagram_sources": 18,
+  "png": 18,
+  "native_vp_diagrams": 13,
+  "checked_links": 193,
+  "broken_links": [],
+  "png_dimensions": [
+    [
+      "UC-OVERVIEW",
+      710,
+      982
+    ],
+    [
+      "ACT-UC01",
+      910,
+      1326
+    ],
+    [
+      "ACT-UC02",
+      839,
+      1235
+    ],
+    [
+      "ACT-UC03",
+      887,
+      1075
+    ],
+    [
+      "ACT-UC04",
+      854,
+      1091
+    ],
+    [
+      "ACT-UC05",
+      849,
+      1349
+    ],
+    [
+      "ACT-UC06",
+      798,
+      1222
+    ],
+    [
+      "ACT-UC07",
+      879,
+      1019
+    ],
+    [
+      "ACT-UC08",
+      736,
+      1388
+    ],
+    [
+      "ACT-UC09",
+      875,
+      1097
+    ],
+    [
+      "ACT-UC10",
+      854,
+      1222
+    ],
+    [
+      "ACT-UC11",
+      814,
+      1059
+    ],
+    [
+      "ACT-UC12",
+      865,
+      1114
+    ],
+    [
+      "ERD-ALL",
+      2313,
+      1226
+    ],
+    [
+      "ERD-IDENTITY",
+      649,
+      1254
+    ],
+    [
+      "ERD-CATALOG",
+      903,
+      1417
+    ],
+    [
+      "ERD-SALES-PAYMENT",
+      1226,
+      1963
+    ],
+    [
+      "ERD-AFTERSALES",
+      457,
+      1255
+    ]
+  ]
+}

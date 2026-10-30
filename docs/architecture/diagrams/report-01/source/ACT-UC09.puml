@@ -1,0 +1,43 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam ArrowColor #334155
+skinparam activityBackgroundColor #EFF6FF
+skinparam activityBorderColor #2563EB
+skinparam activityDiamondBackgroundColor #FFF7ED
+skinparam activityDiamondBorderColor #C2410C
+skinparam usecaseBackgroundColor #EFF6FF
+skinparam usecaseBorderColor #2563EB
+skinparam padding 8
+title ACT-UC09 — Quản lý tài khoản khách hàng
+|Admin|
+start
+|Admin|
+:B1. Tìm tài khoản và mở drawer;
+|PC Store|
+:B2. Đọc thông tin được phép, số đơn và các phương thức\nđăng nhập;
+|PC Store|
+if (User tồn tại?) then (Có)
+else (Không)
+:E-B2. 404; không hiện dữ liệu credential;
+stop
+endif
+|Admin|
+:B3. Chọn cập nhật, khóa, mở khóa hoặc xóa và nhập lý do;
+|PC Store|
+:B4. Khóa user, kiểm version, unique liên hệ và ràng buộc\nAdmin cuối/lịch sử;
+|PC Store|
+if (Thao tác được phép?) then (Có)
+else (Không)
+:E-B4. 409 do stale, trùng, Admin cuối, user có giao dịch\nhoặc mất phương thức cuối;
+stop
+endif
+|PC Store|
+:B5. Lưu thay đổi hoặc xóa user chưa có tham chiếu; đổi\ncontact bỏ verified, tăng sessionVersion khi cần;
+|PC Store|
+:B6. Trả drawer mới; phiên bị khóa/vô hiệu sẽ bị chặn ở\nrequest bảo vệ tiếp theo;
+stop
+@enduml
