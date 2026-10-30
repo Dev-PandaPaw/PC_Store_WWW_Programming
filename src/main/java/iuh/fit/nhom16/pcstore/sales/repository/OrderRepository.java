@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.*;
 
-@Repository
+@Repository("salesJdbcOrderRepository")
 public class OrderRepository {
     private final JdbcTemplate jdbc;
     public OrderRepository(JdbcTemplate jdbc) { this.jdbc = jdbc; }

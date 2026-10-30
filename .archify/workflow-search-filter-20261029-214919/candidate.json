@@ -1,0 +1,170 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Luồng tìm kiếm và lọc sản phẩm",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/Dev-PandaPaw/PC_Store_WWW_Programming.git",
+      "provider": "github",
+      "revision": "202af8b228036f86b84b6c3062da3665d159ffab"
+    },
+    "output": ".archify/workflow-search-filter-20261029-214919/search-filter.html"
+  },
+  "lanes": [
+    { "id": "visitor", "label": "Khách hàng" },
+    { "id": "browser", "label": "Giao diện React" },
+    { "id": "catalog_data", "label": "Nạp dữ liệu cửa hàng" }
+  ],
+  "nodes": [
+    {
+      "id": "visitor_action",
+      "lane": "visitor",
+      "col": 0,
+      "type": "external",
+      "label": "Nhập tìm kiếm",
+      "sublabel": "Từ khóa / danh mục",
+      "icon": "person",
+      "sources": [{ "path": "frontend/src/pages/CatalogPage.jsx", "line": 84, "end_line": 99 }]
+    },
+    {
+      "id": "header_search",
+      "lane": "browser",
+      "col": 1,
+      "type": "frontend",
+      "label": "Ô tìm kiếm",
+      "sublabel": "Enter để tìm",
+      "sources": [{ "path": "frontend/src/components/StoreHeader.jsx", "line": 135, "end_line": 165 }]
+    },
+    {
+      "id": "catalog_page",
+      "lane": "browser",
+      "col": 2,
+      "type": "frontend",
+      "label": "Trang danh mục",
+      "sublabel": "Đọc trạng thái URL",
+      "sources": [{ "path": "frontend/src/pages/CatalogPage.jsx", "line": 18, "end_line": 27 }]
+    },
+    {
+      "id": "query_state",
+      "lane": "browser",
+      "col": 3,
+      "type": "frontend",
+      "label": "Cập nhật URL",
+      "sources": [{ "path": "frontend/src/pages/CatalogPage.jsx", "line": 28, "end_line": 38 }]
+    },
+    {
+      "id": "local_filter",
+      "lane": "browser",
+      "col": 4,
+      "type": "frontend",
+      "label": "Lọc tại client",
+      "sublabel": "Từ khóa · danh mục · deal",
+      "sources": [
+        { "path": "frontend/src/pages/CatalogPage.jsx", "line": 39, "end_line": 61 },
+        { "path": "frontend/src/data/storeData.ts", "line": 87, "end_line": 105 }
+      ]
+    },
+    {
+      "id": "has_matches",
+      "lane": "browser",
+      "col": 5,
+      "type": "frontend",
+      "label": "Có kết quả?",
+      "icon": "decision",
+      "sources": [{ "path": "frontend/src/pages/CatalogPage.jsx", "line": 126, "end_line": 145 }]
+    },
+    {
+      "id": "show_products",
+      "lane": "visitor",
+      "col": 5,
+      "type": "frontend",
+      "label": "Hiện danh sách",
+      "sources": [{ "path": "frontend/src/pages/CatalogPage.jsx", "line": 126, "end_line": 135 }]
+    },
+    {
+      "id": "show_empty",
+      "lane": "visitor",
+      "col": 5,
+      "type": "frontend",
+      "label": "Không có kết quả",
+      "sublabel": "Xóa bộ lọc URL",
+      "icon": "failure",
+      "yOffset": 85,
+      "sources": [{ "path": "frontend/src/pages/CatalogPage.jsx", "line": 136, "end_line": 145 }]
+    },
+    {
+      "id": "provider_load",
+      "lane": "catalog_data",
+      "col": 0,
+      "type": "frontend",
+      "label": "Tải catalog",
+      "sublabel": "Lúc khởi tạo / retry",
+      "sources": [{ "path": "frontend/src/contexts/CatalogContext.jsx", "line": 8, "end_line": 31 }]
+    },
+    {
+      "id": "storefront_api",
+      "lane": "catalog_data",
+      "col": 1,
+      "type": "backend",
+      "label": "Storefront API",
+      "sublabel": "GET catalog JSON",
+      "sources": [{ "path": "src/main/java/iuh/fit/nhom16/pcstore/catalog/StorefrontController.java", "line": 17, "end_line": 33 }]
+    },
+    {
+      "id": "catalog_db",
+      "lane": "catalog_data",
+      "col": 2,
+      "type": "database",
+      "label": "Catalog DB",
+      "sublabel": "Sản phẩm + danh mục",
+      "sources": [{ "path": "src/main/java/iuh/fit/nhom16/pcstore/catalog/StorefrontController.java", "line": 21, "end_line": 39 }]
+    },
+    {
+      "id": "cached_products",
+      "lane": "catalog_data",
+      "col": 3,
+      "type": "frontend",
+      "label": "Cache React",
+      "sublabel": "Danh sách sản phẩm",
+      "sources": [
+        { "path": "frontend/src/contexts/CatalogContext.jsx", "line": 19, "end_line": 40 },
+        { "path": "frontend/src/pages/CatalogPage.jsx", "line": 18, "end_line": 20 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "load_request", "from": "provider_load", "to": "storefront_api", "label": "GET" },
+    { "id": "read_catalog", "from": "storefront_api", "to": "catalog_db", "label": "Đọc catalog" },
+    { "id": "response_to_cache", "from": "storefront_api", "to": "cached_products", "label": "JSON", "role": "return" },
+    { "id": "visitor_search", "from": "visitor_action", "to": "header_search", "label": "Từ khóa" },
+    { "id": "go_to_catalog", "from": "header_search", "to": "catalog_page", "label": "Gửi" },
+    { "id": "select_filter", "from": "visitor_action", "to": "query_state", "label": "Danh mục / sort" },
+    { "id": "page_controls", "from": "catalog_page", "to": "query_state", "label": "Đổi tiêu chí" },
+    { "id": "apply_filters", "from": "query_state", "to": "local_filter", "label": "Lọc tại client" },
+    { "id": "use_cached_products", "from": "cached_products", "to": "local_filter", "label": "Products" },
+    { "id": "evaluate_results", "from": "local_filter", "to": "has_matches", "label": "Kết quả" },
+    { "id": "matches_yes", "from": "has_matches", "to": "show_products", "label": "Có", "role": "branch" },
+    { "id": "matches_no", "from": "has_matches", "to": "show_empty", "label": "Không", "role": "branch" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Điều kiện tìm kiếm",
+      "items": [
+        "Từ khóa được chuẩn hóa chữ thường và bỏ dấu; mọi token phải xuất hiện trong tên, thương hiệu, nhãn danh mục hoặc thông số.",
+        "Danh mục hỗ trợ nhóm như PC, linh kiện, bộ nhớ, build và gear; flash deal chỉ giữ sản phẩm có giá gốc cao hơn giá bán.",
+        "Các lựa chọn category, keyword, sort và deals được giữ trên URL để có thể chia sẻ hoặc tải lại trang."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Phạm vi hiện tại",
+      "items": [
+        "Backend gửi toàn bộ danh sách storefront đang hoạt động khi CatalogProvider khởi tạo.",
+        "Thao tác tìm kiếm và lọc tiếp theo chạy ở frontend trên danh sách đã tải; không gửi request mới theo từng tiêu chí.",
+        "Trang hiện có lọc danh mục và flash deal, cùng sắp xếp theo giá hoặc tên; chưa có bộ lọc khoảng giá hay thương hiệu."
+      ]
+    }
+  ]
+}
