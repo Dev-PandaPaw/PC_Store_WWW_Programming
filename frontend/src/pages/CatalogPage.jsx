@@ -24,7 +24,14 @@ function CatalogContent() {
   const dealsOnly = params.get('deals') === '1'
   const title = dealsOnly
     ? 'Flash Deal PC & linh kiện'
-    : CATEGORY_LABELS[category] || 'Sản phẩm'
+    : CATEGORY_LABELS[category] || 'Tất cả sản phẩm'
+
+  React.useEffect(() => {
+    document.title = `${title} | PixelCore`
+    return () => {
+      document.title = 'PixelCore - Cửa Hàng PC & Linh Kiện'
+    }
+  }, [title])
   const update = (key, value) =>
     setParams(
       (previous) => {

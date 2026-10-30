@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@ConditionalOnProperty(name="app.test-login.enabled", havingValue="true", matchIfMissing=true)
+@ConditionalOnProperty(name="app.test-login.enabled", havingValue="true")
 public class TestLoginService {
     private final JdbcTemplate jdbc;
     private final PasswordEncoder passwords;

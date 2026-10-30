@@ -11,7 +11,7 @@ import { useCatalog } from '../contexts/CatalogContext'
 import ProductStock from '../components/ProductStock'
 
 export default function ProductDetailPage() {
-  const { findProduct, productsInCategory } = useCatalog()
+  const { findProduct, productsInCategory, loading } = useCatalog()
   const { slug } = useParams()
   const product = findProduct(slug)
   const { addItem, ready, productState, reportCartError } = useCart()
@@ -23,7 +23,39 @@ export default function ProductDetailPage() {
       document.title = 'PixelCore'
     }
   }, [product])
-  if (!product)
+  if (!product) {
+    if (loading) {
+      return (
+        <div className="product-page">
+          <nav className="breadcrumbs" aria-label="Đường dẫn">
+            <Link to="/">Trang chủ</Link>
+            <span>/</span>
+            <Link to="/catalog">Sản phẩm</Link>
+          </nav>
+          <div className="product-detail">
+            <div className="product-detail__image">
+              <div className="sk-box" style={{ width: '100%', aspectRatio: '1/1', borderRadius: '12px' }} />
+            </div>
+            <div className="product-detail__info">
+              <div className="sk-box" style={{ width: '80px', height: '14px', marginBottom: '10px' }} />
+              <div className="sk-box" style={{ width: '90%', height: '32px', marginBottom: '12px', borderRadius: '6px' }} />
+              <div className="sk-box" style={{ width: '65%', height: '26px', marginBottom: '18px', borderRadius: '6px' }} />
+              <div className="sk-box" style={{ width: '100%', height: '48px', marginBottom: '24px', borderRadius: '6px' }} />
+              <div className="product-detail__price" style={{ marginBottom: '22px' }}>
+                <span className="sk-box" style={{ width: '50px', height: '12px', marginBottom: '6px' }} />
+                <div className="sk-box" style={{ width: '200px', height: '36px', borderRadius: '6px' }} />
+              </div>
+              <div className="product-detail__specs" style={{ marginBottom: '24px' }}>
+                <span className="sk-box" style={{ width: '80px', height: '30px', borderRadius: '6px' }} />
+                <span className="sk-box" style={{ width: '100px', height: '30px', borderRadius: '6px' }} />
+                <span className="sk-box" style={{ width: '90px', height: '30px', borderRadius: '6px' }} />
+              </div>
+              <div className="sk-box" style={{ width: '190px', height: '46px', borderRadius: '8px', background: '#2563eb', opacity: 0.65 }} />
+            </div>
+          </div>
+        </div>
+      )
+    }
     return (
       <div className="store-empty">
         <h1>Không tìm thấy sản phẩm</h1>
@@ -32,6 +64,7 @@ export default function ProductDetailPage() {
         </Link>
       </div>
     )
+  }
   const related = productsInCategory(product.category)
     .filter((item) => item.id !== product.id)
     .slice(0, 4)

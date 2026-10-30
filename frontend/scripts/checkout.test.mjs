@@ -41,6 +41,8 @@ test('long order references are compact for display while short codes stay uncha
 test('login returns to checkout and rejects external redirect destinations', () => {
   assert.equal(loginDestination('/checkout'), '/checkout')
   assert.equal(loginDestination('/checkout?step=shipping'), '/checkout?step=shipping')
+  assert.equal(loginDestination({ pathname: '/checkout', search: '?step=shipping' }), '/checkout?step=shipping')
+  assert.equal(loginDestination({ pathname: '//example.com' }), '/')
   for (const from of [undefined, 'https://example.com', '//example.com', '/\\example.com', '/login']) {
     assert.equal(loginDestination(from), '/')
   }

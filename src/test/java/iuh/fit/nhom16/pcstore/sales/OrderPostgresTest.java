@@ -49,6 +49,7 @@ class OrderPostgresTest {
         properties.add("spring.flyway.default-schema", () -> SCHEMA);
         properties.add("spring.jpa.properties.hibernate.default_schema", () -> SCHEMA);
         properties.add("app.orders.expiry-delay-ms", () -> "3600000");
+        properties.add("app.test-login.enabled", () -> "true");
     }
     @Autowired OrderService service;
     @Autowired CartRepository carts;

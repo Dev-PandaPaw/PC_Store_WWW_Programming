@@ -9,6 +9,10 @@ import CartQuantity from '../components/CartQuantity'
 export default function CartPage() {
   const { items, setQuantity, removeItem, clearCart, totalAmount, totalCount, ready } =
     useCart()
+  React.useEffect(() => {
+    document.title = `Giỏ hàng (${totalCount}) | PixelCore`
+    return () => { document.title = 'PixelCore - Cửa Hàng PC & Linh Kiện' }
+  }, [totalCount])
   const [feedback, setFeedback] = React.useState('')
   const [clearing, setClearing] = React.useState(false)
   const clear = async () => {

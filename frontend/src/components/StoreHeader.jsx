@@ -123,6 +123,7 @@ export default function StoreHeader() {
   const navigate = useNavigate()
   const { totalCount } = useCart()
   const { user, logout } = useAuth()
+  const [loggingOut, setLoggingOut] = useState(false)
   const [keyword, setKeyword] = useState(
     () => new URLSearchParams(search).get('keyword') || '',
   )
@@ -131,6 +132,15 @@ export default function StoreHeader() {
   useEffect(() => {
     setKeyword(new URLSearchParams(search).get('keyword') || '')
   }, [pathname, search])
+
+  const handleLogout = async () => {
+    setLoggingOut(true)
+    try {
+      await logout()
+    } finally {
+      setLoggingOut(false)
+    }
+  }
 
   const handleSearch = (event) => {
     event.preventDefault()
@@ -175,13 +185,17 @@ export default function StoreHeader() {
             </Link>
             {user ? (
               <div className="store-account store-account--signed-in">
-                <HeaderIcon name="user" />
+                {loggingOut ? (
+                  <span className="shell-spinner" aria-hidden="true" />
+                ) : (
+                  <HeaderIcon name="user" />
+                )}
                 <div>
                   <span className="store-account__name">
                     {user.fullName || user.username}
                   </span>
-                  <button type="button" onClick={logout}>
-                    Đăng xuất
+                  <button type="button" onClick={handleLogout} disabled={loggingOut}>
+                    {loggingOut ? 'Đang thoát...' : 'Đăng xuất'}
                   </button>
                 </div>
               </div>

@@ -180,6 +180,23 @@ a.store-account:hover {
   text-decoration: underline;
 }
 
+.shell-spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: shell-spin 0.75s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes shell-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .store-header__bottom {
   border-top: 1px solid #347693;
   border-bottom: 1px solid #285570;

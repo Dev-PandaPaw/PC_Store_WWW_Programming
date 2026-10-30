@@ -1,6 +1,6 @@
 # PC Store
 
-Luồng đặt hàng ORD01–ORD15 đã được bổ sung theo MVC, với checkout COD và tài khoản giả lập. Xem [hướng dẫn chạy và kiểm thử chức năng đặt hàng](docs/reports/ORDER_FEATURE_IMPLEMENTATION.md).
+Luồng đặt hàng ORD01–ORD15 đã được bổ sung theo MVC, với checkout COD và đăng nhập từ development. Xem [hướng dẫn chạy và kiểm thử chức năng đặt hàng](docs/reports/ORDER_FEATURE_IMPLEMENTATION.md).
 
 Kho mã nguồn cho đồ án website giới thiệu và bán máy PC trực tuyến.
 

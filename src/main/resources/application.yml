@@ -41,4 +41,4 @@ springdoc:
 
 app:
   test-login:
-    enabled: ${TEST_LOGIN_ENABLED:true}
+    enabled: ${TEST_LOGIN_ENABLED:false}

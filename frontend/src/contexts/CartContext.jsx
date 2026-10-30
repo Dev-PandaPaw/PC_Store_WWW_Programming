@@ -9,6 +9,7 @@ import './CartNotice.css'
 import { CheckCircle2, X } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
+/** @type {import('react').Context<import('./cartContextTypes').CartContextValue | null>} */
 const CartContext = createContext(null)
 const emptyCart = () => ({ cartVersion: 0, items: [], totalQuantity: 0, subtotal: 0 })
 const messageFor = error => error?.response?.data?.detail || 'Không thể cập nhật giỏ hàng. Vui lòng thử lại.'
@@ -215,4 +216,9 @@ export function CartProvider({ children }) {
   )
 }
 
-export function useCart() { return useContext(CartContext) }
+/** @returns {import('./cartContextTypes').CartContextValue} */
+export function useCart() {
+  const context = useContext(CartContext)
+  if (!context) throw new Error('useCart must be used within CartProvider')
+  return context
+}

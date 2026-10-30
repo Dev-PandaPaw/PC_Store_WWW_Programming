@@ -24,7 +24,7 @@ import org.springframework.web.util.WebUtils;
 
 @RestController
 @RequestMapping("/api/auth")
-@ConditionalOnProperty(name="app.test-login.enabled", havingValue="true", matchIfMissing=true)
+@ConditionalOnProperty(name="app.test-login.enabled", havingValue="true")
 public class TestLoginController {
     private final TestLoginService login;
     private final CartStorageService carts;

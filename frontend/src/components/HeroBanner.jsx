@@ -19,10 +19,12 @@ export default function HeroBanner({ compact = false }) {
 
   useEffect(() => {
     const video = videoRef.current
-    if (isPaused) {
-      video.pause()
-    } else {
-      video.play().catch(() => setIsPaused(true))
+    if (video) {
+      if (isPaused) {
+        video.pause()
+      } else {
+        video.play().catch(() => setIsPaused(true))
+      }
     }
   }, [isPaused])
 
@@ -45,7 +47,7 @@ export default function HeroBanner({ compact = false }) {
             </Link>
           </div>
         </div>
-        <div className="pc-hero__showcase">
+        <div className="pc-hero__showcase" style={{ position: 'relative', background: '#0a1a2f', borderRadius: '12px', overflow: 'hidden' }}>
           <video
             ref={videoRef}
             className="pc-hero__video"
@@ -56,6 +58,12 @@ export default function HeroBanner({ compact = false }) {
             playsInline
             preload="auto"
             aria-hidden="true"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              display: 'block',
+            }}
           />
         </div>
       </div>

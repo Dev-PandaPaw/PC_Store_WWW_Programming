@@ -80,3 +80,63 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     </article>
   )
 }
+
+export const ProductCardSkeleton: React.FC = () => (
+  <article
+    className="product-card"
+    style={{
+      pointerEvents: 'none',
+      border: '1px solid #f1f5f9',
+      borderRadius: '10px',
+      padding: '12px',
+      background: '#ffffff',
+    }}
+  >
+    <div
+      style={{
+        width: '100%',
+        aspectRatio: '1 / 1',
+        background: '#e2e8f0',
+        borderRadius: '8px',
+        marginBottom: '12px',
+      }}
+    />
+    <div>
+      <div
+        style={{
+          height: '12px',
+          width: '35%',
+          background: '#f1f5f9',
+          borderRadius: '4px',
+          marginBottom: '8px',
+        }}
+      />
+      <div
+        style={{
+          height: '16px',
+          width: '90%',
+          background: '#e2e8f0',
+          borderRadius: '4px',
+          marginBottom: '6px',
+        }}
+      />
+      <div
+        style={{
+          height: '16px',
+          width: '65%',
+          background: '#e2e8f0',
+          borderRadius: '4px',
+          marginBottom: '16px',
+        }}
+      />
+      <div
+        style={{
+          height: '20px',
+          width: '45%',
+          background: '#cbd5e1',
+          borderRadius: '4px',
+        }}
+      />
+    </div>
+  </article>
+)

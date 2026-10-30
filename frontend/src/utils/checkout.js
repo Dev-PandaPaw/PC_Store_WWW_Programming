@@ -6,6 +6,7 @@ export function shippingFromCustomer(customer) {
 }
 
 export function loginDestination(from) {
+  if (from && typeof from === 'object') from = `${from.pathname || '/'}${from.search || ''}`
   return typeof from === 'string' && /^\/(?!\/|\\)/.test(from) && !from.startsWith('/login') ? from : '/'
 }
 

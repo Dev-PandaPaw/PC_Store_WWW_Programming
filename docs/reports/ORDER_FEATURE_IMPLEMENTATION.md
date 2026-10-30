@@ -2,7 +2,7 @@
 
 ## Chạy demo
 
-Yêu cầu Java 21, Maven, Node.js và kết nối PostgreSQL hiện có. Chạy ứng dụng bình thường; không cần đổi profile, database hay tạo Docker image. Hai tài khoản kiểm thử: **test / 1234** (CUSTOMER + ADMIN) và **test2 / 1234** (chỉ CUSTOMER). Ứng dụng vẫn dùng danh mục sản phẩm hiện tại.
+Yêu cầu Java 21, Maven, Node.js và PostgreSQL với schema UUID đang dùng. Đăng nhập/đăng ký dùng AuthService và AuthController từ nhánh development; không dùng tài khoản giả lập mặc định.
 
 ```powershell
 mvn spring-boot:run
@@ -16,24 +16,15 @@ npm ci
 npm run dev
 ```
 
-Mở `http://localhost:5173/login`, nhập tên đăng nhập **test**, mật khẩu **1234**. Thêm sản phẩm vào giỏ, tải lại trang hoặc đăng xuất rồi đăng nhập lại: giỏ được lưu trong database theo tài khoản. Nếu thêm giỏ trước khi đăng nhập, hệ thống gộp giỏ khách vào giỏ tài khoản sau khi đăng nhập thành công.
+Mở `http://localhost:5173/login`, đăng nhập bằng email/mật khẩu tài khoản trong database, hoặc dùng `/register` để tạo tài khoản. Luồng checkout, giỏ hàng, trạng thái tồn kho và thông báo 0,5 giây được giữ từ ngan.
 
-Response login trả luôn giỏ đã gộp để cập nhật giao diện cùng tài khoản, không gọi gộp lần hai. Xem [luồng cập nhật giỏ ngay khi đăng nhập](CART_LOGIN_REALTIME.md).
+Login xác thực bằng BCrypt của development, sau đó gộp giỏ khách trước khi ghi phiên đăng nhập. Response trả tài khoản và `cart` đã gộp trong cùng phản hồi; frontend không gộp lần hai. Session chứa UUID và email qua `AuthenticatedAccount`, tương thích CartOwnerResolver và OrderActorResolver. Nếu gộp giỏ thất bại, login không tạo phiên thành công.
 
-Tài khoản cố định nằm tại `src/main/java/iuh/fit/nhom16/pcstore/identity/model/TestUser.java`:
+`TEST_LOGIN_ENABLED=false` là mặc định: chỉ AuthController thật nhận `/api/auth/*`. Chỉ đặt `true` khi cần chạy controller tài khoản mẫu cũ (`test / 1234`, `test2 / 1234`); hai controller không cùng hoạt động. Các endpoint ghi vẫn cần CSRF. Tài khoản đăng ký mới phải có số điện thoại được xác minh để đặt hàng, giữ nguyên quy tắc của checkout.
 
-```java
-public static final String USERNAME = "test";
-public static final String PASSWORD = "1234";
-```
+Migration V11 thêm các cột hồ sơ cần cho User của development và bảng `identity_verification_challenges`, không sửa/xóa bảng challenge cũ. Migration áp dụng khi backend khởi động. Không tự đánh dấu số điện thoại của tài khoản mới là đã xác minh.
 
-Khi nhập đúng thông tin, backend tạo tài khoản kiểm thử riêng có UUID `a0000000-0000-0000-0000-000000000005` nếu chưa có, với số điện thoại mẫu đã xác minh **0987654321**, quyền CUSTOMER và ADMIN để thử các chức năng. Không ghi đè thông tin hay xác minh số của tài khoản khách hàng khác. Tài khoản bị khóa vẫn bị từ chối đăng nhập. Đây là đăng nhập mẫu, chưa có đăng ký, OTP hay xác thực mật khẩu người dùng bất kỳ.
-
-Tài khoản **test2 / 1234** dùng UUID `a0000000-0000-0000-0000-000000000006`, email `test2@pcstore.example`, số điện thoại **0976543210** và chỉ có quyền CUSTOMER. Tài khoản được tạo tự động trong lần đăng nhập đầu, số điện thoại mẫu được xác minh để thử checkout. Giỏ và đơn hàng tách theo UUID của từng tài khoản. Có thể dùng cửa sổ ẩn danh để thử song song; đăng xuất rồi đăng nhập tài khoản còn lại để kiểm tra giỏ được giữ riêng. Không cấp quyền admin cho test2.
-
-Danh tính `TestUser` thực hiện `CartUserIdentity`, lưu trong Spring Security session sau khi đổi session ID. Không tự đăng nhập khi mở trang. `GET /api/auth/me` khôi phục trạng thái sau khi tải lại; `POST /api/auth/logout` kết thúc session, không xóa giỏ tài khoản trong database. Các API ghi, gồm login/logout, được bảo vệ CSRF. Tắt tài khoản mẫu khi triển khai công khai bằng `TEST_LOGIN_ENABLED=false`.
-
-Kết nối dùng `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` từ cấu hình mặc định `local`; Spring không tự đọc `.env`, cần đặt biến môi trường trong terminal hoặc IDE. Nếu đã dùng bộ database hai PC từ lần chạy cũ, chuyển kết nối về database chứa danh mục đầy đủ. Mailpit/Docker chỉ là lựa chọn chạy dịch vụ local, không phải cơ chế giả lập user. Xóa `order-demo` khỏi Active profiles/VM options cũ của IDE và khởi động lại backend.
+Kết nối dùng `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`; giữ cấu hình database hiện có. Không chạy integration tests vào database ứng dụng: test đơn hàng yêu cầu `ORDER_TEST_DB_URL`, test auth yêu cầu `AUTH_TEST_DB_URL`; mỗi nhóm tạo schema ngẫu nhiên riêng.
 
 Lỗi giỏ trong ảnh được xác định bằng kiểm tra schema đang dùng: `cart_items.id` là UUID NOT NULL, không có giá trị mặc định; code trước đây chỉ insert cart_id/product_id/quantity nên vi phạm ràng buộc. `CartRepository` hiện cấp UUID khi insert; migration V10 bổ sung default ID và bảng cart_merge_receipts nếu thiếu, giữ nguyên giỏ/số lượng cũ. Khởi động lại ứng dụng để Flyway áp dụng V10.
 
@@ -42,9 +33,9 @@ Lỗi giỏ trong ảnh được xác định bằng kiểm tra schema đang dù
 ```text
 src/main/java/iuh/fit/nhom16/pcstore/
   identity/
-    controller/     TestLoginController: login/me/logout, session
-    model/          TestUser: hai tài khoản test/1234 và test2/1234
-    service/        TestLoginService: kiểm tra tài khoản mẫu, tạo bản ghi nếu thiếu
+    web/            AuthController: login/register/me/logout và khôi phục mật khẩu
+    model/          AuthenticatedAccount: UUID/email trong session; TestUser chỉ dùng khi bật test-login
+    application/    AuthService: đăng nhập bằng BCrypt, đăng ký và khôi phục mật khẩu
   sales/
     controller/     OrderController, AdminOrderController: HTTP + validation
     dto/            Request/response, snapshot dòng hàng và quote
@@ -86,7 +77,7 @@ Email gửi theo best effort sau commit, chưa có outbox/retry bền vững khi
 
 ## API
 
-Gọi `GET /api/csrf` trước các API ghi, giữ session cookie và gửi `X-XSRF-TOKEN` từ cookie `XSRF-TOKEN`. Đăng nhập bằng `POST /api/auth/login` với `{ "username": "test", "password": "1234" }`, kiểm tra phiên bằng `GET /api/auth/me`, đăng xuất bằng `POST /api/auth/logout`. Bộ chọn session cũ `POST /api/v1/cart/demo` chỉ dành cho profile `cart-demo`, không cần cho luồng đăng nhập mẫu.
+Gọi `GET /api/csrf` trước các API ghi, giữ session cookie và gửi `X-XSRF-TOKEN` từ cookie `XSRF-TOKEN`. Đăng nhập bằng `POST /api/auth/login` với email/mật khẩu tài khoản thật trong body `{ "username": "customer@example.com", "password": "<password>" }`, kiểm tra phiên bằng `GET /api/auth/me`, đăng xuất bằng `POST /api/auth/logout`. Bộ chọn session cũ `POST /api/v1/cart/demo` chỉ dành cho profile `cart-demo`, không cần cho luồng đăng nhập mẫu.
 
 | Method | Endpoint | Nội dung |
 |---|---|---|
