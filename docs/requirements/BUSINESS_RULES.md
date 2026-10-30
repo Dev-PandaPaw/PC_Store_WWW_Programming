@@ -1,5 +1,9 @@
 # PC Store — Quy tắc nghiệp vụ và quyết định thiết kế
 
+> Cập nhật Cart 26/10/2026: yêu cầu mới thay thế phần lưu trữ session-only của BR04.
+> Guest giữ giỏ session; user giữ giỏ trong DB. Xem [thiết kế Cart hiện hành](../reports/CART_FEATURE_IMPLEMENTATION.md).
+> Quy tắc số lượng/tồn kho và checkout vẫn áp dụng. Đăng nhập do module khác cung cấp.
+
 Phiên bản 2.1 — 26/09/2026. Phạm vi: 7 module, 24 màn hình, 20 bảng. Đây là đặc tả trước triển khai; các giới hạn định lượng dưới đây là lựa chọn của nhóm cho đồ án, không phải chính sách mặc định của một cửa hàng thực tế.
 
 ## 1. Nguồn và cách áp dụng

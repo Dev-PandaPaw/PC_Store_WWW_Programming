@@ -12,15 +12,13 @@ import './styles/layout.css'
 import './styles/storefront.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <AuthProvider>
-        <CatalogProvider>
-          <CartProvider>
+  <BrowserRouter>
+    <AuthProvider>
+      <CatalogProvider>
+        <CartProvider>
           <App />
-          </CartProvider>
-        </CatalogProvider>
-      </AuthProvider>
-    </BrowserRouter>
-  </React.StrictMode>,
+        </CartProvider>
+      </CatalogProvider>
+    </AuthProvider>
+  </BrowserRouter>,
 )

@@ -93,6 +93,9 @@ export default function AdvisoryPage() {
         </section>
       )}
       <div className="advisory-reading">
+        <Link className="store-button" to="/advisory/ai">
+          Trò chuyện với trợ lý AI <ArrowRight size={16} />
+        </Link>
         <h2>Cần thêm thông tin trước khi chọn?</h2>
         <Link className="text-link" to="/blog/chon-cpu-va-gpu-cho-pc-gaming">
           Đọc hướng dẫn chọn CPU và GPU <ArrowRight size={16} />

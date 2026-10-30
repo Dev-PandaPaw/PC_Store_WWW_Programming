@@ -1,0 +1,98 @@
+openapi: 3.0.3
+info:
+  title: PixelCore AI product advisor
+  version: 2.1.0
+  description: Spring AI ChatClient and Google GenAI ChatModel run inside Spring Boot. Existing chat response contract is preserved. Read-only product advice; Gemini never supplies prices, stock, URLs or unrestricted product text.
+servers:
+  - url: http://localhost:8080
+paths:
+  /api/ai/status:
+    get:
+      operationId: getAiStatus
+      responses:
+        '200':
+          description: Local configuration status; not proof of Gemini access or quota
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [configured, model, maxMessageLength, maxTurns]
+                properties:
+                  configured: {type: boolean}
+                  model: {type: string}
+                  maxMessageLength: {type: integer, example: 1200}
+                  maxTurns: {type: integer, example: 8}
+  /api/ai/chat:
+    post:
+      operationId: adviseProducts
+      description: Requires CSRF. Cheap without numeric budget means lowest suitable price, not every product sorted by price. Named games retrieve sourced minimum/recommended requirements through Spring AI grounded search or a dated verified reference, compare against catalog specs, and exclude unverified or below-minimum machines. CPU/GPU comparisons are estimates; RAM/storage checks are deterministic. No FPS promise. Unknown lookup returns clarification without invented requirements. Only user history carries game context; an explicit different product group resets it.
+      parameters:
+        - in: header
+          name: X-XSRF-TOKEN
+          required: true
+          schema: {type: string}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [message, history]
+              properties:
+                message: {type: string, minLength: 1, maxLength: 1200}
+                history:
+                  type: array
+                  maxItems: 14
+                  description: Alternating user and assistant pairs, starting with user and ending with assistant
+                  items:
+                    type: object
+                    additionalProperties: false
+                    required: [role, content]
+                    properties:
+                      role: {type: string, enum: [user, assistant]}
+                      content: {type: string, minLength: 1, maxLength: 1200}
+      responses:
+        '200':
+          description: Verified catalog products or an explicit clarification/no-match result
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [message, products, outcome, model, suggestions, criteria]
+                properties:
+                  message: {type: string, description: 'Server-rendered Vietnamese text from validated structured decisions. General recommendations describe listed products without appending blanket warehouse warnings; explicit in-stock requests still require positive available inventory.'}
+                  model: {type: string, nullable: true, description: Null when no Gemini call was needed}
+                  outcome: {type: string, enum: [recommendations, clarification, no_match, out_of_scope]}
+                  suggestions: {type: array, items: {type: string}, maxItems: 3}
+                  criteria: {type: object, description: 'Server-derived category, purpose and budget constraints'}
+                  game:
+                    type: object
+                    nullable: true
+                    description: Optional sourced game requirement report. Includes title, minimum, recommended, sources, checkedAt, lookupStatus and selectedTarget. A dated reference is distinguished from a live grounded lookup. Product cards may include gameFit explaining component checks.
+                  products:
+                    type: array
+                    maxItems: 4
+                    items:
+                      type: object
+                      required: [id, slug, name, price, image, url, stockOnHand, reasons, specs]
+                      properties:
+                        id: {type: string, format: uuid}
+                        slug: {type: string}
+                        name: {type: string}
+                        price: {type: number, minimum: 0}
+                        image: {type: string, description: Bundled logical asset key}
+                        url: {type: string, example: /products/pc-gvn-i5-12400f-rtx-3050}
+                        stockOnHand: {type: integer, minimum: 0, description: 'Available warehouse units from the catalog, unchanged by the advisor. Imported listings start at zero; listing a product for sale is separate from confirming stock. A listing badge must not claim in-stock unless this value is positive.'}
+                        reasons: {type: array, items: {type: string}}
+                        specs: {type: array, items: {type: object}}
+        '400': {description: Invalid or oversized message/history}
+        '403': {description: Missing or invalid CSRF token}
+        '413': {description: Request body larger than 24 KiB}
+        '429':
+          description: Local request limit or Gemini free-tier quota exceeded; retry only after the indicated delay
+          headers:
+            Retry-After: {schema: {type: integer}, description: Seconds before retry}
+        '502': {description: Invalid Gemini response or provider error; no unverified products returned}
+        '503': {description: 'Missing key, unavailable model, or catalog unavailable'}
+        '504': {description: Upstream timeout}

@@ -2,9 +2,22 @@ import React from 'react'
 import { Link, NavLink, Outlet } from 'react-router-dom'
 import { ArrowUpRight, Box, LogOut } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
+import useAdminAccess from '../hooks/useAdminAccess'
+import CartDemoPanel from './CartDemoPanel'
 
 export default function AdminShell() {
-  const { user, logout } = useAuth()
+  const { logout } = useAuth()
+  const access = useAdminAccess()
+
+  if (!access.account) return <main className="orders-page">
+    <CartDemoPanel />
+    <h1>Quản trị cửa hàng</h1>
+    {access.loading ? <p role="status">Đang kiểm tra quyền quản trị…</p> : <>
+      <p role="alert">{access.error || 'Vui lòng đăng nhập tài khoản admin.'}</p>
+      <Link to="/login">Đăng nhập</Link>
+    </>}
+    <p><Link to="/">Về cửa hàng</Link></p>
+  </main>
 
   return (
     <div className="admin-shell">

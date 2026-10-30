@@ -14,7 +14,7 @@ function endOfVietnamDay(now: number) {
 export function FlashDeal({
   onAddToCart,
 }: {
-  onAddToCart?: (product: StoreProduct) => void
+  onAddToCart?: (product: StoreProduct) => Promise<{ success: boolean, message?: string }> | { success: boolean, message?: string }
 }) {
   const { FLASH_DEAL_PRODUCTS } = useCatalog()
   const [endsAt] = useState(() => endOfVietnamDay(Date.now()))
