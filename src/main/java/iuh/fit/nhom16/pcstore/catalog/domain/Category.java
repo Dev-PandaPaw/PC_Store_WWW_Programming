@@ -1,4 +1,4 @@
-package iuh.fit.nhom16.pcstore.catalog;
+package iuh.fit.nhom16.pcstore.catalog.domain;
 
 import jakarta.persistence.*;
 import java.time.OffsetDateTime;

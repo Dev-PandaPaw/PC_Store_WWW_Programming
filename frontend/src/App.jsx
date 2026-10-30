@@ -12,6 +12,7 @@ import BlogPage from './pages/BlogPage'
 import ArticlePage from './pages/ArticlePage'
 import ProductDetailPage from './pages/ProductDetailPage'
 import NotFoundPage from './pages/NotFoundPage'
+import AdminProductsPage from './pages/AdminProductsPage'
 
 export default function App() {
   const { pathname } = useLocation()
@@ -35,8 +36,8 @@ export default function App() {
 
       {/* Admin Routes */}
       <Route path="/admin" element={<AdminShell />}>
-        <Route index element={<CatalogPage />} />
-        <Route path="products" element={<CatalogPage />} />
+        <Route index element={<AdminProductsPage />} />
+        <Route path="products" element={<AdminProductsPage />} />
       </Route>
     </Routes>
   )

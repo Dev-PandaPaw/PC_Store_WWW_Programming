@@ -1,18 +1,23 @@
-package iuh.fit.nhom16.pcstore.catalog;
+package iuh.fit.nhom16.pcstore.catalog.application;
 
-import iuh.fit.nhom16.pcstore.catalog.dto.ProductRequest;
-import iuh.fit.nhom16.pcstore.catalog.dto.ProductSpecRequest;
+import iuh.fit.nhom16.pcstore.catalog.api.dto.ProductRequest;
+import iuh.fit.nhom16.pcstore.catalog.api.dto.ProductSpecRequest;
+import iuh.fit.nhom16.pcstore.catalog.domain.CatalogConflictException;
+import iuh.fit.nhom16.pcstore.catalog.domain.CatalogNotFoundException;
+import iuh.fit.nhom16.pcstore.catalog.domain.Category;
+import iuh.fit.nhom16.pcstore.catalog.domain.Product;
+import iuh.fit.nhom16.pcstore.catalog.domain.ProductSpec;
+import iuh.fit.nhom16.pcstore.catalog.infrastructure.persistence.CategoryRepository;
+import iuh.fit.nhom16.pcstore.catalog.infrastructure.persistence.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.time.OffsetDateTime;
 import java.util.Locale;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.math.BigDecimal;
 
 @Service
 public class CatalogService {
@@ -32,43 +37,23 @@ public class CatalogService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Product> getProductsPage(Pageable pageable) {
-        return productRepository.findByStatus("ACTIVE", pageable);
+    public List<Product> getAllProductsForAdmin() {
+        return productRepository.findAllByOrderByUpdatedAtDesc();
     }
 
     @Transactional(readOnly = true)
-    public Page<Product> searchProductsByKeyword(String keyword, Pageable pageable) {
-        return productRepository.searchActiveByKeyword(requireFilter(keyword, "keyword"), pageable);
+    public List<Category> getAllCategories() {
+        return categoryRepository.findAll();
     }
 
     @Transactional(readOnly = true)
-    public Page<Product> getProductsByCategory(String categorySlug, Pageable pageable) {
-        return productRepository.findByStatusAndCategory_SlugIgnoreCase(
-                "ACTIVE", requireFilter(categorySlug, "category"), pageable);
+    public Optional<Product> getProductById(UUID id) {
+        return productRepository.findById(id);
     }
 
     @Transactional(readOnly = true)
-    public Page<Product> getProductsByBrand(String brand, Pageable pageable) {
-        return productRepository.findByStatusAndBrandContainingIgnoreCase(
-                "ACTIVE", requireFilter(brand, "brand"), pageable);
-    }
-
-    @Transactional(readOnly = true)
-    public Page<Product> getProductsByPriceRange(BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable) {
-        if (minPrice == null || maxPrice == null) {
-            throw new IllegalArgumentException("minPrice và maxPrice là bắt buộc");
-        }
-        if (minPrice.signum() < 0 || maxPrice.signum() < 0 || minPrice.compareTo(maxPrice) > 0) {
-            throw new IllegalArgumentException("Khoảng giá không hợp lệ");
-        }
-        return productRepository.findByStatusAndPriceBetween("ACTIVE", minPrice, maxPrice, pageable);
-    }
-
-    private String requireFilter(String value, String field) {
-        if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException(field + " không được để trống");
-        }
-        return value.trim();
+    public Optional<Product> getProductBySlug(String slug) {
+        return productRepository.findBySlug(slug);
     }
 
     @Transactional
@@ -77,7 +62,6 @@ public class CatalogService {
         Product product = new Product();
         applyProductDetails(product, request);
         product.setStatus("ACTIVE");
-        product.setStockOnHand(0);
         product.setReservedQuantity(0);
         return productRepository.save(product);
     }
@@ -87,6 +71,9 @@ public class CatalogService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new CatalogNotFoundException("Không tìm thấy sản phẩm: " + id));
         ensureUniqueKeys(request, id);
+        if (request.stockOnHand() < product.getReservedQuantity()) {
+            throw new IllegalArgumentException("Stock cannot be lower than the quantity already reserved for orders");
+        }
         applyProductDetails(product, request);
         product.setUpdatedAt(OffsetDateTime.now());
         return productRepository.save(product);
@@ -116,6 +103,7 @@ public class CatalogService {
         product.setBrand(normalizeOptional(request.brand()));
         product.setDescription(normalizeOptional(request.description()));
         product.setPrice(request.price());
+        product.setStockOnHand(request.stockOnHand());
         product.setWarrantyMonths(request.warrantyMonths() == null ? 12 : request.warrantyMonths());
         applySpec(product, request.spec());
     }

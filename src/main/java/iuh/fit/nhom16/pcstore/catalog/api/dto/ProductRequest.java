@@ -1,4 +1,4 @@
-package iuh.fit.nhom16.pcstore.catalog.dto;
+package iuh.fit.nhom16.pcstore.catalog.api.dto;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMin;
@@ -18,6 +18,7 @@ public record ProductRequest(
         @Size(max = 255) String brand,
         String description,
         @NotNull @DecimalMin(value = "0.0", inclusive = false) BigDecimal price,
+        @NotNull @PositiveOrZero Integer stockOnHand,
         @PositiveOrZero Short warrantyMonths,
         @Valid ProductSpecRequest spec
 ) {

@@ -2,8 +2,8 @@ package iuh.fit.nhom16.pcstore.configuration.web;
 
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.HttpStatus;
-import iuh.fit.nhom16.pcstore.catalog.CatalogConflictException;
-import iuh.fit.nhom16.pcstore.catalog.CatalogNotFoundException;
+import iuh.fit.nhom16.pcstore.catalog.domain.CatalogConflictException;
+import iuh.fit.nhom16.pcstore.catalog.domain.CatalogNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;

@@ -1,4 +1,4 @@
-package iuh.fit.nhom16.pcstore.catalog.dto;
+package iuh.fit.nhom16.pcstore.catalog.api.dto;
 
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;

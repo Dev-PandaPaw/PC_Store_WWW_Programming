@@ -1,6 +1,6 @@
 package iuh.fit.nhom16.pcstore.advisory;
 
-import iuh.fit.nhom16.pcstore.catalog.Product;
+import iuh.fit.nhom16.pcstore.catalog.domain.Product;
 import jakarta.persistence.*;
 import java.util.UUID;
 
