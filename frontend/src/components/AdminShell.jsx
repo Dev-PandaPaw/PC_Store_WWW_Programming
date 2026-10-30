@@ -1,5 +1,6 @@
 import React from 'react'
-import { Link, Outlet } from 'react-router-dom'
+import { Link, NavLink, Outlet } from 'react-router-dom'
+import { ArrowUpRight, Box, LogOut } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import useAdminAccess from '../hooks/useAdminAccess'
 import CartDemoPanel from './CartDemoPanel'
@@ -19,31 +20,26 @@ export default function AdminShell() {
   </main>
 
   return (
-    <div className="app-shell">
-      <header className="site-header" style={{ borderBottomColor: '#cbd5e1', background: '#0f172a', color: '#fff' }}>
-        <div className="nav-container">
-          <Link to="/admin/products" className="brand-logo" style={{ color: '#38bdf8' }}>
-            <span>⚙️</span> PixelCore Admin
+    <div className="admin-shell">
+      <header className="admin-shell__header">
+        <div className="admin-shell__inner">
+          <Link to="/admin/products" className="admin-shell__brand">
+            <span className="admin-shell__brand-mark"><Box size={18} /></span>
+            <span>PixelCore <small>ADMIN</small></span>
           </Link>
-          <nav className="nav-links">
-            <Link to="/admin/products" style={{ color: '#e2e8f0' }}>Sản phẩm</Link>
-            <Link to="/admin/categories" style={{ color: '#e2e8f0' }}>Danh mục</Link>
-            <Link to="/admin/orders" style={{ color: '#e2e8f0' }}>Đơn hàng</Link>
-            <Link to="/admin/users" style={{ color: '#e2e8f0' }}>Người dùng</Link>
-            <Link to="/admin/warranties" style={{ color: '#e2e8f0' }}>Bảo hành</Link>
+          <nav className="admin-shell__nav" aria-label="Điều hướng quản trị">
+            <NavLink to="/admin/products" className={({ isActive }) => isActive ? 'is-active' : ''}>
+              Sản phẩm
+            </NavLink>
           </nav>
-          <div className="nav-actions">
-            <Link to="/" style={{ color: '#94a3b8', fontSize: '0.9rem' }}>Về cửa hàng</Link>
-            <button onClick={logout} className="btn" style={{ background: '#334155', color: '#fff' }}>
-              Đăng xuất
-            </button>
+          <div className="admin-shell__account">
+            <span className="admin-shell__user"><i />{user?.fullName || user?.username || 'Quản trị viên'}</span>
+            <Link to="/" className="admin-shell__store-link">Cửa hàng <ArrowUpRight size={14} /></Link>
+            <button type="button" onClick={logout} aria-label="Đăng xuất"><LogOut size={16} /></button>
           </div>
         </div>
       </header>
-
-      <main className="main-content">
-        <Outlet />
-      </main>
+      <main className="admin-shell__main"><Outlet /></main>
     </div>
   )
 }

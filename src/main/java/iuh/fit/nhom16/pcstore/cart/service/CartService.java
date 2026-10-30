@@ -2,8 +2,8 @@ package iuh.fit.nhom16.pcstore.cart.service;
 import iuh.fit.nhom16.pcstore.cart.exception.CartException;
 import iuh.fit.nhom16.pcstore.cart.model.CartSession;
 
-import iuh.fit.nhom16.pcstore.catalog.CartProductSnapshot;
-import iuh.fit.nhom16.pcstore.catalog.ProductRepository;
+import iuh.fit.nhom16.pcstore.catalog.api.dto.CartProductSnapshot;
+import iuh.fit.nhom16.pcstore.catalog.infrastructure.persistence.ProductRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 

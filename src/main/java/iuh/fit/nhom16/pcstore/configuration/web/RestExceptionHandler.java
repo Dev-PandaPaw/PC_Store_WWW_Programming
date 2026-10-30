@@ -1,7 +1,9 @@
 package iuh.fit.nhom16.pcstore.configuration.web;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.HttpStatus;
+import iuh.fit.nhom16.pcstore.catalog.domain.CatalogConflictException;
+import iuh.fit.nhom16.pcstore.catalog.domain.CatalogNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -56,6 +58,20 @@ public class RestExceptionHandler {
         problem.setType(URI.create("urn:problem-type:" + ex.getErrorCode().toLowerCase().replace('_', '-')));
         problem.setTitle("Cart request failed");
         problem.setProperty("errorCode", ex.getErrorCode());
+        return problem;
+    }
+
+    @ExceptionHandler(CatalogNotFoundException.class)
+    public ProblemDetail handleCatalogNotFound(CatalogNotFoundException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problem.setTitle("Resource Not Found");
+        return problem;
+    }
+
+    @ExceptionHandler(CatalogConflictException.class)
+    public ProblemDetail handleCatalogConflict(CatalogConflictException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+        problem.setTitle("Catalog Conflict");
         return problem;
     }
 

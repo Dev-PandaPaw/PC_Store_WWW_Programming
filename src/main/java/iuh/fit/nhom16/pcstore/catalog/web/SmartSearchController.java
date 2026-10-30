@@ -1,4 +1,6 @@
-package iuh.fit.nhom16.pcstore.catalog;
+package iuh.fit.nhom16.pcstore.catalog.web;
+
+import iuh.fit.nhom16.pcstore.catalog.application.SmartSearchService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.CacheControl;

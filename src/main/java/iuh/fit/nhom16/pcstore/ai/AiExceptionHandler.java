@@ -1,7 +1,7 @@
 package iuh.fit.nhom16.pcstore.ai;
 
 import iuh.fit.nhom16.pcstore.advisory.AiAdvisorController;
-import iuh.fit.nhom16.pcstore.catalog.SmartSearchController;
+import iuh.fit.nhom16.pcstore.catalog.web.SmartSearchController;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;

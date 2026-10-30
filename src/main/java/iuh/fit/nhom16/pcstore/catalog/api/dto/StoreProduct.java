@@ -1,4 +1,4 @@
-package iuh.fit.nhom16.pcstore.catalog;
+package iuh.fit.nhom16.pcstore.catalog.api.dto;
 
 import java.util.List;
 

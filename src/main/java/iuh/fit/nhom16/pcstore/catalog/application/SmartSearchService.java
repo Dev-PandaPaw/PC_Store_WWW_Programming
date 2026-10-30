@@ -1,6 +1,7 @@
-package iuh.fit.nhom16.pcstore.catalog;
+package iuh.fit.nhom16.pcstore.catalog.application;
 
 import iuh.fit.nhom16.pcstore.ai.*;
+import iuh.fit.nhom16.pcstore.catalog.api.dto.StoreProduct;
 import org.springframework.stereotype.Service;
 import java.text.NumberFormat;
 import java.util.*;

@@ -1,7 +1,8 @@
 package iuh.fit.nhom16.pcstore.advisory;
 
 import iuh.fit.nhom16.pcstore.ai.*;
-import iuh.fit.nhom16.pcstore.catalog.*;
+import iuh.fit.nhom16.pcstore.catalog.api.dto.StoreProduct;
+import iuh.fit.nhom16.pcstore.catalog.application.StorefrontCatalog;
 import org.springframework.stereotype.Service;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.json.JsonMapper;
