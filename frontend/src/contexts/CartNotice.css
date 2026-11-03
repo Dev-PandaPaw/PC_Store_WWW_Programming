@@ -1,0 +1,9 @@
+.cart-notice { position: fixed; top: 90px; left: 50%; transform: translateX(-50%); width: min(540px, calc(100% - 32px)); z-index: 1200; padding: 18px 22px; display: grid; gap: 10px; background: #fff4ed; color: #9a3412; border: 1px solid #fdba74; border-radius: 12px; box-shadow: 0 10px 35px #0002; }
+.cart-notice > div { display: flex; gap: 16px; }
+.cart-notice button { cursor: pointer; text-decoration: underline; }
+.cart-notice--success { display: flex; align-items: flex-start; gap: 14px; border-color: #a7f3d0; background: #f0fdf4; color: #166534; box-shadow: 0 12px 40px #14532d1a; }
+.cart-notice--success > .cart-notice__content { display: grid; gap: 5px; flex: 1; min-width: 0; }
+.cart-notice__content > span { color: #47635a; font-size: 13px; overflow-wrap: anywhere; }
+.cart-notice__content > a { font-size: 13px; font-weight: 700; text-decoration: underline; }
+.cart-notice--success > svg { flex-shrink: 0; }
+.cart-notice--success > button { padding: 4px; border-radius: 6px; }

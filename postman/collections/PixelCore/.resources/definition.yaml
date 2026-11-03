@@ -1,0 +1,4 @@
+$kind: collection
+description: Database-backed public catalog. Product images are logical keys resolved by the frontend asset bundle.
+variables:
+  baseUrl: http://localhost:8080

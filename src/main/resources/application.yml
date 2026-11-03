@@ -1,0 +1,61 @@
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  application:
+    name: pc-store
+  profiles:
+    default: local
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    validate-on-migrate: false
+    locations: classpath:db/migration,classpath:db/orders
+
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /
+    session:
+      cookie:
+        http-only: true
+        same-site: lax
+        secure: ${SESSION_COOKIE_SECURE:false}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  health:
+    mail:
+      enabled: false
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+app:
+  ai:
+    api-key: ${GEMINI_API_KEY:}
+    model: ${GEMINI_MODEL:gemini-3.5-flash-lite}
+    base-url: ${GEMINI_API_BASE_URL:https://generativelanguage.googleapis.com}
+    timeout-ms: ${AI_TIMEOUT_MS:20000}
+    per-minute: ${AI_RATE_LIMIT_PER_MINUTE:20}
+    per-day: ${AI_RATE_LIMIT_PER_DAY:100}
+    global-per-day: ${AI_GLOBAL_LIMIT_PER_DAY:1000}
+    allow-local-mocks: ${AI_ALLOW_LOCAL_MOCKS:false}
+  test-login:
+    enabled: ${TEST_LOGIN_ENABLED:false}
+
+vnpay:
+  tmn-code: "YZEE4138"
+  hash-secret: "OLTADMKAFDQDSFLAKWATGGNEGCIAPJQW"
+  pay-url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
+  return-url: "http://localhost:5173/checkout/complete"
+  api-url: "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction"

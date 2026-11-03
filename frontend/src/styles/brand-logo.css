@@ -1,0 +1,68 @@
+.pixelcore-brand {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  line-height: 0;
+}
+
+.pixelcore-brand__art {
+  position: relative;
+  display: block;
+  width: 180px;
+  isolation: isolate;
+}
+
+.pixelcore-brand__art img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: brightness(1.12) drop-shadow(0 0 0.7px rgb(156 227 255 / 75%));
+}
+
+.pixelcore-brand__art::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+      110deg,
+      transparent 25%,
+      rgb(91 229 255 / 30%) 40%,
+      rgb(255 255 255 / 90%) 50%,
+      rgb(166 247 255 / 40%) 60%,
+      transparent 75%
+    ) -100%
+    0 / 45% 100% no-repeat;
+  mask: url('../assets/branding/pixel-core.png') center / contain no-repeat;
+  animation: pixelcore-logo-shine 5.5s ease-in-out infinite;
+}
+
+@keyframes pixelcore-logo-shine {
+  0%,
+  12% {
+    background-position: -100% 0;
+  }
+  48%,
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@media (max-width: 800px) {
+  .store-brand .pixelcore-brand__art {
+    width: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .store-brand .pixelcore-brand__art {
+    width: 136px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pixelcore-brand__art::after {
+    animation: none;
+    opacity: 0;
+  }
+}

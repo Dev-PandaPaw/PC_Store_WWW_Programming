@@ -1,0 +1,50 @@
+openapi: 3.0.3
+info:
+  title: PixelCore smart product search
+  version: 1.0.0
+  description: Spring AI interprets Vietnamese intent into validated filters. Products and prices come exclusively from the current database snapshot. Missing credentials, provider errors and local quotas fall back to deterministic accent-insensitive search with mode=local. No automatic provider retry.
+servers:
+  - url: http://localhost:8080
+paths:
+  /api/catalog/search:
+    get:
+      operationId: searchProducts
+      description: Public read-only search. Intent is cached up to five minutes, never prices/stock. Cheap intent without a numeric budget, or explicit 'rẻ nhất', filters to the lowest matching price after category/deals/stock constraints; equal-price ties remain. An explicit numeric budget without 'rẻ nhất' keeps all matching products. Sort only orders the resulting subset. No invented cheap price ceiling.
+      parameters:
+        - {in: query, name: keyword, schema: {type: string, maxLength: 300}, example: chuột giá rẻ chơi game}
+        - {in: query, name: category, schema: {type: string, default: ALL}}
+        - {in: query, name: sort, schema: {type: string, enum: [featured, price-asc, price-desc, name], default: featured}}
+        - {in: query, name: deals, schema: {type: boolean, default: false}}
+      responses:
+        '200':
+          description: Ranked database products, possibly empty. AI failures do not make catalog search unavailable.
+          headers:
+            Cache-Control: {schema: {type: string, example: no-store}}
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [products, total, mode, criteria, summary]
+                properties:
+                  products:
+                    type: array
+                    items:
+                      type: object
+                      required: [id, slug, name, category, brand, price, originalPrice, image, specs, stockOnHand]
+                      properties:
+                        id: {type: string, format: uuid}
+                        slug: {type: string}
+                        name: {type: string}
+                        category: {type: string}
+                        brand: {type: string}
+                        price: {type: number, minimum: 0}
+                        originalPrice: {type: number, minimum: 0}
+                        image: {type: string}
+                        specs: {type: array, items: {type: object}}
+                        stockOnHand: {type: integer, minimum: 0}
+                  total: {type: integer, minimum: 0}
+                  mode: {type: string, enum: [ai, local, catalog]}
+                  summary: {type: string}
+                  criteria: {type: object}
+        '400': {description: 'Keyword exceeds 300 characters, contains control characters, or category/sort is invalid'}
+        '503': {description: Catalog database unavailable; no fabricated or stale catalog returned}

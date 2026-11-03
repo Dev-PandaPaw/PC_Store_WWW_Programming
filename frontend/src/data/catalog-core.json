@@ -1,0 +1,532 @@
+[
+  {
+    "id": "gvn-pc-gvn-i5-12400f-rtx-3050",
+    "slug": "pc-gvn-i5-12400f-rtx-3050",
+    "name": "PC GVN Intel i5-12400F/ VGA RTX 3050 (Main H)",
+    "category": "pc-gaming",
+    "brand": "GEARVN",
+    "price": 17990000,
+    "originalPrice": 19480000,
+    "image": "products/pc-gvn-i5-12400f-rtx-3050.png",
+    "sourceImageUrl": "https://product.hstatic.net/200000722513/product/pc_case_xigmatek_-_26_2a642c84481c4053b0056badc136d0af.png",
+    "specs": [
+      {
+        "label": "Core i5-12400F"
+      },
+      {
+        "label": "RTX 3050 6GB"
+      },
+      {
+        "label": "RAM 16GB"
+      },
+      {
+        "label": "SSD 512GB"
+      },
+      {
+        "label": "H610M"
+      }
+    ],
+    "description": "Bộ PC GVN kết hợp Intel Core i5-12400F và GeForce RTX 3050 6GB, đi kèm RAM 16GB và SSD 512GB. Nền tảng H610M phù hợp cho góc máy chơi game và học tập.",
+    "sourceAvailability": "InStock",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/pc-gvn-intel-i5-13400f-vga-rtx-3050-main-h",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gvn-pc-gvn-i5-12400f-rtx-5060",
+    "slug": "pc-gvn-i5-12400f-rtx-5060",
+    "name": "PC GVN Intel i5-12400F/ VGA RTX 5060 (Main H)",
+    "category": "pc-gaming",
+    "brand": "GEARVN",
+    "price": 26890000,
+    "originalPrice": 28580000,
+    "image": "products/pc-gvn-i5-12400f-rtx-5060.png",
+    "sourceImageUrl": "https://product.hstatic.net/200000722513/product/pc_case_xigmatek_-_26_8cc60d3205d446d89294340c40b09d62.png",
+    "specs": [
+      {
+        "label": "Core i5-12400F"
+      },
+      {
+        "label": "RTX 5060 8GB"
+      },
+      {
+        "label": "RAM 16GB"
+      },
+      {
+        "label": "SSD 512GB"
+      },
+      {
+        "label": "H610M"
+      }
+    ],
+    "description": "Bộ máy sử dụng Intel Core i5-12400F, GeForce RTX 5060 8GB, RAM 16GB và SSD 512GB. Cấu hình lắp sẵn trên bo mạch chủ H610M.",
+    "sourceAvailability": "InStock",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/pc-gvn-intel-i5-12400f-vga-rtx-5060-main-h",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gvn-acer-altos-p130f7-i5",
+    "slug": "acer-altos-p130f7-i5",
+    "name": "PC GVN x Acer - Máy bộ Altos P130F7 (I5/RAM 8GB/SSD 512GB)",
+    "category": "pc-office",
+    "brand": "ACER",
+    "price": 12990000,
+    "originalPrice": 15490000,
+    "image": "products/acer-altos-p130f7-i5.jpg",
+    "sourceImageUrl": "https://cdn.hstatic.net/products/200000722513/9_66f2dbd32b434349bde87279735d6f7c.jpg",
+    "specs": [
+      {
+        "label": "Core i5-11600"
+      },
+      {
+        "label": "RAM 8GB"
+      },
+      {
+        "label": "SSD 512GB"
+      },
+      {
+        "label": "Đồ họa tích hợp"
+      }
+    ],
+    "description": "Máy bộ Acer Altos P130F7 dùng Core i5-11600, RAM 8GB và SSD 512GB. Thiết kế dành cho công việc văn phòng với đồ họa tích hợp.",
+    "sourceAvailability": "InStock",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/may-bo-acer-atlos-p130f7-i5-ram-8gb-ssd-512gb",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gvn-pc-gvn-i7-14700f-rtx-5060",
+    "slug": "pc-gvn-i7-14700f-rtx-5060",
+    "name": "PC GVN Intel i7-14700F/ VGA RTX 5060",
+    "category": "pc-workstation",
+    "brand": "GEARVN",
+    "price": 42990000,
+    "originalPrice": 43120000,
+    "image": "products/pc-gvn-i7-14700f-rtx-5060.jpg",
+    "sourceImageUrl": "https://cdn.hstatic.net/products/200000722513/pc_rtx_5060__2_of_84__ffd3259e58c044a1bffc75b70711b86f.jpg",
+    "specs": [
+      {
+        "label": "Core i7-14700F"
+      },
+      {
+        "label": "RTX 5060 8GB"
+      },
+      {
+        "label": "RAM 16GB"
+      },
+      {
+        "label": "SSD 512GB"
+      },
+      {
+        "label": "Z790 DDR4"
+      }
+    ],
+    "description": "PC GVN dùng Intel Core i7-14700F và GeForce RTX 5060 8GB, đi kèm RAM 16GB và SSD 512GB. Bộ máy phục vụ cả công việc sáng tạo nội dung và giải trí.",
+    "sourceAvailability": "InStock",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/pc-gvn-intel-i7-14700f-vga-rtx-5060",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gvn-intel-core-i5-12400f-tray",
+    "slug": "intel-core-i5-12400f-tray",
+    "name": "Bộ vi xử lý Intel Core i5 12400F / 2.5GHz Turbo 4.4GHz / 6 Nhân 12 Luồng / 18MB / LGA 1700  (TRAY)",
+    "category": "cpu",
+    "brand": "Intel",
+    "price": 4190000,
+    "originalPrice": 5690000,
+    "image": "products/intel-core-i5-12400f-tray.png",
+    "sourceImageUrl": "https://product.hstatic.net/200000722513/product/gearvn-intel-core-i5-12400f-0_0a_777c08cad52f44c6a2168041f43fe424.png",
+    "specs": [
+      {
+        "label": "6 nhân / 12 luồng"
+      },
+      {
+        "label": "LGA 1700"
+      },
+      {
+        "label": "Turbo 4.4GHz"
+      },
+      {
+        "label": "65W"
+      }
+    ],
+    "description": "CPU Intel Core i5-12400F có 6 nhân, 12 luồng, xung Turbo tối đa 4.4GHz và socket LGA 1700. Phiên bản tray không kèm tản nhiệt; cần card đồ họa rời để xuất hình.",
+    "sourceAvailability": "InStock",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/bo-vi-xu-ly-intel-core-i5-12400f-tray",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gvn-amd-ryzen-5-7500f-tray",
+    "slug": "amd-ryzen-5-7500f-tray",
+    "name": "Bộ vi xử lý AMD Ryzen 5 7500F / 3.7GHz Boost 5.0GHz / 6 nhân 12 luồng / 38MB / AM5 (Tray)",
+    "category": "cpu",
+    "brand": "AMD",
+    "price": 4790000,
+    "originalPrice": 5190000,
+    "image": "products/amd-ryzen-5-7500f-tray.png",
+    "sourceImageUrl": "https://cdn.hstatic.net/products/200000722513/gearvn-bo-vi-xu-ly-amd-ryzen-5-7500f-tray-1_3fb95c47b67a41dfa1a5b291fc008df1.png",
+    "specs": [
+      {
+        "label": "6 nhân / 12 luồng"
+      },
+      {
+        "label": "AM5"
+      },
+      {
+        "label": "Boost 5.0GHz"
+      },
+      {
+        "label": "DDR5"
+      }
+    ],
+    "description": "AMD Ryzen 5 7500F là CPU 6 nhân, 12 luồng cho nền tảng AM5 và bộ nhớ DDR5. Xung boost tối đa 5.0GHz; phiên bản này được bán dạng tray.",
+    "sourceAvailability": "InStock",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/bo-vi-xu-ly-amd-ryzen-5-7500f-3-7ghz-boost-5-0ghz-6-nhan-12-luong-38mb-am5-tray",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gvn-zotac-rtx-5060-twin-edge-oc",
+    "slug": "zotac-rtx-5060-twin-edge-oc",
+    "name": "Card màn hình Zotac GeForce RTX 5060 Twin Edge OC 8GB",
+    "category": "vga",
+    "brand": "Zotac",
+    "price": 11490000,
+    "originalPrice": 12490000,
+    "image": "products/zotac-rtx-5060-twin-edge-oc.jpg",
+    "sourceImageUrl": "https://product.hstatic.net/200000722513/product/card_m_n_h_nh_zotac_geforce_rtx_5060_twin_edge_oc_8gb_-1_9a171dd9625e467b814fdb1e35b44445.jpg",
+    "specs": [
+      {
+        "label": "VRAM 8GB"
+      },
+      {
+        "label": "128-bit"
+      },
+      {
+        "label": "3840 CUDA"
+      },
+      {
+        "label": "Boost 2527MHz"
+      }
+    ],
+    "description": "Card đồ họa Zotac RTX 5060 Twin Edge OC có bộ nhớ 8GB và bus 128-bit. Thiết kế hai quạt với xung boost được công bố 2527MHz.",
+    "sourceAvailability": "OutOfStock",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/card-man-hinh-zotac-geforce-rtx-5060-twin-edge-oc-8gb",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gvn-msi-rtx-5060-ti-shadow-2x",
+    "slug": "msi-rtx-5060-ti-shadow-2x",
+    "name": "Card màn hình MSI GeForce RTX 5060 Ti Shadow 2X OC Plus 8GB",
+    "category": "vga",
+    "brand": "MSI",
+    "price": 16990000,
+    "originalPrice": 17490000,
+    "image": "products/msi-rtx-5060-ti-shadow-2x.jpg",
+    "sourceImageUrl": "https://cdn.hstatic.net/products/200000722513/card-man-hinh-msi-geforce-rtx-5060-ti-shadow-2x-oc-plus-8gb-1_7e43a2d2371949d0a0167953c3bba6ae.jpg",
+    "specs": [
+      {
+        "label": "VRAM 8GB"
+      },
+      {
+        "label": "128-bit"
+      },
+      {
+        "label": "4608 CUDA"
+      },
+      {
+        "label": "180W"
+      }
+    ],
+    "description": "Card đồ họa MSI GeForce RTX 5060 Ti Shadow 2X OC Plus trang bị 8GB VRAM, bus 128-bit và 4608 nhân CUDA. Thiết kế tản nhiệt hai quạt cho máy tính để bàn.",
+    "sourceAvailability": "InStock",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/card-man-hinh-msi-geforce-rtx-5060-ti-shadow-2x-oc-plus-8gb",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gvn-zotac-rtx-5070-solid-oc",
+    "slug": "zotac-rtx-5070-solid-oc",
+    "name": "Card màn hình ZOTAC GAMING GeForce RTX 5070 SOLID OC (ZT-B50700J-10P)",
+    "category": "vga",
+    "brand": "Zotac",
+    "price": 29990000,
+    "originalPrice": 30990000,
+    "image": "products/zotac-rtx-5070-solid-oc.jpg",
+    "sourceImageUrl": "https://cdn.hstatic.net/products/200000722513/card-man-hinh-zotac-gaming-geforce-rtx-5070-solid-oc-1_6d0aee3bfa19460a9bf2649cc47c3c92.jpg",
+    "specs": [
+      {
+        "label": "VRAM 12GB"
+      },
+      {
+        "label": "192-bit"
+      },
+      {
+        "label": "6144 CUDA"
+      },
+      {
+        "label": "250W"
+      }
+    ],
+    "description": "Zotac GAMING GeForce RTX 5070 SOLID OC có 12GB bộ nhớ, bus 192-bit và 6144 nhân CUDA. Công suất TDP niêm yết 250W.",
+    "sourceAvailability": "InStock",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/card-man-hinh-zotac-gaming-geforce-rtx-5070-solid-oc-zt-b50700j-10p",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gvn-msi-pro-b760m-a-wifi-ddr4",
+    "slug": "msi-pro-b760m-a-wifi-ddr4",
+    "name": "Bo mạch chủ MSI PRO B760M-A WIFI DDR4",
+    "category": "mainboard",
+    "brand": "MSI",
+    "price": 3490000,
+    "originalPrice": 4190000,
+    "image": "products/msi-pro-b760m-a-wifi-ddr4.png",
+    "sourceImageUrl": "https://product.hstatic.net/200000722513/product/1024_337ff5dc5f42435683c4f5d0ae6f75b2.png",
+    "specs": [
+      {
+        "label": "Intel B760"
+      },
+      {
+        "label": "LGA 1700"
+      },
+      {
+        "label": "DDR4"
+      },
+      {
+        "label": "Micro ATX"
+      },
+      {
+        "label": "2 khe M.2"
+      }
+    ],
+    "description": "MSI PRO B760M-A WIFI DDR4 là bo mạch chủ Micro ATX sử dụng chipset Intel B760 và socket LGA 1700. Trang bị khe RAM DDR4 và hai khe M.2.",
+    "sourceAvailability": "InStock",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/bo-mach-chu-msi-pro-b760m-a-wifi-ddr4",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gvn-asus-tuf-b760m-plus-wifi-ii",
+    "slug": "asus-tuf-b760m-plus-wifi-ii",
+    "name": "Bo mạch chủ ASUS TUF GAMING B760M-PLUS WIFI II DDR5",
+    "category": "mainboard",
+    "brand": "ASUS",
+    "price": 4290000,
+    "originalPrice": 4590000,
+    "image": "products/asus-tuf-b760m-plus-wifi-ii.png",
+    "sourceImageUrl": "https://product.hstatic.net/200000722513/product/w800__1__285a1e0af5884ca2a8082411c34057f4.png",
+    "specs": [
+      {
+        "label": "Intel B760"
+      },
+      {
+        "label": "LGA 1700"
+      },
+      {
+        "label": "DDR5"
+      },
+      {
+        "label": "Micro ATX"
+      },
+      {
+        "label": "3 khe M.2"
+      }
+    ],
+    "description": "ASUS TUF GAMING B760M-PLUS WIFI II dùng chipset Intel B760, socket LGA 1700 và bộ nhớ DDR5. Bo mạch chuẩn Micro ATX có ba khe M.2.",
+    "sourceAvailability": "InStock",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/bo-mach-chu-asus-tuf-gaming-b760m-plus-wifi-ii-ddr5",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gvn-corsair-vengeance-rgb-32gb-ddr5-white",
+    "slug": "corsair-vengeance-rgb-32gb-ddr5-white",
+    "name": "Ram Corsair Vengeance RGB White 32GB (2x16GB) 6000 DDR5 (CMH32GX5M2E6000C36W)",
+    "category": "ram",
+    "brand": "Corsair",
+    "price": 13990000,
+    "originalPrice": 14990000,
+    "image": "products/corsair-vengeance-rgb-32gb-ddr5-white.png",
+    "sourceImageUrl": "https://product.hstatic.net/200000722513/product/32657-ram-ddr5-corsair-32gb-2x16_b2bb353c8b7b4c3a8b5e99a362f85e1a.png",
+    "specs": [
+      {
+        "label": "32GB (2 x 16GB)"
+      },
+      {
+        "label": "DDR5"
+      },
+      {
+        "label": "6000MHz"
+      },
+      {
+        "label": "RGB"
+      },
+      {
+        "label": "Màu trắng"
+      }
+    ],
+    "description": "Bộ RAM Corsair Vengeance RGB màu trắng gồm hai thanh 16GB, tổng dung lượng 32GB. Chuẩn DDR5 với tốc độ công bố 6000MHz và đèn RGB.",
+    "sourceAvailability": "OutOfStock",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/ram-corsair-vengeance-rgb-white-32gb-2x16gb-6000-ddr5-cmh32gx5m2e6000c36w",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gvn-kingmax-blade-x-16gb-ddr4",
+    "slug": "kingmax-blade-x-16gb-ddr4",
+    "name": "Ram Kingmax Blade X 1x16GB DDR4 Bus 3200Mhz",
+    "category": "ram",
+    "brand": "KINGMAX",
+    "price": 3390000,
+    "originalPrice": 3990000,
+    "image": "products/kingmax-blade-x-16gb-ddr4.png",
+    "sourceImageUrl": "https://cdn.hstatic.net/products/200000722513/gearvn-ram-kingmax-blade-x-1x16gb-ddr4-bus-3200mhz-1_41d9d047789d401cb325830846101c93.png",
+    "specs": [
+      {
+        "label": "16GB (1 x 16GB)"
+      },
+      {
+        "label": "DDR4"
+      },
+      {
+        "label": "3200MHz"
+      },
+      {
+        "label": "RAM desktop"
+      }
+    ],
+    "description": "RAM Kingmax Blade X dung lượng 16GB trên một thanh cho máy tính để bàn. Sử dụng chuẩn DDR4, tốc độ bus 3200MHz.",
+    "sourceAvailability": "InStock",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/ram-kingmax-blade-x-1x16gb-ddr4-bus-3200mhz",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gvn-kingston-nv3-1tb",
+    "slug": "kingston-nv3-1tb",
+    "name": "Ổ cứng SSD Kingston NV3 1TB M.2 PCIe NVMe Gen4",
+    "category": "storage",
+    "brand": "Kingston",
+    "price": 4990000,
+    "originalPrice": 5990000,
+    "image": "products/kingston-nv3-1tb.png",
+    "sourceImageUrl": "https://product.hstatic.net/200000722513/product/snv3s_1000gb_pkg-lg_c8006de4edc5418ba1016953a9a041bf.png",
+    "specs": [
+      {
+        "label": "1TB"
+      },
+      {
+        "label": "M.2 NVMe"
+      },
+      {
+        "label": "PCIe Gen4 x4"
+      },
+      {
+        "label": "Ghi 4000MB/s"
+      }
+    ],
+    "description": "SSD Kingston NV3 1TB dùng giao tiếp PCIe Gen4 x4 và chuẩn M.2 NVMe. Dung lượng 1TB phù hợp để cài hệ điều hành, ứng dụng và lưu trò chơi.",
+    "sourceAvailability": "InStock",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/o-cung-ssd-kingston-nv3-1tb-m-2-pcie-nvme-gen4",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gvn-samsung-9100-pro-1tb",
+    "slug": "samsung-9100-pro-1tb",
+    "name": "Ổ cứng SSD Samsung 9100 PRO NVMe M.2 1TB Gen5",
+    "category": "storage",
+    "brand": "Samsung",
+    "price": 6990000,
+    "originalPrice": 7490000,
+    "image": "products/samsung-9100-pro-1tb.png",
+    "sourceImageUrl": "https://product.hstatic.net/200000722513/product/vn-9100-pro-nvme-m2-ssd-mz-vap1t0bw-545216273_15c52dd5f45a465a81f99f0bf75577e2.png",
+    "specs": [
+      {
+        "label": "1TB"
+      },
+      {
+        "label": "M.2 NVMe"
+      },
+      {
+        "label": "PCIe Gen5 x4"
+      },
+      {
+        "label": "3D V-NAND"
+      }
+    ],
+    "description": "SSD Samsung 9100 PRO 1TB sử dụng giao tiếp PCIe Gen5 x4, chuẩn M.2 NVMe và chip nhớ 3D V-NAND. Cần kiểm tra khe M.2 trên bo mạch chủ trước khi lắp.",
+    "sourceAvailability": "OutOfStock",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/o-cung-ssd-samsung-9100-pro-nvme-m-2-1tb-gen5",
+      "checkedAt": "2026-10-25"
+    }
+  },
+  {
+    "id": "gvn-samsung-990-pro-2tb",
+    "slug": "samsung-990-pro-2tb",
+    "name": "Ổ Cứng SSD Samsung 990 PRO 2TB PCIe Gen4 NVMe (MZ-V9P2T0BW)",
+    "category": "storage",
+    "brand": "Samsung",
+    "price": 16990000,
+    "originalPrice": 17990000,
+    "image": "products/samsung-990-pro-2tb.png",
+    "sourceImageUrl": "https://cdn.hstatic.net/products/200000722513/gearvn-o-cung-ssd-samsung-990-pro-2tb-pcie-gen4-nvme-mz-v9p2t0bw-1_c55afd675d144fccb41b146cfb2ef866.png",
+    "specs": [
+      {
+        "label": "2TB"
+      },
+      {
+        "label": "M.2 NVMe"
+      },
+      {
+        "label": "PCIe Gen4 x4"
+      },
+      {
+        "label": "TLC NAND"
+      }
+    ],
+    "description": "SSD Samsung 990 PRO 2TB, mã MZ-V9P2T0BW, sử dụng giao tiếp PCIe Gen4 x4. Bộ nhớ TLC với dung lượng 2TB dành cho hệ điều hành, ứng dụng và dữ liệu.",
+    "sourceAvailability": "OutOfStock",
+    "source": {
+      "name": "GearVN",
+      "url": "https://gearvn.com/products/o-cung-ssd-samsung-990-pro-2tb-pcie-gen4-nvme-mz-v9p2t0bw",
+      "checkedAt": "2026-10-25"
+    }
+  }
+]

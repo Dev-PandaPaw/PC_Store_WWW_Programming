@@ -1,0 +1,43 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam ArrowColor #334155
+skinparam activityBackgroundColor #EFF6FF
+skinparam activityBorderColor #2563EB
+skinparam activityDiamondBackgroundColor #FFF7ED
+skinparam activityDiamondBorderColor #C2410C
+skinparam usecaseBackgroundColor #EFF6FF
+skinparam usecaseBorderColor #2563EB
+skinparam padding 8
+title ACT-UC11 — Gửi hoặc hủy yêu cầu bảo hành
+|Customer|
+start
+|Customer|
+:B1. Chọn gửi mới hoặc hủy yêu cầu của mình;
+|PC Store|
+:B2. Kiểm owner, đầu vào và ảnh; khóa item khi tạo hoặc\nrequest khi hủy;
+|PC Store|
+if (Dữ liệu và quyền hợp lệ?) then (Có)
+else (Không)
+:E-B2. Báo lỗi field/ảnh hoặc 404; không ghi một phần;
+stop
+endif
+|PC Store|
+:B3. Tạo: kiểm DELIVERED, còn hạn, unitIndex và không có\nyêu cầu mở; hủy: kiểm REQUESTED/version;
+|PC Store|
+if (Đủ điều kiện thao tác?) then (Có)
+else (Không)
+:E-B3. 409 hết hạn/trùng/đã tiếp nhận; giữ dữ liệu cũ;
+stop
+endif
+|PC Store|
+:B4. Tạo REQUESTED + snapshot hạn + metadata ảnh + event;\nhoặc chuyển CANCELLED và ghi lý do trong transaction;
+|PC Store|
+:B5. Commit; gửi mail sau commit nếu có email verified;
+|PC Store|
+:B6. Trả mã yêu cầu và timeline công khai;
+stop
+@enduml

@@ -1,0 +1,138 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam ArrowColor #334155
+skinparam activityBackgroundColor #EFF6FF
+skinparam activityBorderColor #2563EB
+skinparam activityDiamondBackgroundColor #FFF7ED
+skinparam activityDiamondBorderColor #C2410C
+skinparam usecaseBackgroundColor #EFF6FF
+skinparam usecaseBorderColor #2563EB
+skinparam padding 8
+title ERD-ALL — PC Store
+hide circle
+skinparam linetype ortho
+skinparam entityBackgroundColor #F8FAFC
+skinparam entityBorderColor #475569
+entity "users" as users {
+* id: uuid <<PK>>
+* status: varchar(16)
+}
+entity "user_roles" as user_roles {
+* user_id: uuid <<PK>>
+* role: varchar(16) <<PK>>
+}
+entity "external_identities" as external_identities {
+* id: uuid <<PK>>
+* user_id: uuid <<FK>>
+}
+entity "verification_challenges" as verification_challenges {
+* id: uuid <<PK>>
+  user_id: uuid <<FK>>
+}
+entity "categories" as categories {
+* id: uuid <<PK>>
+}
+entity "products" as products {
+* id: uuid <<PK>>
+* category_id: uuid <<FK>>
+* status: varchar(20)
+* stock_on_hand: integer
+* reserved_quantity: integer
+}
+entity "product_specs" as product_specs {
+* product_id: uuid <<PK>>
+}
+entity "product_images" as product_images {
+* id: uuid <<PK>>
+* product_id: uuid <<FK>>
+}
+entity "product_suitability" as product_suitability {
+* id: uuid <<PK>>
+* product_id: uuid <<FK>>
+}
+entity "inventory_adjustments" as inventory_adjustments {
+* id: uuid <<PK>>
+* product_id: uuid <<FK>>
+* actor_id: uuid <<FK>>
+}
+entity "orders" as orders {
+* id: uuid <<PK>>
+* user_id: uuid <<FK>>
+* status: varchar(32)
+* reservation_status: varchar(16)
+}
+entity "order_items" as order_items {
+* id: uuid <<PK>>
+* order_id: uuid <<FK>>
+* product_id: uuid <<FK>>
+* quantity: integer
+}
+entity "order_revisions" as order_revisions {
+* id: uuid <<PK>>
+* order_id: uuid <<FK>>
+* actor_id: uuid <<FK>>
+}
+entity "order_status_history" as order_status_history {
+* id: uuid <<PK>>
+* order_id: uuid <<FK>>
+  actor_id: uuid <<FK>>
+}
+entity "idempotency_records" as idempotency_records {
+* id: uuid <<PK>>
+* user_id: uuid <<FK>>
+* order_id: uuid <<FK>>
+}
+entity "payment_attempts" as payment_attempts {
+* id: uuid <<PK>>
+* order_id: uuid <<FK>>
+* status: varchar(24)
+}
+entity "payment_events" as payment_events {
+* id: uuid <<PK>>
+* attempt_id: uuid <<FK>>
+}
+entity "warranty_requests" as warranty_requests {
+* id: uuid <<PK>>
+* user_id: uuid <<FK>>
+* order_item_id: uuid <<FK>>
+* status: varchar(20)
+}
+entity "warranty_request_images" as warranty_request_images {
+* id: uuid <<PK>>
+* request_id: uuid <<FK>>
+}
+entity "warranty_request_events" as warranty_request_events {
+* id: uuid <<PK>>
+* request_id: uuid <<FK>>
+* actor_id: uuid <<FK>>
+}
+users ||--o{ user_roles : user_id
+users ||--o{ external_identities : user_id
+users |o--o{ verification_challenges : user_id
+categories ||--o{ products : category_id
+products ||--o| product_specs : product_id
+products ||--o{ product_images : product_id
+products ||--o{ product_suitability : product_id
+products ||--o{ inventory_adjustments : product_id
+users ||--o{ inventory_adjustments : actor_id
+users ||--o{ orders : user_id
+orders ||--o{ order_items : order_id
+products ||--o{ order_items : product_id
+orders ||--o{ order_revisions : order_id
+users ||--o{ order_revisions : actor_id
+orders ||--o{ order_status_history : order_id
+users |o--o{ order_status_history : actor_id
+users ||--o{ idempotency_records : user_id
+orders ||--o| idempotency_records : order_id
+orders ||--o| payment_attempts : order_id
+payment_attempts ||--o{ payment_events : attempt_id
+users ||--o{ warranty_requests : user_id
+order_items ||--o{ warranty_requests : order_item_id
+warranty_requests ||--o{ warranty_request_images : request_id
+warranty_requests ||--o{ warranty_request_events : request_id
+users ||--o{ warranty_request_events : actor_id
+@enduml

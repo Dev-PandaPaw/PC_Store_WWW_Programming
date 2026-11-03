@@ -1,0 +1,8 @@
+simulation: pixelcore-advisor
+routing: path
+mocks:
+  - name: Google GenAI generateContent contract for Spring AI
+    routeKey: gemini
+    origin:
+      - generativelanguage.googleapis.com
+    path: postman/mocks/pixelcore-google-genai/config.yaml

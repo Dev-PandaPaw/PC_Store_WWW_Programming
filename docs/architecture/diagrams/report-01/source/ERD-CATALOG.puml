@@ -1,0 +1,97 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam ArrowColor #334155
+skinparam activityBackgroundColor #EFF6FF
+skinparam activityBorderColor #2563EB
+skinparam activityDiamondBackgroundColor #FFF7ED
+skinparam activityDiamondBorderColor #C2410C
+skinparam usecaseBackgroundColor #EFF6FF
+skinparam usecaseBorderColor #2563EB
+skinparam padding 8
+title ERD-CATALOG — PC Store
+hide circle
+skinparam linetype ortho
+skinparam entityBackgroundColor #F8FAFC
+skinparam entityBorderColor #475569
+entity "categories" as categories {
+* id: uuid <<PK>>
+* name: varchar(100)
+* slug: varchar(120)
+  description: varchar(1000)
+* version: bigint
+* created_at: timestamptz
+* updated_at: timestamptz
+}
+entity "products" as products {
+* id: uuid <<PK>>
+* category_id: uuid <<FK>>
+* sku: varchar(50)
+* slug: varchar(180)
+* name: varchar(180)
+* brand: varchar(100)
+  description: text
+* price: numeric(19,0)
+* status: varchar(20)
+* warranty_months: smallint
+* stock_on_hand: integer
+* reserved_quantity: integer
+* version: bigint
+* created_at: timestamptz
+* updated_at: timestamptz
+}
+entity "product_specs" as product_specs {
+* product_id: uuid <<PK>>
+* cpu: varchar(150)
+* gpu: varchar(150)
+* ram_gb: integer
+* storage_gb: integer
+* storage_type: varchar(20)
+* motherboard: varchar(150)
+* psu: varchar(150)
+* case_name: varchar(150)
+* operating_system: varchar(150)
+}
+entity "product_images" as product_images {
+* id: uuid <<PK>>
+* product_id: uuid <<FK>>
+* storage_key: varchar(255)
+* mime_type: varchar(32)
+* size_bytes: bigint
+* sort_order: smallint
+* is_cover: boolean
+* alt_text: varchar(180)
+* created_at: timestamptz
+}
+entity "product_suitability" as product_suitability {
+* id: uuid <<PK>>
+* product_id: uuid <<FK>>
+* usage_profile: varchar(32)
+* score: smallint
+* reason: varchar(1000)
+  limitation: varchar(1000)
+}
+entity "inventory_adjustments" as inventory_adjustments {
+* id: uuid <<PK>>
+* product_id: uuid <<FK>>
+* actor_id: uuid <<FK>>
+* kind: varchar(16)
+* delta: integer
+* before_quantity: integer
+* after_quantity: integer
+* reason: varchar(500)
+* created_at: timestamptz
+}
+entity "users (tham chiếu)" as users {
+* id: uuid <<PK>>
+}
+categories ||--o{ products : category_id
+products ||--o| product_specs : product_id
+products ||--o{ product_images : product_id
+products ||--o{ product_suitability : product_id
+products ||--o{ inventory_adjustments : product_id
+users ||--o{ inventory_adjustments : actor_id
+@enduml

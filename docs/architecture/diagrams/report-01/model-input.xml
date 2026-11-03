@@ -1,0 +1,1129 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ReportModel version="1" name="PC Store — Báo cáo lần 1">
+  <Diagram id="UC-OVERVIEW" kind="UseCase" name="UC-OVERVIEW — PC Store">
+    <Node id="Visitor" kind="Actor" name="Người truy cập" x="30" y="80" w="100" h="90" />
+    <Node id="Guest" kind="Actor" name="Guest" x="30" y="250" w="100" h="90" />
+    <Node id="Customer" kind="Actor" name="Customer" x="30" y="420" w="100" h="90" />
+    <Node id="Admin" kind="Actor" name="Admin" x="30" y="590" w="100" h="90" />
+    <Node id="Google" kind="Actor" name="Google" x="1040" y="80" w="110" h="90" />
+    <Node id="VNPAY" kind="Actor" name="VNPAY" x="1040" y="250" w="110" h="90" />
+    <Node id="OTP" kind="Actor" name="OTP Provider" x="1040" y="420" w="110" h="90" />
+    <Node id="Mail" kind="Actor" name="Mail Service" x="1040" y="590" w="110" h="90" />
+    <Node id="Boundary" kind="System" name="PC Store" x="200" y="30" w="800" h="1040" />
+    <Node id="UC01" kind="UseCase" name="UC01&#10;Tài khoản và xác thực" x="240" y="70" w="310" h="85" />
+    <Node id="UC02" kind="UseCase" name="UC02&#10;Tìm và xem PC" x="240" y="230" w="310" h="85" />
+    <Node id="UC03" kind="UseCase" name="UC03&#10;Tư vấn chọn PC" x="240" y="390" w="310" h="85" />
+    <Node id="UC04" kind="UseCase" name="UC04&#10;Quản lý giỏ hàng" x="240" y="550" w="310" h="85" />
+    <Node id="UC05" kind="UseCase" name="UC05&#10;Đặt hàng và thanh toán" x="240" y="710" w="310" h="85" />
+    <Node id="UC06" kind="UseCase" name="UC06&#10;Theo dõi và hủy đơn của tôi" x="240" y="870" w="310" h="85" />
+    <Node id="UC07" kind="UseCase" name="UC07&#10;Quản lý PC và loại sản phẩm" x="620" y="70" w="310" h="85" />
+    <Node id="UC08" kind="UseCase" name="UC08&#10;Xử lý đơn hàng" x="620" y="230" w="310" h="85" />
+    <Node id="UC09" kind="UseCase" name="UC09&#10;Quản lý tài khoản khách hàng" x="620" y="390" w="310" h="85" />
+    <Node id="UC10" kind="UseCase" name="UC10&#10;Tra cứu bảo hành và tiến độ" x="620" y="550" w="310" h="85" />
+    <Node id="UC11" kind="UseCase" name="UC11&#10;Gửi hoặc hủy yêu cầu bảo hành" x="620" y="710" w="310" h="85" />
+    <Node id="UC12" kind="UseCase" name="UC12&#10;Tiếp nhận và xử lý bảo hành" x="620" y="870" w="310" h="85" />
+    <Edge source="Guest" target="UC01" label="" />
+    <Edge source="Visitor" target="UC02" label="" />
+    <Edge source="Visitor" target="UC03" label="" />
+    <Edge source="Visitor" target="UC04" label="" />
+    <Edge source="Customer" target="UC01" label="" />
+    <Edge source="Customer" target="UC05" label="" />
+    <Edge source="Customer" target="UC06" label="" />
+    <Edge source="Customer" target="UC10" label="" />
+    <Edge source="Customer" target="UC11" label="" />
+    <Edge source="Admin" target="UC07" label="" />
+    <Edge source="Admin" target="UC08" label="" />
+    <Edge source="Admin" target="UC09" label="" />
+    <Edge source="Admin" target="UC12" label="" />
+    <Edge source="Google" target="UC01" label="" />
+    <Edge source="VNPAY" target="UC05" label="" />
+    <Edge source="OTP" target="UC01" label="" />
+    <Edge source="Mail" target="UC01" label="" />
+    <Edge source="Mail" target="UC05" label="" />
+    <Edge source="Mail" target="UC11" label="" />
+    <Edge source="Mail" target="UC12" label="" />
+    <Edge source="Guest" target="Visitor" label="" kind="Generalization" />
+    <Edge source="Customer" target="Visitor" label="" kind="Generalization" />
+    <Edge source="Admin" target="Customer" label="" kind="Generalization" />
+  </Diagram>
+  <Diagram id="ACT-UC01" kind="Activity" name="ACT-UC01 — Tài khoản và xác thực">
+    <Node id="start" kind="Initial" name="" x="450" y="15" w="20" h="20" />
+    <Node id="b1" kind="Action" name="B1. [Guest]&#10;Chọn đăng ký, đăng nhập, khôi phục hoặc cập nhật hồ sơ" x="250" y="65" w="430" h="85" />
+    <Edge source="start" target="b1" label="" />
+    <Node id="b2" kind="Action" name="B2. [PC Store]&#10;Xác định thao tác; kiểm định dạng và quyền thao tác" x="250" y="195" w="430" h="85" />
+    <Edge source="b1" target="b2" label="" />
+    <Node id="g2" kind="Decision" name="Dữ liệu và quyền hợp lệ?" x="390" y="325" w="150" h="95" />
+    <Edge source="b2" target="g2" label="" />
+    <Node id="e2" kind="Action" name="E-B2. Báo lỗi field hoặc yêu cầu đăng nhập; không lưu" x="720" y="325" w="370" h="110" />
+    <Edge source="g2" target="e2" label="Không" />
+    <Node id="f2" kind="Final" name="" x="900" y="470" w="22" h="22" />
+    <Edge source="e2" target="f2" label="" />
+    <Node id="ok2" kind="Merge" name="" x="450" y="465" w="20" h="20" />
+    <Edge source="g2" target="ok2" label="Có" />
+    <Node id="b3" kind="Action" name="B3. [PC Store]&#10;Xác minh bằng mật khẩu, OTP hoặc Google theo nhánh đã chọn" x="250" y="535" w="430" h="85" />
+    <Edge source="ok2" target="b3" label="" />
+    <Node id="g3" kind="Decision" name="Bằng chứng xác thực hợp lệ?" x="390" y="665" w="150" h="95" />
+    <Edge source="b3" target="g3" label="" />
+    <Node id="e3" kind="Action" name="E-B3. Báo xác thực thất bại/hết hạn; không cấp phiên, không đổi liên hệ" x="720" y="665" w="370" h="110" />
+    <Edge source="g3" target="e3" label="Không" />
+    <Node id="f3" kind="Final" name="" x="900" y="810" w="22" h="22" />
+    <Edge source="e3" target="f3" label="" />
+    <Node id="ok3" kind="Merge" name="" x="450" y="805" w="20" h="20" />
+    <Edge source="g3" target="ok3" label="Có" />
+    <Node id="b4" kind="Action" name="B4. [PC Store]&#10;Kiểm email/phone duy nhất, tài khoản ACTIVE và phương thức đăng nhập còn lại" x="250" y="875" w="430" h="85" />
+    <Edge source="ok3" target="b4" label="" />
+    <Node id="g4" kind="Decision" name="Không trùng và tài khoản dùng được?" x="390" y="1005" w="150" h="95" />
+    <Edge source="b4" target="g4" label="" />
+    <Node id="e4" kind="Action" name="E-B4. Báo trùng/khóa/không thể bỏ phương thức cuối; giữ dữ liệu cũ" x="720" y="1005" w="370" h="110" />
+    <Edge source="g4" target="e4" label="Không" />
+    <Node id="f4" kind="Final" name="" x="900" y="1150" w="22" h="22" />
+    <Edge source="e4" target="f4" label="" />
+    <Node id="ok4" kind="Merge" name="" x="450" y="1145" w="20" h="20" />
+    <Edge source="g4" target="ok4" label="Có" />
+    <Node id="b5" kind="Action" name="B5. [PC Store]&#10;Tạo/cập nhật tài khoản hoặc cấp phiên; tiêu thụ challenge dùng một lần" x="250" y="1215" w="430" h="85" />
+    <Edge source="ok4" target="b5" label="" />
+    <Node id="b6" kind="Action" name="B6. [PC Store]&#10;Đổi session ID khi login, giữ giỏ; trả hồ sơ hoặc màn hình đích" x="250" y="1345" w="430" h="85" />
+    <Edge source="b5" target="b6" label="" />
+    <Node id="end" kind="Final" name="" x="450" y="1475" w="22" h="22" />
+    <Edge source="b6" target="end" label="" />
+  </Diagram>
+  <Diagram id="ACT-UC02" kind="Activity" name="ACT-UC02 — Tìm và xem PC">
+    <Node id="start" kind="Initial" name="" x="450" y="15" w="20" h="20" />
+    <Node id="b1" kind="Action" name="B1. [Guest]&#10;Mở trang chủ hoặc danh sách PC; nhập từ khóa/bộ lọc" x="250" y="65" w="430" h="85" />
+    <Edge source="start" target="b1" label="" />
+    <Node id="b2" kind="Action" name="B2. [PC Store]&#10;Kiểm bộ lọc, khoảng giá và phân trang" x="250" y="195" w="430" h="85" />
+    <Edge source="b1" target="b2" label="" />
+    <Node id="g2" kind="Decision" name="Bộ lọc hợp lệ?" x="390" y="325" w="150" h="95" />
+    <Edge source="b2" target="g2" label="" />
+    <Node id="e2" kind="Action" name="E-B2. Giữ form, thông báo điều kiện sai" x="720" y="325" w="370" h="110" />
+    <Edge source="g2" target="e2" label="Không" />
+    <Node id="f2" kind="Final" name="" x="900" y="470" w="22" h="22" />
+    <Edge source="e2" target="f2" label="" />
+    <Node id="ok2" kind="Merge" name="" x="450" y="465" w="20" h="20" />
+    <Edge source="g2" target="ok2" label="Có" />
+    <Node id="b3" kind="Action" name="B3. [PC Store]&#10;Tìm PC ACTIVE, phân trang và sắp xếp ổn định" x="250" y="535" w="430" h="85" />
+    <Edge source="ok2" target="b3" label="" />
+    <Node id="g3" kind="Decision" name="Có kết quả?" x="390" y="665" w="150" h="95" />
+    <Edge source="b3" target="g3" label="" />
+    <Node id="e3" kind="Action" name="E-B3. Hiện danh sách rỗng và nút xóa bộ lọc" x="720" y="665" w="370" h="110" />
+    <Edge source="g3" target="e3" label="Không" />
+    <Node id="f3" kind="Final" name="" x="900" y="810" w="22" h="22" />
+    <Edge source="e3" target="f3" label="" />
+    <Node id="ok3" kind="Merge" name="" x="450" y="805" w="20" h="20" />
+    <Edge source="g3" target="ok3" label="Có" />
+    <Node id="b4" kind="Action" name="B4. [Guest]&#10;Chọn PC cần xem" x="250" y="875" w="430" h="85" />
+    <Edge source="ok3" target="b4" label="" />
+    <Node id="b5" kind="Action" name="B5. [PC Store]&#10;Đọc lại PC theo slug, cấu hình, ảnh và bảo hành" x="250" y="1005" w="430" h="85" />
+    <Edge source="b4" target="b5" label="" />
+    <Node id="g5" kind="Decision" name="PC vẫn ACTIVE?" x="390" y="1135" w="150" h="95" />
+    <Edge source="b5" target="g5" label="" />
+    <Node id="e5" kind="Action" name="E-B5. Trả 404; gợi ý quay danh sách" x="720" y="1135" w="370" h="110" />
+    <Edge source="g5" target="e5" label="Không" />
+    <Node id="f5" kind="Final" name="" x="900" y="1280" w="22" h="22" />
+    <Edge source="e5" target="f5" label="" />
+    <Node id="ok5" kind="Merge" name="" x="450" y="1275" w="20" h="20" />
+    <Edge source="g5" target="ok5" label="Có" />
+    <Node id="b6" kind="Action" name="B6. [PC Store]&#10;Hiển thị chi tiết và available; khóa nút thêm giỏ nếu hết hàng" x="250" y="1345" w="430" h="85" />
+    <Edge source="ok5" target="b6" label="" />
+    <Node id="end" kind="Final" name="" x="450" y="1475" w="22" h="22" />
+    <Edge source="b6" target="end" label="" />
+  </Diagram>
+  <Diagram id="ACT-UC03" kind="Activity" name="ACT-UC03 — Tư vấn chọn PC">
+    <Node id="start" kind="Initial" name="" x="450" y="15" w="20" h="20" />
+    <Node id="b1" kind="Action" name="B1. [Guest]&#10;Chọn nhu cầu và nhập ngân sách, RAM, dung lượng tối thiểu" x="250" y="65" w="430" h="85" />
+    <Edge source="start" target="b1" label="" />
+    <Node id="b2" kind="Action" name="B2. [PC Store]&#10;Kiểm enum và giới hạn số" x="250" y="195" w="430" h="85" />
+    <Edge source="b1" target="b2" label="" />
+    <Node id="g2" kind="Decision" name="Tiêu chí hợp lệ?" x="390" y="325" w="150" h="95" />
+    <Edge source="b2" target="g2" label="" />
+    <Node id="e2" kind="Action" name="E-B2. Báo lỗi theo field; giữ form" x="720" y="325" w="370" h="110" />
+    <Edge source="g2" target="e2" label="Không" />
+    <Node id="f2" kind="Final" name="" x="900" y="470" w="22" h="22" />
+    <Edge source="e2" target="f2" label="" />
+    <Node id="ok2" kind="Merge" name="" x="450" y="465" w="20" h="20" />
+    <Edge source="g2" target="ok2" label="Có" />
+    <Node id="b3" kind="Action" name="B3. [PC Store]&#10;Lọc PC ACTIVE, còn hàng, có profile, không vượt ngân sách và đủ cấu hình" x="250" y="535" w="430" h="85" />
+    <Edge source="ok2" target="b3" label="" />
+    <Node id="g3" kind="Decision" name="Có PC đạt tất cả điều kiện?" x="390" y="665" w="150" h="95" />
+    <Edge source="b3" target="g3" label="" />
+    <Node id="e3" kind="Action" name="E-B3. Trả rỗng, chỉ ra bộ lọc làm hết ứng viên; không tự tăng ngân sách" x="720" y="665" w="370" h="110" />
+    <Edge source="g3" target="e3" label="Không" />
+    <Node id="f3" kind="Final" name="" x="900" y="810" w="22" h="22" />
+    <Edge source="e3" target="f3" label="" />
+    <Node id="ok3" kind="Merge" name="" x="450" y="805" w="20" h="20" />
+    <Edge source="g3" target="ok3" label="Có" />
+    <Node id="b4" kind="Action" name="B4. [PC Store]&#10;Xếp score giảm, giá tăng, SKU tăng; lấy tối đa 3" x="250" y="875" w="430" h="85" />
+    <Edge source="ok3" target="b4" label="" />
+    <Node id="b5" kind="Action" name="B5. [PC Store]&#10;Hiển thị lý do, hạn chế, giá và phần ngân sách còn lại" x="250" y="1005" w="430" h="85" />
+    <Edge source="b4" target="b5" label="" />
+    <Node id="b6" kind="Action" name="B6. [Guest]&#10;Mở chi tiết hoặc chỉnh tiêu chí để tư vấn lại" x="250" y="1135" w="430" h="85" />
+    <Edge source="b5" target="b6" label="" />
+    <Node id="end" kind="Final" name="" x="450" y="1265" w="22" h="22" />
+    <Edge source="b6" target="end" label="" />
+  </Diagram>
+  <Diagram id="ACT-UC04" kind="Activity" name="ACT-UC04 — Quản lý giỏ hàng">
+    <Node id="start" kind="Initial" name="" x="450" y="15" w="20" h="20" />
+    <Node id="b1" kind="Action" name="B1. [Guest]&#10;Xem giỏ hoặc chọn thêm, đổi số lượng, xóa dòng" x="250" y="65" w="430" h="85" />
+    <Edge source="start" target="b1" label="" />
+    <Node id="b2" kind="Action" name="B2. [PC Store]&#10;Đọc session cart và kiểm version cho thao tác ghi" x="250" y="195" w="430" h="85" />
+    <Edge source="b1" target="b2" label="" />
+    <Node id="g2" kind="Decision" name="Version và số lượng hợp lệ?" x="390" y="325" w="150" h="95" />
+    <Edge source="b2" target="g2" label="" />
+    <Node id="e2" kind="Action" name="E-B2. 409 nếu hai tab xung đột hoặc lỗi lượng; tải lại, giữ giỏ mới hơn" x="720" y="325" w="370" h="110" />
+    <Edge source="g2" target="e2" label="Không" />
+    <Node id="f2" kind="Final" name="" x="900" y="470" w="22" h="22" />
+    <Edge source="e2" target="f2" label="" />
+    <Node id="ok2" kind="Merge" name="" x="450" y="465" w="20" h="20" />
+    <Edge source="g2" target="ok2" label="Có" />
+    <Node id="b3" kind="Action" name="B3. [PC Store]&#10;Đọc catalog; thêm/đổi lượng cần PC ACTIVE và đủ available, xóa được cả dòng không còn bán" x="250" y="535" w="430" h="85" />
+    <Edge source="ok2" target="b3" label="" />
+    <Node id="g3" kind="Decision" name="Thao tác được phép?" x="390" y="665" w="150" h="95" />
+    <Edge source="b3" target="g3" label="" />
+    <Node id="e3" kind="Action" name="E-B3. Giữ giỏ; báo thiếu hàng/ngừng bán/giới hạn 20 SKU" x="720" y="665" w="370" h="110" />
+    <Edge source="g3" target="e3" label="Không" />
+    <Node id="f3" kind="Final" name="" x="900" y="810" w="22" h="22" />
+    <Edge source="e3" target="f3" label="" />
+    <Node id="ok3" kind="Merge" name="" x="450" y="805" w="20" h="20" />
+    <Edge source="g3" target="ok3" label="Có" />
+    <Node id="b4" kind="Action" name="B4. [PC Store]&#10;Cập nhật dòng: thêm trùng SKU cộng lượng, đổi lượng thay thế, xóa bỏ dòng; tăng version khi thay đổi" x="250" y="875" w="430" h="85" />
+    <Edge source="ok3" target="b4" label="" />
+    <Node id="b5" kind="Action" name="B5. [PC Store]&#10;Tính lại giá hiện tại và subtotal; đánh dấu dòng không mua được" x="250" y="1005" w="430" h="85" />
+    <Edge source="b4" target="b5" label="" />
+    <Node id="b6" kind="Action" name="B6. [PC Store]&#10;Hiện giỏ mới, empty state hoặc CTA checkout nếu hợp lệ" x="250" y="1135" w="430" h="85" />
+    <Edge source="b5" target="b6" label="" />
+    <Node id="end" kind="Final" name="" x="450" y="1265" w="22" h="22" />
+    <Edge source="b6" target="end" label="" />
+  </Diagram>
+  <Diagram id="ACT-UC05" kind="Activity" name="ACT-UC05 — Đặt hàng và thanh toán">
+    <Node id="start" kind="Initial" name="" x="450" y="15" w="20" h="20" />
+    <Node id="b1" kind="Action" name="B1. [Customer]&#10;Nhập nơi nhận và chọn COD hoặc VNPAY" x="250" y="65" w="430" h="85" />
+    <Edge source="start" target="b1" label="" />
+    <Node id="b2" kind="Action" name="B2. [PC Store]&#10;Kiểm tài khoản, phone, giỏ, địa chỉ; tính giá + phí 50.000 và quote hạn 10 phút" x="250" y="195" w="430" h="85" />
+    <Edge source="b1" target="b2" label="" />
+    <Node id="g2" kind="Decision" name="Đủ điều kiện checkout?" x="390" y="325" w="150" h="95" />
+    <Edge source="b2" target="g2" label="" />
+    <Node id="e2" kind="Action" name="E-B2. Yêu cầu xác minh phone, sửa giỏ/địa chỉ; chưa tạo đơn" x="720" y="325" w="370" h="110" />
+    <Edge source="g2" target="e2" label="Không" />
+    <Node id="f2" kind="Final" name="" x="900" y="470" w="22" h="22" />
+    <Edge source="e2" target="f2" label="" />
+    <Node id="ok2" kind="Merge" name="" x="450" y="465" w="20" h="20" />
+    <Edge source="g2" target="ok2" label="Có" />
+    <Node id="b3" kind="Action" name="B3. [Customer]&#10;Xem tổng và xác nhận đặt hàng" x="250" y="535" w="430" h="85" />
+    <Edge source="ok2" target="b3" label="" />
+    <Node id="b4" kind="Action" name="B4. [PC Store]&#10;Kiểm idempotency, khóa user và products theo ID; đọc lại quote/giá/stock" x="250" y="665" w="430" h="85" />
+    <Edge source="b3" target="b4" label="" />
+    <Node id="g4" kind="Decision" name="Key mới và quote/stock còn hợp lệ?" x="390" y="795" w="150" h="95" />
+    <Edge source="b4" target="g4" label="" />
+    <Node id="e4" kind="Action" name="E-B4. Cùng key/payload trả đơn cũ; mismatch hoặc thay đổi trả 409, không tạo đơn mới" x="720" y="795" w="370" h="110" />
+    <Edge source="g4" target="e4" label="Không" />
+    <Node id="f4" kind="Final" name="" x="900" y="940" w="22" h="22" />
+    <Edge source="e4" target="f4" label="" />
+    <Node id="ok4" kind="Merge" name="" x="450" y="935" w="20" h="20" />
+    <Edge source="g4" target="ok4" label="Có" />
+    <Node id="b5" kind="Action" name="B5. [PC Store]&#10;Trong một transaction: tạo order/items snapshot/attempt/history, tăng reserved, lưu idempotency" x="250" y="1005" w="430" h="85" />
+    <Edge source="ok4" target="b5" label="" />
+    <Node id="b6" kind="Action" name="B6. [PC Store]&#10;Commit, dọn giỏ đúng version và gửi mail sau commit" x="250" y="1135" w="430" h="85" />
+    <Edge source="b5" target="b6" label="" />
+    <Node id="b7" kind="Action" name="B7. [PC Store]&#10;COD: chờ xác nhận; VNPAY: redirect URL ký cùng reference và hạn 15 phút" x="250" y="1265" w="430" h="85" />
+    <Edge source="b6" target="b7" label="" />
+    <Node id="optional7" kind="Decision" name="Phương thức VNPAY?" x="390" y="1395" w="150" h="85" />
+    <Edge source="b7" target="optional7" label="" />
+    <Node id="skip7" kind="Final" name="" x="870" y="1425" w="22" h="22" />
+    <Edge source="optional7" target="skip7" label="Không" />
+    <Node id="continue7" kind="Merge" name="" x="450" y="1525" w="20" h="20" />
+    <Edge source="optional7" target="continue7" label="Có" />
+    <Node id="b8" kind="Action" name="B8. [PC Store]&#10;VNPAY: IPN xác minh cập nhật; return chỉ đọc trạng thái; hiển thị kết quả server" x="250" y="1575" w="430" h="85" />
+    <Edge source="continue7" target="b8" label="" />
+    <Node id="end" kind="Final" name="" x="450" y="1705" w="22" h="22" />
+    <Edge source="b8" target="end" label="" />
+  </Diagram>
+  <Diagram id="ACT-UC06" kind="Activity" name="ACT-UC06 — Theo dõi và hủy đơn của tôi">
+    <Node id="start" kind="Initial" name="" x="450" y="15" w="20" h="20" />
+    <Node id="b1" kind="Action" name="B1. [Customer]&#10;Mở danh sách và chọn đơn của mình" x="250" y="65" w="430" h="85" />
+    <Edge source="start" target="b1" label="" />
+    <Node id="b2" kind="Action" name="B2. [PC Store]&#10;Tra đơn theo code + currentUser" x="250" y="195" w="430" h="85" />
+    <Edge source="b1" target="b2" label="" />
+    <Node id="g2" kind="Decision" name="Đơn thuộc người đang đăng nhập?" x="390" y="325" w="150" h="95" />
+    <Edge source="b2" target="g2" label="" />
+    <Node id="e2" kind="Action" name="E-B2. 404; không tiết lộ chủ đơn khác" x="720" y="325" w="370" h="110" />
+    <Edge source="g2" target="e2" label="Không" />
+    <Node id="f2" kind="Final" name="" x="900" y="470" w="22" h="22" />
+    <Edge source="e2" target="f2" label="" />
+    <Node id="ok2" kind="Merge" name="" x="450" y="465" w="20" h="20" />
+    <Edge source="g2" target="ok2" label="Có" />
+    <Node id="b3" kind="Action" name="B3. [PC Store]&#10;Hiển thị snapshots, tổng tiền, timeline, trạng thái payment và allowedActions" x="250" y="535" w="430" h="85" />
+    <Edge source="ok2" target="b3" label="" />
+    <Node id="optional3" kind="Decision" name="Muốn hủy đơn?" x="390" y="665" w="150" h="85" />
+    <Edge source="b3" target="optional3" label="" />
+    <Node id="skip3" kind="Final" name="" x="870" y="695" w="22" h="22" />
+    <Edge source="optional3" target="skip3" label="Không" />
+    <Node id="continue3" kind="Merge" name="" x="450" y="795" w="20" h="20" />
+    <Edge source="optional3" target="continue3" label="Có" />
+    <Node id="b4" kind="Action" name="B4. [Customer]&#10;Nếu cần, chọn hủy và xác nhận lý do" x="250" y="845" w="430" h="85" />
+    <Edge source="continue3" target="b4" label="" />
+    <Node id="b5" kind="Action" name="B5. [PC Store]&#10;Khóa order/attempt, so version và điều kiện hủy" x="250" y="975" w="430" h="85" />
+    <Edge source="b4" target="b5" label="" />
+    <Node id="g5" kind="Decision" name="COD chờ xác nhận chưa trả hoặc VNPAY chờ trả, HELD?" x="390" y="1105" w="150" h="95" />
+    <Edge source="b5" target="g5" label="" />
+    <Node id="e5" kind="Action" name="E-B5. 409 không được hủy; giữ đơn và tồn" x="720" y="1105" w="370" h="110" />
+    <Edge source="g5" target="e5" label="Không" />
+    <Node id="f5" kind="Final" name="" x="900" y="1250" w="22" h="22" />
+    <Edge source="e5" target="f5" label="" />
+    <Node id="ok5" kind="Merge" name="" x="450" y="1245" w="20" h="20" />
+    <Edge source="g5" target="ok5" label="Có" />
+    <Node id="b6" kind="Action" name="B6. [PC Store]&#10;Giảm reserved, đổi RELEASED/CANCELLED và ghi history trong cùng transaction" x="250" y="1315" w="430" h="85" />
+    <Edge source="ok5" target="b6" label="" />
+    <Node id="b7" kind="Action" name="B7. [PC Store]&#10;Trả trạng thái mới; đơn DELIVERED có liên kết tới bảo hành" x="250" y="1445" w="430" h="85" />
+    <Edge source="b6" target="b7" label="" />
+    <Node id="end" kind="Final" name="" x="450" y="1575" w="22" h="22" />
+    <Edge source="b7" target="end" label="" />
+  </Diagram>
+  <Diagram id="ACT-UC07" kind="Activity" name="ACT-UC07 — Quản lý PC và loại sản phẩm">
+    <Node id="start" kind="Initial" name="" x="450" y="15" w="20" h="20" />
+    <Node id="b1" kind="Action" name="B1. [Admin]&#10;Tìm PC/loại và chọn thêm, sửa, trạng thái, xóa hoặc điều chỉnh tồn" x="250" y="65" w="430" h="85" />
+    <Edge source="start" target="b1" label="" />
+    <Node id="b2" kind="Action" name="B2. [PC Store]&#10;Kiểm quyền, field, ảnh, unique SKU/slug và version" x="250" y="195" w="430" h="85" />
+    <Edge source="b1" target="b2" label="" />
+    <Node id="g2" kind="Decision" name="Dữ liệu và version hợp lệ?" x="390" y="325" w="150" h="95" />
+    <Edge source="b2" target="g2" label="" />
+    <Node id="e2" kind="Action" name="E-B2. Báo field/trùng/stale; giữ form" x="720" y="325" w="370" h="110" />
+    <Edge source="g2" target="e2" label="Không" />
+    <Node id="f2" kind="Final" name="" x="900" y="470" w="22" h="22" />
+    <Edge source="e2" target="f2" label="" />
+    <Node id="ok2" kind="Merge" name="" x="450" y="465" w="20" h="20" />
+    <Edge source="g2" target="ok2" label="Có" />
+    <Node id="b3" kind="Action" name="B3. [PC Store]&#10;Kiểm điều kiện riêng: xóa không tham chiếu, tồn không dưới reserved, ACTIVE đủ cấu hình" x="250" y="535" w="430" h="85" />
+    <Edge source="ok2" target="b3" label="" />
+    <Node id="g3" kind="Decision" name="Thỏa điều kiện nghiệp vụ?" x="390" y="665" w="150" h="95" />
+    <Edge source="b3" target="g3" label="" />
+    <Node id="e3" kind="Action" name="E-B3. Chặn xóa dữ liệu đã dùng hoặc giảm quá tồn; đề nghị ngừng bán" x="720" y="665" w="370" h="110" />
+    <Edge source="g3" target="e3" label="Không" />
+    <Node id="f3" kind="Final" name="" x="900" y="810" w="22" h="22" />
+    <Edge source="e3" target="f3" label="" />
+    <Node id="ok3" kind="Merge" name="" x="450" y="805" w="20" h="20" />
+    <Edge source="g3" target="ok3" label="Có" />
+    <Node id="b4" kind="Action" name="B4. [PC Store]&#10;Lưu thay đổi catalog trong transaction; stock adjustment ghi actor, before/after và lý do" x="250" y="875" w="430" h="85" />
+    <Edge source="ok3" target="b4" label="" />
+    <Node id="b5" kind="Action" name="B5. [PC Store]&#10;Commit, dọn media bỏ sau commit; trả danh sách/chi tiết cập nhật" x="250" y="1005" w="430" h="85" />
+    <Edge source="b4" target="b5" label="" />
+    <Node id="end" kind="Final" name="" x="450" y="1135" w="22" h="22" />
+    <Edge source="b5" target="end" label="" />
+  </Diagram>
+  <Diagram id="ACT-UC08" kind="Activity" name="ACT-UC08 — Xử lý đơn hàng">
+    <Node id="start" kind="Initial" name="" x="450" y="15" w="20" h="20" />
+    <Node id="b1" kind="Action" name="B1. [Admin]&#10;Tra cứu và mở chi tiết đơn" x="250" y="65" w="430" h="85" />
+    <Edge source="start" target="b1" label="" />
+    <Node id="b2" kind="Action" name="B2. [PC Store]&#10;Đọc snapshots, timeline, payment summary và action hợp lệ" x="250" y="195" w="430" h="85" />
+    <Edge source="b1" target="b2" label="" />
+    <Node id="g2" kind="Decision" name="Đơn tồn tại?" x="390" y="325" w="150" h="95" />
+    <Edge source="b2" target="g2" label="" />
+    <Node id="e2" kind="Action" name="E-B2. 404; trở về danh sách" x="720" y="325" w="370" h="110" />
+    <Edge source="g2" target="e2" label="Không" />
+    <Node id="f2" kind="Final" name="" x="900" y="470" w="22" h="22" />
+    <Edge source="e2" target="f2" label="" />
+    <Node id="ok2" kind="Merge" name="" x="450" y="465" w="20" h="20" />
+    <Edge source="g2" target="ok2" label="Có" />
+    <Node id="b3" kind="Action" name="B3. [Admin]&#10;Chọn action và xác nhận thông tin" x="250" y="535" w="430" h="85" />
+    <Edge source="ok2" target="b3" label="" />
+    <Node id="b4" kind="Action" name="B4. [PC Store]&#10;Khóa order/attempt, so version và bảng chuyển trạng thái" x="250" y="665" w="430" h="85" />
+    <Edge source="b3" target="b4" label="" />
+    <Node id="g4" kind="Decision" name="Action hợp lệ?" x="390" y="795" w="150" h="95" />
+    <Edge source="b4" target="g4" label="" />
+    <Node id="e4" kind="Action" name="E-B4. 409; tải lại dữ liệu mới, không ép trạng thái" x="720" y="795" w="370" h="110" />
+    <Edge source="g4" target="e4" label="Không" />
+    <Node id="f4" kind="Final" name="" x="900" y="940" w="22" h="22" />
+    <Edge source="e4" target="f4" label="" />
+    <Node id="ok4" kind="Merge" name="" x="450" y="935" w="20" h="20" />
+    <Edge source="g4" target="ok4" label="Có" />
+    <Node id="b5" kind="Action" name="B5. [PC Store]&#10;Sửa/hủy/giao: khóa products theo ID; kiểm và cập nhật lượng giữ/xuất" x="250" y="1005" w="430" h="85" />
+    <Edge source="ok4" target="b5" label="" />
+    <Node id="g5" kind="Decision" name="Đủ tồn và đơn còn ít nhất một item khi sửa?" x="390" y="1135" w="150" h="95" />
+    <Edge source="b5" target="g5" label="" />
+    <Node id="e5" kind="Action" name="E-B5. 409 thiếu tồn hoặc 422 đơn rỗng; rollback" x="720" y="1135" w="370" h="110" />
+    <Edge source="g5" target="e5" label="Không" />
+    <Node id="f5" kind="Final" name="" x="900" y="1280" w="22" h="22" />
+    <Edge source="e5" target="f5" label="" />
+    <Node id="ok5" kind="Merge" name="" x="450" y="1275" w="20" h="20" />
+    <Edge source="g5" target="ok5" label="Có" />
+    <Node id="b6" kind="Action" name="B6. [PC Store]&#10;Ghi order/revision/history/payment liên quan và commit" x="250" y="1345" w="430" h="85" />
+    <Edge source="ok5" target="b6" label="" />
+    <Node id="b7" kind="Action" name="B7. [PC Store]&#10;Hiển thị timeline mới; DELIVERED bắt đầu quyền bảo hành" x="250" y="1475" w="430" h="85" />
+    <Edge source="b6" target="b7" label="" />
+    <Node id="end" kind="Final" name="" x="450" y="1605" w="22" h="22" />
+    <Edge source="b7" target="end" label="" />
+  </Diagram>
+  <Diagram id="ACT-UC09" kind="Activity" name="ACT-UC09 — Quản lý tài khoản khách hàng">
+    <Node id="start" kind="Initial" name="" x="450" y="15" w="20" h="20" />
+    <Node id="b1" kind="Action" name="B1. [Admin]&#10;Tìm tài khoản và mở drawer" x="250" y="65" w="430" h="85" />
+    <Edge source="start" target="b1" label="" />
+    <Node id="b2" kind="Action" name="B2. [PC Store]&#10;Đọc thông tin được phép, số đơn và các phương thức đăng nhập" x="250" y="195" w="430" h="85" />
+    <Edge source="b1" target="b2" label="" />
+    <Node id="g2" kind="Decision" name="User tồn tại?" x="390" y="325" w="150" h="95" />
+    <Edge source="b2" target="g2" label="" />
+    <Node id="e2" kind="Action" name="E-B2. 404; không hiện dữ liệu credential" x="720" y="325" w="370" h="110" />
+    <Edge source="g2" target="e2" label="Không" />
+    <Node id="f2" kind="Final" name="" x="900" y="470" w="22" h="22" />
+    <Edge source="e2" target="f2" label="" />
+    <Node id="ok2" kind="Merge" name="" x="450" y="465" w="20" h="20" />
+    <Edge source="g2" target="ok2" label="Có" />
+    <Node id="b3" kind="Action" name="B3. [Admin]&#10;Chọn cập nhật, khóa, mở khóa hoặc xóa và nhập lý do" x="250" y="535" w="430" h="85" />
+    <Edge source="ok2" target="b3" label="" />
+    <Node id="b4" kind="Action" name="B4. [PC Store]&#10;Khóa user, kiểm version, unique liên hệ và ràng buộc Admin cuối/lịch sử" x="250" y="665" w="430" h="85" />
+    <Edge source="b3" target="b4" label="" />
+    <Node id="g4" kind="Decision" name="Thao tác được phép?" x="390" y="795" w="150" h="95" />
+    <Edge source="b4" target="g4" label="" />
+    <Node id="e4" kind="Action" name="E-B4. 409 do stale, trùng, Admin cuối, user có giao dịch hoặc mất phương thức cuối" x="720" y="795" w="370" h="110" />
+    <Edge source="g4" target="e4" label="Không" />
+    <Node id="f4" kind="Final" name="" x="900" y="940" w="22" h="22" />
+    <Edge source="e4" target="f4" label="" />
+    <Node id="ok4" kind="Merge" name="" x="450" y="935" w="20" h="20" />
+    <Edge source="g4" target="ok4" label="Có" />
+    <Node id="b5" kind="Action" name="B5. [PC Store]&#10;Lưu thay đổi hoặc xóa user chưa có tham chiếu; đổi contact bỏ verified, tăng sessionVersion khi cần" x="250" y="1005" w="430" h="85" />
+    <Edge source="ok4" target="b5" label="" />
+    <Node id="b6" kind="Action" name="B6. [PC Store]&#10;Trả drawer mới; phiên bị khóa/vô hiệu sẽ bị chặn ở request bảo vệ tiếp theo" x="250" y="1135" w="430" h="85" />
+    <Edge source="b5" target="b6" label="" />
+    <Node id="end" kind="Final" name="" x="450" y="1265" w="22" h="22" />
+    <Edge source="b6" target="end" label="" />
+  </Diagram>
+  <Diagram id="ACT-UC10" kind="Activity" name="ACT-UC10 — Tra cứu bảo hành và tiến độ">
+    <Node id="start" kind="Initial" name="" x="450" y="15" w="20" h="20" />
+    <Node id="b1" kind="Action" name="B1. [Customer]&#10;Mở Bảo hành của tôi hoặc bảo hành từ chi tiết đơn" x="250" y="65" w="430" h="85" />
+    <Edge source="start" target="b1" label="" />
+    <Node id="b2" kind="Action" name="B2. [PC Store]&#10;Tra đơn DELIVERED của currentUser và item snapshot" x="250" y="195" w="430" h="85" />
+    <Edge source="b1" target="b2" label="" />
+    <Node id="g2" kind="Decision" name="Có mặt hàng đã giao?" x="390" y="325" w="150" h="95" />
+    <Edge source="b2" target="g2" label="" />
+    <Node id="e2" kind="Action" name="E-B2. Hiển thị empty; giải thích chỉ đơn đã giao có bảo hành" x="720" y="325" w="370" h="110" />
+    <Edge source="g2" target="e2" label="Không" />
+    <Node id="f2" kind="Final" name="" x="900" y="470" w="22" h="22" />
+    <Edge source="e2" target="f2" label="" />
+    <Node id="ok2" kind="Merge" name="" x="450" y="465" w="20" h="20" />
+    <Edge source="g2" target="ok2" label="Có" />
+    <Node id="b3" kind="Action" name="B3. [PC Store]&#10;Tính thời hạn từ deliveredAt + tháng snapshot, theo tháng lịch giờ Việt Nam" x="250" y="535" w="430" h="85" />
+    <Edge source="ok2" target="b3" label="" />
+    <Node id="b4" kind="Action" name="B4. [PC Store]&#10;Hiển thị từng vị trí 1..quantity, trạng thái còn/hết hạn và yêu cầu đang mở" x="250" y="665" w="430" h="85" />
+    <Edge source="b3" target="b4" label="" />
+    <Node id="optional4" kind="Decision" name="Mở yêu cầu đã gửi?" x="390" y="795" w="150" h="85" />
+    <Edge source="b4" target="optional4" label="" />
+    <Node id="skip4" kind="Final" name="" x="870" y="825" w="22" h="22" />
+    <Edge source="optional4" target="skip4" label="Không" />
+    <Node id="continue4" kind="Merge" name="" x="450" y="925" w="20" h="20" />
+    <Edge source="optional4" target="continue4" label="Có" />
+    <Node id="b5" kind="Action" name="B5. [Customer]&#10;Mở chi tiết một yêu cầu đã gửi nếu có" x="250" y="975" w="430" h="85" />
+    <Edge source="continue4" target="b5" label="" />
+    <Node id="b6" kind="Action" name="B6. [PC Store]&#10;Kiểm owner, đọc ảnh và timeline công khai" x="250" y="1105" w="430" h="85" />
+    <Edge source="b5" target="b6" label="" />
+    <Node id="g6" kind="Decision" name="Yêu cầu thuộc Customer?" x="390" y="1235" w="150" h="95" />
+    <Edge source="b6" target="g6" label="" />
+    <Node id="e6" kind="Action" name="E-B6. 404; không lộ chủ khác hoặc internal note" x="720" y="1235" w="370" h="110" />
+    <Edge source="g6" target="e6" label="Không" />
+    <Node id="f6" kind="Final" name="" x="900" y="1380" w="22" h="22" />
+    <Edge source="e6" target="f6" label="" />
+    <Node id="ok6" kind="Merge" name="" x="450" y="1375" w="20" h="20" />
+    <Edge source="g6" target="ok6" label="Có" />
+    <Node id="b7" kind="Action" name="B7. [PC Store]&#10;Hiển thị kết quả/từ chối và action được phép kể cả yêu cầu đã đóng" x="250" y="1445" w="430" h="85" />
+    <Edge source="ok6" target="b7" label="" />
+    <Node id="end" kind="Final" name="" x="450" y="1575" w="22" h="22" />
+    <Edge source="b7" target="end" label="" />
+  </Diagram>
+  <Diagram id="ACT-UC11" kind="Activity" name="ACT-UC11 — Gửi hoặc hủy yêu cầu bảo hành">
+    <Node id="start" kind="Initial" name="" x="450" y="15" w="20" h="20" />
+    <Node id="b1" kind="Action" name="B1. [Customer]&#10;Chọn gửi mới hoặc hủy yêu cầu của mình" x="250" y="65" w="430" h="85" />
+    <Edge source="start" target="b1" label="" />
+    <Node id="b2" kind="Action" name="B2. [PC Store]&#10;Kiểm owner, đầu vào và ảnh; khóa item khi tạo hoặc request khi hủy" x="250" y="195" w="430" h="85" />
+    <Edge source="b1" target="b2" label="" />
+    <Node id="g2" kind="Decision" name="Dữ liệu và quyền hợp lệ?" x="390" y="325" w="150" h="95" />
+    <Edge source="b2" target="g2" label="" />
+    <Node id="e2" kind="Action" name="E-B2. Báo lỗi field/ảnh hoặc 404; không ghi một phần" x="720" y="325" w="370" h="110" />
+    <Edge source="g2" target="e2" label="Không" />
+    <Node id="f2" kind="Final" name="" x="900" y="470" w="22" h="22" />
+    <Edge source="e2" target="f2" label="" />
+    <Node id="ok2" kind="Merge" name="" x="450" y="465" w="20" h="20" />
+    <Edge source="g2" target="ok2" label="Có" />
+    <Node id="b3" kind="Action" name="B3. [PC Store]&#10;Tạo: kiểm DELIVERED, còn hạn, unitIndex và không có yêu cầu mở; hủy: kiểm REQUESTED/version" x="250" y="535" w="430" h="85" />
+    <Edge source="ok2" target="b3" label="" />
+    <Node id="g3" kind="Decision" name="Đủ điều kiện thao tác?" x="390" y="665" w="150" h="95" />
+    <Edge source="b3" target="g3" label="" />
+    <Node id="e3" kind="Action" name="E-B3. 409 hết hạn/trùng/đã tiếp nhận; giữ dữ liệu cũ" x="720" y="665" w="370" h="110" />
+    <Edge source="g3" target="e3" label="Không" />
+    <Node id="f3" kind="Final" name="" x="900" y="810" w="22" h="22" />
+    <Edge source="e3" target="f3" label="" />
+    <Node id="ok3" kind="Merge" name="" x="450" y="805" w="20" h="20" />
+    <Edge source="g3" target="ok3" label="Có" />
+    <Node id="b4" kind="Action" name="B4. [PC Store]&#10;Tạo REQUESTED + snapshot hạn + metadata ảnh + event; hoặc chuyển CANCELLED và ghi lý do trong transaction" x="250" y="875" w="430" h="85" />
+    <Edge source="ok3" target="b4" label="" />
+    <Node id="b5" kind="Action" name="B5. [PC Store]&#10;Commit; gửi mail sau commit nếu có email verified" x="250" y="1005" w="430" h="85" />
+    <Edge source="b4" target="b5" label="" />
+    <Node id="b6" kind="Action" name="B6. [PC Store]&#10;Trả mã yêu cầu và timeline công khai" x="250" y="1135" w="430" h="85" />
+    <Edge source="b5" target="b6" label="" />
+    <Node id="end" kind="Final" name="" x="450" y="1265" w="22" h="22" />
+    <Edge source="b6" target="end" label="" />
+  </Diagram>
+  <Diagram id="ACT-UC12" kind="Activity" name="ACT-UC12 — Tiếp nhận và xử lý bảo hành">
+    <Node id="start" kind="Initial" name="" x="450" y="15" w="20" h="20" />
+    <Node id="b1" kind="Action" name="B1. [Admin]&#10;Tìm và mở yêu cầu bảo hành" x="250" y="65" w="430" h="85" />
+    <Edge source="start" target="b1" label="" />
+    <Node id="b2" kind="Action" name="B2. [PC Store]&#10;Hiển thị thông tin đơn, item/unit, ảnh, thời hạn snapshot và timeline" x="250" y="195" w="430" h="85" />
+    <Edge source="b1" target="b2" label="" />
+    <Node id="g2" kind="Decision" name="Yêu cầu tồn tại?" x="390" y="325" w="150" h="95" />
+    <Edge source="b2" target="g2" label="" />
+    <Node id="e2" kind="Action" name="E-B2. 404; quay danh sách" x="720" y="325" w="370" h="110" />
+    <Edge source="g2" target="e2" label="Không" />
+    <Node id="f2" kind="Final" name="" x="900" y="470" w="22" h="22" />
+    <Edge source="e2" target="f2" label="" />
+    <Node id="ok2" kind="Merge" name="" x="450" y="465" w="20" h="20" />
+    <Edge source="g2" target="ok2" label="Có" />
+    <Node id="b3" kind="Action" name="B3. [Admin]&#10;Chọn tiếp nhận, xử lý, hoàn tất, từ chối hoặc thêm ghi chú" x="250" y="535" w="430" h="85" />
+    <Edge source="ok2" target="b3" label="" />
+    <Node id="b4" kind="Action" name="B4. [PC Store]&#10;Khóa request; so version, trạng thái và nội dung bắt buộc" x="250" y="665" w="430" h="85" />
+    <Edge source="b3" target="b4" label="" />
+    <Node id="g4" kind="Decision" name="Action và nội dung hợp lệ?" x="390" y="795" w="150" h="95" />
+    <Edge source="b4" target="g4" label="" />
+    <Node id="e4" kind="Action" name="E-B4. 409 chuyển sai/stale hoặc422 thiếu kết quả/lý do; giữ trạng thái" x="720" y="795" w="370" h="110" />
+    <Edge source="g4" target="e4" label="Không" />
+    <Node id="f4" kind="Final" name="" x="900" y="940" w="22" h="22" />
+    <Edge source="e4" target="f4" label="" />
+    <Node id="ok4" kind="Merge" name="" x="450" y="935" w="20" h="20" />
+    <Edge source="g4" target="ok4" label="Có" />
+    <Node id="b5" kind="Action" name="B5. [PC Store]&#10;Cập nhật trạng thái và append event; tách publicNote khỏi internalNote" x="250" y="1005" w="430" h="85" />
+    <Edge source="ok4" target="b5" label="" />
+    <Node id="b6" kind="Action" name="B6. [PC Store]&#10;Commit, gửi thông báo nếu có; Customer chỉ nhận phần công khai" x="250" y="1135" w="430" h="85" />
+    <Edge source="b5" target="b6" label="" />
+    <Node id="end" kind="Final" name="" x="450" y="1265" w="22" h="22" />
+    <Edge source="b6" target="end" label="" />
+  </Diagram>
+  <Diagram id="ERD-ALL" kind="ERD" name="ERD-ALL — PC Store">
+    <Node id="users" kind="Table" name="users" x="40" y="40" w="390" h="466">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="Định danh user" />
+      <Column name="email" type="varchar(254)" pk="false" nullable="true" description="Email trim lowercase; null cho user phone-only" />
+      <Column name="email_verified_at" type="timestamptz" pk="false" nullable="true" description="Thời điểm email hiện tại được xác minh" />
+      <Column name="password_hash" type="varchar(100)" pk="false" nullable="true" description="BCrypt; null nếu chưa có local credential" />
+      <Column name="phone" type="varchar(16)" pk="false" nullable="true" description="E.164 đã chuẩn hóa" />
+      <Column name="phone_verified_at" type="timestamptz" pk="false" nullable="true" description="Bằng chứng phone hiện tại đã xác minh" />
+      <Column name="full_name" type="varchar(100)" pk="false" nullable="false" description="Tên hiển thị 2–100 ký tự" />
+      <Column name="recipient_name" type="varchar(100)" pk="false" nullable="true" description="Tên nhận mặc định" />
+      <Column name="province" type="varchar(100)" pk="false" nullable="true" description="Tỉnh/thành dạng text trong đồ án" />
+      <Column name="district" type="varchar(100)" pk="false" nullable="true" description="Trường tương thích địa chỉ, không bắt buộc" />
+      <Column name="ward" type="varchar(100)" pk="false" nullable="true" description="Phường/xã" />
+      <Column name="address_line" type="varchar(255)" pk="false" nullable="true" description="Địa chỉ chi tiết" />
+      <Column name="status" type="varchar(16)" pk="false" nullable="false" description="ACTIVE hoặc LOCKED" />
+      <Column name="status_reason" type="varchar(500)" pk="false" nullable="true" description="Lý do khóa/mở gần nhất" />
+      <Column name="session_version" type="bigint" pk="false" nullable="false" description="Đổi khi cần vô hiệu mọi phiên cũ" />
+      <Column name="version" type="bigint" pk="false" nullable="false" description="Optimistic lock" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Ngày tạo UTC" />
+      <Column name="updated_at" type="timestamptz" pk="false" nullable="false" description="Ngày cập nhật UTC" />
+    </Node>
+    <Node id="user_roles" kind="Table" name="user_roles" x="500" y="40" w="390" h="114">
+      <Column name="user_id" type="uuid" pk="true" nullable="false" description="User sở hữu" />
+      <Column name="role" type="varchar(16)" pk="true" nullable="false" description="CUSTOMER hoặc ADMIN" />
+    </Node>
+    <Node id="external_identities" kind="Table" name="external_identities" x="960" y="40" w="390" h="202">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID liên kết" />
+      <Column name="user_id" type="uuid" pk="false" nullable="false" description="Tài khoản nội bộ" />
+      <Column name="issuer" type="varchar(255)" pk="false" nullable="false" description="Issuer đã xác minh" />
+      <Column name="subject" type="varchar(255)" pk="false" nullable="false" description="OIDC sub bất biến" />
+      <Column name="provider" type="varchar(20)" pk="false" nullable="false" description="Provider cho hiển thị" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Ngày liên kết" />
+    </Node>
+    <Node id="verification_challenges" kind="Table" name="verification_challenges" x="1420" y="40" w="390" h="356">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="Challenge opaque" />
+      <Column name="user_id" type="uuid" pk="false" nullable="true" description="Null cho phone login chưa biết user" />
+      <Column name="purpose" type="varchar(32)" pk="false" nullable="false" description="PHONE_LOGIN, PHONE_CHANGE, EMAIL_CHANGE, RESET_PASSWORD" />
+      <Column name="target" type="varchar(254)" pk="false" nullable="false" description="Email/phone chuẩn hóa cần xác minh" />
+      <Column name="secret_digest" type="varchar(128)" pk="false" nullable="false" description="Token hash; OTP dùng keyed digest, không lưu plaintext" />
+      <Column name="session_binding" type="varchar(128)" pk="false" nullable="true" description="Hash ràng buộc session cho OTP/link; reset email không yêu cầu cùng browser" />
+      <Column name="auth_version" type="bigint" pk="false" nullable="true" description="sessionVersion khi phát hành challenge cho user" />
+      <Column name="attempts" type="smallint" pk="false" nullable="false" description="Số lần OTP sai" />
+      <Column name="expires_at" type="timestamptz" pk="false" nullable="false" description="Hạn theo purpose" />
+      <Column name="resend_after" type="timestamptz" pk="false" nullable="false" description="Cooldown gửi lại" />
+      <Column name="verified_at" type="timestamptz" pk="false" nullable="true" description="Đã chứng minh mã nhưng chưa hoàn thành nghiệp vụ" />
+      <Column name="consumed_at" type="timestamptz" pk="false" nullable="true" description="Đã dùng hoặc vô hiệu" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Ngày tạo" />
+    </Node>
+    <Node id="categories" kind="Table" name="categories" x="40" y="690" w="390" h="224">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID loại" />
+      <Column name="name" type="varchar(100)" pk="false" nullable="false" description="Tên loại" />
+      <Column name="slug" type="varchar(120)" pk="false" nullable="false" description="Slug loại" />
+      <Column name="description" type="varchar(1000)" pk="false" nullable="true" description="Mô tả" />
+      <Column name="version" type="bigint" pk="false" nullable="false" description="Optimistic lock" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Ngày tạo" />
+      <Column name="updated_at" type="timestamptz" pk="false" nullable="false" description="Ngày sửa" />
+    </Node>
+    <Node id="products" kind="Table" name="products" x="500" y="690" w="390" h="400">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID sản phẩm" />
+      <Column name="category_id" type="uuid" pk="false" nullable="false" description="Loại hiện tại" />
+      <Column name="sku" type="varchar(50)" pk="false" nullable="false" description="Mã SKU bất biến sau tạo" />
+      <Column name="slug" type="varchar(180)" pk="false" nullable="false" description="Đường dẫn" />
+      <Column name="name" type="varchar(180)" pk="false" nullable="false" description="Tên PC" />
+      <Column name="brand" type="varchar(100)" pk="false" nullable="false" description="Hãng dạng text" />
+      <Column name="description" type="text" pk="false" nullable="true" description="Mô tả tối đa 10000 ký tự tại Java" />
+      <Column name="price" type="numeric(19,0)" pk="false" nullable="false" description="Giá bán 1..1 tỷ VND" />
+      <Column name="status" type="varchar(20)" pk="false" nullable="false" description="ACTIVE/INACTIVE/DISCONTINUED" />
+      <Column name="warranty_months" type="smallint" pk="false" nullable="false" description="0..60; 0 là không bảo hành trong hệ thống" />
+      <Column name="stock_on_hand" type="integer" pk="false" nullable="false" description="Số thực có 0..10000" />
+      <Column name="reserved_quantity" type="integer" pk="false" nullable="false" description="Số đã giữ cho order HELD" />
+      <Column name="version" type="bigint" pk="false" nullable="false" description="Optimistic lock" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Ngày tạo" />
+      <Column name="updated_at" type="timestamptz" pk="false" nullable="false" description="Ngày sửa" />
+    </Node>
+    <Node id="product_specs" kind="Table" name="product_specs" x="960" y="690" w="390" h="290">
+      <Column name="product_id" type="uuid" pk="true" nullable="false" description="Shared PK" />
+      <Column name="cpu" type="varchar(150)" pk="false" nullable="false" description="Tên CPU" />
+      <Column name="gpu" type="varchar(150)" pk="false" nullable="false" description="Tên GPU hoặc tích hợp" />
+      <Column name="ram_gb" type="integer" pk="false" nullable="false" description="1..1024 GB" />
+      <Column name="storage_gb" type="integer" pk="false" nullable="false" description="1..100000 GB" />
+      <Column name="storage_type" type="varchar(20)" pk="false" nullable="false" description="SSD/HDD/HYBRID" />
+      <Column name="motherboard" type="varchar(150)" pk="false" nullable="false" description="Bo mạch" />
+      <Column name="psu" type="varchar(150)" pk="false" nullable="false" description="Nguồn" />
+      <Column name="case_name" type="varchar(150)" pk="false" nullable="false" description="Vỏ máy" />
+      <Column name="operating_system" type="varchar(150)" pk="false" nullable="false" description="Hệ điều hành hoặc Không kèm OS" />
+    </Node>
+    <Node id="product_images" kind="Table" name="product_images" x="1420" y="690" w="390" h="268">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID ảnh" />
+      <Column name="product_id" type="uuid" pk="false" nullable="false" description="PC sở hữu" />
+      <Column name="storage_key" type="varchar(255)" pk="false" nullable="false" description="Tên file do server tạo" />
+      <Column name="mime_type" type="varchar(32)" pk="false" nullable="false" description="image/jpeg, image/png, image/webp" />
+      <Column name="size_bytes" type="bigint" pk="false" nullable="false" description="≤5242880" />
+      <Column name="sort_order" type="smallint" pk="false" nullable="false" description="0..7, không trùng trong PC" />
+      <Column name="is_cover" type="boolean" pk="false" nullable="false" description="Ảnh đại diện" />
+      <Column name="alt_text" type="varchar(180)" pk="false" nullable="false" description="Nội dung thay thế" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Ngày upload" />
+    </Node>
+    <Node id="product_suitability" kind="Table" name="product_suitability" x="40" y="1340" w="390" h="202">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID profile" />
+      <Column name="product_id" type="uuid" pk="false" nullable="false" description="PC" />
+      <Column name="usage_profile" type="varchar(32)" pk="false" nullable="false" description="OFFICE_STUDY/PROGRAMMING/GAMING/CONTENT_CREATION" />
+      <Column name="score" type="smallint" pk="false" nullable="false" description="1..5" />
+      <Column name="reason" type="varchar(1000)" pk="false" nullable="false" description="Lý do 10–1000" />
+      <Column name="limitation" type="varchar(1000)" pk="false" nullable="true" description="Hạn chế" />
+    </Node>
+    <Node id="inventory_adjustments" kind="Table" name="inventory_adjustments" x="500" y="1340" w="390" h="268">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID adjustment" />
+      <Column name="product_id" type="uuid" pk="false" nullable="false" description="SKU được chỉnh" />
+      <Column name="actor_id" type="uuid" pk="false" nullable="false" description="Admin thực hiện" />
+      <Column name="kind" type="varchar(16)" pk="false" nullable="false" description="INITIAL hoặc MANUAL" />
+      <Column name="delta" type="integer" pk="false" nullable="false" description="Lượng tăng/giảm khác 0" />
+      <Column name="before_quantity" type="integer" pk="false" nullable="false" description="onHand trước" />
+      <Column name="after_quantity" type="integer" pk="false" nullable="false" description="onHand sau" />
+      <Column name="reason" type="varchar(500)" pk="false" nullable="false" description="Lý do" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Ngày thao tác" />
+    </Node>
+    <Node id="orders" kind="Table" name="orders" x="960" y="1340" w="390" h="576">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID order" />
+      <Column name="code" type="varchar(32)" pk="false" nullable="false" description="Mã hiển thị PC + ngày + đoạn UUID; retry khi collision" />
+      <Column name="user_id" type="uuid" pk="false" nullable="false" description="Chủ đơn" />
+      <Column name="status" type="varchar(32)" pk="false" nullable="false" description="AWAITING_PAYMENT/AWAITING_CONFIRMATION/CONFIRMED/SHIPPING/DELIVERED/CANCELLED/EXPIRED" />
+      <Column name="payment_method" type="varchar(16)" pk="false" nullable="false" description="COD/VNPAY" />
+      <Column name="reservation_status" type="varchar(16)" pk="false" nullable="false" description="HELD/RELEASED/CONSUMED, marker chống xử lý tồn lặp" />
+      <Column name="recipient_name" type="varchar(100)" pk="false" nullable="false" description="Tên nhận snapshot" />
+      <Column name="phone_snapshot" type="varchar(16)" pk="false" nullable="false" description="Phone đã verified khi đặt" />
+      <Column name="province_snapshot" type="varchar(100)" pk="false" nullable="false" description="Tỉnh/thành snapshot" />
+      <Column name="district_snapshot" type="varchar(100)" pk="false" nullable="true" description="Quận/huyện nếu có" />
+      <Column name="ward_snapshot" type="varchar(100)" pk="false" nullable="false" description="Phường/xã snapshot" />
+      <Column name="address_line_snapshot" type="varchar(255)" pk="false" nullable="false" description="Địa chỉ snapshot" />
+      <Column name="note" type="varchar(500)" pk="false" nullable="true" description="Ghi chú Customer" />
+      <Column name="subtotal" type="numeric(19,0)" pk="false" nullable="false" description="Tổng items" />
+      <Column name="shipping_fee" type="numeric(19,0)" pk="false" nullable="false" description="Phí được snapshot lúc đặt" />
+      <Column name="grand_total" type="numeric(19,0)" pk="false" nullable="false" description="subtotal + shippingFee" />
+      <Column name="currency" type="varchar(3)" pk="false" nullable="false" description="Tiền tệ" />
+      <Column name="expires_at" type="timestamptz" pk="false" nullable="true" description="Chỉ VNPAY: created +15 phút" />
+      <Column name="shipped_at" type="timestamptz" pk="false" nullable="true" description="Khi SHIPPING" />
+      <Column name="delivered_at" type="timestamptz" pk="false" nullable="true" description="Khi DELIVERED; gốc bảo hành" />
+      <Column name="version" type="bigint" pk="false" nullable="false" description="Chống thao tác stale" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Ngày đặt" />
+      <Column name="updated_at" type="timestamptz" pk="false" nullable="false" description="Ngày cập nhật" />
+    </Node>
+    <Node id="order_items" kind="Table" name="order_items" x="1420" y="1340" w="390" h="268">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID dòng" />
+      <Column name="order_id" type="uuid" pk="false" nullable="false" description="Đơn sở hữu" />
+      <Column name="product_id" type="uuid" pk="false" nullable="false" description="PC gốc" />
+      <Column name="sku_snapshot" type="varchar(50)" pk="false" nullable="false" description="SKU khi đặt" />
+      <Column name="name_snapshot" type="varchar(180)" pk="false" nullable="false" description="Tên khi đặt" />
+      <Column name="spec_snapshot" type="jsonb" pk="false" nullable="false" description="Object cpu,gpu,ramGb,storageGb,storageType,motherboard,psu,caseName,operatingSystem" />
+      <Column name="unit_price_snapshot" type="numeric(19,0)" pk="false" nullable="false" description="Đơn giá khi đặt" />
+      <Column name="warranty_months_snapshot" type="smallint" pk="false" nullable="false" description="Thời hạn 0..60 tháng" />
+      <Column name="quantity" type="integer" pk="false" nullable="false" description="1..99; quantity=0 trong revision dẫn xóa dòng trước xác nhận" />
+    </Node>
+    <Node id="order_revisions" kind="Table" name="order_revisions" x="40" y="1990" w="390" h="224">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID revision" />
+      <Column name="order_id" type="uuid" pk="false" nullable="false" description="Đơn" />
+      <Column name="actor_id" type="uuid" pk="false" nullable="false" description="Admin" />
+      <Column name="before_snapshot" type="jsonb" pk="false" nullable="false" description="items [{id,sku,quantity,unitPrice}], subtotal,shippingFee,total" />
+      <Column name="after_snapshot" type="jsonb" pk="false" nullable="false" description="Cùng shape, bao gồm dòng loại khỏi đơn với quantity=0" />
+      <Column name="reason" type="varchar(500)" pk="false" nullable="false" description="Lý do sửa" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Thời điểm" />
+    </Node>
+    <Node id="order_status_history" kind="Table" name="order_status_history" x="500" y="1990" w="390" h="246">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID event" />
+      <Column name="order_id" type="uuid" pk="false" nullable="false" description="Đơn" />
+      <Column name="actor_id" type="uuid" pk="false" nullable="true" description="Null cho scheduler/IPN" />
+      <Column name="actor_type" type="varchar(16)" pk="false" nullable="false" description="CUSTOMER/ADMIN/SYSTEM/GATEWAY" />
+      <Column name="from_status" type="varchar(32)" pk="false" nullable="true" description="Null ở event tạo" />
+      <Column name="to_status" type="varchar(32)" pk="false" nullable="false" description="Trạng thái đích" />
+      <Column name="reason" type="varchar(500)" pk="false" nullable="true" description="Nội dung đã lọc để Customer xem" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Thời điểm" />
+    </Node>
+    <Node id="idempotency_records" kind="Table" name="idempotency_records" x="960" y="1990" w="390" h="202">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID nội bộ" />
+      <Column name="user_id" type="uuid" pk="false" nullable="false" description="Principal gửi yêu cầu" />
+      <Column name="request_key" type="uuid" pk="false" nullable="false" description="Idempotency-Key từ client" />
+      <Column name="request_hash" type="varchar(64)" pk="false" nullable="false" description="SHA256 canonical quoteId/cartVersion/method" />
+      <Column name="order_id" type="uuid" pk="false" nullable="false" description="Kết quả đã commit" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Ngày tạo" />
+    </Node>
+    <Node id="payment_attempts" kind="Table" name="payment_attempts" x="1420" y="1990" w="390" h="334">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID attempt" />
+      <Column name="order_id" type="uuid" pk="false" nullable="false" description="Quan hệ 1–1 với order" />
+      <Column name="method" type="varchar(16)" pk="false" nullable="false" description="COD/VNPAY" />
+      <Column name="merchant_reference" type="varchar(100)" pk="false" nullable="false" description="Reference gateway hoặc COD internal" />
+      <Column name="amount" type="numeric(19,0)" pk="false" nullable="false" description="grandTotal hiện hành; sửa COD cập nhật cùng transaction" />
+      <Column name="currency" type="varchar(3)" pk="false" nullable="false" description="Tiền tệ" />
+      <Column name="status" type="varchar(24)" pk="false" nullable="false" description="PENDING/PAID/FAILED/EXPIRED/CANCELLED/REVIEW_REQUIRED" />
+      <Column name="gateway_transaction_no" type="varchar(100)" pk="false" nullable="true" description="Mã gateway nhận qua IPN đã xác minh" />
+      <Column name="paid_at" type="timestamptz" pk="false" nullable="true" description="Lúc ghi nhận tiền; REVIEW_REQUIRED vẫn ghi nếu xác nhận success" />
+      <Column name="version" type="bigint" pk="false" nullable="false" description="Version" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Ngày tạo" />
+      <Column name="updated_at" type="timestamptz" pk="false" nullable="false" description="Ngày cập nhật" />
+    </Node>
+    <Node id="payment_events" kind="Table" name="payment_events" x="40" y="2640" w="390" h="268">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID event" />
+      <Column name="attempt_id" type="uuid" pk="false" nullable="false" description="Attempt" />
+      <Column name="event_key" type="varchar(64)" pk="false" nullable="false" description="SHA256 canonical reference/transactionNo/responseCode/status/amount" />
+      <Column name="event_type" type="varchar(24)" pk="false" nullable="false" description="VNPAY_IPN/COD_DELIVERED" />
+      <Column name="response_code" type="varchar(8)" pk="false" nullable="true" description="Mã cổng" />
+      <Column name="transaction_status" type="varchar(8)" pk="false" nullable="true" description="Mã trạng thái cổng" />
+      <Column name="payload_sanitized" type="jsonb" pk="false" nullable="false" description="Allowlist reference,amount,currency,transactionNo,responseCode,transactionStatus; không secureHash/secret" />
+      <Column name="result" type="varchar(32)" pk="false" nullable="false" description="ACCEPTED/FAILED/LATE_REVIEW/IGNORED_AFTER_PAID" />
+      <Column name="received_at" type="timestamptz" pk="false" nullable="false" description="Thời gian server nhận" />
+    </Node>
+    <Node id="warranty_requests" kind="Table" name="warranty_requests" x="500" y="2640" w="390" h="466">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID request" />
+      <Column name="code" type="varchar(32)" pk="false" nullable="false" description="Mã WR + ngày + đoạn UUID" />
+      <Column name="user_id" type="uuid" pk="false" nullable="false" description="Chủ yêu cầu, phải trùng order.userId" />
+      <Column name="order_item_id" type="uuid" pk="false" nullable="false" description="Dòng hàng đã giao" />
+      <Column name="item_unit_index" type="integer" pk="false" nullable="false" description="1..quantity" />
+      <Column name="client_request_id" type="uuid" pk="false" nullable="false" description="Chống submit lại" />
+      <Column name="request_hash" type="varchar(64)" pk="false" nullable="false" description="Hash item/unit/description/ảnh theo checksum" />
+      <Column name="warranty_start_at" type="timestamptz" pk="false" nullable="false" description="Snapshot deliveredAt" />
+      <Column name="warranty_expires_at" type="timestamptz" pk="false" nullable="false" description="Snapshot thời hạn tính theo tháng lịch" />
+      <Column name="issue_description" type="varchar(2000)" pk="false" nullable="false" description="Mô tả 10–2000" />
+      <Column name="status" type="varchar(20)" pk="false" nullable="false" description="REQUESTED/RECEIVED/PROCESSING/COMPLETED/REJECTED/CANCELLED" />
+      <Column name="public_resolution" type="varchar(2000)" pk="false" nullable="true" description="Kết luận hoặc lý do từ chối" />
+      <Column name="internal_note" type="varchar(2000)" pk="false" nullable="true" description="Ghi chú nội bộ gần nhất, history vẫn append-only" />
+      <Column name="received_at" type="timestamptz" pk="false" nullable="true" description="Lúc nhận máy" />
+      <Column name="closed_at" type="timestamptz" pk="false" nullable="true" description="Lúc COMPLETED/REJECTED/CANCELLED" />
+      <Column name="version" type="bigint" pk="false" nullable="false" description="Optimistic lock" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Lúc gửi" />
+      <Column name="updated_at" type="timestamptz" pk="false" nullable="false" description="Lúc cập nhật" />
+    </Node>
+    <Node id="warranty_request_images" kind="Table" name="warranty_request_images" x="960" y="2640" w="390" h="246">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID ảnh" />
+      <Column name="request_id" type="uuid" pk="false" nullable="false" description="Yêu cầu" />
+      <Column name="storage_key" type="varchar(255)" pk="false" nullable="false" description="Đường dẫn nội bộ do server tạo" />
+      <Column name="mime_type" type="varchar(32)" pk="false" nullable="false" description="JPEG/PNG/WebP" />
+      <Column name="size_bytes" type="bigint" pk="false" nullable="false" description="≤5242880" />
+      <Column name="checksum" type="varchar(64)" pk="false" nullable="false" description="SHA256 phục vụ idempotency ảnh" />
+      <Column name="sort_order" type="smallint" pk="false" nullable="false" description="0..2" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Ngày tạo" />
+    </Node>
+    <Node id="warranty_request_events" kind="Table" name="warranty_request_events" x="1420" y="2640" w="390" h="246">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID event" />
+      <Column name="request_id" type="uuid" pk="false" nullable="false" description="Yêu cầu" />
+      <Column name="actor_id" type="uuid" pk="false" nullable="false" description="Customer/Admin thực hiện" />
+      <Column name="from_status" type="varchar(20)" pk="false" nullable="true" description="Null event tạo" />
+      <Column name="to_status" type="varchar(20)" pk="false" nullable="false" description="Bằng fromStatus cho note-only" />
+      <Column name="public_note" type="varchar(2000)" pk="false" nullable="true" description="Customer được xem" />
+      <Column name="internal_note" type="varchar(2000)" pk="false" nullable="true" description="Chỉ Admin" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Thời điểm" />
+    </Node>
+    <Edge source="users" target="user_roles" label="user_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="users" target="external_identities" label="user_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="users" target="verification_challenges" label="user_id" kind="ForeignKey" nullable="true" single="false" />
+    <Edge source="categories" target="products" label="category_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="products" target="product_specs" label="product_id" kind="ForeignKey" nullable="false" single="true" />
+    <Edge source="products" target="product_images" label="product_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="products" target="product_suitability" label="product_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="products" target="inventory_adjustments" label="product_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="users" target="inventory_adjustments" label="actor_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="users" target="orders" label="user_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="orders" target="order_items" label="order_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="products" target="order_items" label="product_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="orders" target="order_revisions" label="order_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="users" target="order_revisions" label="actor_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="orders" target="order_status_history" label="order_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="users" target="order_status_history" label="actor_id" kind="ForeignKey" nullable="true" single="false" />
+    <Edge source="users" target="idempotency_records" label="user_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="orders" target="idempotency_records" label="order_id" kind="ForeignKey" nullable="false" single="true" />
+    <Edge source="orders" target="payment_attempts" label="order_id" kind="ForeignKey" nullable="false" single="true" />
+    <Edge source="payment_attempts" target="payment_events" label="attempt_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="users" target="warranty_requests" label="user_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="order_items" target="warranty_requests" label="order_item_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="warranty_requests" target="warranty_request_images" label="request_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="warranty_requests" target="warranty_request_events" label="request_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="users" target="warranty_request_events" label="actor_id" kind="ForeignKey" nullable="false" single="false" />
+  </Diagram>
+  <Diagram id="ERD-IDENTITY" kind="ERD" name="ERD-IDENTITY — PC Store">
+    <Node id="users" kind="Table" name="users" x="40" y="40" w="390" h="466">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="Định danh user" />
+      <Column name="email" type="varchar(254)" pk="false" nullable="true" description="Email trim lowercase; null cho user phone-only" />
+      <Column name="email_verified_at" type="timestamptz" pk="false" nullable="true" description="Thời điểm email hiện tại được xác minh" />
+      <Column name="password_hash" type="varchar(100)" pk="false" nullable="true" description="BCrypt; null nếu chưa có local credential" />
+      <Column name="phone" type="varchar(16)" pk="false" nullable="true" description="E.164 đã chuẩn hóa" />
+      <Column name="phone_verified_at" type="timestamptz" pk="false" nullable="true" description="Bằng chứng phone hiện tại đã xác minh" />
+      <Column name="full_name" type="varchar(100)" pk="false" nullable="false" description="Tên hiển thị 2–100 ký tự" />
+      <Column name="recipient_name" type="varchar(100)" pk="false" nullable="true" description="Tên nhận mặc định" />
+      <Column name="province" type="varchar(100)" pk="false" nullable="true" description="Tỉnh/thành dạng text trong đồ án" />
+      <Column name="district" type="varchar(100)" pk="false" nullable="true" description="Trường tương thích địa chỉ, không bắt buộc" />
+      <Column name="ward" type="varchar(100)" pk="false" nullable="true" description="Phường/xã" />
+      <Column name="address_line" type="varchar(255)" pk="false" nullable="true" description="Địa chỉ chi tiết" />
+      <Column name="status" type="varchar(16)" pk="false" nullable="false" description="ACTIVE hoặc LOCKED" />
+      <Column name="status_reason" type="varchar(500)" pk="false" nullable="true" description="Lý do khóa/mở gần nhất" />
+      <Column name="session_version" type="bigint" pk="false" nullable="false" description="Đổi khi cần vô hiệu mọi phiên cũ" />
+      <Column name="version" type="bigint" pk="false" nullable="false" description="Optimistic lock" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Ngày tạo UTC" />
+      <Column name="updated_at" type="timestamptz" pk="false" nullable="false" description="Ngày cập nhật UTC" />
+    </Node>
+    <Node id="user_roles" kind="Table" name="user_roles" x="500" y="40" w="390" h="114">
+      <Column name="user_id" type="uuid" pk="true" nullable="false" description="User sở hữu" />
+      <Column name="role" type="varchar(16)" pk="true" nullable="false" description="CUSTOMER hoặc ADMIN" />
+    </Node>
+    <Node id="external_identities" kind="Table" name="external_identities" x="960" y="40" w="390" h="202">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID liên kết" />
+      <Column name="user_id" type="uuid" pk="false" nullable="false" description="Tài khoản nội bộ" />
+      <Column name="issuer" type="varchar(255)" pk="false" nullable="false" description="Issuer đã xác minh" />
+      <Column name="subject" type="varchar(255)" pk="false" nullable="false" description="OIDC sub bất biến" />
+      <Column name="provider" type="varchar(20)" pk="false" nullable="false" description="Provider cho hiển thị" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Ngày liên kết" />
+    </Node>
+    <Node id="verification_challenges" kind="Table" name="verification_challenges" x="1420" y="40" w="390" h="356">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="Challenge opaque" />
+      <Column name="user_id" type="uuid" pk="false" nullable="true" description="Null cho phone login chưa biết user" />
+      <Column name="purpose" type="varchar(32)" pk="false" nullable="false" description="PHONE_LOGIN, PHONE_CHANGE, EMAIL_CHANGE, RESET_PASSWORD" />
+      <Column name="target" type="varchar(254)" pk="false" nullable="false" description="Email/phone chuẩn hóa cần xác minh" />
+      <Column name="secret_digest" type="varchar(128)" pk="false" nullable="false" description="Token hash; OTP dùng keyed digest, không lưu plaintext" />
+      <Column name="session_binding" type="varchar(128)" pk="false" nullable="true" description="Hash ràng buộc session cho OTP/link; reset email không yêu cầu cùng browser" />
+      <Column name="auth_version" type="bigint" pk="false" nullable="true" description="sessionVersion khi phát hành challenge cho user" />
+      <Column name="attempts" type="smallint" pk="false" nullable="false" description="Số lần OTP sai" />
+      <Column name="expires_at" type="timestamptz" pk="false" nullable="false" description="Hạn theo purpose" />
+      <Column name="resend_after" type="timestamptz" pk="false" nullable="false" description="Cooldown gửi lại" />
+      <Column name="verified_at" type="timestamptz" pk="false" nullable="true" description="Đã chứng minh mã nhưng chưa hoàn thành nghiệp vụ" />
+      <Column name="consumed_at" type="timestamptz" pk="false" nullable="true" description="Đã dùng hoặc vô hiệu" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Ngày tạo" />
+    </Node>
+    <Edge source="users" target="user_roles" label="user_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="users" target="external_identities" label="user_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="users" target="verification_challenges" label="user_id" kind="ForeignKey" nullable="true" single="false" />
+  </Diagram>
+  <Diagram id="ERD-CATALOG" kind="ERD" name="ERD-CATALOG — PC Store">
+    <Node id="categories" kind="Table" name="categories" x="40" y="40" w="390" h="224">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID loại" />
+      <Column name="name" type="varchar(100)" pk="false" nullable="false" description="Tên loại" />
+      <Column name="slug" type="varchar(120)" pk="false" nullable="false" description="Slug loại" />
+      <Column name="description" type="varchar(1000)" pk="false" nullable="true" description="Mô tả" />
+      <Column name="version" type="bigint" pk="false" nullable="false" description="Optimistic lock" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Ngày tạo" />
+      <Column name="updated_at" type="timestamptz" pk="false" nullable="false" description="Ngày sửa" />
+    </Node>
+    <Node id="products" kind="Table" name="products" x="500" y="40" w="390" h="400">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID sản phẩm" />
+      <Column name="category_id" type="uuid" pk="false" nullable="false" description="Loại hiện tại" />
+      <Column name="sku" type="varchar(50)" pk="false" nullable="false" description="Mã SKU bất biến sau tạo" />
+      <Column name="slug" type="varchar(180)" pk="false" nullable="false" description="Đường dẫn" />
+      <Column name="name" type="varchar(180)" pk="false" nullable="false" description="Tên PC" />
+      <Column name="brand" type="varchar(100)" pk="false" nullable="false" description="Hãng dạng text" />
+      <Column name="description" type="text" pk="false" nullable="true" description="Mô tả tối đa 10000 ký tự tại Java" />
+      <Column name="price" type="numeric(19,0)" pk="false" nullable="false" description="Giá bán 1..1 tỷ VND" />
+      <Column name="status" type="varchar(20)" pk="false" nullable="false" description="ACTIVE/INACTIVE/DISCONTINUED" />
+      <Column name="warranty_months" type="smallint" pk="false" nullable="false" description="0..60; 0 là không bảo hành trong hệ thống" />
+      <Column name="stock_on_hand" type="integer" pk="false" nullable="false" description="Số thực có 0..10000" />
+      <Column name="reserved_quantity" type="integer" pk="false" nullable="false" description="Số đã giữ cho order HELD" />
+      <Column name="version" type="bigint" pk="false" nullable="false" description="Optimistic lock" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Ngày tạo" />
+      <Column name="updated_at" type="timestamptz" pk="false" nullable="false" description="Ngày sửa" />
+    </Node>
+    <Node id="product_specs" kind="Table" name="product_specs" x="960" y="40" w="390" h="290">
+      <Column name="product_id" type="uuid" pk="true" nullable="false" description="Shared PK" />
+      <Column name="cpu" type="varchar(150)" pk="false" nullable="false" description="Tên CPU" />
+      <Column name="gpu" type="varchar(150)" pk="false" nullable="false" description="Tên GPU hoặc tích hợp" />
+      <Column name="ram_gb" type="integer" pk="false" nullable="false" description="1..1024 GB" />
+      <Column name="storage_gb" type="integer" pk="false" nullable="false" description="1..100000 GB" />
+      <Column name="storage_type" type="varchar(20)" pk="false" nullable="false" description="SSD/HDD/HYBRID" />
+      <Column name="motherboard" type="varchar(150)" pk="false" nullable="false" description="Bo mạch" />
+      <Column name="psu" type="varchar(150)" pk="false" nullable="false" description="Nguồn" />
+      <Column name="case_name" type="varchar(150)" pk="false" nullable="false" description="Vỏ máy" />
+      <Column name="operating_system" type="varchar(150)" pk="false" nullable="false" description="Hệ điều hành hoặc Không kèm OS" />
+    </Node>
+    <Node id="product_images" kind="Table" name="product_images" x="1420" y="40" w="390" h="268">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID ảnh" />
+      <Column name="product_id" type="uuid" pk="false" nullable="false" description="PC sở hữu" />
+      <Column name="storage_key" type="varchar(255)" pk="false" nullable="false" description="Tên file do server tạo" />
+      <Column name="mime_type" type="varchar(32)" pk="false" nullable="false" description="image/jpeg, image/png, image/webp" />
+      <Column name="size_bytes" type="bigint" pk="false" nullable="false" description="≤5242880" />
+      <Column name="sort_order" type="smallint" pk="false" nullable="false" description="0..7, không trùng trong PC" />
+      <Column name="is_cover" type="boolean" pk="false" nullable="false" description="Ảnh đại diện" />
+      <Column name="alt_text" type="varchar(180)" pk="false" nullable="false" description="Nội dung thay thế" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Ngày upload" />
+    </Node>
+    <Node id="product_suitability" kind="Table" name="product_suitability" x="40" y="690" w="390" h="202">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID profile" />
+      <Column name="product_id" type="uuid" pk="false" nullable="false" description="PC" />
+      <Column name="usage_profile" type="varchar(32)" pk="false" nullable="false" description="OFFICE_STUDY/PROGRAMMING/GAMING/CONTENT_CREATION" />
+      <Column name="score" type="smallint" pk="false" nullable="false" description="1..5" />
+      <Column name="reason" type="varchar(1000)" pk="false" nullable="false" description="Lý do 10–1000" />
+      <Column name="limitation" type="varchar(1000)" pk="false" nullable="true" description="Hạn chế" />
+    </Node>
+    <Node id="inventory_adjustments" kind="Table" name="inventory_adjustments" x="500" y="690" w="390" h="268">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID adjustment" />
+      <Column name="product_id" type="uuid" pk="false" nullable="false" description="SKU được chỉnh" />
+      <Column name="actor_id" type="uuid" pk="false" nullable="false" description="Admin thực hiện" />
+      <Column name="kind" type="varchar(16)" pk="false" nullable="false" description="INITIAL hoặc MANUAL" />
+      <Column name="delta" type="integer" pk="false" nullable="false" description="Lượng tăng/giảm khác 0" />
+      <Column name="before_quantity" type="integer" pk="false" nullable="false" description="onHand trước" />
+      <Column name="after_quantity" type="integer" pk="false" nullable="false" description="onHand sau" />
+      <Column name="reason" type="varchar(500)" pk="false" nullable="false" description="Lý do" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Ngày thao tác" />
+    </Node>
+    <Node id="users" kind="Table" name="users" x="960" y="690" w="390" h="466">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="Định danh user" />
+      <Column name="email" type="varchar(254)" pk="false" nullable="true" description="Email trim lowercase; null cho user phone-only" />
+      <Column name="email_verified_at" type="timestamptz" pk="false" nullable="true" description="Thời điểm email hiện tại được xác minh" />
+      <Column name="password_hash" type="varchar(100)" pk="false" nullable="true" description="BCrypt; null nếu chưa có local credential" />
+      <Column name="phone" type="varchar(16)" pk="false" nullable="true" description="E.164 đã chuẩn hóa" />
+      <Column name="phone_verified_at" type="timestamptz" pk="false" nullable="true" description="Bằng chứng phone hiện tại đã xác minh" />
+      <Column name="full_name" type="varchar(100)" pk="false" nullable="false" description="Tên hiển thị 2–100 ký tự" />
+      <Column name="recipient_name" type="varchar(100)" pk="false" nullable="true" description="Tên nhận mặc định" />
+      <Column name="province" type="varchar(100)" pk="false" nullable="true" description="Tỉnh/thành dạng text trong đồ án" />
+      <Column name="district" type="varchar(100)" pk="false" nullable="true" description="Trường tương thích địa chỉ, không bắt buộc" />
+      <Column name="ward" type="varchar(100)" pk="false" nullable="true" description="Phường/xã" />
+      <Column name="address_line" type="varchar(255)" pk="false" nullable="true" description="Địa chỉ chi tiết" />
+      <Column name="status" type="varchar(16)" pk="false" nullable="false" description="ACTIVE hoặc LOCKED" />
+      <Column name="status_reason" type="varchar(500)" pk="false" nullable="true" description="Lý do khóa/mở gần nhất" />
+      <Column name="session_version" type="bigint" pk="false" nullable="false" description="Đổi khi cần vô hiệu mọi phiên cũ" />
+      <Column name="version" type="bigint" pk="false" nullable="false" description="Optimistic lock" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Ngày tạo UTC" />
+      <Column name="updated_at" type="timestamptz" pk="false" nullable="false" description="Ngày cập nhật UTC" />
+    </Node>
+    <Edge source="categories" target="products" label="category_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="products" target="product_specs" label="product_id" kind="ForeignKey" nullable="false" single="true" />
+    <Edge source="products" target="product_images" label="product_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="products" target="product_suitability" label="product_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="products" target="inventory_adjustments" label="product_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="users" target="inventory_adjustments" label="actor_id" kind="ForeignKey" nullable="false" single="false" />
+  </Diagram>
+  <Diagram id="ERD-SALES-PAYMENT" kind="ERD" name="ERD-SALES-PAYMENT — PC Store">
+    <Node id="orders" kind="Table" name="orders" x="40" y="40" w="390" h="576">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID order" />
+      <Column name="code" type="varchar(32)" pk="false" nullable="false" description="Mã hiển thị PC + ngày + đoạn UUID; retry khi collision" />
+      <Column name="user_id" type="uuid" pk="false" nullable="false" description="Chủ đơn" />
+      <Column name="status" type="varchar(32)" pk="false" nullable="false" description="AWAITING_PAYMENT/AWAITING_CONFIRMATION/CONFIRMED/SHIPPING/DELIVERED/CANCELLED/EXPIRED" />
+      <Column name="payment_method" type="varchar(16)" pk="false" nullable="false" description="COD/VNPAY" />
+      <Column name="reservation_status" type="varchar(16)" pk="false" nullable="false" description="HELD/RELEASED/CONSUMED, marker chống xử lý tồn lặp" />
+      <Column name="recipient_name" type="varchar(100)" pk="false" nullable="false" description="Tên nhận snapshot" />
+      <Column name="phone_snapshot" type="varchar(16)" pk="false" nullable="false" description="Phone đã verified khi đặt" />
+      <Column name="province_snapshot" type="varchar(100)" pk="false" nullable="false" description="Tỉnh/thành snapshot" />
+      <Column name="district_snapshot" type="varchar(100)" pk="false" nullable="true" description="Quận/huyện nếu có" />
+      <Column name="ward_snapshot" type="varchar(100)" pk="false" nullable="false" description="Phường/xã snapshot" />
+      <Column name="address_line_snapshot" type="varchar(255)" pk="false" nullable="false" description="Địa chỉ snapshot" />
+      <Column name="note" type="varchar(500)" pk="false" nullable="true" description="Ghi chú Customer" />
+      <Column name="subtotal" type="numeric(19,0)" pk="false" nullable="false" description="Tổng items" />
+      <Column name="shipping_fee" type="numeric(19,0)" pk="false" nullable="false" description="Phí được snapshot lúc đặt" />
+      <Column name="grand_total" type="numeric(19,0)" pk="false" nullable="false" description="subtotal + shippingFee" />
+      <Column name="currency" type="varchar(3)" pk="false" nullable="false" description="Tiền tệ" />
+      <Column name="expires_at" type="timestamptz" pk="false" nullable="true" description="Chỉ VNPAY: created +15 phút" />
+      <Column name="shipped_at" type="timestamptz" pk="false" nullable="true" description="Khi SHIPPING" />
+      <Column name="delivered_at" type="timestamptz" pk="false" nullable="true" description="Khi DELIVERED; gốc bảo hành" />
+      <Column name="version" type="bigint" pk="false" nullable="false" description="Chống thao tác stale" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Ngày đặt" />
+      <Column name="updated_at" type="timestamptz" pk="false" nullable="false" description="Ngày cập nhật" />
+    </Node>
+    <Node id="order_items" kind="Table" name="order_items" x="500" y="40" w="390" h="268">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID dòng" />
+      <Column name="order_id" type="uuid" pk="false" nullable="false" description="Đơn sở hữu" />
+      <Column name="product_id" type="uuid" pk="false" nullable="false" description="PC gốc" />
+      <Column name="sku_snapshot" type="varchar(50)" pk="false" nullable="false" description="SKU khi đặt" />
+      <Column name="name_snapshot" type="varchar(180)" pk="false" nullable="false" description="Tên khi đặt" />
+      <Column name="spec_snapshot" type="jsonb" pk="false" nullable="false" description="Object cpu,gpu,ramGb,storageGb,storageType,motherboard,psu,caseName,operatingSystem" />
+      <Column name="unit_price_snapshot" type="numeric(19,0)" pk="false" nullable="false" description="Đơn giá khi đặt" />
+      <Column name="warranty_months_snapshot" type="smallint" pk="false" nullable="false" description="Thời hạn 0..60 tháng" />
+      <Column name="quantity" type="integer" pk="false" nullable="false" description="1..99; quantity=0 trong revision dẫn xóa dòng trước xác nhận" />
+    </Node>
+    <Node id="order_revisions" kind="Table" name="order_revisions" x="960" y="40" w="390" h="224">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID revision" />
+      <Column name="order_id" type="uuid" pk="false" nullable="false" description="Đơn" />
+      <Column name="actor_id" type="uuid" pk="false" nullable="false" description="Admin" />
+      <Column name="before_snapshot" type="jsonb" pk="false" nullable="false" description="items [{id,sku,quantity,unitPrice}], subtotal,shippingFee,total" />
+      <Column name="after_snapshot" type="jsonb" pk="false" nullable="false" description="Cùng shape, bao gồm dòng loại khỏi đơn với quantity=0" />
+      <Column name="reason" type="varchar(500)" pk="false" nullable="false" description="Lý do sửa" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Thời điểm" />
+    </Node>
+    <Node id="order_status_history" kind="Table" name="order_status_history" x="1420" y="40" w="390" h="246">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID event" />
+      <Column name="order_id" type="uuid" pk="false" nullable="false" description="Đơn" />
+      <Column name="actor_id" type="uuid" pk="false" nullable="true" description="Null cho scheduler/IPN" />
+      <Column name="actor_type" type="varchar(16)" pk="false" nullable="false" description="CUSTOMER/ADMIN/SYSTEM/GATEWAY" />
+      <Column name="from_status" type="varchar(32)" pk="false" nullable="true" description="Null ở event tạo" />
+      <Column name="to_status" type="varchar(32)" pk="false" nullable="false" description="Trạng thái đích" />
+      <Column name="reason" type="varchar(500)" pk="false" nullable="true" description="Nội dung đã lọc để Customer xem" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Thời điểm" />
+    </Node>
+    <Node id="idempotency_records" kind="Table" name="idempotency_records" x="40" y="690" w="390" h="202">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID nội bộ" />
+      <Column name="user_id" type="uuid" pk="false" nullable="false" description="Principal gửi yêu cầu" />
+      <Column name="request_key" type="uuid" pk="false" nullable="false" description="Idempotency-Key từ client" />
+      <Column name="request_hash" type="varchar(64)" pk="false" nullable="false" description="SHA256 canonical quoteId/cartVersion/method" />
+      <Column name="order_id" type="uuid" pk="false" nullable="false" description="Kết quả đã commit" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Ngày tạo" />
+    </Node>
+    <Node id="payment_attempts" kind="Table" name="payment_attempts" x="500" y="690" w="390" h="334">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID attempt" />
+      <Column name="order_id" type="uuid" pk="false" nullable="false" description="Quan hệ 1–1 với order" />
+      <Column name="method" type="varchar(16)" pk="false" nullable="false" description="COD/VNPAY" />
+      <Column name="merchant_reference" type="varchar(100)" pk="false" nullable="false" description="Reference gateway hoặc COD internal" />
+      <Column name="amount" type="numeric(19,0)" pk="false" nullable="false" description="grandTotal hiện hành; sửa COD cập nhật cùng transaction" />
+      <Column name="currency" type="varchar(3)" pk="false" nullable="false" description="Tiền tệ" />
+      <Column name="status" type="varchar(24)" pk="false" nullable="false" description="PENDING/PAID/FAILED/EXPIRED/CANCELLED/REVIEW_REQUIRED" />
+      <Column name="gateway_transaction_no" type="varchar(100)" pk="false" nullable="true" description="Mã gateway nhận qua IPN đã xác minh" />
+      <Column name="paid_at" type="timestamptz" pk="false" nullable="true" description="Lúc ghi nhận tiền; REVIEW_REQUIRED vẫn ghi nếu xác nhận success" />
+      <Column name="version" type="bigint" pk="false" nullable="false" description="Version" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Ngày tạo" />
+      <Column name="updated_at" type="timestamptz" pk="false" nullable="false" description="Ngày cập nhật" />
+    </Node>
+    <Node id="payment_events" kind="Table" name="payment_events" x="960" y="690" w="390" h="268">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID event" />
+      <Column name="attempt_id" type="uuid" pk="false" nullable="false" description="Attempt" />
+      <Column name="event_key" type="varchar(64)" pk="false" nullable="false" description="SHA256 canonical reference/transactionNo/responseCode/status/amount" />
+      <Column name="event_type" type="varchar(24)" pk="false" nullable="false" description="VNPAY_IPN/COD_DELIVERED" />
+      <Column name="response_code" type="varchar(8)" pk="false" nullable="true" description="Mã cổng" />
+      <Column name="transaction_status" type="varchar(8)" pk="false" nullable="true" description="Mã trạng thái cổng" />
+      <Column name="payload_sanitized" type="jsonb" pk="false" nullable="false" description="Allowlist reference,amount,currency,transactionNo,responseCode,transactionStatus; không secureHash/secret" />
+      <Column name="result" type="varchar(32)" pk="false" nullable="false" description="ACCEPTED/FAILED/LATE_REVIEW/IGNORED_AFTER_PAID" />
+      <Column name="received_at" type="timestamptz" pk="false" nullable="false" description="Thời gian server nhận" />
+    </Node>
+    <Node id="products" kind="Table" name="products" x="1420" y="690" w="390" h="400">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID sản phẩm" />
+      <Column name="category_id" type="uuid" pk="false" nullable="false" description="Loại hiện tại" />
+      <Column name="sku" type="varchar(50)" pk="false" nullable="false" description="Mã SKU bất biến sau tạo" />
+      <Column name="slug" type="varchar(180)" pk="false" nullable="false" description="Đường dẫn" />
+      <Column name="name" type="varchar(180)" pk="false" nullable="false" description="Tên PC" />
+      <Column name="brand" type="varchar(100)" pk="false" nullable="false" description="Hãng dạng text" />
+      <Column name="description" type="text" pk="false" nullable="true" description="Mô tả tối đa 10000 ký tự tại Java" />
+      <Column name="price" type="numeric(19,0)" pk="false" nullable="false" description="Giá bán 1..1 tỷ VND" />
+      <Column name="status" type="varchar(20)" pk="false" nullable="false" description="ACTIVE/INACTIVE/DISCONTINUED" />
+      <Column name="warranty_months" type="smallint" pk="false" nullable="false" description="0..60; 0 là không bảo hành trong hệ thống" />
+      <Column name="stock_on_hand" type="integer" pk="false" nullable="false" description="Số thực có 0..10000" />
+      <Column name="reserved_quantity" type="integer" pk="false" nullable="false" description="Số đã giữ cho order HELD" />
+      <Column name="version" type="bigint" pk="false" nullable="false" description="Optimistic lock" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Ngày tạo" />
+      <Column name="updated_at" type="timestamptz" pk="false" nullable="false" description="Ngày sửa" />
+    </Node>
+    <Node id="users" kind="Table" name="users" x="40" y="1340" w="390" h="466">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="Định danh user" />
+      <Column name="email" type="varchar(254)" pk="false" nullable="true" description="Email trim lowercase; null cho user phone-only" />
+      <Column name="email_verified_at" type="timestamptz" pk="false" nullable="true" description="Thời điểm email hiện tại được xác minh" />
+      <Column name="password_hash" type="varchar(100)" pk="false" nullable="true" description="BCrypt; null nếu chưa có local credential" />
+      <Column name="phone" type="varchar(16)" pk="false" nullable="true" description="E.164 đã chuẩn hóa" />
+      <Column name="phone_verified_at" type="timestamptz" pk="false" nullable="true" description="Bằng chứng phone hiện tại đã xác minh" />
+      <Column name="full_name" type="varchar(100)" pk="false" nullable="false" description="Tên hiển thị 2–100 ký tự" />
+      <Column name="recipient_name" type="varchar(100)" pk="false" nullable="true" description="Tên nhận mặc định" />
+      <Column name="province" type="varchar(100)" pk="false" nullable="true" description="Tỉnh/thành dạng text trong đồ án" />
+      <Column name="district" type="varchar(100)" pk="false" nullable="true" description="Trường tương thích địa chỉ, không bắt buộc" />
+      <Column name="ward" type="varchar(100)" pk="false" nullable="true" description="Phường/xã" />
+      <Column name="address_line" type="varchar(255)" pk="false" nullable="true" description="Địa chỉ chi tiết" />
+      <Column name="status" type="varchar(16)" pk="false" nullable="false" description="ACTIVE hoặc LOCKED" />
+      <Column name="status_reason" type="varchar(500)" pk="false" nullable="true" description="Lý do khóa/mở gần nhất" />
+      <Column name="session_version" type="bigint" pk="false" nullable="false" description="Đổi khi cần vô hiệu mọi phiên cũ" />
+      <Column name="version" type="bigint" pk="false" nullable="false" description="Optimistic lock" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Ngày tạo UTC" />
+      <Column name="updated_at" type="timestamptz" pk="false" nullable="false" description="Ngày cập nhật UTC" />
+    </Node>
+    <Edge source="users" target="orders" label="user_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="orders" target="order_items" label="order_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="products" target="order_items" label="product_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="orders" target="order_revisions" label="order_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="users" target="order_revisions" label="actor_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="orders" target="order_status_history" label="order_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="users" target="order_status_history" label="actor_id" kind="ForeignKey" nullable="true" single="false" />
+    <Edge source="users" target="idempotency_records" label="user_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="orders" target="idempotency_records" label="order_id" kind="ForeignKey" nullable="false" single="true" />
+    <Edge source="orders" target="payment_attempts" label="order_id" kind="ForeignKey" nullable="false" single="true" />
+    <Edge source="payment_attempts" target="payment_events" label="attempt_id" kind="ForeignKey" nullable="false" single="false" />
+  </Diagram>
+  <Diagram id="ERD-AFTERSALES" kind="ERD" name="ERD-AFTERSALES — PC Store">
+    <Node id="warranty_requests" kind="Table" name="warranty_requests" x="40" y="40" w="390" h="466">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID request" />
+      <Column name="code" type="varchar(32)" pk="false" nullable="false" description="Mã WR + ngày + đoạn UUID" />
+      <Column name="user_id" type="uuid" pk="false" nullable="false" description="Chủ yêu cầu, phải trùng order.userId" />
+      <Column name="order_item_id" type="uuid" pk="false" nullable="false" description="Dòng hàng đã giao" />
+      <Column name="item_unit_index" type="integer" pk="false" nullable="false" description="1..quantity" />
+      <Column name="client_request_id" type="uuid" pk="false" nullable="false" description="Chống submit lại" />
+      <Column name="request_hash" type="varchar(64)" pk="false" nullable="false" description="Hash item/unit/description/ảnh theo checksum" />
+      <Column name="warranty_start_at" type="timestamptz" pk="false" nullable="false" description="Snapshot deliveredAt" />
+      <Column name="warranty_expires_at" type="timestamptz" pk="false" nullable="false" description="Snapshot thời hạn tính theo tháng lịch" />
+      <Column name="issue_description" type="varchar(2000)" pk="false" nullable="false" description="Mô tả 10–2000" />
+      <Column name="status" type="varchar(20)" pk="false" nullable="false" description="REQUESTED/RECEIVED/PROCESSING/COMPLETED/REJECTED/CANCELLED" />
+      <Column name="public_resolution" type="varchar(2000)" pk="false" nullable="true" description="Kết luận hoặc lý do từ chối" />
+      <Column name="internal_note" type="varchar(2000)" pk="false" nullable="true" description="Ghi chú nội bộ gần nhất, history vẫn append-only" />
+      <Column name="received_at" type="timestamptz" pk="false" nullable="true" description="Lúc nhận máy" />
+      <Column name="closed_at" type="timestamptz" pk="false" nullable="true" description="Lúc COMPLETED/REJECTED/CANCELLED" />
+      <Column name="version" type="bigint" pk="false" nullable="false" description="Optimistic lock" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Lúc gửi" />
+      <Column name="updated_at" type="timestamptz" pk="false" nullable="false" description="Lúc cập nhật" />
+    </Node>
+    <Node id="warranty_request_images" kind="Table" name="warranty_request_images" x="500" y="40" w="390" h="246">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID ảnh" />
+      <Column name="request_id" type="uuid" pk="false" nullable="false" description="Yêu cầu" />
+      <Column name="storage_key" type="varchar(255)" pk="false" nullable="false" description="Đường dẫn nội bộ do server tạo" />
+      <Column name="mime_type" type="varchar(32)" pk="false" nullable="false" description="JPEG/PNG/WebP" />
+      <Column name="size_bytes" type="bigint" pk="false" nullable="false" description="≤5242880" />
+      <Column name="checksum" type="varchar(64)" pk="false" nullable="false" description="SHA256 phục vụ idempotency ảnh" />
+      <Column name="sort_order" type="smallint" pk="false" nullable="false" description="0..2" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Ngày tạo" />
+    </Node>
+    <Node id="warranty_request_events" kind="Table" name="warranty_request_events" x="960" y="40" w="390" h="246">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID event" />
+      <Column name="request_id" type="uuid" pk="false" nullable="false" description="Yêu cầu" />
+      <Column name="actor_id" type="uuid" pk="false" nullable="false" description="Customer/Admin thực hiện" />
+      <Column name="from_status" type="varchar(20)" pk="false" nullable="true" description="Null event tạo" />
+      <Column name="to_status" type="varchar(20)" pk="false" nullable="false" description="Bằng fromStatus cho note-only" />
+      <Column name="public_note" type="varchar(2000)" pk="false" nullable="true" description="Customer được xem" />
+      <Column name="internal_note" type="varchar(2000)" pk="false" nullable="true" description="Chỉ Admin" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Thời điểm" />
+    </Node>
+    <Node id="order_items" kind="Table" name="order_items" x="1420" y="40" w="390" h="268">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="ID dòng" />
+      <Column name="order_id" type="uuid" pk="false" nullable="false" description="Đơn sở hữu" />
+      <Column name="product_id" type="uuid" pk="false" nullable="false" description="PC gốc" />
+      <Column name="sku_snapshot" type="varchar(50)" pk="false" nullable="false" description="SKU khi đặt" />
+      <Column name="name_snapshot" type="varchar(180)" pk="false" nullable="false" description="Tên khi đặt" />
+      <Column name="spec_snapshot" type="jsonb" pk="false" nullable="false" description="Object cpu,gpu,ramGb,storageGb,storageType,motherboard,psu,caseName,operatingSystem" />
+      <Column name="unit_price_snapshot" type="numeric(19,0)" pk="false" nullable="false" description="Đơn giá khi đặt" />
+      <Column name="warranty_months_snapshot" type="smallint" pk="false" nullable="false" description="Thời hạn 0..60 tháng" />
+      <Column name="quantity" type="integer" pk="false" nullable="false" description="1..99; quantity=0 trong revision dẫn xóa dòng trước xác nhận" />
+    </Node>
+    <Node id="users" kind="Table" name="users" x="40" y="690" w="390" h="466">
+      <Column name="id" type="uuid" pk="true" nullable="false" description="Định danh user" />
+      <Column name="email" type="varchar(254)" pk="false" nullable="true" description="Email trim lowercase; null cho user phone-only" />
+      <Column name="email_verified_at" type="timestamptz" pk="false" nullable="true" description="Thời điểm email hiện tại được xác minh" />
+      <Column name="password_hash" type="varchar(100)" pk="false" nullable="true" description="BCrypt; null nếu chưa có local credential" />
+      <Column name="phone" type="varchar(16)" pk="false" nullable="true" description="E.164 đã chuẩn hóa" />
+      <Column name="phone_verified_at" type="timestamptz" pk="false" nullable="true" description="Bằng chứng phone hiện tại đã xác minh" />
+      <Column name="full_name" type="varchar(100)" pk="false" nullable="false" description="Tên hiển thị 2–100 ký tự" />
+      <Column name="recipient_name" type="varchar(100)" pk="false" nullable="true" description="Tên nhận mặc định" />
+      <Column name="province" type="varchar(100)" pk="false" nullable="true" description="Tỉnh/thành dạng text trong đồ án" />
+      <Column name="district" type="varchar(100)" pk="false" nullable="true" description="Trường tương thích địa chỉ, không bắt buộc" />
+      <Column name="ward" type="varchar(100)" pk="false" nullable="true" description="Phường/xã" />
+      <Column name="address_line" type="varchar(255)" pk="false" nullable="true" description="Địa chỉ chi tiết" />
+      <Column name="status" type="varchar(16)" pk="false" nullable="false" description="ACTIVE hoặc LOCKED" />
+      <Column name="status_reason" type="varchar(500)" pk="false" nullable="true" description="Lý do khóa/mở gần nhất" />
+      <Column name="session_version" type="bigint" pk="false" nullable="false" description="Đổi khi cần vô hiệu mọi phiên cũ" />
+      <Column name="version" type="bigint" pk="false" nullable="false" description="Optimistic lock" />
+      <Column name="created_at" type="timestamptz" pk="false" nullable="false" description="Ngày tạo UTC" />
+      <Column name="updated_at" type="timestamptz" pk="false" nullable="false" description="Ngày cập nhật UTC" />
+    </Node>
+    <Edge source="users" target="warranty_requests" label="user_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="order_items" target="warranty_requests" label="order_item_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="warranty_requests" target="warranty_request_images" label="request_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="warranty_requests" target="warranty_request_events" label="request_id" kind="ForeignKey" nullable="false" single="false" />
+    <Edge source="users" target="warranty_request_events" label="actor_id" kind="ForeignKey" nullable="false" single="false" />
+  </Diagram>
+</ReportModel>

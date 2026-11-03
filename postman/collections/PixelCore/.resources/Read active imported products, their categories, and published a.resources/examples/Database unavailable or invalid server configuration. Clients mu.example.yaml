@@ -1,0 +1,17 @@
+$kind: http-example
+name: Database unavailable or invalid server configuration. Clients must show an error and allow retry.
+request:
+  url: "{{baseUrl}}/api/catalog/storefront"
+  method: GET
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 500
+  statusText: Internal Server Error
+  headers:
+    Content-Type: text/plain
+  body:
+    type: text
+    content: ""
+order: 2000

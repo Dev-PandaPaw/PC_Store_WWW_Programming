@@ -1,0 +1,50 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam ArrowColor #334155
+skinparam activityBackgroundColor #EFF6FF
+skinparam activityBorderColor #2563EB
+skinparam activityDiamondBackgroundColor #FFF7ED
+skinparam activityDiamondBorderColor #C2410C
+skinparam usecaseBackgroundColor #EFF6FF
+skinparam usecaseBorderColor #2563EB
+skinparam padding 8
+title ACT-UC06 — Theo dõi và hủy đơn của tôi
+|Customer|
+start
+|Customer|
+:B1. Mở danh sách và chọn đơn của mình;
+|PC Store|
+:B2. Tra đơn theo code + currentUser;
+|PC Store|
+if (Đơn thuộc người đang đăng nhập?) then (Có)
+else (Không)
+:E-B2. 404; không tiết lộ chủ đơn khác;
+stop
+endif
+|PC Store|
+:B3. Hiển thị snapshots, tổng tiền, timeline, trạng thái\npayment và allowedActions;
+|Customer|
+if (Muốn hủy đơn?) then (Có)
+else (Không)
+stop
+endif
+|Customer|
+:B4. Nếu cần, chọn hủy và xác nhận lý do;
+|PC Store|
+:B5. Khóa order/attempt, so version và điều kiện hủy;
+|PC Store|
+if (COD chờ xác nhận chưa trả hoặc VNPAY chờ\ntrả, HELD?) then (Có)
+else (Không)
+:E-B5. 409 không được hủy; giữ đơn và tồn;
+stop
+endif
+|PC Store|
+:B6. Giảm reserved, đổi RELEASED/CANCELLED và ghi history\ntrong cùng transaction;
+|PC Store|
+:B7. Trả trạng thái mới; đơn DELIVERED có liên kết tới bảo\nhành;
+stop
+@enduml
