@@ -1,8 +1,8 @@
 package iuh.fit.nhom16.pcstore.cart;
 
-import iuh.fit.nhom16.pcstore.catalog.Product;
-import iuh.fit.nhom16.pcstore.catalog.CartProductSnapshot;
-import iuh.fit.nhom16.pcstore.catalog.ProductRepository;
+import iuh.fit.nhom16.pcstore.catalog.domain.Product;
+import iuh.fit.nhom16.pcstore.catalog.api.dto.CartProductSnapshot;
+import iuh.fit.nhom16.pcstore.catalog.infrastructure.persistence.ProductRepository;
 import iuh.fit.nhom16.pcstore.cart.model.CartSession;
 import iuh.fit.nhom16.pcstore.cart.service.CartService;
 import iuh.fit.nhom16.pcstore.cart.exception.CartException;

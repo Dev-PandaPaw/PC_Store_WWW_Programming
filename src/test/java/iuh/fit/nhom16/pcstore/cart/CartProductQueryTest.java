@@ -1,10 +1,10 @@
 package iuh.fit.nhom16.pcstore.cart;
 
-import iuh.fit.nhom16.pcstore.catalog.CartProductSnapshot;
-import iuh.fit.nhom16.pcstore.catalog.Category;
-import iuh.fit.nhom16.pcstore.catalog.Product;
-import iuh.fit.nhom16.pcstore.catalog.ProductRepository;
-import iuh.fit.nhom16.pcstore.catalog.ProductSpec;
+import iuh.fit.nhom16.pcstore.catalog.api.dto.CartProductSnapshot;
+import iuh.fit.nhom16.pcstore.catalog.domain.Category;
+import iuh.fit.nhom16.pcstore.catalog.domain.Product;
+import iuh.fit.nhom16.pcstore.catalog.infrastructure.persistence.ProductRepository;
+import iuh.fit.nhom16.pcstore.catalog.domain.ProductSpec;
 import org.hibernate.cfg.Configuration;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.jpa.repository.Query;

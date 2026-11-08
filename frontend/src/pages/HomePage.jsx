@@ -7,7 +7,7 @@ import ProductSection from '../components/ProductSection'
 import PromoBanner from '../components/PromoBanner'
 import collectionBanner from '../assets/promotions/pc-collection.png'
 import buildWideBanner from '../assets/promotions/build-pc-wide.webp'
-import { useCart } from '../contexts/CartContext'
+import { useCart } from '../contexts/cartContextStore'
 
 export default function HomePage() {
   const { items, addItem, setQuantity, removeItem, clearCart } = useCart()

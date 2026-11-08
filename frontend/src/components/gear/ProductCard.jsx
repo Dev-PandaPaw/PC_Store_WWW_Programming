@@ -1,17 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { ShoppingCart } from 'lucide-react'
-import type { StoreProduct } from '../../data/storeData'
 import { formatVND, calculateDiscount } from '../../utils/cart'
-import { useCart } from '../../contexts/CartContext'
+import { useCart } from '../../contexts/cartContextStore'
 import ProductStock from '../ProductStock'
 
-interface ProductCardProps {
-  product: StoreProduct
-  onAddToCart?: (product: StoreProduct) => Promise<{ success: boolean, message?: string }> | { success: boolean, message?: string }
-}
-
-export const ProductCard: React.FC<ProductCardProps> = ({
+export const ProductCard = ({
   product,
   onAddToCart,
 }) => {
@@ -81,7 +75,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   )
 }
 
-export const ProductCardSkeleton: React.FC = () => (
+export const ProductCardSkeleton = () => (
   <article
     className="product-card"
     style={{

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, useMemo, useCallback } from 'react'
+import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import http from '../services/http'
 import { matchesCategory, selectFlashDeals, CATEGORIES } from '../data/storeData'
 import { resolveProductImage } from '../assets/productImages'
@@ -11,7 +11,7 @@ const initialProducts = initialProductsRaw.map((p) => ({
   image: resolveProductImage(p.image),
 }))
 
-const CatalogContext = createContext(null)
+import { CatalogContext, useCatalog } from './catalogContextStore'
 
 export function CatalogProvider({ children }) {
   const [data, setData] = useState(() => {
@@ -89,9 +89,7 @@ export function CatalogProvider({ children }) {
   return <CatalogContext.Provider value={value}>{children}</CatalogContext.Provider>
 }
 
-export function useCatalog() {
-  return useContext(CatalogContext)
-}
+
 
 export function CatalogBoundary({ children }) {
   const { loading, error, retry, PRODUCTS } = useCatalog()

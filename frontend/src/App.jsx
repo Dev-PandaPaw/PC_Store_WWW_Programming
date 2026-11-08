@@ -7,6 +7,7 @@ import HomePage from "./pages/HomePage";
 import CatalogPage from "./pages/CatalogPage";
 import AiChatPage from "./pages/AiChatPage";
 import CartPage from "./pages/CartPage";
+import PcBuildPage from "./pages/PcBuildPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import BlogPage from "./pages/BlogPage";
@@ -45,6 +46,7 @@ export default function App() {
             element={<Navigate to="/advisory" replace />}
           />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/build-pc" element={<PcBuildPage />} />
           <Route
             path="/checkout"
             element={

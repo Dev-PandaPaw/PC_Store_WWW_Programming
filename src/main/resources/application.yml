@@ -41,6 +41,10 @@ springdoc:
     path: /swagger-ui.html
 
 app:
+  pc-build:
+    base-url: ${PC_BUILD_BASE_URL:http://127.0.0.1:8000}
+    backend-key: ${CART_BACKEND_API_KEY:}
+    read-timeout-seconds: ${PC_BUILD_READ_TIMEOUT_SECONDS:210}
   ai:
     api-key: ${GEMINI_API_KEY:}
     model: ${GEMINI_MODEL:gemini-3.5-flash-lite}

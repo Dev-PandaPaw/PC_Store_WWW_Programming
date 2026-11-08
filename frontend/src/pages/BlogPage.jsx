@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useCatalog } from '../contexts/CatalogContext'
+import { useCatalog } from '../contexts/catalogContextStore'
 import ArticleCard from '../components/ArticleCard'
 
 export default function BlogPage() {

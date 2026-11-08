@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useCart } from '../contexts/CartContext'
+import { useCart } from '../contexts/cartContextStore'
 
 export default function CartDemoPanel() {
   const { demo, selectDemo, ready, mergeCart } = useCart()

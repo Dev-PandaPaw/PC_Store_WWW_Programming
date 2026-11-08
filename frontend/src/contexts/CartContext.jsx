@@ -1,7 +1,8 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { cartApi } from '../services/cart'
-import { useCatalog } from './CatalogContext'
-import { useAuth } from './AuthContext'
+import { pcBuildApi } from '../services/pcBuild'
+import { useCatalog } from './catalogContextStore'
+import { useAuth } from './authContextStore'
 import { projectCart } from '../utils/optimisticCart'
 import { cartFromLogin } from '../utils/loginCart'
 import { cartStockError, productCartState } from '../utils/cartStock'
@@ -9,8 +10,7 @@ import './CartNotice.css'
 import { CheckCircle2, X } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
-/** @type {import('react').Context<import('./cartContextTypes').CartContextValue | null>} */
-const CartContext = createContext(null)
+import { CartContext } from './cartContextStore'
 const emptyCart = () => ({ cartVersion: 0, items: [], totalQuantity: 0, subtotal: 0 })
 const messageFor = error => error?.response?.data?.detail || 'Không thể cập nhật giỏ hàng. Vui lòng thử lại.'
 
@@ -197,6 +197,7 @@ export function CartProvider({ children }) {
       reportCartError: message => setNotice(message || 'Không thể cập nhật giỏ hàng. Vui lòng thử lại.'),
       login,
       mergeCart: () => mutate(cartApi.merge),
+      applyBuildProposal: (id, acknowledged) => mutate(() => pcBuildApi.confirm(id, acknowledged), 'cart.build-proposal'),
     }}>
       {children}
       {successNotice && !notice && <div className="cart-notice cart-notice--success" role="status">
@@ -214,11 +215,4 @@ export function CartProvider({ children }) {
       </div>}
     </CartContext.Provider>
   )
-}
-
-/** @returns {import('./cartContextTypes').CartContextValue} */
-export function useCart() {
-  const context = useContext(CartContext)
-  if (!context) throw new Error('useCart must be used within CartProvider')
-  return context
 }

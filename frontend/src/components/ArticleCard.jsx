@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowUpRight, Clock3 } from 'lucide-react'
-import { useCatalog } from '../contexts/CatalogContext'
+import { useCatalog } from '../contexts/catalogContextStore'
 
 export default function ArticleCard({ article, compact = false }) {
   const { productsInCategory } = useCatalog()

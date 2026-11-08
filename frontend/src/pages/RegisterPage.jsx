@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
-import { useCart } from '../contexts/CartContext'
+import { useAuth } from '../contexts/authContextStore'
+import { useCart } from '../contexts/cartContextStore'
 
 export default function RegisterPage() {
   const [fullName, setFullName] = useState('')

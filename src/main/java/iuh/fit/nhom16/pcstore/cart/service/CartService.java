@@ -55,6 +55,7 @@ public class CartService {
             var products = products(ids);
             guest.quantities().forEach((id, quantity) ->
                     addLine(cart, new AddItemRequest(id, quantity, cart.version()), products));
+            if (guest.buildCheckoutRequired()) cart.mergeBuildRequirements(guest.buildRequirements());
             return response(cart, products);
         }
     }
@@ -100,7 +101,31 @@ public class CartService {
                 throw new CartException(HttpStatus.NOT_FOUND, "CART_ITEM_NOT_FOUND", "Sản phẩm không có trong giỏ hàng.");
             }
             cart.incrementVersion();
+            if (cart.quantities().isEmpty()) cart.clearBuildCheckout();
             return response(cart);
+        }
+    }
+
+    /** All lines are validated before changing the cart; the storage transaction persists once. */
+    public CartResponse applyProposal(CartSession cart, Map<UUID, Integer> target, long version) {
+        synchronized (cart) {
+            requireVersion(cart, version);
+            if (target.isEmpty() || target.size() > MAX_DISTINCT_SKUS)
+                throw conflict("CART_ITEM_LIMIT", "Cấu hình vượt giới hạn số món trong giỏ.");
+            var products = products(target.keySet());
+            for (var entry : target.entrySet()) {
+                requirePositive(entry.getValue());
+                var product = product(products, entry.getKey());
+                requireForPurchase(product);
+                requireQuantityWithinLimits(product, entry.getValue());
+            }
+            if (!cart.quantities().equals(target) || !cart.buildCheckoutRequired()) {
+                cart.quantities().clear();
+                cart.quantities().putAll(target);
+                cart.markBuildCheckout();
+                cart.incrementVersion();
+            }
+            return response(cart, products);
         }
     }
 
@@ -109,6 +134,7 @@ public class CartService {
             requireVersion(cart, cartVersion);
             if (!cart.quantities().isEmpty()) {
                 cart.quantities().clear();
+                cart.clearBuildCheckout();
                 cart.incrementVersion();
             }
             return response(cart);

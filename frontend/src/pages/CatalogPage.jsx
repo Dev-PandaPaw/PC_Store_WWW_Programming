@@ -8,7 +8,8 @@ import {
 } from '../data/storeData'
 import CategoryIcon from '../components/CategoryIcon'
 import { ProductCard } from '../components/gear/ProductCard'
-import { useCatalog, CatalogBoundary } from '../contexts/CatalogContext'
+import { useCatalog } from '../contexts/catalogContextStore'
+import { CatalogBoundary } from '../contexts/CatalogContext'
 import { searchProducts } from '../services/productSearch'
 
 export default function CatalogPage() {

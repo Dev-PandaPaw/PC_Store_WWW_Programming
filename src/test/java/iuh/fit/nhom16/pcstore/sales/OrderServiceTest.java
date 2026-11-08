@@ -27,7 +27,8 @@ class OrderServiceTest {
     final UUID actor = UUID.randomUUID(), product = UUID.randomUUID(), id = UUID.randomUUID(), quoteId = UUID.randomUUID();
     final Line line = new Line(product, "PC", "PC-01", BigDecimal.valueOf(100_000), 2, 36);
     final CartSession cart = new CartSession(UUID.randomUUID(), 3, Map.of(product, 2));
-    final OrderService service = new OrderService(orders, carts, actors, events, Clock.fixed(now, ZoneOffset.UTC));
+    final iuh.fit.nhom16.pcstore.pcbuild.PcBuildCheckoutGuard buildCheckout = mock(iuh.fit.nhom16.pcstore.pcbuild.PcBuildCheckoutGuard.class);
+    final OrderService service = new OrderService(orders, carts, actors, events, Clock.fixed(now, ZoneOffset.UTC), buildCheckout);
     @BeforeEach void setup() {
         when(actors.require(eq(actor), anyString())).thenReturn(new Account(actor, "Customer", "demo@example.test", "+84912345678", true, List.of("CUSTOMER", "ADMIN")));
         when(carts.lock(actor)).thenReturn(cart);
@@ -87,6 +88,21 @@ class OrderServiceTest {
         verify(orders).create(any(), argThat(q -> q.total().equals(BigDecimal.valueOf(250_000))), anyString(), eq(now.plus(Duration.ofHours(24))));
         assertTrue(cart.quantities().isEmpty()); assertEquals(4, cart.version());
         verify(carts).save(cart); verify(events).publishEvent(any(Object.class));
+    }
+    @Test void failedBuildGateCannotReserveCreateOrClearCart() {
+        doThrow(OrderException.conflict("PC_BUILD_NOT_READY", "blocked")).when(buildCheckout).requireReady(any(), anyList());
+        var error = assertThrows(OrderException.class, () -> service.place(actor, "request-123", new PlaceRequest(quoteId, PaymentMethod.COD)));
+        assertEquals("PC_BUILD_NOT_READY", error.code());
+        verify(orders, never()).reserve(any(), anyInt());
+        verify(orders, never()).create(any(), any(), any(), any());
+        assertFalse(cart.quantities().isEmpty());
+    }
+    @Test void successfulCheckoutRunsGateBeforeAnyReservation() {
+        service.place(actor, "request-123", new PlaceRequest(quoteId, PaymentMethod.COD));
+        var sequence = inOrder(orders, buildCheckout);
+        sequence.verify(orders).lockProduct(product, 2);
+        sequence.verify(buildCheckout).requireReady(eq(cart), anyList());
+        sequence.verify(orders).reserve(product, 2);
     }
     @Test void insufficientStockDoesNotCreateOrder() {
         when(orders.lockProduct(product, 2)).thenReturn(new OrderRepository.Stock(line, 1, "ACTIVE"));

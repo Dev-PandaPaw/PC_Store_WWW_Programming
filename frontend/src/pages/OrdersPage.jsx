@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { useCart } from '../contexts/CartContext'
+import { useCart } from '../contexts/cartContextStore'
 import CartDemoPanel from '../components/CartDemoPanel'
 import { orderApi, orderError, orderLabels } from '../services/orders'
 import { formatVND } from '../utils/cart'

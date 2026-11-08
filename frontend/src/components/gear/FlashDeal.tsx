@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, Zap } from 'lucide-react'
-import { useCatalog } from '../../contexts/CatalogContext'
+import { useCatalog } from '../../contexts/catalogContextStore'
 import type { StoreProduct } from '../../data/storeData'
 import { ProductCard } from './ProductCard'
 

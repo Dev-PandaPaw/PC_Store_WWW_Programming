@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
-import { useCatalog } from '../../contexts/CatalogContext'
+import { useCatalog } from '../../contexts/catalogContextStore'
 import ArticleCard from '../ArticleCard'
 
 export const NewsSection: React.FC = () => {

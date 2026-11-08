@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link, NavLink, Outlet } from 'react-router-dom'
 import { ArrowUpRight, Box, LogOut } from 'lucide-react'
-import { useAuth } from '../contexts/AuthContext'
+import { useAuth } from '../contexts/authContextStore'
 import useAdminAccess from '../hooks/useAdminAccess'
 import CartDemoPanel from './CartDemoPanel'
 

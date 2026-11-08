@@ -5,9 +5,9 @@ import {
   CATEGORY_LABELS,
 } from '../data/storeData'
 import { formatVND } from '../utils/cart'
-import { useCart } from '../contexts/CartContext'
+import { useCart } from '../contexts/cartContextStore'
 import { ProductCard } from '../components/gear/ProductCard'
-import { useCatalog } from '../contexts/CatalogContext'
+import { useCatalog } from '../contexts/catalogContextStore'
 import ProductStock from '../components/ProductStock'
 
 export default function ProductDetailPage() {

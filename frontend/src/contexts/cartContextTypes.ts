@@ -35,4 +35,5 @@ export interface CartContextValue {
   reportCartError: (message?: string) => void
   login: (username: string, password: string) => Promise<unknown>
   mergeCart: () => Promise<CartMutationResult>
+  applyBuildProposal: (proposalId: string, acknowledged: boolean) => Promise<CartMutationResult>
 }

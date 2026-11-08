@@ -1,4 +1,5 @@
 import axios from "axios";
+import { isDevelopmentAdminPath } from "../utils/developmentAuth";
 
 const http = axios.create({
   baseURL: "/api",
@@ -10,10 +11,11 @@ const http = axios.create({
 
 // Local Spring profile exposes a demo admin through HTTP Basic authentication.
 // Keep these development credentials out of production builds.
+let localAdminAuthorization;
 if (import.meta.env.DEV) {
   const username = import.meta.env.VITE_ADMIN_USERNAME || "admin";
   const password = import.meta.env.VITE_ADMIN_PASSWORD || "admin1234";
-  http.defaults.headers.common.Authorization = `Basic ${btoa(`${username}:${password}`)}`;
+  localAdminAuthorization = `Basic ${btoa(`${username}:${password}`)}`;
 }
 
 // Fetch the CSRF cookie on the first write request, then send it as a header.
@@ -21,6 +23,9 @@ let csrfRequest;
 const csrfHeaderName = "X-XSRF-TOKEN";
 
 http.interceptors.request.use(async (config) => {
+  if (localAdminAuthorization && isDevelopmentAdminPath(config.url) && !config.headers.Authorization) {
+    config.headers.Authorization = localAdminAuthorization;
+  }
   const method = (config.method || "get").toLowerCase();
   if (["get", "head", "options", "trace"].includes(method)) return config;
 

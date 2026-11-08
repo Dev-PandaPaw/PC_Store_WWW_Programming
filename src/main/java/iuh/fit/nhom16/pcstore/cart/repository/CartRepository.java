@@ -17,17 +17,21 @@ public class CartRepository {
     public CartSession lock(UUID userId) {
         jdbc.update("INSERT INTO carts(id, user_id) VALUES (?, ?) ON CONFLICT (user_id) DO NOTHING",
                 UUID.randomUUID(), userId);
-        return jdbc.queryForObject("SELECT id, version FROM carts WHERE user_id = ? FOR UPDATE",
+        return jdbc.queryForObject("SELECT id, version, pc_build_checkout, pc_build_requirements FROM carts WHERE user_id = ? FOR UPDATE",
                 (rs, row) -> {
                     UUID id = rs.getObject("id", UUID.class);
                     var quantities = new LinkedHashMap<UUID, Integer>();
                     jdbc.query("SELECT product_id, quantity FROM cart_items WHERE cart_id = ? ORDER BY product_id",
                             (org.springframework.jdbc.core.RowCallbackHandler) item ->
                                     quantities.put(item.getObject("product_id", UUID.class), item.getInt("quantity")), id);
-                    return new CartSession(id, rs.getLong("version"), quantities);
+                    return new CartSession(id, rs.getLong("version"), quantities, rs.getBoolean("pc_build_checkout"), readRequirements(rs.getString("pc_build_requirements")));
                 }, userId);
     }
 
+    @SuppressWarnings("unchecked")
+    private static java.util.Map<String,Object> readRequirements(String value) {
+        return new tools.jackson.databind.ObjectMapper().readValue(value, java.util.Map.class);
+    }
     public void save(CartSession cart) {
         if (cart.quantities().isEmpty()) {
             jdbc.update("DELETE FROM cart_items WHERE cart_id = ?", cart.mergeId());
@@ -49,8 +53,8 @@ public class CartRepository {
                 statement.setInt(4, entry.getValue());
             });
         }
-        jdbc.update("UPDATE carts SET version = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
-                cart.version(), cart.mergeId());
+        jdbc.update("UPDATE carts SET version = ?, pc_build_checkout = ?, pc_build_requirements = ?::jsonb, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+                cart.version(), cart.buildCheckoutRequired(), new tools.jackson.databind.ObjectMapper().writeValueAsString(cart.buildRequirements()), cart.mergeId());
     }
 
     public boolean claimMerge(UUID guestId, UUID cartId) {

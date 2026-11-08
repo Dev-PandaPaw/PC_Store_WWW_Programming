@@ -6,8 +6,8 @@ import iuh.fit.nhom16.pcstore.cart.model.CartSession;
 import iuh.fit.nhom16.pcstore.cart.repository.CartRepository;
 import iuh.fit.nhom16.pcstore.cart.service.CartService;
 import iuh.fit.nhom16.pcstore.cart.service.CartStorageService;
-import iuh.fit.nhom16.pcstore.catalog.Product;
-import iuh.fit.nhom16.pcstore.catalog.ProductRepository;
+import iuh.fit.nhom16.pcstore.catalog.domain.Product;
+import iuh.fit.nhom16.pcstore.catalog.infrastructure.persistence.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpSession;
@@ -44,7 +44,7 @@ class CartStorageServiceTest {
         product.setStockOnHand(10);
         product.setReservedQuantity(2);
         when(products.findCartProducts(any())).thenReturn(java.util.List.of(
-                new iuh.fit.nhom16.pcstore.catalog.CartProductSnapshot(productId, product.getSku(), product.getName(),
+                new iuh.fit.nhom16.pcstore.catalog.api.dto.CartProductSnapshot(productId, product.getSku(), product.getName(),
                         product.getPrice(), product.getStatus(), product.getStockOnHand(), product.getReservedQuantity())));
     }
 

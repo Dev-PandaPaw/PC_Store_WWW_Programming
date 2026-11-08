@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { useAuth } from '../contexts/AuthContext'
-import { useCart } from '../contexts/CartContext'
+import { useAuth } from '../contexts/authContextStore'
+import { useCart } from '../contexts/cartContextStore'
 import { orderApi, orderError } from '../services/orders'
 
 export default function useAdminAccess(enabled = true) {

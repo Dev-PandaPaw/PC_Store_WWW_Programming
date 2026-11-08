@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, ShoppingBag, Trash2 } from 'lucide-react'
-import { useCart } from '../contexts/CartContext'
+import { useCart } from '../contexts/cartContextStore'
 import { formatVND } from '../utils/cart'
 import CartDemoPanel from '../components/CartDemoPanel'
 import CartQuantity from '../components/CartQuantity'
@@ -26,6 +26,7 @@ export default function CartPage() {
   return (
     <div className="cart-page">
       <CartDemoPanel />
+      <Link className="store-button" to="/build-pc">Hoàn thiện cấu hình từ giỏ hàng</Link>
       <Link className="text-link" to="/orders">Đơn hàng của tôi</Link>
       <nav className="breadcrumbs" aria-label="Đường dẫn">
         <Link to="/">Trang chủ</Link>

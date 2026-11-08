@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, SlidersHorizontal } from 'lucide-react'
-import { useCatalog } from '../contexts/CatalogContext'
+import { useCatalog } from '../contexts/catalogContextStore'
 import { ProductCard } from '../components/gear/ProductCard'
 import { formatVND } from '../utils/cart'
 

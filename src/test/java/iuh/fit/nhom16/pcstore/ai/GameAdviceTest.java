@@ -1,7 +1,10 @@
 package iuh.fit.nhom16.pcstore.ai;
 
 import iuh.fit.nhom16.pcstore.advisory.*;
-import iuh.fit.nhom16.pcstore.catalog.*;
+import iuh.fit.nhom16.pcstore.catalog.api.dto.StoreProduct;
+import iuh.fit.nhom16.pcstore.catalog.application.StorefrontCatalog;
+import iuh.fit.nhom16.pcstore.catalog.application.SmartSearchService;
+import iuh.fit.nhom16.pcstore.catalog.web.SmartSearchController;
 import org.junit.jupiter.api.Test;
 import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;

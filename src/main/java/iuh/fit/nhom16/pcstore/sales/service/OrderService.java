@@ -1,6 +1,7 @@
 package iuh.fit.nhom16.pcstore.sales.service;
 
 import iuh.fit.nhom16.pcstore.cart.model.CartSession;
+import iuh.fit.nhom16.pcstore.pcbuild.PcBuildCheckoutGuard;
 import iuh.fit.nhom16.pcstore.cart.repository.CartRepository;
 import iuh.fit.nhom16.pcstore.sales.dto.OrderDtos.*;
 import iuh.fit.nhom16.pcstore.sales.exception.OrderException;
@@ -26,9 +27,10 @@ public class OrderService {
     private final OrderActorResolver actors;
     private final ApplicationEventPublisher events;
     private final Clock clock;
+    private final PcBuildCheckoutGuard buildCheckout;
     public OrderService(OrderRepository orders, CartRepository carts, OrderActorResolver actors,
-                        ApplicationEventPublisher events, Clock clock) {
-        this.orders = orders; this.carts = carts; this.actors = actors; this.events = events; this.clock = clock;
+                        ApplicationEventPublisher events, Clock clock, PcBuildCheckoutGuard buildCheckout) {
+        this.orders = orders; this.carts = carts; this.actors = actors; this.events = events; this.clock = clock; this.buildCheckout = buildCheckout;
     }
     public Account account(UUID actor) { return actors.require(actor, "CUSTOMER"); }
     public Account adminAccount(UUID actor) { return actors.require(actor, "ADMIN"); }
@@ -44,6 +46,7 @@ public class OrderService {
             requireStock(stock, entry.getValue());
             lines.add(stock.line());
         });
+        buildCheckout.requireReady(cart, lines);
         Quote quote = new Quote(UUID.randomUUID(), actor, cart.version(), request.shipping().recipient().trim(),
                 request.shipping().normalizedPhone(), request.shipping().address(), clock.instant().plus(Duration.ofMinutes(10)),
                 List.copyOf(lines), SHIPPING_FEE);
@@ -70,14 +73,15 @@ public class OrderService {
         if (!cart.quantities().equals(quantities)) throw OrderException.conflict("CART_CHANGED", "Giỏ hàng đã thay đổi.");
         for (Line line : sorted(quote.items())) {
             requireStock(orders.lockProduct(line.productId(), line.quantity()), line.quantity());
-            orders.reserve(line.productId(), line.quantity());
         }
+        buildCheckout.requireReady(cart, quote.items());
+        for (Line line : sorted(quote.items())) orders.reserve(line.productId(), line.quantity());
         UUID id = UUID.randomUUID();
         Instant expiry = now.plus(Duration.ofHours(24));
         orders.create(id, quote, customer.email(), expiry);
         orders.history(id, null, "PENDING_CONFIRMATION", actor, "Tạo đơn hàng");
         orders.remember(actor, key, request, id);
-        cart.quantities().clear(); cart.incrementVersion(); carts.save(cart);
+        cart.quantities().clear(); cart.clearBuildCheckout(); cart.incrementVersion(); carts.save(cart);
         Order order = orders.get(id, false);
         events.publishEvent(new OrderNotification(order.email(), order.code(), order.status().name()));
         return order;

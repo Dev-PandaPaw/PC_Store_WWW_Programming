@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
-import { useCatalog } from '../contexts/CatalogContext'
+import { useCatalog } from '../contexts/catalogContextStore'
 import { ProductCard, ProductCardSkeleton } from './gear/ProductCard'
 
 export default function ProductSection({

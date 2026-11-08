@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
-import { useCart } from '../contexts/CartContext'
+import { useAuth } from '../contexts/authContextStore'
+import { useCart } from '../contexts/cartContextStore'
 import { loginDestination } from '../utils/checkout'
 
 export default function LoginPage() {

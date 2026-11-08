@@ -41,6 +41,31 @@ public class CartStorageService {
         }
     }
 
+    /** Stable copy for advice; release locks before any remote request. */
+    public CartSession snapshot(HttpSession session, UUID userId) {
+        synchronized (WebUtils.getSessionMutex(session)) {
+            if (userId != null) return transactions.execute(status -> repository.lock(userId).copy());
+            CartSession current = (CartSession) session.getAttribute(CartSession.ATTRIBUTE);
+            if (current == null) {
+                current = new CartSession();
+                session.setAttribute(CartSession.ATTRIBUTE, current);
+            }
+            return current.copy();
+        }
+    }
+
+    /** Guest state is published only after the product-check transaction commits. */
+    public CartResponse executeChecked(HttpSession session, UUID userId, Function<CartSession, CartResponse> operation) {
+        if (userId != null) return execute(session, userId, operation);
+        synchronized (WebUtils.getSessionMutex(session)) {
+            CartSession current = (CartSession) session.getAttribute(CartSession.ATTRIBUTE);
+            CartSession copy = current == null ? new CartSession() : current.copy();
+            CartResponse result = transactions.execute(status -> operation.apply(copy));
+            session.setAttribute(CartSession.ATTRIBUTE, copy);
+            return result;
+        }
+    }
+
     public CartResponse merge(HttpSession session, UUID userId) {
         synchronized (WebUtils.getSessionMutex(session)) {
             if (userId == null) return execute(session, null, rules::get);

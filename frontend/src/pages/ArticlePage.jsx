@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, Clock3 } from 'lucide-react'
-import { useCatalog } from '../contexts/CatalogContext'
+import { useCatalog } from '../contexts/catalogContextStore'
 import { ProductCard } from '../components/gear/ProductCard'
 
 export default function ArticlePage() {

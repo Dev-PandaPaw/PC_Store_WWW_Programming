@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import http, { ensureCsrfToken } from '../services/http'
 import { splitLoginResponse } from '../utils/loginCart'
 
-const AuthContext = createContext(null)
+import { AuthContext } from './authContextStore'
 const cacheUser = user => {
   try {
     if (user) localStorage.setItem('pc_auth_user', JSON.stringify(user))
@@ -63,5 +63,3 @@ export function AuthProvider({ children }) {
   }
   return <AuthContext.Provider value={{ user, loginCart, loading, login, logout, register }}>{children}</AuthContext.Provider>
 }
-
-export function useAuth() { return useContext(AuthContext) }
