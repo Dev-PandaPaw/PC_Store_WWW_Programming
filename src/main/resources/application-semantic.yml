@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    hikari:
+      connection-init-sql: >-
+        SELECT set_config('search_path', current_setting('search_path') || ', ' ||
+        COALESCE((SELECT quote_ident(n.nspname) FROM pg_extension e JOIN pg_namespace n
+        ON n.oid=e.extnamespace WHERE e.extname='vector'), 'extensions'), false)
+  flyway:
+    locations: classpath:db/migration,classpath:db/orders,classpath:db/recommendations
+app:
+  recommendations:
+    enabled: true
+    price-tolerance: ${RECOMMENDATION_PRICE_TOLERANCE:0.20}
+    sync-delay-ms: ${RECOMMENDATION_SYNC_DELAY_MS:300000}
+    behavior-source: ${RECOMMENDATION_BEHAVIOR_SOURCE:tracking}
+    auto-sync: ${RECOMMENDATION_AUTO_SYNC:false}

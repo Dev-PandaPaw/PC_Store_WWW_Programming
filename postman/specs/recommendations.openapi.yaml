@@ -1,0 +1,108 @@
+openapi: 3.0.3
+info:
+  title: PC Store Semantic Recommendations
+  version: 1.0.0
+  description: Cosine similarity >= 0.70, at most 5 candidates, followed by live catalog inventory and basic socket checks. No order or inventory reservation is created.
+paths:
+  /api/v1/recommendations/personalized:
+    get:
+      operationId: personalizedRecommendations
+      description: Uses the current ACTIVE shop account from its authenticated session. Uses development's UserTrackingService through RecentCategoryProvider; categories are derived from real products and user-scoped VIEW_PRODUCT events. Never accepts a client-selected user ID.
+      security:
+        - session: []
+      parameters:
+        - $ref: '#/components/parameters/SelectedProducts'
+      responses:
+        '200':
+          description: Recommendations or insufficient_history/no_match. Cache-Control no-store.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '400': {description: Invalid selected product IDs or unresolved/conflicting build sockets}
+        '401': {description: Missing or unmapped shop identity}
+        '403': {description: Account is not ACTIVE}
+        '503': {description: Behavior adapter, embedding, vector store or catalog unavailable}
+  /api/v1/recommendations/similar/{productId}:
+    get:
+      operationId: similarRecommendations
+      description: Same component category and within 20 percent of the source's current price. Excludes the source. CPU/mainboard replacements preserve the source socket when no selected products are supplied. Similarity of descriptions is not benchmark equivalence.
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema: {type: string, format: uuid}
+        - $ref: '#/components/parameters/SelectedProducts'
+      responses:
+        '200':
+          description: Up to five recommendations after guardrails, possibly empty.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '400': {description: Invalid UUID or build context}
+        '404': {description: Source is not an ACTIVE storefront component}
+        '503': {description: Embedding, vector store or catalog unavailable}
+  /api/v1/admin/recommendations/reindex:
+    post:
+      operationId: synchronizeRecommendationIndex
+      description: Requires ACTIVE shop account, ADMIN authority and the normal CSRF token. Synchronizes changed product documents, deletes stale IDs. Uses a transaction-scoped database lock.
+      security:
+        - session: []
+      responses:
+        '200':
+          description: Synchronization result; busy means another instance currently owns the lock.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  updated: {type: integer}
+                  removed: {type: integer}
+                  busy: {type: boolean}
+        '401': {description: Shop identity required}
+        '403': {description: Missing ADMIN authority or invalid/missing CSRF token}
+        '503': {description: Semantic profile disabled or synchronization failed}
+components:
+  securitySchemes:
+    session:
+      type: apiKey
+      in: cookie
+      name: JSESSIONID
+  parameters:
+    SelectedProducts:
+      name: selectedProductIds
+      in: query
+      description: Current build component UUIDs. Their facts are read from the database; view history is never treated as an owned build.
+      style: form
+      explode: false
+      schema:
+        type: array
+        maxItems: 20
+        items: {type: string, format: uuid}
+  schemas:
+    Result:
+      type: object
+      required: [status, products]
+      properties:
+        status: {type: string, enum: [ok, no_match, insufficient_history]}
+        products:
+          type: array
+          maxItems: 5
+          items:
+            type: object
+            required: [product, similarityScore, compatibilityStatus]
+            properties:
+              product:
+                type: object
+                description: Existing StoreProduct DTO from the live catalog; stockOnHand is available inventory after reservations.
+                properties:
+                  id: {type: string, format: uuid}
+                  name: {type: string}
+                  price: {type: integer, format: int64}
+                  stockOnHand: {type: integer, minimum: 1}
+              similarityScore: {type: number, minimum: 0.70, maximum: 1}
+              compatibilityStatus:
+                type: string
+                enum: [socket_match, needs_verification, not_checked]
+                description: socket_match checks only socket equality, not BIOS, memory, power or physical dimensions.

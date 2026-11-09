@@ -1,5 +1,7 @@
 # AI trong PC Store
 
+Gợi ý linh kiện dùng vector/cosine là luồng riêng với smart search: xem [triển khai, API và kiểm thử Semantic Recommendations](SEMANTIC_RECOMMENDATIONS.md). Luồng này bật bằng profile `semantic`; cá nhân hóa đọc lịch sử thật từ UserTrackingService của development qua RecentCategoryProvider.
+
 Tất cả lệnh gọi model chạy trong Java: **React → Spring Boot → Spring AI ChatClient → GoogleGenAiChatModel → Gemini**. Dùng Spring AI 2.0.2 với Spring Boot 4.1.2. Service TypeScript cũ đã được thay thế; không chạy worker cổng 3001.
 
 ## Chạy

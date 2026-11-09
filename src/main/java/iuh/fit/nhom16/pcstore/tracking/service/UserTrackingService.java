@@ -11,6 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import org.springframework.data.domain.PageRequest;
 
 @Service
 public class UserTrackingService {
@@ -21,6 +24,14 @@ public class UserTrackingService {
 
     public UserTrackingService(UserActivityLogRepository activityLogRepository) {
         this.activityLogRepository = activityLogRepository;
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> getTopViewedCategories(UUID userId, Instant since, int limit) {
+        if (userId==null || since==null || limit<1 || limit>10)
+            throw new IllegalArgumentException("Invalid recommendation history query");
+        return activityLogRepository.findTopViewedCategoriesByUser(userId,
+                OffsetDateTime.ofInstant(since,ZoneOffset.UTC),PageRequest.of(0,limit));
     }
 
     @Transactional

@@ -23,7 +23,7 @@ export function useProductViewTracker(product) {
     if (!product || !product.id) return
 
     // 1. Gui su kien xem san pham ngay khi trang duoc mo
-    sendTrackingEvent({
+    const viewTimer = setTimeout(() => sendTrackingEvent({
       eventType: 'VIEW_PRODUCT',
       productId: product.id,
       categorySlug: product.category || null,
@@ -31,7 +31,7 @@ export function useProductViewTracker(product) {
         productName: product.name,
         price: product.price,
       },
-    })
+    }), 0)
 
     // 2. Bat dau dem thoi gian onsite (Dwell Time)
     timerRef.current = setTimeout(() => {
@@ -48,6 +48,7 @@ export function useProductViewTracker(product) {
 
     // 3. Cleanup: Huy timer khi nguoi dung chuyen san pham hoac dong trang
     return () => {
+      clearTimeout(viewTimer)
       if (timerRef.current) {
         clearTimeout(timerRef.current)
         timerRef.current = null

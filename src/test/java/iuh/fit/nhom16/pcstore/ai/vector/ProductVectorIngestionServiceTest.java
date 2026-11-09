@@ -22,6 +22,23 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 class ProductVectorIngestionServiceTest {
+    @Test void semanticAdminEndpointUsesThePersistentRecommendationIndexer() {
+        var index=mock(iuh.fit.nhom16.pcstore.advisory.infrastructure.ProductSemanticIndexService.class);
+        when(index.synchronize()).thenReturn(new iuh.fit.nhom16.pcstore.advisory.infrastructure.ProductSemanticIndexService.SyncResult(2,1,false));
+        when(index.indexedCount()).thenReturn(5);
+        var persistent=new ProductVectorStore(mock(org.springframework.ai.vectorstore.VectorStore.class));
+        var routed=new ProductVectorIngestionService(repository,new ProductChunker(),persistent,settings,transactions,()->index);
+        assertEquals(5,routed.reindexAll().documentCount());
+        verify(index).synchronize(); verify(index).indexedCount();
+        verifyNoInteractions(repository,embedding);
+    }
+    @Test void semanticAdminReindexRespectsTheSharedDatabaseLock() {
+        var index=mock(iuh.fit.nhom16.pcstore.advisory.infrastructure.ProductSemanticIndexService.class);
+        when(index.synchronize()).thenReturn(new iuh.fit.nhom16.pcstore.advisory.infrastructure.ProductSemanticIndexService.SyncResult(0,0,true));
+        var routed=new ProductVectorIngestionService(repository,new ProductChunker(),store,settings,transactions,()->index);
+        assertEquals(409,assertThrows(AiFailure.class,routed::reindexAll).status);
+        verify(index,never()).indexedCount();
+    }
     final ProductRepository repository = mock(ProductRepository.class);
     final EmbeddingModel embedding = mock(EmbeddingModel.class);
     final ProductVectorStore store = new ProductVectorStore(embedding);

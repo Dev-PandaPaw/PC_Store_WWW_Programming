@@ -10,6 +10,10 @@ import org.springframework.transaction.support.TransactionTemplate;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.concurrent.locks.ReentrantLock;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
+import iuh.fit.nhom16.pcstore.advisory.infrastructure.ProductSemanticIndexService;
+import java.util.function.Supplier;
 
 @Service
 public class ProductVectorIngestionService {
@@ -20,13 +24,27 @@ public class ProductVectorIngestionService {
     private final AiSettings settings;
     private final TransactionTemplate readTransaction;
     private final ReentrantLock reindexLock = new ReentrantLock();
+    private final Supplier<ProductSemanticIndexService> persistentIndex;
 
     public ProductVectorIngestionService(ProductRepository products, ProductChunker chunker,
             ProductVectorStore vectorStore, AiSettings settings, PlatformTransactionManager transactionManager) {
+        this(products,chunker,vectorStore,settings,transactionManager,()->null);
+    }
+
+    @Autowired
+    public ProductVectorIngestionService(ProductRepository products, ProductChunker chunker,
+            ProductVectorStore vectorStore, AiSettings settings, PlatformTransactionManager transactionManager,
+            ObjectProvider<ProductSemanticIndexService> persistentIndex) {
+        this(products,chunker,vectorStore,settings,transactionManager,persistentIndex::getIfAvailable);
+    }
+
+    ProductVectorIngestionService(ProductRepository products,ProductChunker chunker,ProductVectorStore vectorStore,
+            AiSettings settings,PlatformTransactionManager transactionManager,Supplier<ProductSemanticIndexService> persistentIndex) {
         this.products = products;
         this.chunker = chunker;
         this.vectorStore = vectorStore;
         this.settings = settings;
+        this.persistentIndex=persistentIndex;
         this.readTransaction = new TransactionTemplate(transactionManager);
         this.readTransaction.setReadOnly(true);
     }
@@ -34,6 +52,18 @@ public class ProductVectorIngestionService {
     public ReindexResult reindexAll() {
         if (!settings.configured())
             throw new AiFailure(503, "VECTOR_NOT_CONFIGURED", "Chưa cấu hình GEMINI_API_KEY cho embedding.");
+        var index=persistentIndex.get();
+        if(index!=null) {
+            try {
+                var result=index.synchronize();
+                if(result.busy()) throw new AiFailure(409,"VECTOR_REINDEX_IN_PROGRESS","Đang đồng bộ vector. Hãy đợi lượt hiện tại hoàn tất.");
+                int total=index.indexedCount();
+                return new ReindexResult("SUCCESS",total,total,Instant.now());
+            } catch(AiFailure error) { throw error;
+            } catch(RuntimeException error) {
+                throw new AiFailure(503,"VECTOR_INDEX_UNAVAILABLE","Chưa đồng bộ được chỉ mục vector. Hãy thử lại sau.");
+            }
+        }
         if (!reindexLock.tryLock())
             throw new AiFailure(409, "VECTOR_REINDEX_IN_PROGRESS", "Đang đồng bộ vector. Hãy đợi lượt hiện tại hoàn tất.");
         try {

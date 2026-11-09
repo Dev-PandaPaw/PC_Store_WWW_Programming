@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Pageable;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -12,6 +13,18 @@ import java.util.UUID;
 
 @Repository
 public interface UserActivityLogRepository extends JpaRepository<UserActivityLog, UUID> {
+
+    /** Recommendation reads are user-scoped and derive categories from real products,
+     * not untrusted categorySlug metadata or another user's browser session. */
+    @Query("""
+            SELECT p.category.slug FROM UserActivityLog l JOIN Product p ON p.id=l.productId
+            WHERE l.userId=:userId AND l.eventType='VIEW_PRODUCT' AND l.createdAt>=:since
+              AND p.status='ACTIVE'
+              AND p.category.slug IN ('cpu','mainboard','vga','ram','storage','cooling','case','psu','monitor','mouse','keyboard')
+            GROUP BY p.category.slug ORDER BY COUNT(l) DESC, MAX(l.createdAt) DESC, p.category.slug ASC
+            """)
+    List<String> findTopViewedCategoriesByUser(@Param("userId") UUID userId,
+            @Param("since") OffsetDateTime since, Pageable pageable);
 
     @Query("""
             SELECT l.categorySlug

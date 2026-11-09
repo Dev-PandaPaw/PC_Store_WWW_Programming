@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.retry.RetryPolicy;
 import org.springframework.core.retry.RetryTemplate;
 
@@ -50,13 +51,15 @@ public class VectorStoreConfig {
         if (!model.matches("[a-z0-9][a-z0-9.-]{0,99}") || dimensions < 1 || dimensions > 3072)
             throw new IllegalArgumentException("Invalid embedding model or dimensions");
         var connection = GoogleGenAiEmbeddingConnectionDetails.builder().genAiClient(productEmbeddingClient).build();
-        var options = GoogleGenAiTextEmbeddingOptions.builder().model(model).dimensions(dimensions).build();
+        var options = GoogleGenAiTextEmbeddingOptions.builder().model(model).dimensions(dimensions)
+                .taskType(GoogleGenAiTextEmbeddingOptions.TaskType.SEMANTIC_SIMILARITY).build();
         var delegate = new GoogleGenAiTextEmbeddingModel(connection, options,
                 new RetryTemplate(RetryPolicy.withMaxRetries(0)));
         return new ProductEmbeddingModel(delegate, settings.configured(), dimensions);
     }
 
     @Bean
+    @ConditionalOnProperty(name="app.recommendations.enabled",havingValue="false",matchIfMissing=true)
     ProductVectorStore vectorStore(EmbeddingModel productEmbeddingModel) {
         return new ProductVectorStore(productEmbeddingModel);
     }

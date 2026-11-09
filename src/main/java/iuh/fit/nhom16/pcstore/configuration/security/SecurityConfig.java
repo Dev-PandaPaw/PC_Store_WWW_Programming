@@ -53,6 +53,8 @@ public class SecurityConfig {
                         .ignoringRequestMatchers("/actuator/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/api/tracking/**")
                 )
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/v1/recommendations/personalized").authenticated()
+                        .requestMatchers("/api/v1/admin/recommendations/**").hasRole("ADMIN")
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/api/csrf",
