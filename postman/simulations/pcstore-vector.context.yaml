@@ -1,0 +1,40 @@
+purpose:
+  stands_in_for: Google Gemini embedContent/batchEmbedContents, called by Spring AI 2.0.2 and Google GenAI SDK 1.65.0.
+  unblocks: Independent section 3.3 ingestion and provider failure checks before recommendation UI exists.
+assumptions:
+  - id: embedding-caller-http-contract
+    status: supported
+    claim: In the exercised path, the SDK sends batchEmbedContents with x-goog-api-key, content.parts[].text and outputDimensionality=768, and Spring AI consumes embeddings[].values.
+    reason: The repository-owned mock validates these fields, and the simulation request log recorded calls from the actual SDK. This supports this caller subset only.
+    verification: On 2026-11-09, VectorEmbeddingHttpTest passed 8 cases through the local simulation at port 4901; the routeKey embedding served the requests.
+    source: src/test/java/iuh/fit/nhom16/pcstore/ai/vector/VectorEmbeddingHttpTest.java; postman/mocks/pcstore-gemini-embedding/default.js; https://ai.google.dev/api/embeddings
+    updated_at: '2026-11-09'
+  - id: failure-retains-index
+    status: supported
+    claim: The exercised ingestion caller retains the previous complete index on quota, access, unavailable, timeout, empty, zero or wrong-dimension responses, without retrying the provider request.
+    reason: Tests first build a valid index, inject one failure, assert API status and request count, and query the old index after resetting the mock.
+    verification: VectorEmbeddingHttpTest passed all seven failure scenarios on 2026-11-09. ProductVectorIngestionServiceTest additionally checked a failure after a successful document in the staging index.
+    source: src/test/java/iuh/fit/nhom16/pcstore/ai/vector/VectorEmbeddingHttpTest.java; src/test/java/iuh/fit/nhom16/pcstore/ai/vector/ProductVectorIngestionServiceTest.java
+    updated_at: '2026-11-09'
+  - id: live-model-768
+    status: supported
+    claim: The configured Google key accepted gemini-embedding-001 at 768 dimensions for the fixture product and identical query tested on 2026-11-09.
+    reason: A separate opt-in live test used the real Google endpoint, real Spring AI embedding model and SimpleVectorStore; its document was retrieved with self-similarity approximately 1.
+    verification: VectorEmbeddingLiveTest passed with two real HTTP calls. This establishes model access and storage for this input, not recommendation quality, future quota or full-catalog ingestion.
+    source: src/test/java/iuh/fit/nhom16/pcstore/ai/vector/VectorEmbeddingLiveTest.java; docs/testing/evidence/spring-ai-3.3/results.json
+    updated_at: '2026-11-09'
+  - id: synthetic-vectors-are-semantic-evidence
+    status: contradicted
+    claim: Synthetic vectors from this mock establish real semantic relevance of product recommendations.
+    reason: Every successful fixture vector is the same unit vector; it exists only to exercise the HTTP protocol and index state. Recommendation quality belongs to section 3.4 and requires real embeddings and evaluation queries.
+    verification: Inspected the fixture handler and limited test claims accordingly on 2026-11-09.
+    source: postman/mocks/pcstore-gemini-embedding/default.js
+    updated_at: '2026-11-09'
+fingerprints:
+  - id: section-3-3-local
+    date: '2026-11-09'
+    commit: working-tree section 3.3 implementation
+    cli: Postman CLI 1.73.0; Spring AI 2.0.2; Google GenAI SDK 1.65.0
+# Mock provenance: repository-owned subset from Google's embedding contract and the exact SDK wire shape.
+# Owner-workspace search was skipped: this CLI does not support `postman status`, and an authenticated
+# owner workspace was not established. No mock or simulation was uploaded or deployed.

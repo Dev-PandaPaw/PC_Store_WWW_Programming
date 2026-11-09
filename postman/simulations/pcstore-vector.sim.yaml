@@ -1,0 +1,8 @@
+simulation: pcstore-vector
+routing: path
+mocks:
+  - name: Google Gemini embedding HTTP subset for section 3.3
+    routeKey: embedding
+    origin:
+      - generativelanguage.googleapis.com
+    path: postman/mocks/pcstore-gemini-embedding/config.yaml

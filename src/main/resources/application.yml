@@ -54,6 +54,9 @@ app:
     per-day: ${AI_RATE_LIMIT_PER_DAY:100}
     global-per-day: ${AI_GLOBAL_LIMIT_PER_DAY:1000}
     allow-local-mocks: ${AI_ALLOW_LOCAL_MOCKS:false}
+    vector:
+      model: ${GEMINI_EMBEDDING_MODEL:gemini-embedding-001}
+      dimensions: ${GEMINI_EMBEDDING_DIMENSIONS:768}
   test-login:
     enabled: ${TEST_LOGIN_ENABLED:false}
 
