@@ -50,7 +50,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
-                        .ignoringRequestMatchers("/actuator/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
+                        .ignoringRequestMatchers("/actuator/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/api/tracking/**")
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
@@ -58,6 +58,7 @@ public class SecurityConfig {
                                 "/api/csrf",
                                 "/api/catalog/**",
                                 "/api/advisory/**",
+                                "/api/tracking/**",
                                 "/actuator/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
