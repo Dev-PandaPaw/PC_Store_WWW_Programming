@@ -5,6 +5,7 @@ import { useCart } from '../contexts/cartContextStore'
 import { formatVND } from '../utils/cart'
 import CartDemoPanel from '../components/CartDemoPanel'
 import CartQuantity from '../components/CartQuantity'
+import PersonalizedRecommendations from '../components/PersonalizedRecommendations'
 
 export default function CartPage() {
   const { items, setQuantity, removeItem, clearCart, totalAmount, totalCount, ready } =
@@ -97,6 +98,16 @@ export default function CartPage() {
           </aside>
         </div>
       )}
+
+      {/* Gợi ý linh kiện thông minh theo giỏ hàng (Phụ trách: Bùi Ngọc Bửu) */}
+      <PersonalizedRecommendations
+        id="cart-personalized-recommendations"
+        context="cart"
+        eyebrow="AI CROSS-SELL • TƯƠNG THÍCH PHẦN CỨNG"
+        title="Linh kiện gợi ý thêm cho dàn máy của bạn."
+        description="Được đề xuất tự động dựa trên độ tương thích với các linh kiện trong giỏ hàng."
+        limit={6}
+      />
     </div>
   )
 }
