@@ -9,12 +9,16 @@ import { useCart } from '../contexts/cartContextStore'
 import { ProductCard } from '../components/gear/ProductCard'
 import { useCatalog } from '../contexts/catalogContextStore'
 import ProductStock from '../components/ProductStock'
+import { useProductViewTracker } from '../hooks/useUserTracker'
 
 export default function ProductDetailPage() {
   const { findProduct, productsInCategory, loading } = useCatalog()
   const { slug } = useParams()
   const product = findProduct(slug)
   const { addItem, ready, productState, reportCartError } = useCart()
+
+  // Theo doi hanh vi xem chi tiet san pham va dwell time (User Tracking)
+  useProductViewTracker(product)
   useEffect(() => {
     document.title = product
       ? `${product.name} | PixelCore`

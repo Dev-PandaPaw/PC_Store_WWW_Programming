@@ -1,0 +1,11 @@
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.292 s -- in iuh.fit.nhom16.pcstore.ai.vector.AdminVectorControllerTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.055 s -- in iuh.fit.nhom16.pcstore.ai.vector.ProductChunkerTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.696 s -- in iuh.fit.nhom16.pcstore.ai.vector.ProductVectorIngestionServiceTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.892 s -- in iuh.fit.nhom16.pcstore.ai.vector.VectorEmbeddingHttpTest
+LIVE GEMINI PASS: model=gemini-embedding-001, dimensions=768, storedDocuments=1
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.766 s -- in iuh.fit.nhom16.pcstore.ai.vector.VectorEmbeddingLiveTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.109 s -- in iuh.fit.nhom16.pcstore.ai.vector.VectorStoreConfigTest
+[INFO] Tests run: 24, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+[INFO] Total time:  23.807 s
+[INFO] Finished at: 2026-11-09T20:29:10+07:00

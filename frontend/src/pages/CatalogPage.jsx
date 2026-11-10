@@ -11,6 +11,7 @@ import { ProductCard } from '../components/gear/ProductCard'
 import { useCatalog } from '../contexts/catalogContextStore'
 import { CatalogBoundary } from '../contexts/CatalogContext'
 import { searchProducts } from '../services/productSearch'
+import { useCatalogTracker } from '../hooks/useUserTracker'
 
 export default function CatalogPage() {
   return <CatalogBoundary><CatalogContent /></CatalogBoundary>
@@ -24,6 +25,10 @@ function CatalogContent() {
   const [draft, setDraft] = useState(keyword)
   const sort = params.get('sort') || 'featured'
   const dealsOnly = params.get('deals') === '1'
+
+  // Theo doi hanh vi loc danh muc va tim kiem tu khoa (User Tracking)
+  useCatalogTracker(category, draft)
+
   const [searchState, setSearchState] = useState({ key: '', products: [], summary: '', mode: '', error: false, pending: false })
   const [attempt, setAttempt] = useState(0)
   const searchKey = JSON.stringify([draft.trim(), category, sort, dealsOnly, attempt])

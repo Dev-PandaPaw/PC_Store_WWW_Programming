@@ -50,14 +50,17 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
-                        .ignoringRequestMatchers("/actuator/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
+                        .ignoringRequestMatchers("/actuator/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/api/tracking/**")
                 )
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/v1/recommendations/personalized").authenticated()
+                        .requestMatchers("/api/v1/admin/recommendations/**").hasRole("ADMIN")
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/api/csrf",
                                 "/api/catalog/**",
                                 "/api/advisory/**",
+                                "/api/tracking/**",
                                 "/actuator/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",

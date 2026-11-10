@@ -1,0 +1,175 @@
+{
+  "source": "Actual JUnit XML; no JUnit environment/system properties copied",
+  "totals": {
+    "tests": 24,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "suites": [
+    {
+      "name": "AdminVectorControllerTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": "4.292",
+      "cases": [
+        {
+          "name": "anonymousIsUnauthorizedAndCustomerIsForbidden",
+          "status": "PASS"
+        },
+        {
+          "name": "adminWithoutCsrfCannotStartPaidEmbeddingWork",
+          "status": "PASS"
+        },
+        {
+          "name": "adminWithCsrfGetsCountsForFutureSyncUi",
+          "status": "PASS"
+        },
+        {
+          "name": "quotaFailureReturnsRetryAfterAndSafeErrorCode",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "ProductChunkerTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": "0.055",
+      "cases": [
+        {
+          "name": "preservesRealSpecsAndTypedMetadata",
+          "status": "PASS"
+        },
+        {
+          "name": "missingOptionalFieldsNeverProduceInventedSpecsOrNullText",
+          "status": "PASS"
+        },
+        {
+          "name": "longDescriptionsKeepEveryWordAndContextWithStableIds",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "ProductVectorIngestionServiceTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": "1.696",
+      "cases": [
+        {
+          "name": "missingKeyDoesNotReadDatabaseOrCallProvider",
+          "status": "PASS"
+        },
+        {
+          "name": "concurrentAdminRequestGetsConflictWhileOldSnapshotRemainsReadable",
+          "status": "PASS"
+        },
+        {
+          "name": "reindexUpdatesWithoutDuplicatesAndRemovesInactiveOrDeletedProducts",
+          "status": "PASS"
+        },
+        {
+          "name": "databaseTransactionEndsBeforeNetworkEmbeddingStarts",
+          "status": "PASS"
+        },
+        {
+          "name": "partialProviderFailureKeepsEntirePreviousSnapshotAndReleasesLock",
+          "status": "PASS"
+        },
+        {
+          "name": "databaseFailureKeepsOldStoreWithoutCallingProvider",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "VectorEmbeddingHttpTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": "3.892",
+      "cases": [
+        {
+          "name": "httpPipelineEmbeds768DimensionsAndStoresProductMetadata",
+          "status": "PASS"
+        },
+        {
+          "name": "failedProviderNeverPublishesBrokenIndex(String, int, String)[1]",
+          "status": "PASS"
+        },
+        {
+          "name": "failedProviderNeverPublishesBrokenIndex(String, int, String)[2]",
+          "status": "PASS"
+        },
+        {
+          "name": "failedProviderNeverPublishesBrokenIndex(String, int, String)[3]",
+          "status": "PASS"
+        },
+        {
+          "name": "failedProviderNeverPublishesBrokenIndex(String, int, String)[4]",
+          "status": "PASS"
+        },
+        {
+          "name": "failedProviderNeverPublishesBrokenIndex(String, int, String)[5]",
+          "status": "PASS"
+        },
+        {
+          "name": "failedProviderNeverPublishesBrokenIndex(String, int, String)[6]",
+          "status": "PASS"
+        },
+        {
+          "name": "failedProviderNeverPublishesBrokenIndex(String, int, String)[7]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "VectorEmbeddingLiveTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": "1.766",
+      "cases": [
+        {
+          "name": "realGeminiEmbeddingIs768DimensionsAndCanBeLoadedIntoSimpleVectorStore",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "VectorStoreConfigTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": "0.109",
+      "cases": [
+        {
+          "name": "createsInjectableSpringAiBeansWithoutKeyAndFailsOnlyWhenEmbeddingIsRequested",
+          "status": "PASS"
+        },
+        {
+          "name": "rejectsUntrustedProviderUrl",
+          "status": "PASS"
+        }
+      ]
+    }
+  ],
+  "simulationHttpStatusCounts": {
+    "200": 62,
+    "429": 3,
+    "403": 3,
+    "503": 3
+  },
+  "regressionSummary": "[INFO] Tests run: 162, Failures: 0, Errors: 0, Skipped: 21\n[INFO] BUILD SUCCESS\n[INFO] Finished at: 2026-11-09T20:30:16+07:00",
+  "scope": "Fixture ProductRepository; real Spring AI + SimpleVectorStore; provider simulation plus opt-in real Gemini test. UI and full database catalog integration are pending sections 3.4/3.5."
+}
