@@ -49,35 +49,65 @@ public class ProductSemanticRecommendationService {
         this.catalog=catalog; this.vectors=vectors; this.behavior=behavior; this.clock=clock; this.signature=signature;
         this.priceTolerance=priceTolerance;
     }
+
+    // gợi ý cá nhân hóa
     public Result personalized(UUID userId, List<UUID> selectedProductIds) {
-        if (userId == null) throw failure(401,"IDENTITY_REQUIRED","Bạn cần đăng nhập.");
+        if (userId == null)
+            throw failure(401,
+                    "IDENTITY_REQUIRED",
+                    "Bạn cần đăng nhập.");
         List<Item> context = context(selectedProductIds);
         RecentCategoryProvider provider = behavior.get();
-        if (provider == null) throw failure(503,"BEHAVIOR_UNAVAILABLE","Chưa kết nối dịch vụ lịch sử xem sản phẩm.");
+        if (provider == null)
+            throw failure(503,
+                    "BEHAVIOR_UNAVAILABLE",
+                    "Chưa kết nối dịch vụ lịch sử xem sản phẩm.");
         List<String> recent;
-        try { recent=provider.topCategories(userId,clock.instant().minus(Duration.ofDays(30)),3); }
-        catch (RuntimeException e) { throw failure(503,"BEHAVIOR_UNAVAILABLE","Chưa đọc được lịch sử xem sản phẩm."); }
-        List<String> categories = recent == null ? List.of() : recent.stream().filter(Objects::nonNull)
-                .filter(CATEGORIES::contains).distinct().limit(3).toList();
-        if (categories.isEmpty()) return new Result(List.of(),"insufficient_history");
-        String prompt = "Gợi ý linh kiện máy tính thuộc các danh mục quan tâm gần đây: " + String.join(", ",categories)
+        try {
+            recent=provider.topCategories(userId,clock.instant().minus(Duration.ofDays(30)),3);
+        } catch (RuntimeException e) {
+            throw failure(503,
+                    "BEHAVIOR_UNAVAILABLE",
+                    "Chưa đọc được lịch sử xem sản phẩm.");
+        }
+        List<String> categories = recent == null ? List.of() : recent.stream()
+                .filter(Objects::nonNull)
+                .filter(CATEGORIES::contains)
+                .distinct()
+                .limit(3)
+                .toList();
+        if (categories.isEmpty())
+            return new Result(List.of(),
+                    "insufficient_history");
+        String prompt = "Gợi ý linh kiện máy tính thuộc các danh mục quan tâm gần đây: "
+                + String.join(", ",categories)
                 + contextText(context);
         return search(prompt,categories,null,context,null);
     }
+
+    // kiểm tra độ tương đồng
     public Result similar(UUID productId, List<UUID> selectedProductIds) {
         Item source = read(Set.of(productId)).get(productId);
         if (source == null || !"ACTIVE".equals(source.status()) || !CATEGORIES.contains(source.product().category()))
-            throw failure(404,"PRODUCT_NOT_FOUND","Không tìm thấy linh kiện đang được hiển thị.");
+            throw failure(404,
+                    "PRODUCT_NOT_FOUND",
+                    "Không tìm thấy linh kiện đang được hiển thị.");
         List<Item> context = context(selectedProductIds);
         // Replacement CPU/mainboard must also preserve the source platform when no build was supplied.
         if (context.isEmpty() && ComponentCompatibility.socketComponent(source)) {
-            if (ComponentCompatibility.normalizeSocket(source.socket())==null) return new Result(List.of(),"no_match");
+            if (ComponentCompatibility.normalizeSocket(source.socket())==null)
+                return new Result(List.of(),"no_match");
             context=List.of(source);
         }
-        String prompt = "Linh kiện thay thế cùng loại, thông số và tầm giá tương tự: " + source.product().searchable()
-                + ". Giá tham chiếu VND: " + source.product().price() + contextText(context);
+        String prompt = "Linh kiện thay thế cùng loại, thông số và tầm giá tương tự: "
+                + source.product().searchable()
+                + ". Giá tham chiếu VND: "
+                + source.product().price()
+                + contextText(context);
         return search(prompt,List.of(source.product().category()),source,context,source.product().price());
     }
+
+    // tìm sản phẩm tương tự
     private Result search(String prompt, List<String> categories, Item source, List<Item> context, Long price) {
         VectorStore store = vectors.get();
         if(store instanceof ProductVectorStore products && !products.isPersistent())
@@ -88,15 +118,25 @@ public class ProductSemanticRecommendationService {
                 + String.join(",",categories.stream().map(c -> "'"+c+"'").toList()) + "]";
         if (source != null) filter += " && productId != '" + source.id() + "'";
         List<Document> documents;
-        try { documents=store.similaritySearch(SearchRequest.builder().query(prompt).topK(TOP_K)
-                    .similarityThreshold(MIN_SIMILARITY).filterExpression(filter).build()); }
-        catch (RuntimeException e) { throw failure(503,"VECTOR_UNAVAILABLE","Dịch vụ tìm kiếm vector tạm thời gián đoạn."); }
-        if (documents == null) throw failure(503,"VECTOR_UNAVAILABLE","Dịch vụ tìm kiếm vector không trả dữ liệu hợp lệ.");
+        try {
+            documents = store.similaritySearch(SearchRequest.builder()
+                    .query(prompt)
+                    .topK(TOP_K)
+                    .similarityThreshold(MIN_SIMILARITY)
+                    .filterExpression(filter).build());
+        }
+        catch (RuntimeException e) {
+            throw failure(503,"VECTOR_UNAVAILABLE","Dịch vụ tìm kiếm vector tạm thời gián đoạn.");
+        }
+        if (documents == null)
+            throw failure(503,"VECTOR_UNAVAILABLE","Dịch vụ tìm kiếm vector không trả dữ liệu hợp lệ.");
         Map<UUID, Double> scores = new HashMap<>();
         for (Document document : documents) {
-            if (document == null || document.getScore() == null) continue;
+            if (document == null || document.getScore() == null)
+                continue;
             double score = document.getScore();
-            if (!Double.isFinite(score) || score < MIN_SIMILARITY || score > 1.0) continue;
+            if (!Double.isFinite(score) || score < MIN_SIMILARITY || score > 1.0)
+                continue;
             try {
                 UUID id = UUID.fromString(String.valueOf(document.getMetadata().get("productId")));
                 if (source == null || !source.id().equals(id)) scores.merge(id,score,Math::max);
@@ -117,13 +157,17 @@ public class ProductSemanticRecommendationService {
         List<Recommendation> result = new ArrayList<>();
         for (var entry : scores.entrySet()) {
             Item item=current.get(entry.getKey());
-            if (item == null || !item.purchasable() || !categories.contains(item.product().category())) continue;
+            if (item == null || !item.purchasable() || !categories.contains(item.product().category()))
+                continue;
             if (price != null && (item.product().price() < price*(1-priceTolerance)
-                    || item.product().price() > price*(1+priceTolerance))) continue;
+                    || item.product().price() > price*(1+priceTolerance)))
+                continue;
             String compatibility=ComponentCompatibility.check(item,context);
-            if (compatibility.equals("incompatible")) continue;
+            if (compatibility.equals("incompatible"))
+                continue;
             if (ComponentCompatibility.socketComponent(item) && context.stream().anyMatch(ComponentCompatibility::socketComponent)
-                    && compatibility.equals("needs_verification")) continue;
+                    && compatibility.equals("needs_verification"))
+                continue;
             result.add(new Recommendation(item.product(),entry.getValue(),compatibility));
         }
         result.sort(Comparator.comparingDouble(Recommendation::similarityScore).reversed().thenComparing(r -> r.product().id()));
@@ -131,9 +175,11 @@ public class ProductSemanticRecommendationService {
         return new Result(top,top.isEmpty() ? "no_match" : "ok");
     }
     private List<Item> context(List<UUID> ids) {
-        if (ids == null || ids.isEmpty()) return List.of();
-        if (ids.size() > 20 || ids.stream().anyMatch(Objects::isNull)) throw failure(400,"INVALID_CONTEXT","Tối đa 20 ID linh kiện hợp lệ.");
-        Set<UUID> distinct=new LinkedHashSet<>(ids);
+        if (ids == null || ids.isEmpty())
+            return List.of();
+        if (ids.size() > 20 || ids.stream().anyMatch(Objects::isNull))
+            throw failure(400,"INVALID_CONTEXT","Tối đa 20 ID linh kiện hợp lệ.");
+        Set<UUID> distinct = new LinkedHashSet<>(ids);
         return validateContext(ids,read(distinct));
     }
     private List<Item> validateContext(List<UUID> ids,Map<UUID, Item> items) {
@@ -145,12 +191,19 @@ public class ProductSemanticRecommendationService {
         return selected;
     }
     private Map<UUID, Item> read(Set<UUID> ids) {
-        try { return catalog.findAll(ids); }
-        catch (RuntimeException e) { throw failure(503,"CATALOG_UNAVAILABLE","Chưa đọc được danh mục sản phẩm."); }
+        try {
+            return catalog.findAll(ids);
+        }
+        catch (RuntimeException e) {
+            throw failure(503,"CATALOG_UNAVAILABLE","Chưa đọc được danh mục sản phẩm.");
+        }
     }
     private static String contextText(List<Item> context) {
         return context.isEmpty() ? "" : ". Ngữ cảnh linh kiện: " + String.join("; ",context.stream()
-                .map(i -> i.product().category()+": "+i.product().name()+", socket="+i.socket()).toList());
+                .map(i -> i.product().category()+": "+i.product().name()+", socket="+i.socket())
+                .toList());
     }
-    private static RecommendationFailure failure(int status,String code,String message) { return new RecommendationFailure(status,code,message); }
+    private static RecommendationFailure failure(int status,String code,String message) {
+        return new RecommendationFailure(status,code,message);
+    }
 }

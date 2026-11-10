@@ -7,9 +7,13 @@ import org.springframework.ai.embedding.AbstractEmbeddingModel;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.embedding.EmbeddingRequest;
 import org.springframework.ai.embedding.EmbeddingResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.util.Arrays;
 
 /** Kiểm tra kết quả thật của Gemini; tuyệt đối không sinh vector giả khi provider lỗi. */
 final class ProductEmbeddingModel extends AbstractEmbeddingModel {
+    private static final Logger LOG = LoggerFactory.getLogger(ProductEmbeddingModel.class);
     private final EmbeddingModel delegate;
     private final boolean configured;
     private final int dimensions;
@@ -47,6 +51,18 @@ final class ProductEmbeddingModel extends AbstractEmbeddingModel {
                     norm += (double) value * value;
                 }
                 if (norm == 0) throw new IllegalStateException("Zero embedding");
+            }
+            // Log only validated outputs. DEBUG is a readable preview; TRACE includes all dimensions.
+            if (LOG.isDebugEnabled()) {
+                for (int index = 0; index < response.getResults().size(); index++) {
+                    float[] vector = response.getResults().get(index).getOutput();
+                    String input = String.valueOf(request.getInstructions().get(index))
+                            .replace("\r", "\\r").replace("\n", "\\n").replace("\t", "\\t");
+                    LOG.debug("[Embedding] input[{}]=\"{}\" -> dimensions={}, vectorPreview={}",
+                            index, input, vector.length, Arrays.toString(Arrays.copyOf(vector, Math.min(8, vector.length))));
+                    if (LOG.isTraceEnabled())
+                        LOG.trace("[Embedding] input[{}]=\"{}\" -> vector={}", index, input, Arrays.toString(vector));
+                }
             }
             return response;
         } catch (Exception error) {
