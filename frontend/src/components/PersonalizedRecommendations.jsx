@@ -189,13 +189,6 @@ export default function PersonalizedRecommendations({
                         <Link to={`/products/${product.slug}`}>{product.name}</Link>
                       </h3>
 
-                      {product.matchReason && (
-                        <div className="ai-rec-card__reason" title={product.matchReason}>
-                          <Sparkles size={12} />
-                          <span>{product.matchReason}</span>
-                        </div>
-                      )}
-
                       {Array.isArray(product.specs) && product.specs.length > 0 && (
                         <div className="ai-rec-card__specs">
                           {product.specs.slice(0, 2).map((s, idx) => (
