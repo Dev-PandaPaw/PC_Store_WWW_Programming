@@ -22,7 +22,7 @@ function isUserLoggedIn() {
   }
 }
 
-function formatProduct(product, defaultScore = 0.92, defaultReason = 'Phù hợp với nhu cầu của bạn') {
+function formatProduct(product, defaultScore = 0.92) {
   let image = product.image
   const rawKey = product.imageKey || product.image
 
@@ -81,7 +81,6 @@ function formatProduct(product, defaultScore = 0.92, defaultReason = 'Phù hợp
     image,
     similarityScore: score,
     similarityPercent: Math.round(score <= 1 ? score * 100 : score),
-    matchReason: product.matchReason || product.reason || defaultReason,
     specs: Array.isArray(product.specs) ? product.specs : [],
   }
 }
@@ -136,8 +135,7 @@ export async function getPersonalizedRecommendations(options = {}) {
       return rawList.map((item, index) =>
         formatProduct(
           item,
-          item.similarityScore ?? (0.96 - index * 0.03),
-          item.matchReason || 'Đề xuất theo mô hình Cosine Similarity'
+          item.similarityScore ?? (0.96 - index * 0.03)
         )
       )
     }
@@ -186,7 +184,7 @@ export async function getSimilarProducts(productId, options = {}) {
 
     if (rawList.length > 0) {
       return rawList.map((item, index) =>
-        formatProduct(item, item.similarityScore ?? (0.95 - index * 0.04), 'Tương đồng cấu hình & phân khúc giá')
+        formatProduct(item, item.similarityScore ?? (0.95 - index * 0.04))
       )
     }
   } catch (err) {
@@ -267,7 +265,6 @@ function getFallbackPersonalizedProducts(limit = 6, context = 'home') {
   const recentCategories = getRecentUserInterests()
 
   let selected = []
-  let reasonTemplate = 'Đề xuất theo mô hình Cosine Similarity'
 
   if (recentCategories.length > 0) {
     // 1. Nhặt các sản phẩm thuộc danh mục người dùng vừa xem nhiều nhất
@@ -282,29 +279,6 @@ function getFallbackPersonalizedProducts(limit = 6, context = 'home') {
     const others = activeProducts.filter(p => !matchedIds.has(p.id))
 
     selected = [...matched, ...others].slice(0, limit)
-
-    // Tên tiếng Việt hiển thị trong câu giải thích đề xuất
-    const categoryNameMap = {
-      mouse: 'Chuột máy tính',
-      keyboard: 'Bàn phím cơ',
-      gear: 'Chuột & Bàn phím',
-      vga: 'Card đồ họa',
-      cpu: 'Bộ vi xử lý',
-      mainboard: 'Bo mạch chủ',
-      ram: 'Bộ nhớ RAM',
-      storage: 'Ổ cứng SSD',
-      monitor: 'Màn hình máy tính',
-      cooling: 'Tản nhiệt',
-      case: 'Vỏ case',
-      psu: 'Nguồn máy tính',
-      'pc-gaming': 'PC Gaming',
-      'pc-office': 'PC văn phòng',
-      'pc-workstation': 'PC đồ họa & làm việc',
-    }
-
-    const primaryCat = recentCategories[0]
-    const catName = categoryNameMap[primaryCat] || primaryCat.toUpperCase()
-    reasonTemplate = `Khớp 96% với nhu cầu ${catName} bạn vừa quan tâm gần đây`
   } else {
     selected = activeProducts.slice(0, limit)
   }
@@ -315,9 +289,6 @@ function getFallbackPersonalizedProducts(limit = 6, context = 'home') {
     formatProduct(
       item,
       scores[index % scores.length],
-      recentCategories.length > 0 && index < 4
-        ? reasonTemplate
-        : 'Phù hợp với cấu hình và phân khúc tìm kiếm'
     )
   )
 }
