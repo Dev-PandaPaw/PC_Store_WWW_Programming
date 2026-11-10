@@ -36,7 +36,6 @@ public class PcStoreApplication {
                 }
             }
         } catch (IOException ignored) {
-            // Fallback to application.yml defaults
         }
     }
 }
