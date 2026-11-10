@@ -8,12 +8,6 @@ import { useAuth } from '../contexts/authContextStore'
 import { formatVND } from '../utils/cart'
 import '../styles/personalized-recommendations.css'
 
-/**
- * Component hiển thị danh sách sản phẩm gợi ý cá nhân hóa (AI Semantic Match)
- * Dạng Carousel / Grid với nhãn độ tương đồng Cosine Similarity
- * Phụ trách: Bùi Ngọc Bửu (Nhóm 16)
- * Căn cứ: docs/KE_HOACH_PHAN_CONG_CONG_VIEC_SPRING_AI_NHOM16.md (Mục 3.5)
- */
 export default function PersonalizedRecommendations({
   id = 'personalized-recommendations',
   eyebrow = 'AI SEMANTIC MATCH • COSINE SIMILARITY',
@@ -42,9 +36,6 @@ export default function PersonalizedRecommendations({
         if (productId) {
           results = await getSimilarProducts(productId, { limit })
         } else {
-          // Truyền trực tiếp trạng thái user vào service:
-          // Nếu user chưa đăng nhập, service chủ động dùng gợi ý thông minh từ catalog,
-          // KHÔNG gửi request lên endpoint /api/v1/recommendations/personalized để triệt tiêu 401 trên Console
           results = await getPersonalizedRecommendations({ limit, context, user, authLoading })
         }
         if (isMounted) {

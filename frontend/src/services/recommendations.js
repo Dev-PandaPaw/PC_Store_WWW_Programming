@@ -5,12 +5,6 @@ import initialGearProductsRaw from '../data/catalog-gear.json'
 
 const allCatalogProducts = [...initialProductsRaw, ...initialGearProductsRaw]
 
-/**
- * Service lấy danh sách sản phẩm gợi ý cá nhân hóa và quản trị Vector AI
- * Phụ trách: Bùi Ngọc Bửu (Nhóm 16)
- * Căn cứ: docs/KE_HOACH_PHAN_CONG_CONG_VIEC_SPRING_AI_NHOM16.md (Mục 3.5)
- */
-
 function isUserLoggedIn() {
   try {
     const cached = localStorage.getItem('pc_auth_user')
@@ -27,7 +21,6 @@ function formatProduct(product, defaultScore = 0.92) {
   const rawKey = product.imageKey || product.image
 
   if (rawKey && typeof rawKey === 'string') {
-    // 1. Nếu đã là URL tuyệt đối / data base64 / Vite bundled asset thì giữ nguyên
     if (
       rawKey.startsWith('http://') ||
       rawKey.startsWith('https://') ||
@@ -38,11 +31,9 @@ function formatProduct(product, defaultScore = 0.92) {
     ) {
       image = rawKey
     } else {
-      // 2. Resolve thông qua Vite glob import trong productImages.js
       try {
         image = resolveProductImage(rawKey)
       } catch {
-        // Fallback: Tìm sản phẩm đối chiếu trong danh mục
         const matched = allCatalogProducts.find(
           p => p.id === product.id || p.slug === product.slug || p.name === product.name
         )
@@ -55,7 +46,6 @@ function formatProduct(product, defaultScore = 0.92) {
     }
   }
 
-  // 3. Fallback an toàn nếu image vẫn chưa có đường dẫn hợp lệ
   if (!image || typeof image !== 'string' || (!image.includes('/') && !image.includes('.'))) {
     const matched = allCatalogProducts.find(
       p => p.id === product.id || p.slug === product.slug || p.name === product.name
@@ -65,7 +55,6 @@ function formatProduct(product, defaultScore = 0.92) {
         image = resolveProductImage(matched.image)
       } catch {}
     } else {
-      // Dùng ảnh mặc định nếu không tìm thấy
       try {
         image = resolveProductImage('products/pc-gvn-i5-12400f-rtx-3050.png')
       } catch {}
@@ -85,28 +74,16 @@ function formatProduct(product, defaultScore = 0.92) {
   }
 }
 
-// Circuit Breaker: nếu backend trả về 503 (VECTOR_UNAVAILABLE do chưa bật PgVector profile semantic)
-// hoặc 401, ngắt mạch tạm thời để không spam request lỗi ra console trình duyệt
 let vectorServiceUnavailable = false
 
-/**
- * Lấy danh sách sản phẩm đề xuất cá nhân hoá (AI Semantic Match)
- * Endpoint backend: GET /api/v1/recommendations/personalized
- * Lưu ý: Backend yêu cầu xác thực (.authenticated()), do đó nếu khách vãng lai
- * chưa đăng nhập, hàm sẽ dùng danh mục gợi ý khách để không gây 401 trên Console.
- */
 export async function getPersonalizedRecommendations(options = {}) {
   const { limit = 6, context = 'home', user = undefined, authLoading = false } = options
 
-  // Nếu AuthContext đang kiểm tra hoặc không có user hợp lệ:
-  // KHÔNG gửi request lên endpoint authenticated để triệt tiêu hoàn toàn 401 trên Console
   const hasUser = user !== undefined ? Boolean(user?.id || user?.email) : isUserLoggedIn()
   if (!hasUser || authLoading) {
     return getFallbackPersonalizedProducts(limit, context)
   }
 
-  // Nếu Circuit Breaker ghi nhận backend vector chưa bật trong phiên này (503),
-  // dùng ngay fallback để không spam thêm request lỗi ra Console
   if (vectorServiceUnavailable) {
     return getFallbackPersonalizedProducts(limit, context)
   }
@@ -141,22 +118,16 @@ export async function getPersonalizedRecommendations(options = {}) {
     }
   } catch (err) {
     const status = err?.response?.status
-    // 503: profile semantic chưa bật / Vector store chưa có dữ liệu
-    // 401: phiên đăng nhập backend đã hết hạn
     if (status === 503 || status === 401 || status === 404) {
       vectorServiceUnavailable = true
     }
     console.debug('[Recommendations] Backend API not available or no history, using smart fallback:', err.message)
   }
 
-  // Fallback: Lấy từ catalog cache hoặc fallback list
   return getFallbackPersonalizedProducts(limit, context)
 }
 
-/**
- * Lấy danh sách sản phẩm tương đồng về hiệu năng / tầm giá với sản phẩm đang xem
- * Endpoint backend: GET /api/v1/recommendations/similar/{productId}
- */
+
 export async function getSimilarProducts(productId, options = {}) {
   const { limit = 4 } = options
 
@@ -197,10 +168,6 @@ export async function getSimilarProducts(productId, options = {}) {
   return getFallbackPersonalizedProducts(limit, 'similar')
 }
 
-/**
- * Kích hoạt đồng bộ nạp dữ liệu Vector vào Vector Store (Dành cho Admin)
- * Thử nghiệm lần lượt endpoint của Ngân (/v1/admin/recommendations/reindex) và (/admin/vector/reindex)
- */
 export async function syncVectorDatabase() {
   try {
     const response = await http.post('/v1/admin/recommendations/reindex', {}, { timeout: 30000 })
@@ -222,9 +189,6 @@ export async function syncVectorDatabase() {
   }
 }
 
-/**
- * Đọc nhật ký danh mục linh kiện/phụ kiện người dùng vừa xem gần nhất
- */
 function getRecentUserInterests() {
   try {
     const raw = localStorage.getItem('pc_recent_interests')
@@ -243,10 +207,6 @@ function getRecentUserInterests() {
   }
 }
 
-/**
- * Fallback dữ liệu thông minh khi đang chờ backend tích hợp hoàn chỉnh hoặc cho khách vãng lai
- * Tự động thích ứng bám sát từng danh mục người dùng vừa click (Real-time Adaptive)
- */
 function getFallbackPersonalizedProducts(limit = 6, context = 'home') {
   let catalog = []
   try {
