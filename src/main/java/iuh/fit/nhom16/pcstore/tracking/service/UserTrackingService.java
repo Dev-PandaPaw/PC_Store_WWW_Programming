@@ -58,14 +58,14 @@ public class UserTrackingService {
     @Transactional(readOnly = true)
     public List<String> getTopCategories(String sessionId, UUID userId, int days) {
         int windowDays = days > 0 ? days : 7;
-        OffsetDateTime since = OffsetDateTime.now().minusDays(windowDays);
+        OffsetDateTime since = OffsetDateTime.now(UserActivityLog.VN_ZONE).minusDays(windowDays);
         return activityLogRepository.findTopCategoriesBySessionOrUser(sessionId, userId, since);
     }
 
     @Transactional(readOnly = true)
     public List<UUID> getTopProducts(String sessionId, UUID userId, int days) {
         int windowDays = days > 0 ? days : 7;
-        OffsetDateTime since = OffsetDateTime.now().minusDays(windowDays);
+        OffsetDateTime since = OffsetDateTime.now(UserActivityLog.VN_ZONE).minusDays(windowDays);
         return activityLogRepository.findTopProductIdsBySessionOrUser(sessionId, userId, since);
     }
 
