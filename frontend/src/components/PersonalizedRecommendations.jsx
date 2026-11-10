@@ -2,7 +2,9 @@ import React, { useEffect, useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { Sparkles, ChevronLeft, ChevronRight, ShoppingCart, Cpu, Check, Zap } from 'lucide-react'
 import { getPersonalizedRecommendations, getSimilarProducts } from '../services/recommendations'
+import { resolveProductImage } from '../assets/productImages'
 import { useCart } from '../contexts/cartContextStore'
+import { useAuth } from '../contexts/authContextStore'
 import { formatVND } from '../utils/cart'
 import '../styles/personalized-recommendations.css'
 
@@ -28,6 +30,7 @@ export default function PersonalizedRecommendations({
   const [addedId, setAddedId] = useState(null)
   const carouselRef = useRef(null)
   const { addItem, ready, productState, reportCartError } = useCart()
+  const { user, loading: authLoading } = useAuth() || {}
 
   useEffect(() => {
     let isMounted = true
@@ -39,13 +42,16 @@ export default function PersonalizedRecommendations({
         if (productId) {
           results = await getSimilarProducts(productId, { limit })
         } else {
-          results = await getPersonalizedRecommendations({ limit, context })
+          // Truyền trực tiếp trạng thái user vào service:
+          // Nếu user chưa đăng nhập, service chủ động dùng gợi ý thông minh từ catalog,
+          // KHÔNG gửi request lên endpoint /api/v1/recommendations/personalized để triệt tiêu 401 trên Console
+          results = await getPersonalizedRecommendations({ limit, context, user, authLoading })
         }
         if (isMounted) {
           setItems(results || [])
         }
       } catch (err) {
-        console.error('[PersonalizedRecommendations] Failed to load:', err)
+        console.debug('[PersonalizedRecommendations] Handled fallback load:', err)
       } finally {
         if (isMounted) setLoading(false)
       }
@@ -55,7 +61,7 @@ export default function PersonalizedRecommendations({
     return () => {
       isMounted = false
     }
-  }, [productId, context, limit])
+  }, [productId, context, limit, user?.id, authLoading])
 
   const scroll = direction => {
     if (carouselRef.current) {
@@ -145,42 +151,43 @@ export default function PersonalizedRecommendations({
               return (
                 <div className="ai-recommendations__item" key={product.id}>
                   <article className="ai-rec-card">
-                    <div className="ai-rec-card__badge-row">
-                      <span className={`ai-rec-card__match-badge ${badgeClass}`}>
-                        <Zap size={11} /> Phù hợp {percent}%
-                      </span>
-                    </div>
-
                     <Link
                       to={`/products/${product.slug}`}
                       className="ai-rec-card__image-link"
-                      aria-label={product.name}
+                      tabIndex={-1}
+                      aria-hidden="true"
                     >
                       <img
-                        src={product.image}
-                        alt={product.name}
+                        src={resolveProductImage(product.image || product.imageKey)}
+                        alt=""
                         loading="lazy"
                         decoding="async"
                         width="240"
                         height="240"
+                        onError={e => {
+                          e.currentTarget.onerror = null
+                          try {
+                            e.currentTarget.src = resolveProductImage('products/pc-gvn-i5-12400f-rtx-3050.png')
+                          } catch {}
+                        }}
                       />
                     </Link>
 
                     <div className="ai-rec-card__body">
-                      {product.brand && (
-                        <span className="ai-rec-card__brand">{product.brand}</span>
-                      )}
+                      <div className="ai-rec-card__meta-row">
+                        {product.brand ? (
+                          <span className="ai-rec-card__brand">{product.brand}</span>
+                        ) : (
+                          <span />
+                        )}
+                        <span className={`ai-rec-card__match-badge ${badgeClass}`}>
+                          <Zap size={11} /> Phù hợp {percent}%
+                        </span>
+                      </div>
 
                       <h3 className="ai-rec-card__name">
                         <Link to={`/products/${product.slug}`}>{product.name}</Link>
                       </h3>
-
-                      {product.matchReason && (
-                        <div className="ai-rec-card__reason" title={product.matchReason}>
-                          <Sparkles size={12} />
-                          <span>{product.matchReason}</span>
-                        </div>
-                      )}
 
                       {Array.isArray(product.specs) && product.specs.length > 0 && (
                         <div className="ai-rec-card__specs">

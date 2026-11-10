@@ -31,11 +31,10 @@ export default function HomePage() {
 
       <PersonalizedRecommendations
         id="ai-personalized-home"
-        eyebrow="AI SEMANTIC MATCH • COSINE SIMILARITY"
+        eyebrow="PixelCore AI"
         title="Gợi ý dành riêng cho bạn."
-        description="Mô hình Vector Embedding kết hợp Cosine Similarity gợi ý linh kiện phù hợp với hành vi duyệt web của bạn."
+        description="Được đề xuất tự động dựa trên hoạt động và sở thích cấu hình của bạn."
         context="home"
-        limit={8}
         onAddToCart={handleAddToCart}
       />
 
