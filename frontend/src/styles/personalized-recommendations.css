@@ -3,12 +3,15 @@
 
 .ai-recommendations-section {
   position: relative;
+  min-width: 0;
+  max-width: 100%;
   margin: 32px 0;
   padding: 24px;
   background: linear-gradient(135deg, rgba(240, 249, 255, 0.7) 0%, rgba(245, 243, 255, 0.6) 100%);
   border: 1px solid rgba(186, 230, 253, 0.6);
   border-radius: 16px;
   box-shadow: 0 4px 20px -2px rgba(14, 165, 233, 0.08);
+  overflow: hidden;
 }
 
 .ai-recommendations-section::before {
@@ -61,61 +64,23 @@
 }
 
 .ai-recommendations__controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  display: none;
 }
 
-.ai-recommendations__nav-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 1px solid #cbd5e1;
-  background: #ffffff;
-  color: #334155;
-  cursor: pointer;
-  transition: all 0.18s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.ai-recommendations__nav-btn:hover:not(:disabled) {
-  background: #0284c7;
-  color: #ffffff;
-  border-color: #0284c7;
-  transform: translateY(-1px);
-}
-
-.ai-recommendations__nav-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-/* Carousel Container */
+/* Grid Layout: Chuẩn 4 thẻ trên một hàng, tự động nhảy xuống hàng khi đủ 4 */
+.ai-recommendations__grid,
 .ai-recommendations__carousel {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 18px;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  padding: 4px 2px 14px;
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 transparent;
-}
-
-.ai-recommendations__carousel::-webkit-scrollbar {
-  height: 6px;
-}
-
-.ai-recommendations__carousel::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 999px;
+  width: 100%;
+  min-width: 0;
+  padding: 4px 0 8px;
 }
 
 .ai-recommendations__item {
-  flex: 0 0 260px;
-  max-width: 260px;
+  min-width: 0;
+  width: 100%;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -141,16 +106,13 @@
   box-shadow: 0 10px 25px -4px rgba(14, 165, 233, 0.15);
 }
 
-.ai-rec-card__badge-row {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  right: 10px;
+.ai-rec-card__meta-row {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  z-index: 2;
-  pointer-events: none;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+  min-height: 22px;
 }
 
 .ai-rec-card__match-badge {
@@ -159,40 +121,45 @@
   gap: 4px;
   font-size: 11px;
   font-weight: 700;
-  padding: 4px 8px;
+  padding: 3px 8px;
   border-radius: 6px;
-  backdrop-filter: blur(8px);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  line-height: 1.4;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .ai-rec-card__match-badge--high {
-  background: rgba(16, 185, 129, 0.95);
+  background: #059669;
   color: #ffffff;
 }
 
 .ai-rec-card__match-badge--good {
-  background: rgba(2, 132, 199, 0.95);
+  background: #0284c7;
   color: #ffffff;
 }
 
 .ai-rec-card__match-badge--normal {
-  background: rgba(99, 102, 241, 0.95);
+  background: #6366f1;
   color: #ffffff;
 }
 
 .ai-rec-card__image-link {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1;
-  background: #f8fafc;
+  aspect-ratio: 1.15;
+  background: #ffffff;
+  border-bottom: 1px solid #f1f5f9;
   overflow: hidden;
-  padding: 12px;
+  padding: 16px;
 }
 
 .ai-rec-card__image-link img {
   width: 100%;
   height: 100%;
+  max-height: 180px;
   object-fit: contain;
   transition: transform 0.25s ease;
 }
@@ -210,10 +177,14 @@
 
 .ai-rec-card__brand {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
   color: #64748b;
-  margin-bottom: 4px;
+  margin-bottom: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .ai-rec-card__name {
@@ -352,13 +323,29 @@
   cursor: not-allowed;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 1100px) {
+  .ai-recommendations__grid,
+  .ai-recommendations__carousel {
+    gap: 14px;
+  }
+}
+
+@media (max-width: 800px) {
+  .ai-recommendations__grid,
+  .ai-recommendations__carousel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+}
+
+@media (max-width: 480px) {
   .ai-recommendations-section {
     padding: 16px 12px;
   }
-  .ai-recommendations__item {
-    flex: 0 0 220px;
-    max-width: 220px;
+  .ai-recommendations__grid,
+  .ai-recommendations__carousel {
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
 }
 

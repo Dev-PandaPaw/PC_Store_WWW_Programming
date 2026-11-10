@@ -8,7 +8,7 @@ import CartQuantity from '../components/CartQuantity'
 import PersonalizedRecommendations from '../components/PersonalizedRecommendations'
 
 export default function CartPage() {
-  const { items, setQuantity, removeItem, clearCart, totalAmount, totalCount, ready } =
+  const { items, addItem, setQuantity, removeItem, clearCart, totalAmount, totalCount, ready } =
     useCart()
   React.useEffect(() => {
     document.title = `Giỏ hàng (${totalCount}) | PixelCore`
@@ -99,14 +99,13 @@ export default function CartPage() {
         </div>
       )}
 
-      {/* Gợi ý linh kiện thông minh theo giỏ hàng (Phụ trách: Bùi Ngọc Bửu) */}
       <PersonalizedRecommendations
         id="cart-personalized-recommendations"
         context="cart"
-        eyebrow="AI CROSS-SELL • TƯƠNG THÍCH PHẦN CỨNG"
+        eyebrow="PixelCore AI"
         title="Linh kiện gợi ý thêm cho dàn máy của bạn."
         description="Được đề xuất tự động dựa trên độ tương thích với các linh kiện trong giỏ hàng."
-        limit={6}
+        onAddToCart={product => addItem(product, 1)}
       />
     </div>
   )
