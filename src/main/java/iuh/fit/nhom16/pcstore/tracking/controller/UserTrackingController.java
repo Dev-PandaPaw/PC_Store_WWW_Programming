@@ -25,10 +25,6 @@ public class UserTrackingController {
         this.userTrackingService = userTrackingService;
     }
 
-    /**
-     * Endpoint nhan su kien tu frontend hook useUserTracker (do Cảnh viết).
-     * Non-blocking, luu tru hanh vi nguoi dung vao PostgreSQL.
-     */
     @PostMapping("/events")
     public ResponseEntity<Map<String, Object>> trackEvent(
             @Valid @RequestBody TrackingEventRequest request,
@@ -47,10 +43,7 @@ public class UserTrackingController {
         ));
     }
 
-    /**
-     * User Profile API: Cung cap top danh muc va so thich cua nguoi dung
-     * phuc vu cho phan Semantic Recommendation (do Ngan & Buu phu trach).
-     */
+ 
     @GetMapping("/profile")
     public ResponseEntity<Map<String, Object>> getUserProfile(
             @RequestParam(defaultValue = "7") int days,

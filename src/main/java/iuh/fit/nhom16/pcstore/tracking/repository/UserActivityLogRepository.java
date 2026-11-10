@@ -14,8 +14,6 @@ import java.util.UUID;
 @Repository
 public interface UserActivityLogRepository extends JpaRepository<UserActivityLog, UUID> {
 
-    /** Recommendation reads are user-scoped and derive categories from real products,
-     * not untrusted categorySlug metadata or another user's browser session. */
     @Query("""
             SELECT p.category.slug FROM UserActivityLog l JOIN Product p ON p.id=l.productId
             WHERE l.userId=:userId AND l.eventType='VIEW_PRODUCT' AND l.createdAt>=:since
