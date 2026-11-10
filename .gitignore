@@ -47,4 +47,9 @@ coverage/
 # Temporary UI export folder
 UI/
 
+# Graphify
+graphify-out/
+.graphify*
+
+
 

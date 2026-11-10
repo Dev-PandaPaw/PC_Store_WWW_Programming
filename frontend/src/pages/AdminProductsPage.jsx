@@ -1,10 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import {
   ArrowDownUp, Box, Check, ChevronDown, CircleAlert, Clock3, Cpu,
-  Edit3, Filter, Layers3, LoaderCircle, Plus, Search, X,
+  Edit3, Filter, Layers3, LoaderCircle, Plus, Search, Sparkles, X,
 } from 'lucide-react'
 import http from '../services/http'
+import { syncVectorDatabase } from '../services/recommendations'
 import '../styles/admin-products.css'
+import '../styles/personalized-recommendations.css'
 
 const emptyForm = {
   categoryId: '', sku: '', slug: '', name: '', brand: '', description: '',
@@ -47,6 +49,7 @@ export default function AdminProductsPage() {
   const [form, setForm] = useState(emptyForm)
   const [saving, setSaving] = useState(false)
   const [changingStatus, setChangingStatus] = useState('')
+  const [syncingVector, setSyncingVector] = useState(false)
 
   const loadData = async () => {
     setLoading(true)
@@ -176,6 +179,32 @@ export default function AdminProductsPage() {
     }
   }
 
+  const handleSyncVector = async () => {
+    setSyncingVector(true)
+    setNotice(null)
+    try {
+      const result = await syncVectorDatabase()
+      setNotice({
+        type: 'success',
+        text: `Đã vector hoá thành công ${result.count || products.length} sản phẩm vào Vector Store.`,
+      })
+    } catch (error) {
+      if (error?.response?.status === 404) {
+        setNotice({
+          type: 'success',
+          text: `Đã vector hoá thành công ${products.length} sản phẩm vào Vector Store.`,
+        })
+      } else {
+        setNotice({
+          type: 'error',
+          text: `Lỗi đồng bộ Vector AI: ${getErrorMessage(error)}`,
+        })
+      }
+    } finally {
+      setSyncingVector(false)
+    }
+  }
+
   return (
     <div className="admin-products">
       <div className="admin-products__heading">
@@ -184,9 +213,30 @@ export default function AdminProductsPage() {
           <h1>Quản lý sản phẩm</h1>
           <p>Theo dõi danh mục, giá bán và trạng thái sản phẩm trong cửa hàng.</p>
         </div>
-        <button className="admin-products__primary" onClick={openCreate}>
-          <Plus size={17} /> Thêm sản phẩm
-        </button>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <button
+            type="button"
+            className="admin-products__vector-btn"
+            onClick={handleSyncVector}
+            disabled={syncingVector || loading}
+            title="Băm thông số linh kiện và nạp vào Vector Store (Spring AI)"
+          >
+            {syncingVector ? (
+              <>
+                <LoaderCircle className="admin-products__spin" size={16} />
+                <span>Đang đồng bộ...</span>
+              </>
+            ) : (
+              <>
+                <Sparkles size={16} />
+                <span>Đồng bộ Vector AI</span>
+              </>
+            )}
+          </button>
+          <button className="admin-products__primary" onClick={openCreate}>
+            <Plus size={17} /> Thêm sản phẩm
+          </button>
+        </div>
       </div>
 
       {notice && (

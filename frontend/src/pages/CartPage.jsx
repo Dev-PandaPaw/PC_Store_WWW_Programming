@@ -5,9 +5,10 @@ import { useCart } from '../contexts/cartContextStore'
 import { formatVND } from '../utils/cart'
 import CartDemoPanel from '../components/CartDemoPanel'
 import CartQuantity from '../components/CartQuantity'
+import PersonalizedRecommendations from '../components/PersonalizedRecommendations'
 
 export default function CartPage() {
-  const { items, setQuantity, removeItem, clearCart, totalAmount, totalCount, ready } =
+  const { items, addItem, setQuantity, removeItem, clearCart, totalAmount, totalCount, ready } =
     useCart()
   React.useEffect(() => {
     document.title = `Giỏ hàng (${totalCount}) | PixelCore`
@@ -97,6 +98,15 @@ export default function CartPage() {
           </aside>
         </div>
       )}
+
+      <PersonalizedRecommendations
+        id="cart-personalized-recommendations"
+        context="cart"
+        eyebrow="PixelCore AI"
+        title="Linh kiện gợi ý thêm cho dàn máy của bạn."
+        description="Được đề xuất tự động dựa trên độ tương thích với các linh kiện trong giỏ hàng."
+        onAddToCart={product => addItem(product, 1)}
+      />
     </div>
   )
 }

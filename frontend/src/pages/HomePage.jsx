@@ -3,6 +3,7 @@ import { HeroSection } from '../components/gear/HeroSection'
 import { NewsSection } from '../components/gear/NewsSection'
 import { CartDrawer } from '../components/gear/CartDrawer'
 import { FlashDeal } from '../components/gear/FlashDeal'
+import PersonalizedRecommendations from '../components/PersonalizedRecommendations'
 import ProductSection from '../components/ProductSection'
 import PromoBanner from '../components/PromoBanner'
 import collectionBanner from '../assets/promotions/pc-collection.png'
@@ -27,6 +28,15 @@ export default function HomePage() {
         className="promo-banner--collection"
       />
       <FlashDeal onAddToCart={handleAddToCart} />
+
+      <PersonalizedRecommendations
+        id="ai-personalized-home"
+        eyebrow="PixelCore AI"
+        title="Gợi ý dành riêng cho bạn."
+        description="Được đề xuất tự động dựa trên hoạt động và sở thích cấu hình của bạn."
+        context="home"
+        onAddToCart={handleAddToCart}
+      />
 
       <ProductSection
         id="pc-bo"
