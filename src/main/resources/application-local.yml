@@ -39,6 +39,11 @@ app:
       username: ${ADMIN_USERNAME:admin}
       password: ${ADMIN_PASSWORD:admin1234}
 
+logging:
+  level:
+    iuh.fit.nhom16.pcstore.ai.vector.ProductEmbeddingModel: DEBUG
+    iuh.fit.nhom16.pcstore.catalog.application.SmartSearchService: DEBUG
+
 management:
   health:
     mail:

@@ -28,10 +28,10 @@ public class UserTrackingService {
 
     @Transactional(readOnly = true)
     public List<String> getTopViewedCategories(UUID userId, Instant since, int limit) {
-        if (userId==null || since==null || limit<1 || limit>10)
+        if (userId == null || since == null || limit < 1 || limit > 10)
             throw new IllegalArgumentException("Invalid recommendation history query");
         return activityLogRepository.findTopViewedCategoriesByUser(userId,
-                OffsetDateTime.ofInstant(since,ZoneOffset.UTC),PageRequest.of(0,limit));
+                OffsetDateTime.ofInstant(since, ZoneOffset.UTC), PageRequest.of(0, limit));
     }
 
     @Transactional
@@ -46,8 +46,7 @@ public class UserTrackingService {
                 request.eventType().trim().toUpperCase(),
                 request.productId(),
                 request.categorySlug() != null ? request.categorySlug().trim().toLowerCase() : null,
-                request.metadata()
-        );
+                request.metadata());
 
         UserActivityLog saved = activityLogRepository.save(activityLog);
         log.debug("Recorded tracking event: type={}, session={}, user={}, product={}",
@@ -74,4 +73,3 @@ public class UserTrackingService {
         return activityLogRepository.findTop20BySessionIdOrUserIdOrderByCreatedAtDesc(sessionId, userId);
     }
 }
-

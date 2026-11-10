@@ -3,12 +3,15 @@ package iuh.fit.nhom16.pcstore.catalog.application;
 import iuh.fit.nhom16.pcstore.ai.*;
 import iuh.fit.nhom16.pcstore.catalog.api.dto.StoreProduct;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class SmartSearchService {
+    private static final Logger LOG = LoggerFactory.getLogger(SmartSearchService.class);
     private final StorefrontCatalog catalog;
     private final AiGateway ai;
     private final Map<String, CachedIntent> cache = new ConcurrentHashMap<>();
@@ -44,6 +47,8 @@ public class SmartSearchService {
         catch (RuntimeException e) { throw new AiFailure(503,"CATALOG_UNAVAILABLE","Chưa đọc được danh mục sản phẩm. Bạn vui lòng thử lại."); }
         CachedIntent intent = query.isEmpty() ? new CachedIntent(ProductCriteria.empty(),"catalog",0) : interpret(query,client);
         ProductCriteria criteria = intent.criteria();
+        LOG.debug("[SmartSearchService] input=\"{}\" mode={} groups={} purpose={}",
+                query, intent.mode(), criteria.groups(), criteria.purpose());
         final String literal = CriteriaParser.normalize(query);
         List<StoreProduct> found = CriteriaParser.unsupported(query) ? List.of() : products.stream()
                 .filter(p -> ProductMatcher.category(p,category))
@@ -61,6 +66,12 @@ public class SmartSearchService {
                     : Comparator.comparingInt(p -> 0);
         };
         found = found.stream().sorted(order).toList();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("[ProductMatcher] input=\"{}\" categoryFilter={} minBudget={} maxBudget={} inStockOnly={} deals={} sort={}",
+                    query, category, criteria.minBudget(), criteria.maxBudget(), criteria.inStockOnly(), deals, sort);
+            LOG.debug("[ProductMatcher] input=\"{}\" matched={}/{} categories={} productIds={}", query, found.size(), products.size(),
+                    found.stream().map(StoreProduct::category).distinct().toList(), found.stream().map(StoreProduct::id).toList());
+        }
         List<String> descriptions = new ArrayList<>();
         NumberFormat money = NumberFormat.getIntegerInstance(Locale.forLanguageTag("vi-VN"));
         if (criteria.cheapest() && !found.isEmpty()) descriptions.add("Mức giá thấp nhất phù hợp: " + money.format(found.stream().mapToLong(StoreProduct::price).min().orElseThrow()) + " ₫");

@@ -18,25 +18,44 @@ public class RecommendationController {
     private final ObjectProvider<ProductSemanticIndexService> index;
     public RecommendationController(ProductSemanticRecommendationService recommendations,RecommendationAccountAccess accounts,
             ObjectProvider<ProductSemanticIndexService> index) {
-        this.recommendations=recommendations; this.accounts=accounts; this.index=index;
+        this.recommendations=recommendations;
+        this.accounts=accounts;
+        this.index=index;
     }
+
+    // controller gợi ý sản phẩm theo cá nhân hóa
     @GetMapping("/api/v1/recommendations/personalized")
     public ResponseEntity<?> personalized(Authentication authentication,
             @RequestParam(defaultValue="") List<UUID> selectedProductIds) {
-        return ResponseEntity.ok().cacheControl(CacheControl.noStore())
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.noStore())
                 .body(recommendations.personalized(accounts.requireActiveUser(authentication),selectedProductIds));
     }
+
+
+    // controller tìm kiếm các sản phẩm tương tự đang xem
     @GetMapping("/api/v1/recommendations/similar/{productId}")
     public ResponseEntity<?> similar(@PathVariable UUID productId,
             @RequestParam(defaultValue="") List<UUID> selectedProductIds) {
-        return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(recommendations.similar(productId,selectedProductIds));
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.noStore())
+                .body(recommendations.similar(productId,selectedProductIds));
     }
+
+    // controller đồng bộ chỉ mục khi dữ liệu thay đổi
     @PostMapping("/api/v1/admin/recommendations/reindex")
     public ResponseEntity<?> reindex(Authentication authentication) {
         accounts.requireActiveUser(authentication);
         var service=index.getIfAvailable();
-        if (service==null) throw new RecommendationFailure(503,"VECTOR_UNAVAILABLE","Tìm kiếm vector chưa được bật.");
-        try { return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(service.synchronize()); }
-        catch (RuntimeException e) { throw new RecommendationFailure(503,"INDEX_UNAVAILABLE","Chưa đồng bộ được chỉ mục vector."); }
+        if (service==null)
+            throw new RecommendationFailure(503,"VECTOR_UNAVAILABLE","Tìm kiếm vector chưa được bật.");
+        try {
+            return ResponseEntity.ok()
+                    .cacheControl(CacheControl.noStore())
+                    .body(service.synchronize());
+        }
+        catch (RuntimeException e) {
+            throw new RecommendationFailure(503,"INDEX_UNAVAILABLE","Chưa đồng bộ được chỉ mục vector.");
+        }
     }
 }
