@@ -26,7 +26,8 @@ Migration không trùng số:
 
 - V15__create_user_activity_logs.sql: giữ nguyên từ development.
 - V16__component_socket_specs.sql: thêm socket CPU/mainboard có cấu trúc, chưa rõ để NULL.
-- V17__semantic_vector_store.sql: chỉ bật trong profile semantic, tạo product_semantic_vectors với 768 chiều/HNSW cosine và RLS.
+- V17__product_view_history.sql: khôi phục nguyên bản migration lịch sử đã áp dụng trên Supabase; luồng tracking hiện tại vẫn dùng user_activity_logs.
+- V18__semantic_vector_store.sql: chỉ bật trong profile semantic, tạo product_semantic_vectors với 768 chiều/HNSW cosine và RLS.
 
 Không đổi lịch sử Flyway của database đã triển khai. Nếu đã tự chạy bản migration cũ trước lần đồng bộ này, kiểm tra flyway_schema_history trước khi áp bản mới.
 

@@ -16,8 +16,10 @@ public class SemanticRecommendationConfiguration {
     @Bean
     ProductVectorStore recommendationVectorStore(JdbcTemplate jdbc, EmbeddingModel productEmbeddingModel,
             @Value("${app.ai.vector.dimensions:768}") int dimensions) {
-        if(dimensions!=768) throw new IllegalArgumentException("PgVector migration requires 768 embedding dimensions");
-        var persistent=new InclusiveCosinePgVectorStore(PgVectorStore.builder(jdbc,productEmbeddingModel).dimensions(dimensions)
+        if(dimensions!=768)
+            throw new IllegalArgumentException("PgVector migration requires 768 embedding dimensions");
+        var persistent=new InclusiveCosinePgVectorStore(PgVectorStore.builder(jdbc,productEmbeddingModel)
+                .dimensions(dimensions)
                 .distanceType(PgVectorStore.PgDistanceType.COSINE_DISTANCE)
                 .indexType(PgVectorStore.PgIndexType.HNSW).vectorTableName("product_semantic_vectors")
                 .initializeSchema(false));

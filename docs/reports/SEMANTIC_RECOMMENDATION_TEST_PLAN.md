@@ -6,7 +6,7 @@ Ngày lập: 09/11/2026. Phạm vi: cosine, cá nhân hóa theo lịch sử xem,
 
 - Local: JDK 21/Maven và Node; không gọi Supabase hoặc Gemini.
 - Supabase: đọc cấu hình `.env` hoặc `RECOMMENDATION_TEST_DB_*` nội bộ; không in credentials. DB role cần quyền tạo schema và dùng extension vector đã bật.
-- Test tạo schema `recommendation_check_<UUID>`, chạy V15 tracking/V16 socket/V17 vector, seed 2 user giả và 5 linh kiện giả rồi xóa schema trong teardown. Không sửa bảng người dùng, sản phẩm, tồn kho hoặc đơn hàng thật. Nếu mất kết nối lúc teardown, cần kiểm tra schema tạm còn lại trước khi chạy lại.
+- Test tạo schema `recommendation_check_<UUID>`, chạy V15 tracking/V16 socket/V18 vector, seed 2 user giả và 5 linh kiện giả rồi xóa schema trong teardown. Không sửa bảng người dùng, sản phẩm, tồn kho hoặc đơn hàng thật. Nếu mất kết nối lúc teardown, cần kiểm tra schema tạm còn lại trước khi chạy lại.
 - Live embedding là bước opt-in riêng: một request gửi chuỗi thông số CPU giả sang Google, không gửi lịch sử user hoặc catalog thật. Request có thể dùng quota API.
 - Tích hợp ứng dụng thật: chạy profile `local,semantic`, xác nhận database mục tiêu trước migration. Không sửa lịch sử Flyway để chạy lại migration đã áp dụng.
 

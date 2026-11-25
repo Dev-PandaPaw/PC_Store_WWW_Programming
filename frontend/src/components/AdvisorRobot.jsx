@@ -3,27 +3,27 @@ import '../styles/advisor-robot.css'
 
 // SVG geometry and animation adapted from the supplied transparent robot component.
 export default function AdvisorRobot() {
-  const id = useId()
-  const waveArm = useRef(null)
-  const waveAnimation = useRef(null)
-  useEffect(() => () => waveAnimation.current?.cancel(), [])
+    const id = useId()
+    const waveArm = useRef(null)
+    const waveAnimation = useRef(null)
+    useEffect(() => () => waveAnimation.current?.cancel(), [])
 
-  function wave() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || waveAnimation.current?.playState === 'running') return
-    // A separate joint keeps the idle animation running without jumping back to its first frame.
-    waveAnimation.current = waveArm.current?.animate([
-      { transform: 'rotate(0deg)' },
-      { transform: 'rotate(-9deg)' },
-      { transform: 'rotate(7deg)' },
-      { transform: 'rotate(-6deg)' },
-      { transform: 'rotate(0deg)' },
-    ], { duration: 1600, easing: 'ease-in-out' })
-  }
+    function wave() {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || waveAnimation.current?.playState === 'running') return
+        // A separate joint keeps the idle animation running without jumping back to its first frame.
+        waveAnimation.current = waveArm.current?.animate([
+            { transform: 'rotate(0deg)' },
+            { transform: 'rotate(-9deg)' },
+            { transform: 'rotate(7deg)' },
+            { transform: 'rotate(-6deg)' },
+            { transform: 'rotate(0deg)' },
+        ], { duration: 1600, easing: 'ease-in-out' })
+    }
 
-  return <aside className="ai-robot-companion" aria-label="Robot PixelCore">
-    <button type="button" className="ai-robot anim-idle anim-wave anim-blink"
-      onClick={wave} aria-label="Chào robot PixelCore" title="Nhấn để robot vẫy chào">
-<svg viewBox="-70 -20 760 920" className="ai-robot__art" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    return <aside className="ai-robot-companion" aria-label="Robot PixelCore">
+        <button type="button" className="ai-robot anim-idle anim-wave anim-blink"
+            onClick={wave} aria-label="Chào robot PixelCore" title="Nhấn để robot vẫy chào">
+            <svg viewBox="-70 -20 760 920" className="ai-robot__art" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                     <linearGradient id={`${id}-whiteArmor`} x1="15%" y1="10%" x2="85%" y2="90%">
                         <stop offset="0%" stopColor="#ffffff"></stop>
@@ -139,28 +139,28 @@ export default function AdvisorRobot() {
                         <path d="M 378 342 L 335 366 L 340 390" fill="none" stroke={`url(#${id}-cyanLed)`} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" className="led-pulse cyan-glow"></path>
                     </g>
                     <g ref={waveArm} data-robot-part="greeting-wave">
-                    <g data-robot-part="viewer-right-arm">
-                        <circle cx="385" cy="318" r="30" fill={`url(#${id}-darkJoint)`}></circle>
-                        <circle cx="385" cy="318" r="22" fill="none" stroke={`url(#${id}-cyanLed)`} strokeWidth="4" className="led-pulse cyan-glow"></circle>
-                        <path d="M 392 302 C 424 324, 452 362, 466 396 C 458 416, 432 424, 418 412 C 396 385, 382 352, 376 324 Z" fill={`url(#${id}-whiteArmor)`} filter={`url(#${id}-armorShadow)`}></path>
-                        <path d="M 404 316 Q 426 334 436 355" fill="none" stroke={`url(#${id}-cyanLed)`} strokeWidth="3" strokeLinecap="round" className="led-pulse"></path>
-                        <g data-robot-part="viewer-right-forearm">
-                            <circle cx="455" cy="410" r="22" fill={`url(#${id}-darkJoint)`}></circle>
-                            <circle cx="458" cy="414" r="12" fill="#050b14" stroke={`url(#${id}-cyanLed)`} strokeWidth="3.5" className="led-pulse cyan-glow"></circle>
-                            <path d="M 444 394 C 468 364, 496 338, 522 322 C 538 328, 544 346, 534 360 C 510 385, 486 410, 468 422 Z" fill={`url(#${id}-whiteArmor)`} filter={`url(#${id}-armorShadow)`}></path>
-                            <path d="M 476 388 L 518 346" stroke={`url(#${id}-cyanLed)`} strokeWidth="3" strokeLinecap="round" className="led-pulse"></path>
-                            <circle cx="532" cy="332" r="14" fill={`url(#${id}-darkJoint)`} stroke={`url(#${id}-cyanLed)`} strokeWidth="2.5" className="led-pulse"></circle>
-                            <g data-robot-part="viewer-right-hand">
-                                <path d="M 526 322 C 528 302, 542 286, 552 284 C 558 290, 550 308, 540 322 Z" fill={`url(#${id}-darkJoint)`}></path>
-                                <path d="M 528 320 C 530 308, 538 298, 544 296" fill="none" stroke="#e2e8f0" strokeWidth="4" strokeLinecap="round"></path>
-                                <path d="M 548 318 C 566 304, 584 294, 592 298 C 594 304, 576 318, 556 328 Z" fill={`url(#${id}-darkJoint)`}></path>
-                                <path d="M 552 326 C 572 314, 592 306, 598 312 C 598 318, 578 330, 558 336 Z" fill={`url(#${id}-darkJoint)`}></path>
-                                <path d="M 554 334 C 572 326, 588 320, 594 326 C 592 332, 574 340, 556 344 Z" fill={`url(#${id}-darkJoint)`}></path>
-                                <path d="M 526 324 C 542 316, 562 320, 568 334 C 562 348, 542 350, 528 340 Z" fill={`url(#${id}-whiteArmor)`} filter={`url(#${id}-armorShadow)`}></path>
-                                <circle cx="546" cy="334" r="3.5" fill={`url(#${id}-cyanLed)`} className="led-pulse"></circle>
+                        <g data-robot-part="viewer-right-arm">
+                            <circle cx="385" cy="318" r="30" fill={`url(#${id}-darkJoint)`}></circle>
+                            <circle cx="385" cy="318" r="22" fill="none" stroke={`url(#${id}-cyanLed)`} strokeWidth="4" className="led-pulse cyan-glow"></circle>
+                            <path d="M 392 302 C 424 324, 452 362, 466 396 C 458 416, 432 424, 418 412 C 396 385, 382 352, 376 324 Z" fill={`url(#${id}-whiteArmor)`} filter={`url(#${id}-armorShadow)`}></path>
+                            <path d="M 404 316 Q 426 334 436 355" fill="none" stroke={`url(#${id}-cyanLed)`} strokeWidth="3" strokeLinecap="round" className="led-pulse"></path>
+                            <g data-robot-part="viewer-right-forearm">
+                                <circle cx="455" cy="410" r="22" fill={`url(#${id}-darkJoint)`}></circle>
+                                <circle cx="458" cy="414" r="12" fill="#050b14" stroke={`url(#${id}-cyanLed)`} strokeWidth="3.5" className="led-pulse cyan-glow"></circle>
+                                <path d="M 444 394 C 468 364, 496 338, 522 322 C 538 328, 544 346, 534 360 C 510 385, 486 410, 468 422 Z" fill={`url(#${id}-whiteArmor)`} filter={`url(#${id}-armorShadow)`}></path>
+                                <path d="M 476 388 L 518 346" stroke={`url(#${id}-cyanLed)`} strokeWidth="3" strokeLinecap="round" className="led-pulse"></path>
+                                <circle cx="532" cy="332" r="14" fill={`url(#${id}-darkJoint)`} stroke={`url(#${id}-cyanLed)`} strokeWidth="2.5" className="led-pulse"></circle>
+                                <g data-robot-part="viewer-right-hand">
+                                    <path d="M 526 322 C 528 302, 542 286, 552 284 C 558 290, 550 308, 540 322 Z" fill={`url(#${id}-darkJoint)`}></path>
+                                    <path d="M 528 320 C 530 308, 538 298, 544 296" fill="none" stroke="#e2e8f0" strokeWidth="4" strokeLinecap="round"></path>
+                                    <path d="M 548 318 C 566 304, 584 294, 592 298 C 594 304, 576 318, 556 328 Z" fill={`url(#${id}-darkJoint)`}></path>
+                                    <path d="M 552 326 C 572 314, 592 306, 598 312 C 598 318, 578 330, 558 336 Z" fill={`url(#${id}-darkJoint)`}></path>
+                                    <path d="M 554 334 C 572 326, 588 320, 594 326 C 592 332, 574 340, 556 344 Z" fill={`url(#${id}-darkJoint)`}></path>
+                                    <path d="M 526 324 C 542 316, 562 320, 568 334 C 562 348, 542 350, 528 340 Z" fill={`url(#${id}-whiteArmor)`} filter={`url(#${id}-armorShadow)`}></path>
+                                    <circle cx="546" cy="334" r="3.5" fill={`url(#${id}-cyanLed)`} className="led-pulse"></circle>
+                                </g>
                             </g>
                         </g>
-                    </g>
                     </g>
                     <g data-robot-part="head-group">
                         <g data-robot-part="left-ear">
@@ -200,6 +200,6 @@ export default function AdvisorRobot() {
                     </g>
                 </g>
             </svg>
-    </button>
-  </aside>
+        </button>
+    </aside>
 }

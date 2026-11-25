@@ -6,7 +6,14 @@ export const cartApi = {
   csrf: () => http.get('/csrf', options),
   get: () => http.get('/v1/cart', options),
   merge: () => http.post('/v1/cart/merge', null, options),
-  add: (productId, quantity, cartVersion) => http.post('/v1/cart/items', { productId, quantity, cartVersion }, options),
+  add: (productId, quantity, cartVersion, operationId) =>
+    http.post(
+      '/v1/cart/items',
+      operationId ? { productId, quantity, cartVersion, operationId } : { productId, quantity, cartVersion },
+      operationId
+        ? { ...options, headers: { 'Idempotency-Key': operationId } }
+        : options,
+    ),
   update: (productId, quantity, cartVersion) => http.patch(`/v1/cart/items/${productId}`, { quantity, cartVersion }, options),
   remove: (productId, cartVersion) => http.delete(`/v1/cart/items/${productId}`, { ...options, params: { cartVersion } }),
   clear: (cartVersion) => http.delete('/v1/cart', { ...options, params: { cartVersion } }),

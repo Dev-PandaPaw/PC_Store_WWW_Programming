@@ -6,11 +6,15 @@ export type CartProduct = Pick<StoreProduct, 'id' | 'name' | 'price'> & Partial<
 export interface CartMutationResult {
   success: boolean
   message?: string
+  operationId?: string
+  availableQuantity?: number
+  remainingAddableQuantity?: number
 }
 
 export interface ProductCartState {
   available: number | undefined
   quantity: number
+  remaining: number
   canAdd: boolean
   status: 'available' | 'sold-out' | 'limit'
   label: string
@@ -18,7 +22,14 @@ export interface ProductCartState {
 
 export interface CartContextValue {
   items: CartItem[]
-  addItem: (product: CartProduct, quantity?: number, onAccepted?: () => void) => Promise<CartMutationResult>
+  addItem: (
+    product: CartProduct,
+    quantity?: number,
+    onAccepted?: () => void,
+  ) => Promise<CartMutationResult>
+  retryLastAdd: () => Promise<CartMutationResult>
+  adding: boolean
+  isAdding: (productId: string) => boolean
   setQuantity: (id: string, quantity: number) => Promise<CartMutationResult>
   removeItem: (id: string) => Promise<CartMutationResult>
   clearCart: () => Promise<CartMutationResult>
@@ -26,7 +37,8 @@ export interface CartContextValue {
   totalAmount: number
   ready: boolean
   syncing: boolean
-  refresh: () => Promise<void>
+  /** Reloads the cart and resolves with the fresh server cart (or null on failure). */
+  refresh: () => Promise<{ cartVersion?: number; items?: unknown[] } | null>
   cartVersion: number
   notice: string
   demo: { userId: string | null } | null

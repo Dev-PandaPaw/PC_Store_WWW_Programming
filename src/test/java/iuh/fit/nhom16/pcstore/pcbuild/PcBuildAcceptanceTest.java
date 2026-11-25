@@ -75,16 +75,23 @@ class PcBuildAcceptanceTest {
             jdbc.update("INSERT INTO task8_specs VALUES (?,?::jsonb)",id,JSON.writeValueAsString(p.get("component_record")));
         }
         var transactions=new TransactionTemplate(new DataSourceTransactionManager(dataSource));
-        var repository=new CartRepository(jdbc);
+        var repository=mock(CartRepository.class);
+        when(repository.activeUser(any())).thenAnswer(call -> Boolean.TRUE.equals(
+                jdbc.queryForObject("SELECT EXISTS(SELECT 1 FROM users WHERE id = ? AND status = 'ACTIVE')", Boolean.class, call.getArgument(0, UUID.class))));
+        when(repository.lock(any())).thenAnswer(call -> lockCartFromPg(call.getArgument(0, UUID.class)));
+        when(repository.lock(any(), any())).thenAnswer(call -> lockCartFromPg(call.getArgument(0, UUID.class)));
+        doAnswer(call -> { saveCartToPg(call.getArgument(0)); return null; }).when(repository).save(any());
         var products=mock(ProductRepository.class);
         // Test adapter reads actual PG rows for the catalog projection; no catalog values are mocked.
-        when(products.findCartProducts(any())).thenAnswer(call -> {
+        org.mockito.stubbing.Answer<List<CartProductSnapshot>> loadSnapshots = call -> {
             Collection<UUID> ids=call.getArgument(0);
             String placeholders=String.join(",",Collections.nCopies(ids.size(),"?"));
-            return jdbc.query("SELECT * FROM products WHERE id IN ("+placeholders+")",(rs,n)->new CartProductSnapshot(
+            return jdbc.query("SELECT * FROM products WHERE id IN ("+placeholders+") ORDER BY id FOR SHARE",(rs,n)->new CartProductSnapshot(
                     rs.getObject("id",UUID.class),rs.getString("sku"),rs.getString("name"),rs.getBigDecimal("price"),
                     rs.getString("status"),rs.getInt("stock_on_hand"),rs.getInt("reserved_quantity")),ids.toArray());
-        });
+        };
+        when(products.findCartProducts(any())).thenAnswer(loadSnapshots);
+        when(products.lockCartProducts(any())).thenAnswer(loadSnapshots);
         var cartRules=new CartService(products);
         var storage=new CartStorageService(repository,transactions,cartRules);
         var client=new PcBuildClient(System.getenv("PC_BUILD_TEST_PYTHON_URL"),System.getenv("CART_BACKEND_API_KEY"),30);
@@ -124,6 +131,41 @@ class PcBuildAcceptanceTest {
     }
     long cartVersion() {return jdbc.queryForObject("SELECT version FROM carts WHERE user_id=?",Long.class,ALICE);}
     int cartLines() {return jdbc.queryForObject("SELECT count(*) FROM cart_items i JOIN carts c ON c.id=i.cart_id WHERE c.user_id=?",Integer.class,ALICE);}
+    @SuppressWarnings("unchecked")
+    iuh.fit.nhom16.pcstore.cart.model.CartSession lockCartFromPg(UUID userId) {
+        jdbc.update("INSERT INTO carts(id, user_id) VALUES (?, ?) ON CONFLICT (user_id) DO NOTHING", UUID.randomUUID(), userId);
+        return jdbc.queryForObject("SELECT id, version, pc_build_checkout, pc_build_requirements FROM carts WHERE user_id = ? FOR UPDATE",
+                (rs, row) -> {
+                    UUID id = rs.getObject("id", UUID.class);
+                    var quantities = new LinkedHashMap<UUID, Integer>();
+                    jdbc.query("SELECT product_id, quantity FROM cart_items WHERE cart_id = ? ORDER BY product_id",
+                            (org.springframework.jdbc.core.RowCallbackHandler) item ->
+                                    quantities.put(item.getObject("product_id", UUID.class), item.getInt("quantity")), id);
+                    return new iuh.fit.nhom16.pcstore.cart.model.CartSession(
+                            id, rs.getLong("version"), quantities, rs.getBoolean("pc_build_checkout"),
+                            JSON.readValue(rs.getString("pc_build_requirements"), Map.class));
+                }, userId);
+    }
+    void saveCartToPg(iuh.fit.nhom16.pcstore.cart.model.CartSession cart) {
+        if (cart.quantities().isEmpty()) {
+            jdbc.update("DELETE FROM cart_items WHERE cart_id = ?", cart.mergeId());
+        } else {
+            var parameters = new ArrayList<Object>();
+            parameters.add(cart.mergeId());
+            parameters.addAll(cart.quantities().keySet());
+            String placeholders = String.join(",", Collections.nCopies(cart.quantities().size(), "?"));
+            jdbc.update("DELETE FROM cart_items WHERE cart_id = ? AND product_id NOT IN (" + placeholders + ")", parameters.toArray());
+            for (var entry : cart.quantities().entrySet()) {
+                jdbc.update("""
+                        INSERT INTO cart_items(id, cart_id, product_id, quantity) VALUES (?, ?, ?, ?)
+                        ON CONFLICT (cart_id, product_id) DO UPDATE SET quantity = EXCLUDED.quantity
+                        WHERE cart_items.quantity IS DISTINCT FROM EXCLUDED.quantity
+                        """, UUID.randomUUID(), cart.mergeId(), entry.getKey(), entry.getValue());
+            }
+        }
+        jdbc.update("UPDATE carts SET version = ?, pc_build_checkout = ?, pc_build_requirements = ?::jsonb, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+                cart.version(), cart.buildCheckoutRequired(), JSON.writeValueAsString(cart.buildRequirements()), cart.mergeId());
+    }
     @Test void realAdviceAndConfirmationPersistExactlyOnce() throws Exception {
         var response=advice("Task 8 socket evidence","10000",session,ALICE);
         var payload=(Map<?,?>)response.get("advice");

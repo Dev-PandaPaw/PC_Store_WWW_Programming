@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, ShoppingCart } from 'lucide-react'
+import { ArrowLeft, LoaderCircle, ShoppingCart } from 'lucide-react'
 import {
   CATEGORY_LABELS,
 } from '../data/storeData'
@@ -9,13 +9,16 @@ import { useCart } from '../contexts/cartContextStore'
 import { ProductCard } from '../components/gear/ProductCard'
 import { useCatalog } from '../contexts/catalogContextStore'
 import ProductStock from '../components/ProductStock'
+import AddQuantitySelector from '../components/AddQuantitySelector'
 import { useProductViewTracker } from '../hooks/useUserTracker'
 
 export default function ProductDetailPage() {
   const { findProduct, productsInCategory, loading } = useCatalog()
   const { slug } = useParams()
   const product = findProduct(slug)
-  const { addItem, ready, productState, reportCartError } = useCart()
+  const { addItem, ready, adding, isAdding, productState, reportCartError } = useCart()
+  const [selectedQuantity, setSelectedQuantity] = useState(1)
+  const [quantityError, setQuantityError] = useState('')
 
   // Theo doi hanh vi xem chi tiet san pham va dwell time (User Tracking)
   useProductViewTracker(product)
@@ -27,6 +30,21 @@ export default function ProductDetailPage() {
       document.title = 'PixelCore'
     }
   }, [product])
+
+  useEffect(() => {
+    setSelectedQuantity(1)
+    setQuantityError('')
+  }, [product?.id])
+
+  const availability = product ? productState(product) : null
+  const maxAddable = Math.max(1, Math.min(99, availability?.remaining || 99))
+
+  useEffect(() => {
+    if (availability?.canAdd && selectedQuantity > maxAddable) {
+      setSelectedQuantity(maxAddable)
+    }
+  }, [availability?.canAdd, maxAddable, selectedQuantity])
+
   if (!product) {
     if (loading) {
       return (
@@ -69,15 +87,28 @@ export default function ProductDetailPage() {
       </div>
     )
   }
+
   const related = productsInCategory(product.category)
     .filter((item) => item.id !== product.id)
     .slice(0, 4)
-  const availability = productState(product)
+  const productAdding = isAdding(product.id)
+
   const handleAdd = async () => {
+    if (quantityError) {
+      reportCartError(quantityError)
+      return
+    }
     try {
-      const result = await addItem(product, 1)
-      if (!result.success) reportCartError(result.message)
-    } catch { reportCartError('Không thể thêm vào giỏ hàng. Vui lòng thử lại.') }
+      const result = await addItem(product, selectedQuantity)
+      if (result.success) {
+        setSelectedQuantity(1)
+        setQuantityError('')
+      } else {
+        reportCartError(result.message)
+      }
+    } catch {
+      reportCartError('Không thể thêm vào giỏ hàng. Vui lòng thử lại.')
+    }
   }
 
   return (
@@ -114,10 +145,45 @@ export default function ProductDetailPage() {
               <span key={index}>{spec.label}</span>
             ))}
           </div>
-          <button className="store-button" onClick={handleAdd} disabled={!ready || !availability.canAdd}>
-            <ShoppingCart size={18} />
-            Thêm vào giỏ hàng
-          </button>
+
+          <div className="product-detail__purchase">
+            <div className="product-detail__quantity-row">
+              <span className="product-detail__quantity-label">Số lượng</span>
+              <AddQuantitySelector
+                productName={product.name}
+                value={selectedQuantity}
+                onChange={setSelectedQuantity}
+                max={maxAddable}
+                disabled={!ready || adding || !availability.canAdd}
+                error={quantityError}
+                onErrorChange={setQuantityError}
+              />
+              {availability.canAdd && availability.available != null && (
+                <span className="product-detail__remaining-hint">
+                  Còn có thể thêm tối đa {availability.remaining} sản phẩm
+                </span>
+              )}
+            </div>
+            <button
+              type="button"
+              className="store-button"
+              onClick={handleAdd}
+              disabled={!ready || adding || !availability.canAdd || Boolean(quantityError)}
+              aria-busy={productAdding}
+            >
+              {productAdding ? (
+                <>
+                  <LoaderCircle size={18} className="cart-add-spinner" />
+                  Đang xử lý…
+                </>
+              ) : (
+                <>
+                  <ShoppingCart size={18} />
+                  Thêm vào giỏ hàng
+                </>
+              )}
+            </button>
+          </div>
           <ProductStock product={product} />
         </div>
       </div>

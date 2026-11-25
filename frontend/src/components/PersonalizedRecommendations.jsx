@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { Sparkles, ChevronLeft, ChevronRight, ShoppingCart, Cpu, Check, Zap } from 'lucide-react'
+import { Sparkles, ChevronLeft, ChevronRight, ShoppingCart, Cpu, Check, Zap, LoaderCircle } from 'lucide-react'
 import { getPersonalizedRecommendations, getSimilarProducts } from '../services/recommendations'
 import { resolveProductImage } from '../assets/productImages'
 import { useCart } from '../contexts/cartContextStore'
@@ -23,7 +23,7 @@ export default function PersonalizedRecommendations({
   const [loading, setLoading] = useState(true)
   const [addedId, setAddedId] = useState(null)
   const carouselRef = useRef(null)
-  const { addItem, ready, productState, reportCartError } = useCart()
+  const { addItem, ready, adding, isAdding, productState, reportCartError } = useCart()
   const { user, loading: authLoading } = useAuth() || {}
 
   useEffect(() => {
@@ -138,6 +138,7 @@ export default function PersonalizedRecommendations({
 
               const availability = productState ? productState(product) : { canAdd: true }
               const isAdded = addedId === product.id
+              const productAdding = isAdding ? isAdding(product.id) : false
 
               return (
                 <div className="ai-recommendations__item" key={product.id}>
@@ -206,11 +207,12 @@ export default function PersonalizedRecommendations({
                           type="button"
                           className="ai-rec-card__add-btn"
                           onClick={e => handleAdd(product, e)}
-                          disabled={!ready || !availability.canAdd || isAdded}
-                          title={isAdded ? 'Đã thêm!' : 'Thêm vào giỏ'}
-                          aria-label={`Thêm ${product.name} vào giỏ hàng`}
+                          disabled={!ready || adding || !availability.canAdd || isAdded}
+                          aria-busy={productAdding}
+                          title={productAdding ? 'Đang xử lý…' : isAdded ? 'Đã thêm!' : 'Thêm vào giỏ'}
+                          aria-label={productAdding ? `Đang thêm ${product.name} vào giỏ` : `Thêm ${product.name} vào giỏ hàng`}
                         >
-                          {isAdded ? <Check size={16} /> : <ShoppingCart size={16} />}
+                          {productAdding ? <LoaderCircle size={16} className="cart-add-spinner" /> : isAdded ? <Check size={16} /> : <ShoppingCart size={16} />}
                         </button>
                       </div>
                     </div>

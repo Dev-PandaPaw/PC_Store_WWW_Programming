@@ -25,6 +25,17 @@ public class RestExceptionHandler {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(ex.status(), ex.getMessage());
         problem.setTitle("Order request failed");
         problem.setProperty("errorCode", ex.code());
+        ex.details().forEach(problem::setProperty);
+        return problem;
+    }
+
+    @ExceptionHandler(org.springframework.dao.TransientDataAccessException.class)
+    public ProblemDetail handleTransientDatabaseFailure(org.springframework.dao.TransientDataAccessException ex) {
+        log.warn("Transient database / lock failure: {}", ex.getClass().getSimpleName());
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.SERVICE_UNAVAILABLE, "Hệ thống đang xử lý nhiều giao dịch đồng thời. Vui lòng thử lại trong giây lát.");
+        problem.setTitle("Database Temporarily Busy");
+        problem.setProperty("errorCode", "DATABASE_BUSY");
         return problem;
     }
 
@@ -44,6 +55,19 @@ public class RestExceptionHandler {
                        org.springframework.http.converter.HttpMessageNotReadableException.class,
                        org.springframework.web.bind.MissingRequestHeaderException.class})
     public ProblemDetail handleMalformedRequest(Exception ex) {
+        Throwable cause = ex.getCause();
+        if (cause instanceof tools.jackson.databind.DatabindException databind) {
+            boolean quantityError = databind.getPath().stream()
+                    .anyMatch(ref -> "quantity".equals(ref.getPropertyName()));
+            if (quantityError) {
+                ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                        HttpStatus.BAD_REQUEST, "Số lượng phải là số nguyên từ 1 đến 99, không chấp nhận số thập phân.");
+                problem.setType(URI.create("urn:problem-type:cart-invalid-quantity"));
+                problem.setTitle("Validation Failed");
+                problem.setProperty("errorCode", "CART_INVALID_QUANTITY");
+                return problem;
+            }
+        }
         return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Dữ liệu đầu vào không hợp lệ.");
     }
 
@@ -58,6 +82,7 @@ public class RestExceptionHandler {
         problem.setType(URI.create("urn:problem-type:" + ex.getErrorCode().toLowerCase().replace('_', '-')));
         problem.setTitle("Cart request failed");
         problem.setProperty("errorCode", ex.getErrorCode());
+        ex.getDetails().forEach(problem::setProperty);
         return problem;
     }
 
@@ -77,13 +102,19 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail handleValidationException(MethodArgumentNotValidException ex) {
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Dữ liệu đầu vào không hợp lệ");
-        problem.setType(URI.create("urn:problem-type:validation-error"));
-        problem.setTitle("Validation Failed");
-
+        String detail = "Dữ liệu đầu vào không hợp lệ";
         Map<String, String> errors = new HashMap<>();
         for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
             errors.put(fieldError.getField(), fieldError.getDefaultMessage());
+            if ("quantity".equals(fieldError.getField())) {
+                detail = "Số lượng phải là số nguyên từ 1 đến 99.";
+            }
+        }
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, detail);
+        problem.setType(URI.create("urn:problem-type:validation-error"));
+        problem.setTitle("Validation Failed");
+        if (errors.containsKey("quantity")) {
+            problem.setProperty("errorCode", "CART_INVALID_QUANTITY");
         }
         problem.setProperty("invalidParams", errors);
         return problem;
@@ -104,8 +135,18 @@ public class RestExceptionHandler {
         return problem;
     }
 
+    @ExceptionHandler(jakarta.validation.ConstraintViolationException.class)
+    public ProblemDetail handleConstraintViolation(jakarta.validation.ConstraintViolationException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Tham số truy vấn không hợp lệ.");
+        problem.setType(URI.create("urn:problem-type:validation-error"));
+        problem.setTitle("Validation Failed");
+        problem.setProperty("errorCode", "VALIDATION_ERROR");
+        return problem;
+    }
+
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleGenericException(Exception ex) {
+        log.error("Unhandled internal exception", ex);
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Đã có lỗi hệ thống xảy ra");
         problem.setType(URI.create("urn:problem-type:internal-error"));
         problem.setTitle("Internal Server Error");

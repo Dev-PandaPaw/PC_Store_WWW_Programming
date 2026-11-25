@@ -36,15 +36,23 @@ public class SmartSearchService {
             Với nội dung không liên quan sản phẩm PC, groups=[], keywords=[từ khóa gốc].
             """;
 
-    public SmartSearchService(StorefrontCatalog catalog, AiGateway ai) { this.catalog = catalog; this.ai = ai; }
+    public SmartSearchService(StorefrontCatalog catalog, AiGateway ai) {
+        this.catalog = catalog; this.ai = ai;
+    }
 
     public SearchResult search(String keyword, String category, String sort, boolean deals, String client) {
         String query = keyword.trim();
-        if (query.length() > 300 || query.chars().anyMatch(c -> c < 32)) throw invalid();
-        if (!Set.of("featured","price-asc","price-desc","name").contains(sort) || !validCategory(category)) throw invalid();
+        if (query.length() > 300 || query.chars().anyMatch(c -> c < 32))
+            throw invalid();
+        if (!Set.of("featured","price-asc","price-desc","name").contains(sort) || !validCategory(category))
+            throw invalid();
         List<StoreProduct> products;
-        try { products = catalog.products(); }
-        catch (RuntimeException e) { throw new AiFailure(503,"CATALOG_UNAVAILABLE","Chưa đọc được danh mục sản phẩm. Bạn vui lòng thử lại."); }
+        try {
+            products = catalog.products();
+        }
+        catch (RuntimeException e) {
+            throw new AiFailure(503,"CATALOG_UNAVAILABLE","Chưa đọc được danh mục sản phẩm. Bạn vui lòng thử lại.");
+        }
         CachedIntent intent = query.isEmpty() ? new CachedIntent(ProductCriteria.empty(),"catalog",0) : interpret(query,client);
         ProductCriteria criteria = intent.criteria();
         LOG.debug("[SmartSearchService] input=\"{}\" mode={} groups={} purpose={}",
@@ -74,11 +82,16 @@ public class SmartSearchService {
         }
         List<String> descriptions = new ArrayList<>();
         NumberFormat money = NumberFormat.getIntegerInstance(Locale.forLanguageTag("vi-VN"));
-        if (criteria.cheapest() && !found.isEmpty()) descriptions.add("Mức giá thấp nhất phù hợp: " + money.format(found.stream().mapToLong(StoreProduct::price).min().orElseThrow()) + " ₫");
-        else if (criteria.cheaper() && sort.equals("featured")) descriptions.add("Ưu tiên sản phẩm có giá thấp");
-        if (criteria.minBudget() != null) descriptions.add("Từ " + money.format(criteria.minBudget()) + " ₫");
-        if (criteria.maxBudget() != null) descriptions.add("Tối đa " + money.format(criteria.maxBudget()) + " ₫");
-        if (criteria.inStockOnly()) descriptions.add("Chỉ sản phẩm còn hàng");
+        if (criteria.cheapest() && !found.isEmpty())
+            descriptions.add("Mức giá thấp nhất phù hợp: " + money.format(found.stream().mapToLong(StoreProduct::price).min().orElseThrow()) + " ₫");
+        else if (criteria.cheaper() && sort.equals("featured"))
+            descriptions.add("Ưu tiên sản phẩm có giá thấp");
+        if (criteria.minBudget() != null)
+            descriptions.add("Từ " + money.format(criteria.minBudget()) + " ₫");
+        if (criteria.maxBudget() != null)
+            descriptions.add("Tối đa " + money.format(criteria.maxBudget()) + " ₫");
+        if (criteria.inStockOnly())
+            descriptions.add("Chỉ sản phẩm còn hàng");
         return new SearchResult(found,found.size(),intent.mode(),criteria,String.join(" · ",descriptions));
     }
 
@@ -86,19 +99,22 @@ public class SmartSearchService {
         String key = CriteriaParser.normalize(query).replaceAll("\\s+"," ");
         long now = System.currentTimeMillis();
         CachedIntent cached = cache.get(key);
-        if (cached != null && cached.expires() > now) return cached;
+        if (cached != null && cached.expires() > now)
+            return cached;
         ProductCriteria explicit = CriteriaParser.parse(query);
         ProductCriteria criteria = explicit;
         String mode = "local";
         try {
             if (!CriteriaParser.unsupported(query)) {
                 ProductCriteria inferred = ai.ask(SYSTEM, Map.of("query",query),ProductCriteria.class,client);
-                if (inferred == null || !inferred.valid()) throw new IllegalArgumentException("Invalid search intent");
+                if (inferred == null || !inferred.valid())
+                    throw new IllegalArgumentException("Invalid search intent");
                 // Never relax explicit category, numerical budget, stock or hardware requirements.
                 List<String> words = new ArrayList<>(inferred.keywords());
                 words.addAll(explicit.keywords());
                 CriteriaParser.Budget budget = CriteriaParser.budget(query);
-                boolean writtenBudget = CriteriaParser.normalize(query).matches(".*(?:mot|hai|ba|bon|nam|sau|bay|tam|chin|muoi|nua|ruoi)\\s+(?:trieu|tram|nghin|ngan).*" );
+                boolean writtenBudget = CriteriaParser.normalize(query)
+                        .matches(".*(?:mot|hai|ba|bon|nam|sau|bay|tam|chin|muoi|nua|ruoi)\\s+(?:trieu|tram|nghin|ngan).*" );
                 criteria = new ProductCriteria(CriteriaParser.hasExplicitGroup(query) ? explicit.groups()
                         : inferred.groups().isEmpty() ? explicit.groups() : inferred.groups(),
                         explicit.purpose() != null ? explicit.purpose() : inferred.purpose(),
@@ -134,11 +150,14 @@ public class SmartSearchService {
         List<String> words = new ArrayList<>(criteria.keywords());
         if (!text.isBlank()) words.addAll(Arrays.asList(text.split("\\s+")));
         return new ProductCriteria(criteria.groups(),criteria.purpose(),criteria.minBudget(),criteria.maxBudget(),
-                criteria.inStockOnly(),criteria.cheaper(),criteria.cheapest(),words.stream().distinct().limit(12).toList());
+                criteria.inStockOnly(),criteria.cheaper(),criteria.cheapest(),words.stream().distinct().limit(12)
+                .toList());
     }
     private boolean validCategory(String category) {
         return Set.of("ALL","pc","pc-gaming","pc-office","pc-workstation","components","memory","build","gear").contains(category)
                 || ProductCriteria.GROUPS.containsKey(category);
     }
-    private AiFailure invalid() { return new AiFailure(400,"INVALID_SEARCH","Từ khóa tối đa 300 ký tự; danh mục và cách sắp xếp phải hợp lệ."); }
+    private AiFailure invalid() {
+        return new AiFailure(400,"INVALID_SEARCH","Từ khóa tối đa 300 ký tự; danh mục và cách sắp xếp phải hợp lệ.");
+    }
 }

@@ -126,7 +126,37 @@
 .order-list-card__icon { background: #eff6ff; color: #2563eb; padding: 11px; border-radius: 12px; }
 .order-list-card__label { display: block; font-size: 9px; letter-spacing: .15em; font-weight: 800; color: #94a3b8; margin-bottom: 7px; }
 .order-status { font-size: 11px; font-weight: 700; color: #1d4ed8; background: #eff6ff; border: 1px solid #dbeafe; border-radius: 30px; padding: 7px 12px; }
-.order-status--completed { color: #15803d; background: #f0fdf4; border-color: #bbf7d0; }
+.order-status--completed, .order-status--delivered { color: #15803d; background: #f0fdf4; border-color: #bbf7d0; }
+.order-status--processing, .order-status--shipping, .order-status--confirmed { color: #1d4ed8; background: #eff6ff; border-color: #dbeafe; }
+.checkout-subsection { margin-top: 28px; padding-top: 24px; border-top: 1px solid #edf2f7; }
+.checkout-subsection > h3 { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; color: #0f172a; margin: 0 0 16px; }
+.checkout-selection-list { display: grid; gap: 10px; margin: 16px 0 8px; }
+.checkout-select-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid #e2e8f0; border-radius: 12px; background: #f8fafc; cursor: pointer; transition: border-color .15s, background .15s; }
+.checkout-select-item.is-selected { border-color: #93c5fd; background: #eff6ff; }
+.checkout-select-item.is-disabled { opacity: .55; cursor: not-allowed; }
+.checkout-select-item > input { width: 18px; height: 18px; accent-color: #2563eb; flex-shrink: 0; }
+.checkout-select-item > img { width: 48px; height: 48px; object-fit: contain; border-radius: 8px; background: #fff; border: 1px solid #e2e8f0; flex-shrink: 0; }
+.checkout-select-item__info { flex: 1; min-width: 0; }
+.checkout-select-item__info > strong { display: block; font-size: 13px; color: #0f172a; }
+.checkout-select-item__info > span { display: block; font-size: 12px; color: #64748b; margin-top: 3px; }
+.checkout-option-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.checkout-option-card { display: flex; align-items: flex-start; gap: 10px; padding: 14px 16px; border: 1px solid #dbe3ef; border-radius: 12px; background: #fff; cursor: pointer; }
+.checkout-option-card.is-selected { border-color: #2563eb; background: #eff6ff; box-shadow: 0 0 0 2px #dbeafe; }
+.checkout-option-card.is-disabled { opacity: .55; background: #f8fafc; cursor: not-allowed; }
+.checkout-option-card > input { margin-top: 3px; accent-color: #2563eb; }
+.checkout-option-card strong { display: block; font-size: 13px; color: #0f172a; }
+.checkout-option-card small { display: block; font-size: 12px; color: #64748b; margin-top: 4px; line-height: 1.5; }
+.checkout-voucher-box { display: flex; gap: 10px; align-items: center; }
+.checkout-voucher-box > input { flex: 1; border: 1px solid #d7e0eb; border-radius: 10px; padding: 11px 14px; font-size: 14px; text-transform: uppercase; }
+.checkout-voucher-clear { padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 12px; color: #475569; background: #f8fafc; cursor: pointer; }
+.checkout-voucher-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.checkout-voucher-chip { padding: 7px 12px; border: 1px dashed #93c5fd; border-radius: 8px; background: #f8fafc; color: #1e3a8a; font-size: 12px; cursor: pointer; text-align: left; }
+.checkout-voucher-chip.is-active { background: #dbeafe; border-style: solid; border-color: #2563eb; }
+.checkout-discount-row { color: #15803d; }
+.checkout-reconfirm-banner { display: flex; align-items: flex-start; gap: 12px; padding: 16px 18px; margin: 16px 0; border-radius: 12px; background: #fffbeb; border: 1px solid #fcd34d; color: #92400e; }
+.checkout-reconfirm-banner > svg { flex-shrink: 0; margin-top: 2px; }
+.checkout-reconfirm-banner strong { display: block; font-size: 14px; margin-bottom: 4px; }
+.checkout-reconfirm-banner p { margin: 0; font-size: 13px; line-height: 1.5; }
 .order-status--cancelled, .order-status--expired { color: #64748b; background: #f1f5f9; border-color: #e2e8f0; }
 .order-status--pending_payment, .order-status--pending_confirmation { color: #a16207; background: #fffbeb; border-color: #fde68a; }
 .order-list-card__meta { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; color: #94a3b8; font-size: 11px; margin: 18px 0; }

@@ -27,7 +27,7 @@ class SemanticRecommendationConfigurationTest {
                 }
             }
         }
-        assertTrue(versions.keySet().containsAll(java.util.List.of(15,16,17)));
+        assertTrue(versions.keySet().containsAll(java.util.List.of(15,16,17,18)));
     }
     final ApplicationContextRunner runner=new ApplicationContextRunner()
             .withUserConfiguration(VectorStoreConfig.class,SemanticRecommendationConfiguration.class)

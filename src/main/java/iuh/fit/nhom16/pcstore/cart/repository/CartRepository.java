@@ -1,69 +1,107 @@
 package iuh.fit.nhom16.pcstore.cart.repository;
 
+import iuh.fit.nhom16.pcstore.cart.entity.CartAddOperationEntity;
+import iuh.fit.nhom16.pcstore.cart.entity.CartAddOperationId;
+import iuh.fit.nhom16.pcstore.cart.entity.CartEntity;
+import iuh.fit.nhom16.pcstore.cart.entity.CartItemEntity;
 import iuh.fit.nhom16.pcstore.cart.model.CartSession;
-import org.springframework.jdbc.core.JdbcTemplate;
+import iuh.fit.nhom16.pcstore.identity.infrastructure.UserRepository;
 import org.springframework.stereotype.Repository;
+import tools.jackson.databind.ObjectMapper;
+
+import java.time.OffsetDateTime;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.UUID;
-import java.util.ArrayList;
-import java.util.Collections;
 
 @Repository
 public class CartRepository {
-    private final JdbcTemplate jdbc;
-    public CartRepository(JdbcTemplate jdbc) { this.jdbc = jdbc; }
+    private static final ObjectMapper JSON = new ObjectMapper();
 
+    private final CartJpaRepository carts;
+    private final CartMergeReceiptJpaRepository mergeReceipts;
+    private final CartAddOperationJpaRepository addOperations;
+    private final UserRepository users;
+
+    public CartRepository(CartJpaRepository carts,
+                          CartMergeReceiptJpaRepository mergeReceipts,
+                          CartAddOperationJpaRepository addOperations,
+                          UserRepository users) {
+        this.carts = carts;
+        this.mergeReceipts = mergeReceipts;
+        this.addOperations = addOperations;
+        this.users = users;
+    }
 
     public CartSession lock(UUID userId) {
-        jdbc.update("INSERT INTO carts(id, user_id) VALUES (?, ?) ON CONFLICT (user_id) DO NOTHING",
-                UUID.randomUUID(), userId);
-        return jdbc.queryForObject("SELECT id, version, pc_build_checkout, pc_build_requirements FROM carts WHERE user_id = ? FOR UPDATE",
-                (rs, row) -> {
-                    UUID id = rs.getObject("id", UUID.class);
-                    var quantities = new LinkedHashMap<UUID, Integer>();
-                    jdbc.query("SELECT product_id, quantity FROM cart_items WHERE cart_id = ? ORDER BY product_id",
-                            (org.springframework.jdbc.core.RowCallbackHandler) item ->
-                                    quantities.put(item.getObject("product_id", UUID.class), item.getInt("quantity")), id);
-                    return new CartSession(id, rs.getLong("version"), quantities, rs.getBoolean("pc_build_checkout"), readRequirements(rs.getString("pc_build_requirements")));
-                }, userId);
+        return lock(userId, null);
     }
 
-    @SuppressWarnings("unchecked")
-    private static java.util.Map<String,Object> readRequirements(String value) {
-        return new tools.jackson.databind.ObjectMapper().readValue(value, java.util.Map.class);
-    }
-    public void save(CartSession cart) {
-        if (cart.quantities().isEmpty()) {
-            jdbc.update("DELETE FROM cart_items WHERE cart_id = ?", cart.mergeId());
-        } else {
-            var parameters = new ArrayList<Object>();
-            parameters.add(cart.mergeId());
-            parameters.addAll(cart.quantities().keySet());
-            String placeholders = String.join(",", Collections.nCopies(cart.quantities().size(), "?"));
-            jdbc.update("DELETE FROM cart_items WHERE cart_id = ? AND product_id NOT IN (" + placeholders + ")",
-                    parameters.toArray());
-            jdbc.batchUpdate("""
-                    INSERT INTO cart_items(id, cart_id, product_id, quantity) VALUES (?, ?, ?, ?)
-                    ON CONFLICT (cart_id, product_id) DO UPDATE SET quantity = EXCLUDED.quantity
-                    WHERE cart_items.quantity IS DISTINCT FROM EXCLUDED.quantity
-                    """, cart.quantities().entrySet(), 20, (statement, entry) -> {
-                statement.setObject(1, UUID.randomUUID());
-                statement.setObject(2, cart.mergeId());
-                statement.setObject(3, entry.getKey());
-                statement.setInt(4, entry.getValue());
-            });
+    public CartSession lock(UUID userId, UUID operationId) {
+        carts.ensureCartExists(UUID.randomUUID(), userId);
+        CartEntity entity = carts.findByUserIdForUpdate(userId)
+                .orElseThrow(() -> new IllegalStateException("Cart row missing after ensureCartExists for user " + userId));
+
+        Map<UUID, Integer> quantities = new LinkedHashMap<>();
+        for (CartItemEntity item : entity.getItems()) {
+            quantities.put(item.getProductId(), item.getQuantity());
         }
-        jdbc.update("UPDATE carts SET version = ?, pc_build_checkout = ?, pc_build_requirements = ?::jsonb, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
-                cart.version(), cart.buildCheckoutRequired(), new tools.jackson.databind.ObjectMapper().writeValueAsString(cart.buildRequirements()), cart.mergeId());
+
+        CartSession session = new CartSession(
+                entity.getId(),
+                entity.getVersion(),
+                quantities,
+                entity.isPcBuildCheckout(),
+                readRequirements(entity.getPcBuildRequirements()));
+
+        if (operationId != null) {
+            addOperations.findById(new CartAddOperationId(entity.getId(), operationId))
+                    .ifPresent(op -> session.preloadAppliedAdd(new CartSession.AppliedAddOperation(
+                            op.getOperationId(), op.getProductId(), op.getQuantity(), op.getResultVersion())));
+        }
+        return session;
+    }
+
+    public void save(CartSession cart) {
+        CartEntity entity = carts.findById(cart.mergeId())
+                .orElseThrow(() -> new IllegalStateException("Cart entity not found: " + cart.mergeId()));
+        entity.syncItems(cart.quantities());
+        entity.setVersion(cart.version());
+        entity.setPcBuildCheckout(cart.buildCheckoutRequired());
+        entity.setPcBuildRequirements(writeRequirements(cart.buildRequirements()));
+        entity.setUpdatedAt(OffsetDateTime.now());
+        carts.saveAndFlush(entity);
+
+        if (!cart.pendingAppliedAdds().isEmpty()) {
+            for (CartSession.AppliedAddOperation op : cart.pendingAppliedAdds()) {
+                CartAddOperationId opId = new CartAddOperationId(cart.mergeId(), op.operationId());
+                if (!addOperations.existsById(opId)) {
+                    addOperations.save(new CartAddOperationEntity(
+                            cart.mergeId(), op.operationId(), op.productId(), op.quantity(), op.resultVersion()));
+                }
+            }
+            addOperations.flush();
+            cart.clearPendingAppliedAdds();
+        }
     }
 
     public boolean claimMerge(UUID guestId, UUID cartId) {
-        return jdbc.update("INSERT INTO cart_merge_receipts(guest_id, cart_id) VALUES (?, ?) ON CONFLICT DO NOTHING",
-                guestId, cartId) == 1;
+        return mergeReceipts.claimIfAbsent(guestId, cartId) == 1;
     }
 
     public boolean activeUser(UUID userId) {
-        return Boolean.TRUE.equals(jdbc.queryForObject(
-                "SELECT EXISTS(SELECT 1 FROM users WHERE id = ? AND status = 'ACTIVE')", Boolean.class, userId));
+        return users.existsByIdAndStatusIgnoreCase(userId, "ACTIVE");
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Map<String, Object> readRequirements(String value) {
+        if (value == null || value.isBlank()) {
+            return Map.of();
+        }
+        return JSON.readValue(value, Map.class);
+    }
+
+    private static String writeRequirements(Map<String, Object> requirements) {
+        return JSON.writeValueAsString(requirements == null ? Map.of() : requirements);
     }
 }

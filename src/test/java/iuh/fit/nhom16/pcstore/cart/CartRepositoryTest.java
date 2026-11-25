@@ -1,60 +1,111 @@
 package iuh.fit.nhom16.pcstore.cart;
 
+import iuh.fit.nhom16.pcstore.cart.entity.CartAddOperationEntity;
+import iuh.fit.nhom16.pcstore.cart.entity.CartAddOperationId;
+import iuh.fit.nhom16.pcstore.cart.entity.CartEntity;
 import iuh.fit.nhom16.pcstore.cart.model.CartSession;
+import iuh.fit.nhom16.pcstore.cart.repository.CartAddOperationJpaRepository;
+import iuh.fit.nhom16.pcstore.cart.repository.CartJpaRepository;
+import iuh.fit.nhom16.pcstore.cart.repository.CartMergeReceiptJpaRepository;
 import iuh.fit.nhom16.pcstore.cart.repository.CartRepository;
+import iuh.fit.nhom16.pcstore.identity.infrastructure.UserRepository;
 import org.junit.jupiter.api.Test;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
 
-import java.sql.PreparedStatement;
-import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class CartRepositoryTest {
-    private final JdbcTemplate jdbc = mock(JdbcTemplate.class);
-    private final CartRepository repository = new CartRepository(jdbc);
+    private final CartJpaRepository carts = mock(CartJpaRepository.class);
+    private final CartMergeReceiptJpaRepository mergeReceipts = mock(CartMergeReceiptJpaRepository.class);
+    private final CartAddOperationJpaRepository addOperations = mock(CartAddOperationJpaRepository.class);
+    private final UserRepository users = mock(UserRepository.class);
+    private final CartRepository repository = new CartRepository(carts, mergeReceipts, addOperations, users);
 
     @Test
-    void savesLinesInBatchWithoutDeletingExistingProducts() throws Exception {
-        UUID product = UUID.randomUUID();
-        CartSession cart = new CartSession(UUID.randomUUID(), 2, Map.of(product, 4));
-        when(jdbc.batchUpdate(anyString(), anyCollection(), anyInt(), any(ParameterizedPreparedStatementSetter.class)))
-                .thenAnswer(call -> {
-                    String sql = call.getArgument(0);
-                    assertTrue(sql.contains("ON CONFLICT (cart_id, product_id)"));
-                    assertTrue(sql.contains("IS DISTINCT FROM"));
-                    Collection<Map.Entry<UUID, Integer>> entries = call.getArgument(1);
-                    assertEquals(1, entries.size());
-                    ParameterizedPreparedStatementSetter<Map.Entry<UUID, Integer>> setter = call.getArgument(3);
-                    PreparedStatement statement = mock(PreparedStatement.class);
-                    setter.setValues(statement, entries.iterator().next());
-                    verify(statement).setObject(eq(1), any(UUID.class));
-                    verify(statement).setObject(2, cart.mergeId());
-                    verify(statement).setObject(3, product);
-                    verify(statement).setInt(4, 4);
-                    return new int[][] {{1}};
-                });
+    void lockEnsuresCartRowLocksWithPessimisticWriteAndPreloadsOperationReceipt() {
+        UUID userId = UUID.randomUUID();
+        UUID cartId = UUID.randomUUID();
+        UUID productId = UUID.randomUUID();
+        UUID opId = UUID.randomUUID();
 
-        repository.save(cart);
+        CartEntity entity = new CartEntity(cartId, userId);
+        entity.setVersion(3L);
+        entity.syncItems(Map.of(productId, 2));
 
-        verify(jdbc).update(eq("DELETE FROM cart_items WHERE cart_id = ? AND product_id NOT IN (?)"),
-                eq(cart.mergeId()), eq(product));
-        verify(jdbc, never()).update(eq("DELETE FROM cart_items WHERE cart_id = ?"), any(UUID.class));
-        verify(jdbc).batchUpdate(anyString(), anyCollection(), eq(20), any(ParameterizedPreparedStatementSetter.class));
+        when(carts.findByUserIdForUpdate(userId)).thenReturn(Optional.of(entity));
+        when(addOperations.findById(new CartAddOperationId(cartId, opId)))
+                .thenReturn(Optional.of(new CartAddOperationEntity(cartId, opId, productId, 2, 3L)));
+
+        CartSession locked = repository.lock(userId, opId);
+
+        verify(carts).ensureCartExists(any(UUID.class), eq(userId));
+        verify(carts).findByUserIdForUpdate(userId);
+        assertEquals(cartId, locked.mergeId());
+        assertEquals(3L, locked.version());
+        assertEquals(Map.of(productId, 2), locked.quantities());
+        assertNotNull(locked.appliedAdd(opId));
+        assertEquals(2, locked.appliedAdd(opId).quantity());
     }
 
     @Test
-    void clearingCartDeletesLinesWithoutEmptyInClauseOrInsertBatch() {
-        CartSession cart = new CartSession();
+    void saveUpdatesEntityItemsInPlaceWithoutRecreatingKeptProductAndPersistsAddOperations() {
+        UUID userId = UUID.randomUUID();
+        UUID cartId = UUID.randomUUID();
+        UUID keptProduct = UUID.randomUUID();
+        UUID removedProduct = UUID.randomUUID();
+        UUID addedProduct = UUID.randomUUID();
+        UUID opId = UUID.randomUUID();
 
-        repository.save(cart);
+        CartEntity entity = new CartEntity(cartId, userId);
+        entity.syncItems(Map.of(keptProduct, 1, removedProduct, 2));
+        UUID originalKeptLineId = entity.getItems().stream()
+                .filter(i -> i.getProductId().equals(keptProduct))
+                .findFirst().orElseThrow().getLineId();
 
-        verify(jdbc).update("DELETE FROM cart_items WHERE cart_id = ?", cart.mergeId());
-        verify(jdbc, never()).batchUpdate(anyString(), anyCollection(), anyInt(), any(ParameterizedPreparedStatementSetter.class));
+        when(carts.findById(cartId)).thenReturn(Optional.of(entity));
+        when(addOperations.existsById(new CartAddOperationId(cartId, opId))).thenReturn(false);
+
+        CartSession session = new CartSession(cartId, 4L, Map.of(keptProduct, 3, addedProduct, 1));
+        session.recordAppliedAdd(new CartSession.AppliedAddOperation(opId, addedProduct, 1, 4L));
+
+        repository.save(session);
+
+        assertEquals(2, entity.getItems().size());
+        var keptItem = entity.getItems().stream()
+                .filter(i -> i.getProductId().equals(keptProduct))
+                .findFirst().orElseThrow();
+        assertEquals(originalKeptLineId, keptItem.getLineId());
+        assertEquals(3, keptItem.getQuantity());
+        assertEquals(4L, entity.getVersion());
+
+        verify(carts).saveAndFlush(entity);
+        verify(addOperations).save(any(CartAddOperationEntity.class));
+        verify(addOperations).flush();
+        assertTrue(session.pendingAppliedAdds().isEmpty());
+    }
+
+    @Test
+    void clearingCartRemovesOrphanItemsViaJpaAndChecksActiveUserAndMergeReceipts() {
+        UUID userId = UUID.randomUUID();
+        UUID cartId = UUID.randomUUID();
+        UUID guestId = UUID.randomUUID();
+        CartEntity entity = new CartEntity(cartId, userId);
+        entity.syncItems(Map.of(UUID.randomUUID(), 2));
+        when(carts.findById(cartId)).thenReturn(Optional.of(entity));
+
+        repository.save(new CartSession(cartId, 5L, Map.of()));
+        assertTrue(entity.getItems().isEmpty());
+        verify(carts).saveAndFlush(entity);
+
+        when(mergeReceipts.claimIfAbsent(guestId, cartId)).thenReturn(1);
+        assertTrue(repository.claimMerge(guestId, cartId));
+
+        when(users.existsByIdAndStatusIgnoreCase(userId, "ACTIVE")).thenReturn(true);
+        assertTrue(repository.activeUser(userId));
     }
 }

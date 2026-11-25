@@ -6,6 +6,7 @@ import iuh.fit.nhom16.pcstore.cart.model.CartSession;
 import iuh.fit.nhom16.pcstore.cart.repository.CartRepository;
 import iuh.fit.nhom16.pcstore.cart.service.CartService;
 import iuh.fit.nhom16.pcstore.cart.service.CartStorageService;
+import iuh.fit.nhom16.pcstore.catalog.api.dto.CartProductSnapshot;
 import iuh.fit.nhom16.pcstore.catalog.domain.Product;
 import iuh.fit.nhom16.pcstore.catalog.infrastructure.persistence.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,9 +15,12 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.SimpleTransactionStatus;
 import org.springframework.transaction.support.TransactionTemplate;
+
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -30,11 +34,15 @@ class CartStorageServiceTest {
     final UUID productId = UUID.randomUUID();
     CartSession persisted = new CartSession();
 
-    @BeforeEach void setup() {
+    @BeforeEach
+    void setup() {
         when(manager.getTransaction(any())).thenReturn(new SimpleTransactionStatus());
         when(repository.lock(owner)).thenAnswer(call -> persisted.copy());
-        doAnswer(call -> { persisted = ((CartSession) call.getArgument(0)).copy(); return null; })
-                .when(repository).save(any());
+        when(repository.lock(eq(owner), any())).thenAnswer(call -> persisted.copy());
+        doAnswer(call -> {
+            persisted = ((CartSession) call.getArgument(0)).copy();
+            return null;
+        }).when(repository).save(any());
         when(repository.claimMerge(any(), any())).thenReturn(true);
         Product product = new Product();
         product.setId(productId);
@@ -43,12 +51,15 @@ class CartStorageServiceTest {
         product.setPrice(BigDecimal.TEN);
         product.setStockOnHand(10);
         product.setReservedQuantity(2);
-        when(products.findCartProducts(any())).thenReturn(java.util.List.of(
-                new iuh.fit.nhom16.pcstore.catalog.api.dto.CartProductSnapshot(productId, product.getSku(), product.getName(),
-                        product.getPrice(), product.getStatus(), product.getStockOnHand(), product.getReservedQuantity())));
+        List<CartProductSnapshot> snapshots = List.of(
+                new CartProductSnapshot(productId, product.getSku(), product.getName(),
+                        product.getPrice(), product.getStatus(), product.getStockOnHand(), product.getReservedQuantity()));
+        when(products.findCartProducts(any())).thenReturn(snapshots);
+        when(products.lockCartProducts(any())).thenReturn(snapshots);
     }
 
-    @Test void guestCartIsSessionOnlyAndIndependent() {
+    @Test
+    void guestCartIsSessionOnlyAndIndependent() {
         MockHttpSession one = new MockHttpSession();
         storage.execute(one, null, cart -> rules.add(cart, new AddItemRequest(productId, 2, 0L)));
         assertEquals(2, storage.execute(one, null, rules::get).totalQuantity());
@@ -56,7 +67,21 @@ class CartStorageServiceTest {
         verifyNoInteractions(repository, manager);
     }
 
-    @Test void userCartSurvivesNewSessionAndGuestCannotReadIt() {
+    @Test
+    void executeAddRunsInsideTransactionAndPersistsIdempotencyForGuestAndUser() {
+        UUID opId = UUID.randomUUID();
+        MockHttpSession guest = new MockHttpSession();
+        storage.executeAdd(guest, null, new AddItemRequest(productId, 2, 0L, opId));
+        // Retry after reloading guest cart (version = 1) with same opId does not double add
+        assertEquals(2, storage.executeAdd(guest, null, new AddItemRequest(productId, 2, 1L, opId)).totalQuantity());
+
+        UUID userOpId = UUID.randomUUID();
+        storage.executeAdd(new MockHttpSession(), owner, new AddItemRequest(productId, 3, 0L, userOpId));
+        assertEquals(3, storage.executeAdd(new MockHttpSession(), owner, new AddItemRequest(productId, 3, 1L, userOpId)).totalQuantity());
+    }
+
+    @Test
+    void userCartSurvivesNewSessionAndGuestCannotReadIt() {
         storage.execute(new MockHttpSession(), owner, cart -> rules.add(cart, new AddItemRequest(productId, 2, 0L)));
         assertEquals(2, storage.execute(new MockHttpSession(), owner, rules::get).totalQuantity());
         assertEquals(0, storage.execute(new MockHttpSession(), null, rules::get).totalQuantity());
@@ -65,7 +90,8 @@ class CartStorageServiceTest {
         assertEquals(0, storage.execute(new MockHttpSession(), other, rules::get).totalQuantity());
     }
 
-    @Test void mergesSameSkuAndClearsGuestOnlyAfterCommit() {
+    @Test
+    void mergesSameSkuAndClearsGuestOnlyAfterCommit() {
         MockHttpSession guest = new MockHttpSession();
         storage.execute(guest, null, cart -> rules.add(cart, new AddItemRequest(productId, 2, 0L)));
         storage.execute(new MockHttpSession(), owner, cart -> rules.add(cart, new AddItemRequest(productId, 3, 0L)));
@@ -75,19 +101,22 @@ class CartStorageServiceTest {
         verify(repository, times(1)).claimMerge(any(), any());
     }
 
-    @Test void failedMergeRollsBackAndPreservesGuest() {
+    @Test
+    void failedMergeRollsBackAndPreservesGuest() {
         MockHttpSession guest = new MockHttpSession();
         storage.execute(guest, null, cart -> rules.add(cart, new AddItemRequest(productId, 5, 0L)));
         persisted = new CartSession(UUID.randomUUID(), 1, Map.of(productId, 5));
         CartException error = assertThrows(CartException.class, () -> storage.merge(guest, owner));
         assertEquals("CART_INSUFFICIENT_STOCK", error.getErrorCode());
+        assertEquals(3, error.getDetails().get("remainingAddableQuantity"));
         assertEquals(5, ((CartSession) guest.getAttribute(CartSession.ATTRIBUTE)).quantities().get(productId));
         assertEquals(5, persisted.quantities().get(productId));
         verify(repository, never()).save(any());
         verify(manager).rollback(any());
     }
 
-    @Test void retryAfterCommittedMergeDoesNotDoubleCount() {
+    @Test
+    void retryAfterCommittedMergeDoesNotDoubleCount() {
         MockHttpSession guest = new MockHttpSession();
         storage.execute(guest, null, cart -> rules.add(cart, new AddItemRequest(productId, 2, 0L)));
         persisted = new CartSession(UUID.randomUUID(), 1, Map.of(productId, 2));
@@ -97,7 +126,8 @@ class CartStorageServiceTest {
         assertNull(guest.getAttribute(CartSession.ATTRIBUTE));
     }
 
-    @Test void staleUserVersionDoesNotOverwritePersistedCart() {
+    @Test
+    void staleUserVersionDoesNotOverwritePersistedCart() {
         persisted = new CartSession(UUID.randomUUID(), 7, Map.of(productId, 2));
         assertThrows(CartException.class, () -> storage.execute(new MockHttpSession(), owner,
                 cart -> rules.add(cart, new AddItemRequest(productId, 1, 0L))));
@@ -105,7 +135,8 @@ class CartStorageServiceTest {
         assertEquals(2, persisted.quantities().get(productId));
     }
 
-    @Test void failedGuestMutationKeepsOriginalState() {
+    @Test
+    void failedGuestMutationKeepsOriginalState() {
         MockHttpSession guest = new MockHttpSession();
         storage.execute(guest, null, cart -> rules.add(cart, new AddItemRequest(productId, 2, 0L)));
         assertThrows(CartException.class, () -> storage.execute(guest, null,

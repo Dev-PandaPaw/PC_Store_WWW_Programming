@@ -15,8 +15,13 @@ export default function CartQuantity({ id, name, quantity, availableQuantity, on
 
   const commit = async (value = draftRef.current) => {
     if (disabled) return
-    const next = Number(value)
-    if (!/^\d+$/.test(value) || !Number.isInteger(next) || next < 1 || next > max) {
+    const trimmed = String(value ?? '').trim()
+    if (/^[+-]?\d+[.,]\d+$/.test(trimmed)) {
+      setError('Số lượng phải là số nguyên, không chấp nhận số thập phân.')
+      return
+    }
+    const next = Number(trimmed)
+    if (!/^\d+$/.test(trimmed) || !Number.isInteger(next) || next < 1 || next > max) {
       setError(`Nhập số nguyên từ 1 đến ${max}.`)
       return
     }
@@ -27,10 +32,14 @@ export default function CartQuantity({ id, name, quantity, availableQuantity, on
     try {
       const result = await onUpdate(id, next)
       if (current === attempt.current && !result?.success) {
+        requested.current = quantity
         setError(result?.message || 'Không thể cập nhật số lượng. Vui lòng thử lại.')
       }
     } catch {
-      if (current === attempt.current) setError('Không thể cập nhật số lượng. Vui lòng thử lại.')
+      if (current === attempt.current) {
+        requested.current = quantity
+        setError('Không thể cập nhật số lượng. Vui lòng thử lại.')
+      }
     }
   }
 

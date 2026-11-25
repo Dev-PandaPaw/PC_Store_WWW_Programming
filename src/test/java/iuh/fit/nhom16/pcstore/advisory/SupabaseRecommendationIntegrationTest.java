@@ -69,7 +69,7 @@ class SupabaseRecommendationIntegrationTest {
                 CREATE TABLE product_images(id UUID PRIMARY KEY,product_id UUID,storage_key TEXT,is_cover BOOLEAN,sort_order INT);
                 """);
         for(String migration:List.of("db/migration/V15__create_user_activity_logs.sql",
-                "db/migration/V16__component_socket_specs.sql","db/recommendations/V17__semantic_vector_store.sql")) {
+                "db/migration/V16__component_socket_specs.sql","db/recommendations/V18__semantic_vector_store.sql")) {
             try(var input=getClass().getClassLoader().getResourceAsStream(migration)) {
                 assertNotNull(input); jdbc.execute(new String(input.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8));
             }

@@ -11,11 +11,17 @@ import org.springframework.stereotype.Component;
 public class SemanticIndexScheduler {
     private static final Logger LOG=LoggerFactory.getLogger(SemanticIndexScheduler.class);
     private final ProductSemanticIndexService index;
-    public SemanticIndexScheduler(ProductSemanticIndexService index) { this.index=index; }
+    public SemanticIndexScheduler(ProductSemanticIndexService index) {
+        this.index=index;
+    }
     @Scheduled(initialDelayString="${app.recommendations.sync-initial-delay-ms:30000}",
             fixedDelayString="${app.recommendations.sync-delay-ms:300000}")
     public void synchronize() {
-        try { index.synchronize(); }
-        catch (RuntimeException e) { LOG.warn("Semantic index synchronization failed; retry on the next scheduled interval"); }
+        try {
+            index.synchronize();
+        }
+        catch (RuntimeException e) {
+            LOG.warn("Semantic index synchronization failed; retry on the next scheduled interval");
+        }
     }
 }

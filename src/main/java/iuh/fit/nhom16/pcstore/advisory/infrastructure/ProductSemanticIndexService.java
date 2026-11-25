@@ -58,7 +58,12 @@ public class ProductSemanticIndexService {
         return count==null ? 0 : count;
     }
     private static String hash(String content) {
-        try { return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(content.getBytes(StandardCharsets.UTF_8))); }
-        catch (NoSuchAlgorithmException e) { throw new IllegalStateException(e); }
+        try {
+            return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256")
+                    .digest(content.getBytes(StandardCharsets.UTF_8)));
+        }
+        catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }

@@ -99,6 +99,7 @@ public class ProductSemanticRecommendationService {
                 return new Result(List.of(),"no_match");
             context=List.of(source);
         }
+
         String prompt = "Linh kiện thay thế cùng loại, thông số và tầm giá tương tự: "
                 + source.product().searchable()
                 + ". Giá tham chiếu VND: "
@@ -107,7 +108,7 @@ public class ProductSemanticRecommendationService {
         return search(prompt,List.of(source.product().category()),source,context,source.product().price());
     }
 
-    // tìm sản phẩm tương tự
+    // tìm sản phẩm
     private Result search(String prompt, List<String> categories, Item source, List<Item> context, Long price) {
         VectorStore store = vectors.get();
         if(store instanceof ProductVectorStore products && !products.isPersistent())
@@ -123,7 +124,8 @@ public class ProductSemanticRecommendationService {
                     .query(prompt)
                     .topK(TOP_K)
                     .similarityThreshold(MIN_SIMILARITY)
-                    .filterExpression(filter).build());
+                    .filterExpression(filter)
+                    .build());
         }
         catch (RuntimeException e) {
             throw failure(503,"VECTOR_UNAVAILABLE","Dịch vụ tìm kiếm vector tạm thời gián đoạn.");
@@ -140,7 +142,8 @@ public class ProductSemanticRecommendationService {
             try {
                 UUID id = UUID.fromString(String.valueOf(document.getMetadata().get("productId")));
                 if (source == null || !source.id().equals(id)) scores.merge(id,score,Math::max);
-            } catch (IllegalArgumentException ignored) { /* Discard corrupt/stale index metadata. */ }
+            } catch (IllegalArgumentException ignored) {
+                }
         }
         // One catalog statement rechecks candidates, source and build after the embedding call.
         Set<UUID> currentIds=new HashSet<>(scores.keySet());

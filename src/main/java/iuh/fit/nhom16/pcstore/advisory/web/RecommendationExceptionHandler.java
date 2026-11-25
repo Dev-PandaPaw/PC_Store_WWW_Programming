@@ -18,7 +18,8 @@ public class RecommendationExceptionHandler {
     }
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<?> invalidId() {
-        return ResponseEntity.badRequest().cacheControl(CacheControl.noStore())
+        return ResponseEntity.badRequest()
+                .cacheControl(CacheControl.noStore())
                 .body(Map.of("error",Map.of("code","INVALID_ID","message","ID sản phẩm phải là UUID hợp lệ.")));
     }
 }

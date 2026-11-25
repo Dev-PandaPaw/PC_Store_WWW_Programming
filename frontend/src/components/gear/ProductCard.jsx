@@ -1,21 +1,44 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ShoppingCart } from 'lucide-react'
+import { LoaderCircle, ShoppingCart } from 'lucide-react'
 import { formatVND, calculateDiscount } from '../../utils/cart'
 import { useCart } from '../../contexts/cartContextStore'
 import ProductStock from '../ProductStock'
+import AddQuantitySelector from '../AddQuantitySelector'
 
 export const ProductCard = ({
   product,
   onAddToCart,
 }) => {
-  const { addItem, ready, productState, reportCartError } = useCart()
+  const { addItem, ready, adding, isAdding, productState, reportCartError } = useCart()
   const availability = productState(product)
+  const productAdding = isAdding(product.id)
+  const maxAddable = Math.max(1, Math.min(99, availability.remaining || 99))
+  const [quantity, setQuantity] = useState(1)
+  const [quantityError, setQuantityError] = useState('')
   const discount = calculateDiscount(product.originalPrice, product.price)
+
+  useEffect(() => {
+    if (availability.canAdd && quantity > maxAddable) {
+      setQuantity(maxAddable)
+    }
+  }, [availability.canAdd, maxAddable, quantity])
+
   const handleAdd = async () => {
+    if (quantityError) {
+      reportCartError(quantityError)
+      return
+    }
     try {
-      const result = onAddToCart ? await onAddToCart(product) : await addItem(product, 1)
-      if (!result.success) reportCartError(result.message || 'Không thể thêm vào giỏ hàng.')
+      const result = onAddToCart
+        ? await onAddToCart(product, quantity)
+        : await addItem(product, quantity)
+      if (result?.success) {
+        setQuantity(1)
+        setQuantityError('')
+      } else {
+        reportCartError(result?.message || 'Không thể thêm vào giỏ hàng.')
+      }
     } catch {
       reportCartError('Không thể thêm vào giỏ hàng. Vui lòng thử lại.')
     }
@@ -58,17 +81,47 @@ export const ProductCard = ({
             )}
             <strong>{formatVND(product.price)}</strong>
           </div>
-          <button
-            type="button"
-            className="product-card__add"
-            onClick={handleAdd}
-            disabled={!ready || !availability.canAdd}
-            aria-label={availability.canAdd ? `Thêm ${product.name} vào giỏ` : `${product.name}: ${availability.label}`}
-            title={availability.canAdd ? "Thêm vào giỏ hàng" : availability.label}
-          >
-            <ShoppingCart size={18} />
-          </button>
+          <div className="product-card__actions">
+            {availability.canAdd && (
+              <AddQuantitySelector
+                productName={product.name}
+                value={quantity}
+                onChange={setQuantity}
+                max={maxAddable}
+                disabled={!ready || adding || !availability.canAdd}
+                compact
+                error={quantityError}
+                onErrorChange={setQuantityError}
+              />
+            )}
+            <button
+              type="button"
+              className="product-card__add"
+              onClick={handleAdd}
+              disabled={!ready || adding || !availability.canAdd || Boolean(quantityError)}
+              aria-busy={productAdding}
+              aria-label={
+                productAdding
+                  ? `Đang thêm ${product.name} vào giỏ`
+                  : availability.canAdd
+                    ? `Thêm ${quantity} ${product.name} vào giỏ`
+                    : `${product.name}: ${availability.label}`
+              }
+              title={
+                productAdding
+                  ? 'Đang xử lý…'
+                  : availability.canAdd
+                    ? 'Thêm vào giỏ hàng'
+                    : availability.label
+              }
+            >
+              {productAdding ? <LoaderCircle size={17} className="cart-add-spinner" /> : <ShoppingCart size={18} />}
+            </button>
+          </div>
         </div>
+        {quantityError && (
+          <small className="cart-quantity-error" role="alert">{quantityError}</small>
+        )}
         <ProductStock product={product} />
       </div>
     </article>
