@@ -1,0 +1,50 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam ArrowColor #334155
+skinparam activityBackgroundColor #EFF6FF
+skinparam activityBorderColor #2563EB
+skinparam activityDiamondBackgroundColor #FFF7ED
+skinparam activityDiamondBorderColor #C2410C
+skinparam usecaseBackgroundColor #EFF6FF
+skinparam usecaseBorderColor #2563EB
+skinparam padding 8
+title ACT-UC10 — Tra cứu bảo hành và tiến độ
+|Customer|
+start
+|Customer|
+:B1. Mở Bảo hành của tôi hoặc bảo hành từ chi tiết đơn;
+|PC Store|
+:B2. Tra đơn DELIVERED của currentUser và item snapshot;
+|PC Store|
+if (Có mặt hàng đã giao?) then (Có)
+else (Không)
+:E-B2. Hiển thị empty; giải thích chỉ đơn đã giao có bảo\nhành;
+stop
+endif
+|PC Store|
+:B3. Tính thời hạn từ deliveredAt + tháng snapshot, theo\ntháng lịch giờ Việt Nam;
+|PC Store|
+:B4. Hiển thị từng vị trí 1..quantity, trạng thái còn/hết\nhạn và yêu cầu đang mở;
+|Customer|
+if (Mở yêu cầu đã gửi?) then (Có)
+else (Không)
+stop
+endif
+|Customer|
+:B5. Mở chi tiết một yêu cầu đã gửi nếu có;
+|PC Store|
+:B6. Kiểm owner, đọc ảnh và timeline công khai;
+|PC Store|
+if (Yêu cầu thuộc Customer?) then (Có)
+else (Không)
+:E-B6. 404; không lộ chủ khác hoặc internal note;
+stop
+endif
+|PC Store|
+:B7. Hiển thị kết quả/từ chối và action được phép kể cả\nyêu cầu đã đóng;
+stop
+@enduml

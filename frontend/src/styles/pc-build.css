@@ -1,0 +1,17 @@
+.pc-build-page{max-width:1200px;margin:auto;padding:32px 20px 72px;color:var(--pc-text,#0f172a)}
+.pc-build-page header{margin:30px 0}.pc-build-page h1{font-size:clamp(1.8rem,4vw,3rem);line-height:1.15;margin:12px 0}
+.pc-build-page h2{font-size:1.4rem;font-weight:700}.pc-build-page h3{font-size:1.1rem;font-weight:700}
+.pc-build-form,.pc-build-option,.pc-build-evidence{border:1px solid var(--pc-border,#e2e8f0);border-radius:16px;padding:24px;background:var(--pc-surface,#fff)}
+.pc-build-form{display:grid;gap:18px;margin-bottom:32px;max-width:800px}.pc-build-form>label:not(.pc-build-toggle){display:grid;gap:8px}
+.pc-build-form input[type=number],.pc-build-form textarea{font:inherit;color:inherit;background:var(--pc-surface-subtle,#f1f5f9);border:1px solid #b8c4d4;border-radius:8px;padding:12px;width:100%;box-sizing:border-box}
+.pc-build-form textarea{min-height:100px;resize:vertical}.pc-build-toggle{display:flex;align-items:flex-start;gap:10px;padding:6px 0;line-height:1.6}
+.pc-build-toggle input{margin-top:6px;flex:none}.pc-build-form fieldset{border:1px solid var(--pc-border,#e2e8f0);border-radius:10px;padding:16px}
+.pc-build-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:20px;margin:24px 0}
+.pc-build-option{display:grid;align-content:start;gap:14px}.pc-build-option h3,.pc-build-option p{margin:0}.pc-build-option details{line-height:1.6}
+.pc-build-table{overflow-x:auto}.pc-build-table table{border-collapse:collapse;width:100%;font-size:.9rem;text-align:left}
+.pc-build-table th,.pc-build-table td{padding:12px 8px;border-bottom:1px solid var(--pc-border,#e2e8f0);vertical-align:top}.pc-build-table td:first-child{min-width:140px}
+.pc-build-warning{color:#92400e}.pc-build-ok{color:#166534}.pc-build-message{border-left:3px solid #2563eb;padding:12px 16px;background:#eff6ff}
+.pc-build-evidence blockquote{border-left:2px solid #8b9dba;margin:12px 0;padding-left:16px;white-space:pre-wrap;overflow-wrap:anywhere}
+.pc-build-dialog{margin:auto;background:var(--pc-surface,#fff);color:var(--pc-text,#0f172a);border:1px solid #b8c4d4;border-radius:16px;max-width:600px;width:calc(100% - 48px);max-height:85vh;overflow-y:auto;padding:26px}
+.pc-build-dialog::backdrop{background:rgb(0 0 0 / .72)}.pc-build-actions{display:flex;justify-content:flex-end;gap:16px;margin-top:24px}
+.pc-build-page button:disabled{opacity:.55;cursor:not-allowed}.pc-build-page button:focus-visible,.pc-build-page summary:focus-visible{outline:3px solid #a78bfa;outline-offset:3px}

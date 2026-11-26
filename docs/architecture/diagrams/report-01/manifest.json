@@ -1,0 +1,92 @@
+[
+  {
+    "id": "UC-OVERVIEW",
+    "title": "Use case tổng quát",
+    "purpose": "Ranh giới hệ thống, actors và 12 mục tiêu người dùng"
+  },
+  {
+    "id": "ACT-UC01",
+    "title": "Tài khoản và xác thực",
+    "purpose": "Các bước Bn và nhánh E-Bn trong bảng đặc tả UC01"
+  },
+  {
+    "id": "ACT-UC02",
+    "title": "Tìm và xem PC",
+    "purpose": "Các bước Bn và nhánh E-Bn trong bảng đặc tả UC02"
+  },
+  {
+    "id": "ACT-UC03",
+    "title": "Tư vấn chọn PC",
+    "purpose": "Các bước Bn và nhánh E-Bn trong bảng đặc tả UC03"
+  },
+  {
+    "id": "ACT-UC04",
+    "title": "Quản lý giỏ hàng",
+    "purpose": "Các bước Bn và nhánh E-Bn trong bảng đặc tả UC04"
+  },
+  {
+    "id": "ACT-UC05",
+    "title": "Đặt hàng và thanh toán",
+    "purpose": "Các bước Bn và nhánh E-Bn trong bảng đặc tả UC05"
+  },
+  {
+    "id": "ACT-UC06",
+    "title": "Theo dõi và hủy đơn của tôi",
+    "purpose": "Các bước Bn và nhánh E-Bn trong bảng đặc tả UC06"
+  },
+  {
+    "id": "ACT-UC07",
+    "title": "Quản lý PC và loại sản phẩm",
+    "purpose": "Các bước Bn và nhánh E-Bn trong bảng đặc tả UC07"
+  },
+  {
+    "id": "ACT-UC08",
+    "title": "Xử lý đơn hàng",
+    "purpose": "Các bước Bn và nhánh E-Bn trong bảng đặc tả UC08"
+  },
+  {
+    "id": "ACT-UC09",
+    "title": "Quản lý tài khoản khách hàng",
+    "purpose": "Các bước Bn và nhánh E-Bn trong bảng đặc tả UC09"
+  },
+  {
+    "id": "ACT-UC10",
+    "title": "Tra cứu bảo hành và tiến độ",
+    "purpose": "Các bước Bn và nhánh E-Bn trong bảng đặc tả UC10"
+  },
+  {
+    "id": "ACT-UC11",
+    "title": "Gửi hoặc hủy yêu cầu bảo hành",
+    "purpose": "Các bước Bn và nhánh E-Bn trong bảng đặc tả UC11"
+  },
+  {
+    "id": "ACT-UC12",
+    "title": "Tiếp nhận và xử lý bảo hành",
+    "purpose": "Các bước Bn và nhánh E-Bn trong bảng đặc tả UC12"
+  },
+  {
+    "id": "ERD-ALL",
+    "title": "Mô hình dữ liệu ALL",
+    "purpose": "PK/FK, tùy chọn và bội số; bảng đầy đủ trong từ điển dữ liệu"
+  },
+  {
+    "id": "ERD-IDENTITY",
+    "title": "Mô hình dữ liệu IDENTITY",
+    "purpose": "PK/FK, tùy chọn và bội số; bảng đầy đủ trong từ điển dữ liệu"
+  },
+  {
+    "id": "ERD-CATALOG",
+    "title": "Mô hình dữ liệu CATALOG",
+    "purpose": "PK/FK, tùy chọn và bội số; bảng đầy đủ trong từ điển dữ liệu"
+  },
+  {
+    "id": "ERD-SALES-PAYMENT",
+    "title": "Mô hình dữ liệu SALES-PAYMENT",
+    "purpose": "PK/FK, tùy chọn và bội số; bảng đầy đủ trong từ điển dữ liệu"
+  },
+  {
+    "id": "ERD-AFTERSALES",
+    "title": "Mô hình dữ liệu AFTERSALES",
+    "purpose": "PK/FK, tùy chọn và bội số; bảng đầy đủ trong từ điển dữ liệu"
+  }
+]

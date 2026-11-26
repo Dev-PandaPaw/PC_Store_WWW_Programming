@@ -1,0 +1,23 @@
+{
+  "found": true,
+  "title": "Black Myth: Wukong",
+  "minimum": {
+    "cpu": "Intel Core i5-8400 / AMD Ryzen 5 1600",
+    "gpu": "NVIDIA GeForce GTX 1060 6GB / AMD Radeon RX 580 8GB",
+    "ramGb": 16,
+    "storageGb": 130,
+    "ssdRequired": false,
+    "notes": "Windows 10 64-bit; DirectX 11. HDD supported, SSD recommended. Specifications tested with DLSS/FSR/XeSS enabled."
+  },
+  "recommended": {
+    "cpu": "Intel Core i7-9700 / AMD Ryzen 5 5500",
+    "gpu": "NVIDIA GeForce RTX 2060 / AMD Radeon RX 5700 XT / INTEL Arc A750",
+    "ramGb": 16,
+    "storageGb": 130,
+    "ssdRequired": true,
+    "notes": "Windows 10 64-bit; DirectX 12. SSD required. Specifications tested with DLSS/FSR/XeSS enabled."
+  },
+  "sources": [{"title": "Game Science — yêu cầu cấu hình trên Steam", "url": "https://store.steampowered.com/app/2358720/Black_Myth_Wukong/"}],
+  "checkedAt": "2026-10-30",
+  "lookupStatus": "verified_reference"
+}

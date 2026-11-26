@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "fe89f46e-d042-4386-8684-e0a21355247f",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "C:\\Users\\Ngoc Buu\\MonHoc\\Nam_04_HK1\\LapTringWWW\\PC_Store_WWW_Programming\\.archify\\workflow-search-filter-20261029-214919\\candidate.json",
+  "output": "C:\\Users\\Ngoc Buu\\MonHoc\\Nam_04_HK1\\LapTringWWW\\PC_Store_WWW_Programming\\.archify\\workflow-search-filter-20261029-214919\\search-filter.html",
+  "specification": {
+    "sha256": "d8d7444d7af9d5fe9fcd6569542150922447d10dbe2c360641e4596d19d305e2",
+    "bytes": 6737
+  },
+  "artifact": {
+    "sha256": "a9b118a6abc67083ad3cabad84bb20d1cdc5f887c4109f4d8b6fea30eac5b850",
+    "bytes": 854422
+  }
+}

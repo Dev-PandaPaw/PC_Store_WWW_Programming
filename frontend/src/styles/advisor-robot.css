@@ -1,0 +1,37 @@
+﻿.ai-robot-companion { display: grid; place-items: center; min-width: 0; min-height: 0; overflow: hidden; }
+.ai-robot { display: block; width: 100%; height: 100%; max-height: 440px; min-height: 0; padding: 0; border: 0; background: transparent; -webkit-tap-highlight-color: transparent; }
+.ai-robot__art { display: block; width: 100%; height: 100%; overflow: visible; }
+.ai-robot:focus-visible { outline: 2px solid #4dacf4; outline-offset: -4px; border-radius: 20px; }
+/* Static glow avoids repainting dozens of animated SVG blurs on every frame. */
+.ai-robot .cyan-glow { filter: drop-shadow(0 0 3px #00d2ff80); }
+.ai-robot .cyan-glow-intense { filter: drop-shadow(0 0 5px #00d2ffb0); }
+.ai-robot .led-pulse { animation: aiRobotPulseLed 4.8s infinite ease-in-out; }
+.ai-robot [data-robot-part] { transform-box: view-box; }
+.ai-robot [data-robot-part="upper-body"] { transform-origin: 300px 450px; }
+.ai-robot [data-robot-part="head-group"] { transform-origin: 300px 265px; }
+.ai-robot [data-robot-part="viewer-left-arm"] { transform-origin: 215px 318px; }
+.ai-robot [data-robot-part="viewer-left-forearm"] { transform-origin: 174px 435px; }
+.ai-robot [data-robot-part="greeting-wave"], .ai-robot [data-robot-part="viewer-right-arm"] { transform-origin: 385px 318px; }
+.ai-robot [data-robot-part="viewer-right-forearm"] { transform-origin: 455px 410px; }
+.ai-robot [data-robot-part="viewer-right-hand"] { transform-origin: 535px 330px; }
+.ai-robot .eye-left { transform-origin: 256px 175px; }
+.ai-robot .eye-right { transform-origin: 344px 175px; }
+.ai-robot [data-robot-part="floor-shadow"] { transform-origin: 300px 852px; }
+.ai-robot.anim-idle [data-robot-part="upper-body"] { animation: aiRobotBreatheTorso 4.8s infinite ease-in-out; }
+.ai-robot.anim-idle [data-robot-part="head-group"] { animation: aiRobotHeadIdle 6s infinite ease-in-out; }
+.ai-robot.anim-idle [data-robot-part="viewer-left-arm"] { animation: aiRobotLeftArmIdle 4.8s infinite ease-in-out; }
+.ai-robot.anim-idle [data-robot-part="floor-shadow"] { animation: aiRobotShadowBreathe 4.8s infinite ease-in-out; }
+.ai-robot.anim-wave [data-robot-part="viewer-right-arm"] { animation: aiRobotWaveShoulder 6s infinite ease-in-out; }
+.ai-robot.anim-wave [data-robot-part="viewer-right-forearm"] { animation: aiRobotWaveForearm 6s infinite ease-in-out; }
+.ai-robot.anim-wave [data-robot-part="viewer-right-hand"] { animation: aiRobotWaveHand 6s infinite ease-in-out; }
+.ai-robot.anim-blink .eye-left, .ai-robot.anim-blink .eye-right { animation: aiRobotBlinkEye 6s infinite ease-in-out; }
+@keyframes aiRobotPulseLed { 0%, 100% { opacity: .86; } 50% { opacity: 1; } }
+@keyframes aiRobotBreatheTorso { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-4px) rotate(.25deg); } }
+@keyframes aiRobotHeadIdle { 0%, 100% { transform: rotate(-1deg); } 50% { transform: rotate(1.5deg) translateY(-2px); } }
+@keyframes aiRobotLeftArmIdle { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(2deg); } }
+@keyframes aiRobotWaveShoulder { 0%, 55%, 100% { transform: rotate(0deg); } 15%, 40% { transform: rotate(-2deg); } 28% { transform: rotate(2deg); } }
+@keyframes aiRobotWaveForearm { 0%, 55%, 100% { transform: rotate(0deg); } 15%, 40% { transform: rotate(-9deg); } 28% { transform: rotate(10deg); } }
+@keyframes aiRobotWaveHand { 0%, 55%, 100% { transform: rotate(0deg); } 15%, 40% { transform: rotate(-7deg); } 28% { transform: rotate(9deg); } }
+@keyframes aiRobotBlinkEye { 0%, 43%, 48%, 100% { transform: scaleY(1); } 45.5% { transform: scaleY(.1); } }
+@keyframes aiRobotShadowBreathe { 0%, 100% { transform: scaleX(1); opacity: .8; } 50% { transform: scaleX(.96); opacity: .65; } }
+@media (prefers-reduced-motion: reduce) { .ai-robot * { animation: none !important; transition: none !important; } }

@@ -1,0 +1,227 @@
+import React, { useEffect, useState, useRef } from 'react'
+import { Link } from 'react-router-dom'
+import { Sparkles, ChevronLeft, ChevronRight, ShoppingCart, Cpu, Check, Zap, LoaderCircle } from 'lucide-react'
+import { getPersonalizedRecommendations, getSimilarProducts } from '../services/recommendations'
+import { resolveProductImage } from '../assets/productImages'
+import { useCart } from '../contexts/cartContextStore'
+import { useAuth } from '../contexts/authContextStore'
+import { formatVND } from '../utils/cart'
+import '../styles/personalized-recommendations.css'
+
+export default function PersonalizedRecommendations({
+  id = 'personalized-recommendations',
+  eyebrow = 'AI SEMANTIC MATCH • COSINE SIMILARITY',
+  title = 'Gợi ý dành riêng cho bạn',
+  description = 'Thuật toán Vector Embedding & Cosine Similarity phân tích sở thích để đề xuất linh kiện tối ưu.',
+  context = 'home',
+  productId = null,
+  limit = 6,
+  onAddToCart = null,
+  className = '',
+}) {
+  const [items, setItems] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [addedId, setAddedId] = useState(null)
+  const carouselRef = useRef(null)
+  const { addItem, ready, adding, isAdding, productState, reportCartError } = useCart()
+  const { user, loading: authLoading } = useAuth() || {}
+
+  useEffect(() => {
+    let isMounted = true
+    setLoading(true)
+
+    const fetchRecommendations = async () => {
+      try {
+        let results = []
+        if (productId) {
+          results = await getSimilarProducts(productId, { limit })
+        } else {
+          results = await getPersonalizedRecommendations({ limit, context, user, authLoading })
+        }
+        if (isMounted) {
+          setItems(results || [])
+        }
+      } catch (err) {
+        console.debug('[PersonalizedRecommendations] Handled fallback load:', err)
+      } finally {
+        if (isMounted) setLoading(false)
+      }
+    }
+
+    fetchRecommendations()
+    return () => {
+      isMounted = false
+    }
+  }, [productId, context, limit, user?.id, authLoading])
+
+  const scroll = direction => {
+    if (carouselRef.current) {
+      const scrollAmount = direction === 'left' ? -280 : 280
+      carouselRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' })
+    }
+  }
+
+  const handleAdd = async (product, event) => {
+    event.preventDefault()
+    event.stopPropagation()
+    try {
+      const result = onAddToCart ? await onAddToCart(product) : await addItem(product, 1)
+      if (result?.success !== false) {
+        setAddedId(product.id)
+        setTimeout(() => setAddedId(null), 1800)
+      } else {
+        reportCartError(result?.message || 'Không thể thêm vào giỏ hàng.')
+      }
+    } catch {
+      reportCartError('Không thể thêm vào giỏ hàng. Vui lòng thử lại.')
+    }
+  }
+
+  // Nếu không loading và không có sản phẩm nào thì ẩn component
+  if (!loading && items.length === 0) {
+    return null
+  }
+
+  return (
+    <section className={`ai-recommendations-section ${className}`} id={id} aria-label={title}>
+      <div className="ai-recommendations__head">
+        <div>
+          <div className="ai-recommendations__eyebrow">
+            <Sparkles size={13} /> {eyebrow}
+          </div>
+          <h2 className="ai-recommendations__title">{title}</h2>
+          {description && <p className="ai-recommendations__desc">{description}</p>}
+        </div>
+
+        <div className="ai-recommendations__controls">
+          <button
+            type="button"
+            className="ai-recommendations__nav-btn"
+            onClick={() => scroll('left')}
+            aria-label="Cuộn sang trái"
+          >
+            <ChevronLeft size={18} />
+          </button>
+          <button
+            type="button"
+            className="ai-recommendations__nav-btn"
+            onClick={() => scroll('right')}
+            aria-label="Cuộn sang phải"
+          >
+            <ChevronRight size={18} />
+          </button>
+        </div>
+      </div>
+
+      <div className="ai-recommendations__carousel" ref={carouselRef}>
+        {loading
+          ? Array.from({ length: 4 }).map((_, index) => (
+              <div className="ai-recommendations__item" key={index}>
+                <div
+                  style={{
+                    height: '340px',
+                    borderRadius: '12px',
+                    background: '#e2e8f0',
+                    animation: 'pulse 1.5s infinite',
+                  }}
+                />
+              </div>
+            ))
+          : items.map(product => {
+              const percent = product.similarityPercent || 92
+              const badgeClass =
+                percent >= 90
+                  ? 'ai-rec-card__match-badge--high'
+                  : percent >= 80
+                    ? 'ai-rec-card__match-badge--good'
+                    : 'ai-rec-card__match-badge--normal'
+
+              const availability = productState ? productState(product) : { canAdd: true }
+              const isAdded = addedId === product.id
+              const productAdding = isAdding ? isAdding(product.id) : false
+
+              return (
+                <div className="ai-recommendations__item" key={product.id}>
+                  <article className="ai-rec-card">
+                    <Link
+                      to={`/products/${product.slug}`}
+                      className="ai-rec-card__image-link"
+                      tabIndex={-1}
+                      aria-hidden="true"
+                    >
+                      <img
+                        src={resolveProductImage(product.image || product.imageKey)}
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                        width="240"
+                        height="240"
+                        onError={e => {
+                          e.currentTarget.onerror = null
+                          try {
+                            e.currentTarget.src = resolveProductImage('products/pc-gvn-i5-12400f-rtx-3050.png')
+                          } catch {}
+                        }}
+                      />
+                    </Link>
+
+                    <div className="ai-rec-card__body">
+                      <div className="ai-rec-card__meta-row">
+                        {product.brand ? (
+                          <span className="ai-rec-card__brand">{product.brand}</span>
+                        ) : (
+                          <span />
+                        )}
+                        <span className={`ai-rec-card__match-badge ${badgeClass}`}>
+                          <Zap size={11} /> Phù hợp {percent}%
+                        </span>
+                      </div>
+
+                      <h3 className="ai-rec-card__name">
+                        <Link to={`/products/${product.slug}`}>{product.name}</Link>
+                      </h3>
+
+                      {Array.isArray(product.specs) && product.specs.length > 0 && (
+                        <div className="ai-rec-card__specs">
+                          {product.specs.slice(0, 2).map((s, idx) => (
+                            <span className="ai-rec-card__spec-tag" key={idx}>
+                              {s.label || s}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      <div className="ai-rec-card__footer">
+                        <div className="ai-rec-card__price-box">
+                          {product.originalPrice > product.price && (
+                            <span className="ai-rec-card__old-price">
+                              {formatVND(product.originalPrice)}
+                            </span>
+                          )}
+                          <strong className="ai-rec-card__price">
+                            {formatVND(product.price)}
+                          </strong>
+                        </div>
+
+                        <button
+                          type="button"
+                          className="ai-rec-card__add-btn"
+                          onClick={e => handleAdd(product, e)}
+                          disabled={!ready || adding || !availability.canAdd || isAdded}
+                          aria-busy={productAdding}
+                          title={productAdding ? 'Đang xử lý…' : isAdded ? 'Đã thêm!' : 'Thêm vào giỏ'}
+                          aria-label={productAdding ? `Đang thêm ${product.name} vào giỏ` : `Thêm ${product.name} vào giỏ hàng`}
+                        >
+                          {productAdding ? <LoaderCircle size={16} className="cart-add-spinner" /> : isAdded ? <Check size={16} /> : <ShoppingCart size={16} />}
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                </div>
+              )
+            })}
+      </div>
+    </section>
+  )
+}
+

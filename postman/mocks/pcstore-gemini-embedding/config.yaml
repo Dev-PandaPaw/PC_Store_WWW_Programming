@@ -1,0 +1,10 @@
+version: 1
+name: pcstore-gemini-embedding
+slug: pcstore-gemini-embedding
+protocol: http
+interceptRequests: true
+port: 4502
+scenarios:
+  - name: default
+    path: ./default.js
+    default: true

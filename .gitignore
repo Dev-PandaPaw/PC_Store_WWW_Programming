@@ -33,10 +33,25 @@ tmp/
 
 # E2E / Node tooling
 node_modules/
+dist/
+.vite/
 playwright-report/
 test-results/
 blob-report/
+*.bak*
 
 # Local test artifacts
 coverage/
 *.pid
+__pycache__/
+*.py[cod]
+
+# Temporary UI export folder
+UI/
+
+# Graphify
+graphify-out/
+.graphify*
+
+
+

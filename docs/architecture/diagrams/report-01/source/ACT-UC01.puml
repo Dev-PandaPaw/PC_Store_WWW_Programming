@@ -1,0 +1,49 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam ArrowColor #334155
+skinparam activityBackgroundColor #EFF6FF
+skinparam activityBorderColor #2563EB
+skinparam activityDiamondBackgroundColor #FFF7ED
+skinparam activityDiamondBorderColor #C2410C
+skinparam usecaseBackgroundColor #EFF6FF
+skinparam usecaseBorderColor #2563EB
+skinparam padding 8
+title ACT-UC01 — Tài khoản và xác thực
+|Guest|
+start
+|Guest|
+:B1. Chọn đăng ký, đăng nhập, khôi phục hoặc cập nhật hồ\nsơ;
+|PC Store|
+:B2. Xác định thao tác; kiểm định dạng và quyền thao tác;
+|PC Store|
+if (Dữ liệu và quyền hợp lệ?) then (Có)
+else (Không)
+:E-B2. Báo lỗi field hoặc yêu cầu đăng nhập; không lưu;
+stop
+endif
+|PC Store|
+:B3. Xác minh bằng mật khẩu, OTP hoặc Google theo nhánh đã\nchọn;
+|PC Store|
+if (Bằng chứng xác thực hợp lệ?) then (Có)
+else (Không)
+:E-B3. Báo xác thực thất bại/hết hạn; không cấp phiên, không\nđổi liên hệ;
+stop
+endif
+|PC Store|
+:B4. Kiểm email/phone duy nhất, tài khoản ACTIVE và phương\nthức đăng nhập còn lại;
+|PC Store|
+if (Không trùng và tài khoản dùng được?) then (Có)
+else (Không)
+:E-B4. Báo trùng/khóa/không thể bỏ phương thức cuối; giữ dữ\nliệu cũ;
+stop
+endif
+|PC Store|
+:B5. Tạo/cập nhật tài khoản hoặc cấp phiên; tiêu thụ\nchallenge dùng một lần;
+|PC Store|
+:B6. Đổi session ID khi login, giữ giỏ; trả hồ sơ hoặc màn\nhình đích;
+stop
+@enduml

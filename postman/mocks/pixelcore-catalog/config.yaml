@@ -1,0 +1,11 @@
+version: 1
+id: c3bc391e-a99d-4c4f-bb5f-78c9294b86d4
+name: pixelcore-catalog
+slug: pixelcore-catalog
+protocol: http
+interceptRequests: true
+port: 4500
+scenarios:
+  - name: default
+    path: ./default.js
+    default: true

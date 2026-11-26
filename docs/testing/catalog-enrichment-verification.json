@@ -1,0 +1,197 @@
+{
+  "checkedAt": "2026-11-26",
+  "environment": "local Spring Boot + Supabase + real Gemini; external provider failures tested separately with local Postman simulations",
+  "catalog": {
+    "before": 44,
+    "after": 78,
+    "newDemoProducts": 34,
+    "storefrontBefore": 34,
+    "storefrontAfter": 74,
+    "legacyComponentsExposed": 6,
+    "original44IdNameSkuPriceStockWarrantyPreserved": true,
+    "originalRetailerSourcePreserved": true,
+    "allStorefrontProductsHaveTechnicalSpecs": true,
+    "newStockPerSku": 20,
+    "newPriceAndStockAreDemoValues": true,
+    "categoryCounts": {
+      "case": 5,
+      "cooling": 4,
+      "cpu": 11,
+      "keyboard": 3,
+      "mainboard": 5,
+      "monitor": 7,
+      "mouse": 3,
+      "pc-gaming": 2,
+      "pc-office": 1,
+      "pc-workstation": 1,
+      "psu": 6,
+      "ram": 9,
+      "storage": 8,
+      "vga": 9
+    },
+    "manufacturerPhotoOrOriginalImportedImageCount": 43,
+    "clearlyLabeledPlaceholderCount": 31
+  },
+  "javaTests": {
+    "tests": 256,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 29,
+    "passed": 227
+  },
+  "frontend": {
+    "catalogTestsPassed": 2,
+    "productionBuild": "passed",
+    "existingWarning": "bundle chunk above 500 kB"
+  },
+  "postman": {
+    "target": "http://localhost:8080/api/catalog/storefront",
+    "requests": 1,
+    "assertions": 5,
+    "failures": 0,
+    "collectionLintErrors": 0,
+    "collectionLintWarnings": 0
+  },
+  "vectors": {
+    "store": "memory",
+    "documents": 78,
+    "dimensions": 768,
+    "reindexedFromCurrentDatabase": true,
+    "technicalFactsIncluded": true
+  },
+  "browser": [
+    {
+      "width": 1440,
+      "align": {
+        "attach": {
+          "x": 322,
+          "y": 851,
+          "w": 44,
+          "h": 44,
+          "cy": 873
+        },
+        "send": {
+          "x": 1045.203125,
+          "y": 851,
+          "w": 44,
+          "h": 44,
+          "cy": 873
+        },
+        "input": {
+          "x": 374,
+          "y": 851,
+          "w": 663.203125,
+          "h": 44,
+          "cy": 873
+        },
+        "overflow": false
+      },
+      "expandedHeight": 132,
+      "rows": 10,
+      "products": 74,
+      "errors": []
+    },
+    {
+      "width": 390,
+      "align": {
+        "attach": {
+          "x": 20,
+          "y": 861.609375,
+          "w": 44,
+          "h": 44,
+          "cy": 883.609375
+        },
+        "send": {
+          "x": 326,
+          "y": 861.609375,
+          "w": 44,
+          "h": 44,
+          "cy": 883.609375
+        },
+        "input": {
+          "x": 72,
+          "y": 861.609375,
+          "w": 246,
+          "h": 44,
+          "cy": 883.609375
+        },
+        "overflow": false
+      },
+      "expandedHeight": 132,
+      "rows": 10,
+      "products": 74,
+      "errors": []
+    }
+  ],
+  "realBuilds": [
+    {
+      "platform": "Intel LGA1700 DDR4",
+      "http": 200,
+      "total": 19920000,
+      "budget": 20000000,
+      "items": 8,
+      "passedChecks": 6,
+      "model": "gemini-3.5-flash-lite"
+    },
+    {
+      "platform": "AMD AM5 DDR5",
+      "http": 200,
+      "total": 23620000,
+      "budget": 25000000,
+      "items": 8,
+      "passedChecks": 6,
+      "model": "gemini-3.5-flash-lite"
+    },
+    {
+      "platform": "AMD AM4 DDR4",
+      "http": 200,
+      "total": 17320000,
+      "budget": 18000000,
+      "items": 8,
+      "passedChecks": 6,
+      "model": "gemini-3.5-flash-lite"
+    }
+  ],
+  "real64GbBrowserBuild": {
+    "query": "Build PC linh kiện rời AMD DDR5 RAM 64GB dưới 30 triệu",
+    "http": 200,
+    "model": "gemini-3.5-flash-lite",
+    "ram": "RAM Kingston FURY Beast 64GB (2 × 32GB) DDR5-6000 KF560C36BBEK2-64",
+    "total": 27420000,
+    "status": "compatible",
+    "checks": [
+      {
+        "label": "CPU và mainboard",
+        "status": "passed"
+      },
+      {
+        "label": "RAM: chuẩn, dung lượng và số thanh",
+        "status": "passed"
+      },
+      {
+        "label": "Nguồn và đầu cấp điện",
+        "status": "passed"
+      },
+      {
+        "label": "Chiều dài GPU, PSU và khổ mainboard",
+        "status": "passed"
+      },
+      {
+        "label": "Socket và khoảng trống tản khí",
+        "status": "passed"
+      },
+      {
+        "label": "SSD M.2 NVMe",
+        "status": "passed"
+      }
+    ],
+    "photos": 8,
+    "errors": []
+  },
+  "limits": [
+    "Passed means only the six explicitly described catalog checks. Actual BIOS, memory overclock, cable routing, airflow and load testing are not certified.",
+    "Unknown legacy module codes, AIO dimensions and PSU cable revisions are preserved as unresolved; no manufacturer values are invented.",
+    "One live provider 502 occurred during verification; subsequent live calls and the browser build succeeded.",
+    "Local VectorStore is in memory; the semantic profile is needed for persistent semantic vectors."
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "categoryId": "04e44a1e-0d51-5451-b286-1662588410b3",
+  "sku": "DEMO-PC-BUU-001",
+  "slug": "demo-pc-gaming-buu-i5-rtx-4060",
+  "name": "PC Gaming Demo Buu i5 RTX 4060",
+  "brand": "PixelCore Demo",
+  "description": "Sản phẩm mẫu để kiểm tra chức năng thêm sản phẩm trong trang quản trị.",
+  "price": 24990000,
+  "stockOnHand": 5,
+  "warrantyMonths": 24,
+  "spec": {
+    "cpu": "Intel Core i5-12400F",
+    "gpu": "NVIDIA GeForce RTX 4060 8GB",
+    "ramGb": 16,
+    "storageGb": 1000,
+    "storageType": "NVMe PCIe 4.0",
+    "motherboard": "B760M WiFi",
+    "psu": "650W 80 Plus Bronze",
+    "caseName": "Mid Tower Mesh",
+    "operatingSystem": "Windows 11 Home"
+  }
+}

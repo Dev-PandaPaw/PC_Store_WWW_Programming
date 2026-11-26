@@ -1,0 +1,62 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam ArrowColor #334155
+skinparam activityBackgroundColor #EFF6FF
+skinparam activityBorderColor #2563EB
+skinparam activityDiamondBackgroundColor #FFF7ED
+skinparam activityDiamondBorderColor #C2410C
+skinparam usecaseBackgroundColor #EFF6FF
+skinparam usecaseBorderColor #2563EB
+skinparam padding 8
+title Use case tổng quát — 12 chức năng chính
+left to right direction
+actor "Người truy cập" as Visitor <<abstract>>
+actor Guest
+actor Customer
+actor Admin
+actor Google
+actor VNPAY
+actor "OTP Provider" as OTP
+actor "Mail Service" as Mail
+Visitor <|-- Guest
+Visitor <|-- Customer
+Customer <|-- Admin
+rectangle "PC Store" {
+usecase "UC01\nTài khoản và xác thực" as UC01
+usecase "UC02\nTìm và xem PC" as UC02
+usecase "UC03\nTư vấn chọn PC" as UC03
+usecase "UC04\nQuản lý giỏ hàng" as UC04
+usecase "UC05\nĐặt hàng và thanh toán" as UC05
+usecase "UC06\nTheo dõi và hủy đơn của tôi" as UC06
+usecase "UC07\nQuản lý PC và loại sản phẩm" as UC07
+usecase "UC08\nXử lý đơn hàng" as UC08
+usecase "UC09\nQuản lý tài khoản khách hàng" as UC09
+usecase "UC10\nTra cứu bảo hành và tiến độ" as UC10
+usecase "UC11\nGửi hoặc hủy yêu cầu bảo hành" as UC11
+usecase "UC12\nTiếp nhận và xử lý bảo hành" as UC12
+}
+Guest -- UC01
+Visitor -- UC02
+Visitor -- UC03
+Visitor -- UC04
+Customer -- UC01
+Customer -- UC05
+Customer -- UC06
+Customer -- UC10
+Customer -- UC11
+Admin -- UC07
+Admin -- UC08
+Admin -- UC09
+Admin -- UC12
+UC01 -- Google
+UC05 -- VNPAY
+UC01 -- OTP
+UC01 -- Mail
+UC05 -- Mail
+UC11 -- Mail
+UC12 -- Mail
+@enduml
