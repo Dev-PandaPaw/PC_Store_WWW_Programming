@@ -4,6 +4,7 @@ import { ArrowUpRight, Box, LogOut } from "lucide-react";
 import { useAuth } from "../contexts/authContextStore";
 import useAdminAccess from "../hooks/useAdminAccess";
 import { ADMIN_HOME, hasAdminRole } from "../utils/authorization";
+import "../styles/admin-lists.css";
 
 export default function AdminShell() {
   const { user, loading, logout } = useAuth();

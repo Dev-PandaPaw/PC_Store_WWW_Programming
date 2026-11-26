@@ -14,6 +14,7 @@ public class SmartSearchService {
     private static final Logger LOG = LoggerFactory.getLogger(SmartSearchService.class);
     private final StorefrontCatalog catalog;
     private final AiGateway ai;
+    private final ProductRetrievalService retrieval;
     private final Map<String, CachedIntent> cache = new ConcurrentHashMap<>();
     private record CachedIntent(ProductCriteria criteria, String mode, long expires) {}
     public record SearchResult(List<StoreProduct> products, int total, String mode, ProductCriteria criteria, String summary) {}
@@ -37,7 +38,12 @@ public class SmartSearchService {
             """;
 
     public SmartSearchService(StorefrontCatalog catalog, AiGateway ai) {
+        this(catalog,ai,null);
+    }
+    @org.springframework.beans.factory.annotation.Autowired
+    public SmartSearchService(StorefrontCatalog catalog, AiGateway ai, ProductRetrievalService retrieval) {
         this.catalog = catalog; this.ai = ai;
+        this.retrieval=retrieval;
     }
 
     public SearchResult search(String keyword, String category, String sort, boolean deals, String client) {
@@ -55,6 +61,10 @@ public class SmartSearchService {
         }
         CachedIntent intent = query.isEmpty() ? new CachedIntent(ProductCriteria.empty(),"catalog",0) : interpret(query,client);
         ProductCriteria criteria = intent.criteria();
+        if(!query.isEmpty() && retrieval!=null) {
+            try { products=retrieval.rank(query,products); }
+            catch(RuntimeException error) { LOG.debug("Vector ranking unavailable; retaining explicit catalog filters"); }
+        }
         LOG.debug("[SmartSearchService] input=\"{}\" mode={} groups={} purpose={}",
                 query, intent.mode(), criteria.groups(), criteria.purpose());
         final String literal = CriteriaParser.normalize(query);

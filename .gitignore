@@ -43,6 +43,8 @@ blob-report/
 # Local test artifacts
 coverage/
 *.pid
+__pycache__/
+*.py[cod]
 
 # Temporary UI export folder
 UI/

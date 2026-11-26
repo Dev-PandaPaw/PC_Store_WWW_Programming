@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
+import Breadcrumbs from '../components/Breadcrumbs'
 import { SlidersHorizontal, Search, ArrowLeft, LoaderCircle, Sparkles } from 'lucide-react'
 import {
   CATEGORIES,
@@ -107,11 +108,7 @@ function CatalogContent() {
 
   return (
     <div className="catalog-page">
-      <nav className="breadcrumbs" aria-label="Đường dẫn">
-        <Link to="/">Trang chủ</Link>
-        <span>/</span>
-        <span>{title}</span>
-      </nav>
+      <Breadcrumbs items={category !== 'ALL' ? [{ label: 'Sản phẩm', to: '/catalog' }, { label: title }] : [{ label: title }]} />
       <div className="page-heading">
         <p className="section-eyebrow">PIXELCORE COLLECTION</p>
         <h1>{title}</h1>

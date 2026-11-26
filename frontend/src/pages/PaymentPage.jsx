@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
+import Breadcrumbs from '../components/Breadcrumbs'
 import {
   CreditCard,
   Truck,
@@ -90,13 +91,8 @@ export default function PaymentPage() {
 
   return (
     <div className="payment-page-container">
-      <nav className="breadcrumbs" aria-label="Đường dẫn" style={{ marginBottom: '16px' }}>
-        <Link to="/">Trang chủ</Link>
-        <span>/</span>
-        <Link to="/orders">Đơn hàng</Link>
-        <span>/</span>
-        <span>Thanh toán đơn hàng</span>
-      </nav>
+      {/* ── Breadcrumbs & Steps ── */}
+      <Breadcrumbs items={[{ label: 'Giỏ hàng', to: '/cart' }, { label: 'Thanh toán đơn hàng' }]} style={{ marginBottom: '16px' }} />
 
       <div className="checkout-steps">
         <div className="checkout-step checkout-step--done">

@@ -1,12 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import {
-  ArrowDownUp, Box, Check, ChevronDown, CircleAlert, Clock3, Cpu,
-  Edit3, Filter, Layers3, LoaderCircle, Plus, Search, Sparkles, X,
-} from 'lucide-react'
+import { Check, LoaderCircle, Plus, RefreshCw, Sparkles, X } from 'lucide-react'
 import http from '../services/http'
 import { syncVectorDatabase } from '../services/recommendations'
 import '../styles/admin-products.css'
-import '../styles/personalized-recommendations.css'
 
 const emptyForm = {
   categoryId: '', sku: '', slug: '', name: '', brand: '', description: '',
@@ -206,17 +202,18 @@ export default function AdminProductsPage() {
   }
 
   return (
-    <div className="admin-products">
-      <div className="admin-products__heading">
+    <div className="admin-list admin-products">
+      <header className="admin-list__heading">
         <div>
-          <div className="admin-products__eyebrow"><Layers3 size={14} /> QUẢN TRỊ CATALOG</div>
           <h1>Quản lý sản phẩm</h1>
-          <p>Theo dõi danh mục, giá bán và trạng thái sản phẩm trong cửa hàng.</p>
+          {!loading && !loadError && (
+            <p>Tổng cộng {stats.total} sản phẩm · {stats.active} đang bán · {stats.inactive} đã ẩn hoặc ngừng bán · {stats.lowStock} tồn kho thấp</p>
+          )}
         </div>
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <div className="admin-list__actions">
           <button
             type="button"
-            className="admin-products__vector-btn"
+            className="admin-list__button"
             onClick={handleSyncVector}
             disabled={syncingVector || loading}
             title="Băm thông số linh kiện và nạp vào Vector Store (Spring AI)"
@@ -233,131 +230,109 @@ export default function AdminProductsPage() {
               </>
             )}
           </button>
-          <button className="admin-products__primary" onClick={openCreate}>
-            <Plus size={17} /> Thêm sản phẩm
+          <button type="button" className="admin-list__button admin-list__button--primary" onClick={openCreate}>
+            <Plus size={16} /> Thêm sản phẩm
           </button>
         </div>
-      </div>
+      </header>
 
       {notice && (
-        <div className={`admin-products__notice admin-products__notice--${notice.type}`} role="status">
-          {notice.type === 'success' ? <Check size={17} /> : <CircleAlert size={17} />}
+        <div className={`admin-list__notice${notice.type === 'error' ? ' admin-list__notice--error' : ''}`} role={notice.type === 'error' ? 'alert' : 'status'}>
           <span>{notice.text}</span>
-          <button aria-label="Đóng thông báo" onClick={() => setNotice(null)}><X size={16} /></button>
+          <button type="button" aria-label="Đóng thông báo" onClick={() => setNotice(null)}><X size={16} /></button>
         </div>
       )}
 
-      <section className="admin-products__stats" aria-label="Tổng quan sản phẩm">
-        <StatCard label="Tổng sản phẩm" value={stats.total} icon={<Box />} tone="blue" />
-        <StatCard label="Đang kinh doanh" value={stats.active} icon={<Check />} tone="green" />
-        <StatCard label="Đang ẩn / ngừng bán" value={stats.inactive} icon={<Layers3 />} tone="slate" />
-        <StatCard label="Tồn kho thấp" value={stats.lowStock} icon={<CircleAlert />} tone="amber" />
-      </section>
-
-      <section className="admin-products__panel">
-        <div className="admin-products__panel-head">
-          <div>
-            <h2>Danh sách sản phẩm</h2>
-            <p>{visibleProducts.length} sản phẩm phù hợp</p>
-          </div>
-          <button className="admin-products__refresh" onClick={loadData} disabled={loading}>
-            <ArrowDownUp size={15} /> Làm mới
-          </button>
+      <div className="admin-list__toolbar">
+        <div className="admin-list__actions" role="group" aria-label="Lọc và sắp xếp sản phẩm">
+          <input
+            className="admin-list__control" type="search" aria-label="Tìm sản phẩm"
+            placeholder="Tìm tên, SKU, thương hiệu..." value={search}
+            onChange={event => setSearch(event.target.value)}
+          />
+          <select className="admin-list__control" aria-label="Danh mục" value={categoryFilter} onChange={event => setCategoryFilter(event.target.value)}>
+            <option value="ALL">Tất cả danh mục</option>
+            {categories.map(category => <option key={category.id} value={category.id}>{category.name}</option>)}
+          </select>
+          <select className="admin-list__control" aria-label="Trạng thái sản phẩm" value={statusFilter} onChange={event => setStatusFilter(event.target.value)}>
+            <option value="ALL">Tất cả trạng thái</option>
+            <option value="ACTIVE">Đang kinh doanh</option>
+            <option value="INACTIVE">Đang ẩn</option>
+            <option value="DISCONTINUED">Ngừng kinh doanh</option>
+          </select>
+          <select className="admin-list__control" aria-label="Sắp xếp sản phẩm" value={sortOrder} onChange={event => setSortOrder(event.target.value)}>
+            <option value="updated">Mới cập nhật</option>
+            <option value="name">Tên A–Z</option>
+            <option value="priceAsc">Giá thấp đến cao</option>
+            <option value="priceDesc">Giá cao đến thấp</option>
+          </select>
         </div>
+        <button type="button" className="admin-list__button" onClick={loadData} disabled={loading}>
+          <RefreshCw size={15} /> Tải lại
+        </button>
+      </div>
 
-        <div className="admin-products__filters">
-          <label className="admin-products__search">
-            <Search size={17} />
-            <input value={search} onChange={event => setSearch(event.target.value)} placeholder="Tìm tên, SKU, thương hiệu..." />
-          </label>
-          <label className="admin-products__select-wrap">
-            <Filter size={15} />
-            <select value={categoryFilter} onChange={event => setCategoryFilter(event.target.value)}>
-              <option value="ALL">Tất cả danh mục</option>
-              {categories.map(category => <option key={category.id} value={category.id}>{category.name}</option>)}
-            </select>
-            <ChevronDown size={14} />
-          </label>
-          <label className="admin-products__select-wrap">
-            <select value={statusFilter} onChange={event => setStatusFilter(event.target.value)}>
-              <option value="ALL">Mọi trạng thái</option>
-              <option value="ACTIVE">Đang kinh doanh</option>
-              <option value="INACTIVE">Đang ẩn</option>
-              <option value="DISCONTINUED">Ngừng kinh doanh</option>
-            </select>
-            <ChevronDown size={14} />
-          </label>
-          <label className="admin-products__select-wrap admin-products__select-wrap--sort">
-            <select value={sortOrder} onChange={event => setSortOrder(event.target.value)}>
-              <option value="updated">Mới cập nhật</option>
-              <option value="name">Tên A–Z</option>
-              <option value="priceAsc">Giá thấp đến cao</option>
-              <option value="priceDesc">Giá cao đến thấp</option>
-            </select>
-            <ChevronDown size={14} />
-          </label>
-        </div>
-
-        {loadError ? (
-          <div className="admin-products__empty admin-products__empty--error">
-            <CircleAlert size={25} /><strong>Không tải được danh sách</strong><span>{loadError}</span>
-            <button className="admin-products__secondary" onClick={loadData}>Thử lại</button>
-          </div>
-        ) : loading ? (
-          <div className="admin-products__empty"><LoaderCircle className="admin-products__spin" size={25} />Đang tải sản phẩm...</div>
-        ) : visibleProducts.length === 0 ? (
-          <div className="admin-products__empty"><Search size={24} /><strong>Không tìm thấy sản phẩm</strong><span>Thử xóa bớt bộ lọc hoặc thêm sản phẩm mới.</span></div>
-        ) : (
-          <div className="admin-products__table-wrap">
-            <table className="admin-products__table">
-              <thead><tr>
-                <th>Sản phẩm</th><th>Danh mục</th><th>Giá bán</th><th>Tồn kho</th><th>Trạng thái</th><th>Cập nhật</th><th><span className="sr-only">Thao tác</span></th>
-              </tr></thead>
-              <tbody>
-                {visibleProducts.map(product => {
-                  const available = Number(product.stockOnHand || 0) - Number(product.reservedQuantity || 0)
-                  return (
-                    <tr key={product.id}>
-                      <td>
-                        <div className="admin-product-cell">
-                          <div className="admin-product-cell__thumb"><Cpu size={20} /></div>
-                          <div className="admin-product-cell__details">
-                            <strong>{product.name}</strong>
-                            <span>{product.sku} <i>·</i> {product.brand || 'Chưa có thương hiệu'}</span>
-                          </div>
-                        </div>
-                      </td>
-                      <td><span className="admin-products__category">{product.category?.name || 'Chưa phân loại'}</span></td>
-                      <td className="admin-products__price">{money(product.price)}</td>
-                      <td><span className={`admin-products__stock ${available <= 5 ? 'is-low' : ''}`}>{available}</span></td>
-                      <td><StatusBadge status={product.status} /></td>
-                      <td className="admin-products__date"><Clock3 size={13} /> {formatDate(product.updatedAt)}</td>
-                      <td>
-                        <div className="admin-products__row-actions">
-                          <button className="admin-products__icon-btn" aria-label={`Sửa ${product.name}`} onClick={() => openEdit(product)}><Edit3 size={16} /></button>
-                          <button className={`admin-products__row-toggle ${product.status === 'ACTIVE' ? 'is-active' : ''}`} disabled={changingStatus === product.id} onClick={() => toggleStatus(product)}>
-                            {changingStatus === product.id ? <LoaderCircle className="admin-products__spin" size={14} /> : product.status === 'ACTIVE' ? 'Ẩn' : 'Kích hoạt'}
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
+      {loadError && (
+        <p className="admin-list__notice admin-list__notice--error" role="alert">{loadError}</p>
+      )}
+      <div className="admin-list__table-wrap">
+        <table className="admin-list__table" aria-label="Danh sách sản phẩm" aria-busy={loading}>
+          <thead><tr>
+            <th scope="col">Sản phẩm</th><th scope="col">Danh mục</th><th scope="col">Giá bán</th>
+            <th scope="col">Tồn kho</th><th scope="col">Trạng thái</th><th scope="col">Cập nhật</th>
+            <th scope="col" className="admin-list__end">Thao tác</th>
+          </tr></thead>
+          <tbody>
+            {loading || loadError || visibleProducts.length === 0 ? (
+              <tr><td colSpan={7} className="admin-list__empty">
+                <span role="status">{loading ? 'Đang tải sản phẩm…' : loadError ? 'Không tải được danh sách sản phẩm.' : 'Không tìm thấy sản phẩm phù hợp.'}</span>
+              </td></tr>
+            ) : visibleProducts.map(product => {
+              const available = Number(product.stockOnHand || 0) - Number(product.reservedQuantity || 0)
+              const isActive = product.status === 'ACTIVE'
+              return (
+                <tr key={product.id}>
+                  <td>
+                    <span className="admin-list__name">{product.name}</span>
+                    <span className="admin-list__subline">{[product.sku, product.brand].filter(Boolean).join(' · ')}</span>
+                  </td>
+                  <td>{product.category?.name || 'Chưa phân loại'}</td>
+                  <td className="admin-list__nowrap">{money(product.price)}</td>
+                  <td><span className={available <= 5 ? 'admin-products__low-stock' : undefined}>{available}</span></td>
+                  <td><StatusBadge status={product.status} /></td>
+                  <td className="admin-list__nowrap">{formatDate(product.updatedAt)}</td>
+                  <td className="admin-list__end">
+                    <div className="admin-list__actions">
+                      <button type="button" className="admin-list__button admin-list__button--small" aria-label={`Sửa ${product.name}`} onClick={() => openEdit(product)}>Sửa</button>
+                      <button
+                        type="button"
+                        className={`admin-list__button admin-list__button--small admin-list__button--${isActive ? 'negative' : 'positive'}`}
+                        disabled={changingStatus === product.id}
+                        onClick={() => toggleStatus(product)}
+                      >
+                        {changingStatus === product.id ? 'Đang cập nhật…' : isActive ? 'Ẩn' : 'Kích hoạt'}
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+      {!loading && !loadError && visibleProducts.length !== stats.total && (
+        <p className="admin-list__subline" role="status">{visibleProducts.length} sản phẩm phù hợp</p>
         )}
-      </section>
 
       {editorOpen && (
         <div className="admin-editor-backdrop" onMouseDown={event => { if (event.target === event.currentTarget) setEditorOpen(false) }}>
           <section className="admin-editor" role="dialog" aria-modal="true" aria-labelledby="admin-editor-title">
             <header className="admin-editor__head">
-              <div><span>{editingProduct ? 'CẬP NHẬT CATALOG' : 'CATALOG MỚI'}</span><h2 id="admin-editor-title">{editingProduct ? 'Sửa sản phẩm' : 'Thêm sản phẩm'}</h2></div>
-              <button className="admin-products__icon-btn" aria-label="Đóng" onClick={() => setEditorOpen(false)}><X size={19} /></button>
+              <h2 id="admin-editor-title">{editingProduct ? 'Sửa sản phẩm' : 'Thêm sản phẩm'}</h2>
+              <button type="button" className="admin-list__button admin-list__button--small" aria-label="Đóng" onClick={() => setEditorOpen(false)}><X size={17} /></button>
             </header>
             <form onSubmit={saveProduct} className="admin-editor__form">
-              <div className="admin-editor__section-title"><span>01</span> Thông tin cơ bản</div>
+              <h3 className="admin-editor__section-title">Thông tin cơ bản</h3>
               <label className="admin-editor__field admin-editor__field--full">Tên sản phẩm<input required maxLength="255" value={form.name} onChange={event => {
                 const name = event.target.value
                 setForm(current => ({ ...current, name, slug: !editingProduct && (!current.slug || current.slug === slugify(current.name)) ? slugify(name) : current.slug }))
@@ -373,7 +348,7 @@ export default function AdminProductsPage() {
               <label className="admin-editor__field admin-editor__field--full">Mô tả<textarea rows="3" value={form.description} onChange={event => updateField('description', event.target.value)} /></label>
 
               <label className="admin-editor__field admin-editor__field--full">{'S\u1ed1 l\u01b0\u1ee3ng s\u1ea3n ph\u1ea9m'}<input required type="number" min="0" step="1" value={form.stockOnHand} onChange={event => updateField('stockOnHand', event.target.value)} /></label>
-              <div className="admin-editor__section-title"><span>02</span> Cấu hình kỹ thuật <small>Không bắt buộc</small></div>
+              <h3 className="admin-editor__section-title">Cấu hình kỹ thuật <small>Không bắt buộc</small></h3>
               <div className="admin-editor__grid">
                 <label className="admin-editor__field">CPU<input value={form.spec.cpu} onChange={event => updateSpec('cpu', event.target.value)} /></label>
                 <label className="admin-editor__field">GPU<input value={form.spec.gpu} onChange={event => updateSpec('gpu', event.target.value)} /></label>
@@ -386,8 +361,8 @@ export default function AdminProductsPage() {
                 <label className="admin-editor__field admin-editor__field--full">Hệ điều hành<input value={form.spec.operatingSystem} onChange={event => updateSpec('operatingSystem', event.target.value)} /></label>
               </div>
               <footer className="admin-editor__footer">
-                <button type="button" className="admin-products__secondary" onClick={() => setEditorOpen(false)}>Hủy</button>
-                <button type="submit" className="admin-products__primary" disabled={saving}>
+                <button type="button" className="admin-list__button" onClick={() => setEditorOpen(false)}>Hủy</button>
+                <button type="submit" className="admin-list__button admin-list__button--primary" disabled={saving}>
                   {saving ? <LoaderCircle className="admin-products__spin" size={16} /> : <Check size={16} />}
                   {saving ? 'Đang lưu...' : editingProduct ? 'Lưu thay đổi' : 'Tạo sản phẩm'}
                 </button>
@@ -400,13 +375,10 @@ export default function AdminProductsPage() {
   )
 }
 
-function StatCard({ label, value, icon, tone }) {
-  return <article className="admin-stat-card"><div className={`admin-stat-card__icon is-${tone}`}>{icon}</div><div><span>{label}</span><strong>{value}</strong></div></article>
-}
-
 function StatusBadge({ status }) {
   const labels = { ACTIVE: 'Đang bán', INACTIVE: 'Đang ẩn', DISCONTINUED: 'Ngừng bán' }
-  return <span className={`admin-status-badge admin-status-badge--${String(status).toLowerCase()}`}><i />{labels[status] || status}</span>
+  const tone = { ACTIVE: 'positive', DISCONTINUED: 'negative' }[status]
+  return <span className={`admin-list__pill${tone ? ` admin-list__pill--${tone}` : ''}`}>{labels[status] || status}</span>
 }
 
 function formatDate(value) {

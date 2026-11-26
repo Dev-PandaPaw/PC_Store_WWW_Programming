@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: PixelCore storefront
-  version: 1.0.0
+  version: 1.1.0
   description: Database-backed public catalog. Product images are logical keys resolved by the frontend asset bundle.
 paths:
   /api/v1/cart/merge:
@@ -158,6 +158,28 @@ paths:
                         originalPrice: {type: number, minimum: 0}
                         image: {type: string, example: 'products/cpu-intel-core-i5-14400f.png'}
                         stockOnHand: {type: integer, minimum: 0}
+                        demoCatalog: {type: boolean, description: 'True for explicitly marked demo prices and stock; not a live retailer offer.'}
+                        technicalSpecs:
+                          type: array
+                          items:
+                            type: object
+                            required: [label, value, verified]
+                            properties:
+                              label: {type: string}
+                              value: {type: string}
+                              verified: {type: boolean, description: 'Evidence exists for this field; does not certify the whole build.'}
+                        specSources:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              name: {type: string}
+                              url: {type: string, format: uri}
+                              checkedAt: {type: string, format: date}
+                              kind: {type: string, enum: [manufacturer, retailer_snapshot]}
+                        specNotes:
+                          type: array
+                          items: {type: string}
                         specs:
                           type: array
                           items:

@@ -7,7 +7,8 @@ import { formatVND } from '../utils/cart'
 import '../styles/orders.css'
 import useAdminAccess from '../hooks/useAdminAccess'
 import OrderReference from '../components/OrderReference'
-import { MapPin, Package, CalendarDays } from 'lucide-react'
+import { shortOrderCode } from '../utils/checkout'
+import { CalendarDays, MapPin, Package, RefreshCw, X } from 'lucide-react'
 
 const NEXT_ADMIN_STATUS = {
   PENDING_CONFIRMATION: 'CONFIRMED',
@@ -15,6 +16,18 @@ const NEXT_ADMIN_STATUS = {
   PROCESSING: 'SHIPPING',
   SHIPPING: 'DELIVERED',
   DELIVERED: 'COMPLETED',
+}
+
+const ORDER_STATUS_TONE = {
+  PENDING_PAYMENT: 'pending',
+  PENDING_CONFIRMATION: 'pending',
+  CONFIRMED: 'progress',
+  PROCESSING: 'progress',
+  SHIPPING: 'progress',
+  DELIVERED: 'positive',
+  COMPLETED: 'positive',
+  CANCELLED: 'negative',
+  EXPIRED: 'negative',
 }
 
 function OrderCard({ order, management, busy, run }) {
@@ -68,6 +81,8 @@ function OrderCard({ order, management, busy, run }) {
                 onChange={event => setQuantities({ ...quantities, [item.productId]: event.target.value })}
               />
               <button
+                type="button"
+                className="admin-list__button admin-list__button--small"
                 disabled={busy || !reason.trim() || !Number.isInteger(Number(quantities[item.productId])) || Number(quantities[item.productId]) < 1 || Number(quantities[item.productId]) > 99}
                 onClick={() => run(() => orderApi.quantity(order, item.productId, Number(quantities[item.productId]), reason))}
               >
@@ -104,6 +119,8 @@ function OrderCard({ order, management, busy, run }) {
       <div className="order-actions">
         {cancellable && (
           <button
+            type="button"
+            className={management ? 'admin-list__button admin-list__button--negative' : undefined}
             disabled={busy || (management && !reason.trim())}
             onClick={() => run(() => management
               ? orderApi.transition(order, 'CANCELLED', reason)
@@ -114,7 +131,8 @@ function OrderCard({ order, management, busy, run }) {
         )}
         {management && next && (
           <button
-            className="store-button"
+            type="button"
+            className="admin-list__button admin-list__button--primary"
             disabled={busy || !reason.trim()}
             onClick={() => run(() => orderApi.transition(order, next, reason))}
           >
@@ -125,7 +143,7 @@ function OrderCard({ order, management, busy, run }) {
       <details>
         <summary>Lịch sử trạng thái ({order.history?.length || 0})</summary>
         <ol>
-          {order.history.map((entry, index) => (
+          {order.history?.map((entry, index) => (
             <li key={index}>
               {new Date(entry.createdAt).toLocaleString('vi-VN')} · {orderLabels[entry.toStatus] || entry.toStatus} · {entry.reason}
             </li>
@@ -133,6 +151,101 @@ function OrderCard({ order, management, busy, run }) {
         </ol>
       </details>
     </article>
+  )
+}
+
+function AdminOrderDetails({ order, busy, error, run, onClose }) {
+  const dialog = useRef(null)
+
+  useEffect(() => {
+    if (!dialog.current.open) dialog.current.showModal()
+  }, [])
+
+  return (
+    <dialog ref={dialog} className="admin-orders__dialog" aria-labelledby="admin-order-details-title" onClose={onClose}>
+      <header className="admin-orders__dialog-heading">
+        <h2 id="admin-order-details-title">Chi tiết đơn hàng</h2>
+        <button
+          type="button" className="admin-list__button admin-list__button--small" aria-label="Đóng chi tiết đơn hàng"
+          onClick={() => dialog.current.close()}
+        >
+          <X size={17} />
+        </button>
+      </header>
+      {error && <p className="admin-list__notice admin-list__notice--error" role="alert">{error}</p>}
+      <OrderCard key={`${order.id}:${order.version}`} order={order} management busy={busy} run={run} />
+    </dialog>
+  )
+}
+
+function AdminOrdersList({ orders, loading, busy, error, load, run, page, setPage }) {
+  const [selectedId, setSelectedId] = useState(null)
+  const selectedOrder = orders.find(order => order.id === selectedId)
+
+  return (
+    <div className="admin-list">
+      <CartDemoPanel />
+      <header className="admin-list__heading">
+        <div>
+          <h1>Quản lý đơn hàng</h1>
+          {!loading && !error && <p>Hiển thị {orders.length} đơn hàng trên trang này.</p>}
+        </div>
+        <button type="button" className="admin-list__button" disabled={busy || loading} onClick={load}>
+          <RefreshCw size={15} /> Tải lại
+        </button>
+      </header>
+      {error && !selectedOrder && <p className="admin-list__notice admin-list__notice--error" role="alert">{error}</p>}
+      <div className="admin-list__table-wrap">
+        <table className="admin-list__table" aria-label="Danh sách đơn hàng" aria-busy={loading}>
+          <thead><tr>
+            <th scope="col">Mã đơn</th><th scope="col">Người nhận</th><th scope="col">Thanh toán</th>
+            <th scope="col">Trạng thái</th><th scope="col">Tổng tiền</th><th scope="col">Ngày tạo</th>
+            <th scope="col" className="admin-list__end">Thao tác</th>
+          </tr></thead>
+          <tbody>
+            {loading || orders.length === 0 ? (
+              <tr><td colSpan={7} className="admin-list__empty">
+                <span role="status">{loading ? 'Đang tải đơn hàng…' : error ? 'Không tải được danh sách đơn hàng.' : 'Chưa có đơn hàng ở trang này.'}</span>
+              </td></tr>
+            ) : orders.map(order => {
+              const tone = ORDER_STATUS_TONE[order.status]
+              return (
+                <tr key={order.id}>
+                  <td className="admin-list__name admin-list__nowrap">{shortOrderCode(order.code)}</td>
+                  <td>
+                    <span className="admin-list__name">{order.recipient}</span>
+                    {order.phone && <span className="admin-list__subline">{order.phone}</span>}
+                  </td>
+                  <td>
+                    {paymentMethodLabels[order.paymentMethod] || order.paymentMethod}
+                    <span className="admin-list__subline">{orderLabels[order.paymentStatus] || order.paymentStatus}</span>
+                  </td>
+                  <td><span className={`admin-list__pill${tone ? ` admin-list__pill--${tone}` : ''}`}>{orderLabels[order.status] || order.status}</span></td>
+                  <td className="admin-list__nowrap">{formatVND(Number(order.total))}</td>
+                  <td className="admin-list__nowrap">{new Date(order.createdAt).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' })}</td>
+                  <td className="admin-list__end">
+                    <button
+                      type="button" className="admin-list__button admin-list__button--small"
+                      aria-label={`Chi tiết đơn ${shortOrderCode(order.code)}`} onClick={() => setSelectedId(order.id)}
+                    >
+                      Chi tiết
+                    </button>
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+      <div className="admin-list__pagination">
+        <span>Trang {page + 1}</span>
+        <div className="admin-list__actions">
+          <button type="button" className="admin-list__button admin-list__button--small" disabled={!page || loading || busy} onClick={() => setPage(page - 1)}>Trang trước</button>
+          <button type="button" className="admin-list__button admin-list__button--small" disabled={orders.length < 20 || loading || busy} onClick={() => setPage(page + 1)}>Trang sau</button>
+        </div>
+      </div>
+      {selectedOrder && <AdminOrderDetails order={selectedOrder} busy={busy || loading} error={error} run={run} onClose={() => setSelectedId(null)} />}
+    </div>
   )
 }
 
@@ -188,15 +301,22 @@ export default function OrdersPage({ management = false }) {
     }
   }
 
+  if (management) {
+    return <AdminOrdersList
+      orders={orders} loading={loading} busy={busy} error={error}
+      load={load} run={run} page={page} setPage={setPage}
+    />
+  }
+
   return (
     <div className="orders-page">
       <CartDemoPanel />
       <nav className="order-actions">
         <Link to="/cart">Giỏ hàng</Link>
-        {management ? <Link to="/orders">Đơn của tôi</Link> : adminAccess.account && <Link to="/admin/orders">Quản trị đơn</Link>}
+        {adminAccess.account && <Link to="/admin/orders">Quản trị đơn</Link>}
         <button disabled={busy || loading} onClick={load}>Tải lại</button>
       </nav>
-      <h1>{management ? 'Quản trị đơn hàng' : 'Đơn hàng của tôi'}</h1>
+      <h1>Đơn hàng của tôi</h1>
       {location.state?.created && (
         <div className="order-created-notice">
           <p role="status">Đơn hàng đã được tạo thành công.</p>
@@ -210,7 +330,7 @@ export default function OrdersPage({ management = false }) {
         <p>Chưa có đơn hàng ở trang này.</p>
       ) : (
         orders.map(order => (
-          <OrderCard key={`${order.id}:${order.version}`} order={order} management={management} busy={busy} run={run} />
+          <OrderCard key={`${order.id}:${order.version}`} order={order} busy={busy} run={run} />
         ))
       )}
       <div className="order-actions">

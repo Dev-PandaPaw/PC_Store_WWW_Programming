@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, SlidersHorizontal } from 'lucide-react'
 import { useCatalog } from '../contexts/catalogContextStore'
 import { ProductCard } from '../components/gear/ProductCard'
+import Breadcrumbs from '../components/Breadcrumbs'
 import { formatVND } from '../utils/cart'
 
 export default function AdvisoryPage() {
@@ -21,11 +22,7 @@ export default function AdvisoryPage() {
     : []
   return (
     <div className="advisory-page">
-      <nav className="breadcrumbs" aria-label="Đường dẫn">
-        <Link to="/">Trang chủ</Link>
-        <span>/</span>
-        <span>Tư vấn cấu hình</span>
-      </nav>
+      <Breadcrumbs items={[{ label: 'Tư vấn cấu hình' }]} />
       <div className="page-heading">
         <p className="section-eyebrow">BẮT ĐẦU TỪ NHU CẦU CỦA BẠN</p>
         <h1>Tìm một bộ PC phù hợp.</h1>

@@ -1,11 +1,13 @@
 // Repository-owned subset of Google's generateContent contract used by Spring AI.
 const http = require('http');
 let mode = 'normal';
+let lastMedia = null;
 http.createServer(async (req, res) => {
   const send = (status, body) => { res.writeHead(status, {'Content-Type':'application/json'}); res.end(JSON.stringify(body)); };
   let body = req.body;
   if (!body) { let raw=''; for await (const chunk of req) raw+=chunk; try { body=raw ? JSON.parse(raw) : {}; } catch { return send(400,{error:{code:400,message:'Invalid JSON'}}); } }
-  if (req.url === '/__control' && req.method === 'POST') { mode=body.mode || 'normal'; return send(200,{mode}); }
+  if (req.url === '/__control' && req.method === 'POST') { mode=body.mode || 'normal'; lastMedia=null; return send(200,{mode}); }
+  if (req.url === '/__stats' && req.method === 'GET') return send(200,{mode,lastMedia});
   if (req.method !== 'POST' || !/^\/v1beta\/models\/[a-z0-9.-]+:generateContent$/.test(req.url))
     return send(501,{error:{code:501,message:'Endpoint not modeled'}});
   if (!req.headers['x-goog-api-key'] || !body.systemInstruction || body.generationConfig?.responseMimeType !== 'application/json' || !body.generationConfig?.responseJsonSchema)
@@ -13,7 +15,8 @@ http.createServer(async (req, res) => {
   let input;
   try { input=JSON.parse(body.contents.at(-1).parts.map(p=>p.text || '').join('')); }
   catch { return send(400,{error:{code:400,message:'Expected JSON user context'}}); }
-  const question=input.query || input.gameTitle || input.conversation?.at(-1)?.content || '';
+  const last=input.conversation?.at(-1);
+  const question=input.query || input.gameTitle || (typeof last==='string'?last:last?.content) || '';
   const scenario=question.match(/\[test:([a-z]+)\]/)?.[1] || mode;
   if (scenario === 'quota') return send(429,{error:{code:429,status:'RESOURCE_EXHAUSTED',message:'Quota exhausted'}});
   if (scenario === 'provider') return send(503,{error:{code:503,status:'UNAVAILABLE',message:'Unavailable'}});
@@ -21,7 +24,18 @@ http.createServer(async (req, res) => {
   if (scenario === 'timeout') await new Promise(resolve=>setTimeout(resolve,6000));
   let decision;
   const grounded=body.tools?.some(tool=>tool.googleSearch);
-  if (input.gameTitle !== undefined) {
+  if (input.task === 'extract_hardware') {
+    const media=body.contents.at(-1).parts.filter(part=>part.inlineData);
+    if (!input.text && (media.length!==1 || !['image/png','image/jpeg','image/webp','application/pdf'].includes(media[0].inlineData.mimeType) || !media[0].inlineData.data))
+      return send(400,{error:{code:400,message:'Expected inline image/PDF data'}});
+    lastMedia=media.length?{mimeType:media[0].inlineData.mimeType,bytes:Buffer.from(media[0].inlineData.data,'base64').length}:null;
+    const part=(category,model,extra={})=>({category,model,socket:'',memoryType:'',capacityGb:0,wattageW:0,confidence:scenario==='unclear'?'low':'high',...extra});
+    decision={readable:true,components:[part('cpu','Intel Core i5-12400F',{socket:'LGA1700'}),part('mainboard','MSI PRO B760M-A WIFI DDR4',{socket:'LGA1700',memoryType:'DDR4'}),part('ram','RAM 16GB DDR4',{memoryType:'DDR4',capacityGb:16}),part('psu','Nguon 650W',{wattageW:650})],notes:[]};
+    if(scenario==='unreadable')decision={readable:false,components:[],notes:['Khong co thong so PC doc duoc.']};
+    if(scenario==='badextraction')decision.components[0].category='laptop';
+  } else if (input.options !== undefined) {
+    decision={optionId:scenario==='forgedbuild'?'build-forged':input.options[0]?.optionId};
+  } else if (input.gameTitle !== undefined) {
     decision={found:!question.includes('Unknown'),title:question,
       minimum:{cpu:'Intel Core i5-8400',gpu:'NVIDIA GeForce GTX 1060 6GB',ramGb:16,storageGb:130,ssdRequired:false,notes:'Fixture requirements for protocol testing, not a real game.'},
       recommended:{cpu:'Intel Core i7-9700',gpu:'NVIDIA GeForce RTX 2060',ramGb:16,storageGb:130,ssdRequired:true,notes:'Fixture requirements for protocol testing.'}};

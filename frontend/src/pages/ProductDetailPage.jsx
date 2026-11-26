@@ -10,6 +10,7 @@ import { ProductCard } from '../components/gear/ProductCard'
 import { useCatalog } from '../contexts/catalogContextStore'
 import ProductStock from '../components/ProductStock'
 import AddQuantitySelector from '../components/AddQuantitySelector'
+import Breadcrumbs from '../components/Breadcrumbs'
 import { useProductViewTracker } from '../hooks/useUserTracker'
 
 export default function ProductDetailPage() {
@@ -49,11 +50,7 @@ export default function ProductDetailPage() {
     if (loading) {
       return (
         <div className="product-page">
-          <nav className="breadcrumbs" aria-label="Đường dẫn">
-            <Link to="/">Trang chủ</Link>
-            <span>/</span>
-            <Link to="/catalog">Sản phẩm</Link>
-          </nav>
+          <Breadcrumbs items={[{ label: 'Sản phẩm', to: '/catalog' }, { label: 'Đang tải sản phẩm' }]} />
           <div className="product-detail">
             <div className="product-detail__image">
               <div className="sk-box" style={{ width: '100%', aspectRatio: '1/1', borderRadius: '12px' }} />
@@ -113,13 +110,7 @@ export default function ProductDetailPage() {
 
   return (
     <div className="product-page">
-      <nav className="breadcrumbs" aria-label="Đường dẫn">
-        <Link to="/">Trang chủ</Link>
-        <span>/</span>
-        <Link to={`/catalog?category=${product.category}`}>
-          {CATEGORY_LABELS[product.category]}
-        </Link>
-      </nav>
+      <Breadcrumbs items={[{ label: 'Sản phẩm', to: '/catalog' }, { label: CATEGORY_LABELS[product.category], to: `/catalog?category=${product.category}` }, { label: product.name }]} />
       <div className="product-detail">
         <div className="product-detail__image">
           <img
@@ -187,6 +178,32 @@ export default function ProductDetailPage() {
           <ProductStock product={product} />
         </div>
       </div>
+      {product.technicalSpecs?.length > 0 && (
+        <section className="product-technical" aria-labelledby="product-specs-title">
+          <div className="product-technical__heading">
+            <div><p className="section-eyebrow">CHI TIẾT SẢN PHẨM</p><h2 id="product-specs-title">Thông số kỹ thuật</h2></div>
+            <span>Đối chiếu model khi chọn linh kiện</span>
+          </div>
+          <div className="product-technical__layout">
+            <table><caption className="sr-only">Thông số {product.name}</caption><tbody>
+              {product.technicalSpecs.map((spec, index) => (
+                <tr key={`${spec.label}-${index}`}><th scope="row">{spec.label}</th>
+                  <td>{spec.value}{!spec.verified && <small>Thông tin từ bản nhập cũ · cần đối chiếu</small>}</td></tr>
+              ))}
+            </tbody></table>
+            <aside className="product-technical__sources">
+              <h3>Nguồn thông số</h3>
+              {product.specSources?.map((source,index) => (
+                /^https:\/\//i.test(source.url || '') && <a key={index} href={source.url} target="_blank" rel="noopener noreferrer">
+                  {source.name || product.brand}<span>{source.kind === 'retailer_snapshot' ? 'Bản nhập từ nhà bán lẻ' : 'Tài liệu hãng'} · {source.checkedAt}</span>
+                </a>
+              ))}
+              {product.demoCatalog && <p className="product-technical__demo">Giá và tồn kho mẫu để thử chọn cấu hình. Cần xác nhận giá bán và hàng thực tế.</p>}
+              {product.specNotes?.filter(note => !note.startsWith('Giá và tồn kho mẫu')).map((note,index) => <p key={index}>{note}</p>)}
+            </aside>
+          </div>
+        </section>
+      )}
       {related.length > 0 && (
         <section className="store-section">
           <div className="store-section__heading">

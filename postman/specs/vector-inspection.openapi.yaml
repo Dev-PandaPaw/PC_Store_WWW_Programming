@@ -1,0 +1,63 @@
+openapi: 3.0.3
+info:
+  title: PC Store Admin Vector Inspection
+  version: 1.0.0
+  description: Read actual stored embeddings for section 3.3 demonstrations. Never calls Gemini or reindexes products.
+servers:
+  - url: http://localhost:8080
+paths:
+  /api/admin/vector/documents:
+    get:
+      operationId: inspectStoredProductVectors
+      summary: List stored document text, metadata and complete numeric embedding arrays
+      description: >-
+        Requires ROLE_ADMIN. Supports local Basic admin or an authenticated admin session.
+        Memory mode lists only the current successfully published in-memory index, which is
+        empty after restart until reindex succeeds. Semantic mode reads product_semantic_vectors.
+        Ordered by document ID. Pages may change between reads during concurrent index updates.
+        Cache-Control is no-store. No API keys or provider configuration are returned.
+      security:
+        - basicAuth: []
+        - sessionCookie: []
+      parameters:
+        - in: query
+          name: offset
+          schema: {type: integer, minimum: 0, default: 0}
+        - in: query
+          name: limit
+          schema: {type: integer, minimum: 1, maximum: 100, default: 50}
+      responses:
+        '200':
+          description: Existing documents; an unindexed or empty store returns total=0 and documents=[]
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [storage, total, offset, limit, documents]
+                properties:
+                  storage: {type: string, enum: [memory, pgvector]}
+                  total: {type: integer, format: int64}
+                  offset: {type: integer}
+                  limit: {type: integer}
+                  documents:
+                    type: array
+                    items:
+                      type: object
+                      required: [id, text, metadata, embedding, dimensions]
+                      properties:
+                        id: {type: string}
+                        text: {type: string}
+                        metadata: {type: object, additionalProperties: true}
+                        embedding:
+                          type: array
+                          description: Complete actual stored vector, not a preview; typically 768 numbers
+                          items: {type: number, format: float}
+                        dimensions: {type: integer, description: Length of embedding}
+        '400': {description: offset or limit is invalid}
+        '401': {description: Authentication required}
+        '403': {description: Admin role required}
+        '503': {description: Persistent store cannot be read; no embedding fallback is attempted}
+components:
+  securitySchemes:
+    basicAuth: {type: http, scheme: basic}
+    sessionCookie: {type: apiKey, in: cookie, name: JSESSIONID}

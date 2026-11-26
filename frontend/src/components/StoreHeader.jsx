@@ -1,31 +1,25 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useCart } from '../contexts/cartContextStore'
 import { useAuth } from '../contexts/authContextStore'
 import { ADMIN_HOME, hasAdminRole } from '../utils/authorization'
-import { CATEGORY_GROUPS } from '../data/storeData'
+import { CATEGORIES, CATEGORY_GROUPS } from '../data/storeData'
+import { ChevronDown, X } from 'lucide-react'
+import CategoryIcon from './CategoryIcon'
 import BrandLogo from './BrandLogo'
 import '../styles/store-header.css'
 
 const navigation = [
   { label: 'Trang chủ', to: '/', icon: 'home' },
   {
-    label: 'PC bộ',
-    to: '/catalog?category=pc',
-    category: 'pc',
+    label: 'Sản phẩm',
+    to: '/catalog',
     icon: 'monitor',
   },
   {
-    label: 'Linh kiện PC',
-    to: '/catalog?category=components',
-    category: 'components',
-    icon: 'graphics',
-  },
-  {
-    label: 'Chuột & bàn phím',
-    to: '/catalog?category=gear',
-    category: 'gear',
-    icon: 'keyboard',
+    label: 'Danh mục',
+    to: 'categories',
+    icon: 'grid',
   },
   { label: 'Góc kiến thức', to: '/blog', icon: 'book' },
   { label: 'Tư vấn cấu hình', to: '/advisory', icon: 'tools' },
@@ -125,6 +119,9 @@ export default function StoreHeader() {
   const { totalCount, ready: cartReady } = useCart()
   const { user, loading, logout } = useAuth()
   const [loggingOut, setLoggingOut] = useState(false)
+  const [categoriesOpen, setCategoriesOpen] = useState(false)
+  const categoryPanel = useRef(null)
+  const categoryTrigger = useRef(null)
   const [keyword, setKeyword] = useState(
     () => new URLSearchParams(search).get('keyword') || '',
   )
@@ -132,7 +129,24 @@ export default function StoreHeader() {
 
   useEffect(() => {
     setKeyword(new URLSearchParams(search).get('keyword') || '')
+    setCategoriesOpen(false)
   }, [pathname, search])
+
+  useEffect(() => {
+    if (!categoriesOpen) return
+    const closeOutside = event => {
+      if (!categoryPanel.current?.contains(event.target) && !categoryTrigger.current?.contains(event.target)) setCategoriesOpen(false)
+    }
+    const closeOnEscape = event => {
+      if (event.key === 'Escape') { setCategoriesOpen(false); categoryTrigger.current?.focus() }
+    }
+    document.addEventListener('pointerdown', closeOutside)
+    document.addEventListener('keydown', closeOnEscape)
+    return () => {
+      document.removeEventListener('pointerdown', closeOutside)
+      document.removeEventListener('keydown', closeOnEscape)
+    }
+  }, [categoriesOpen])
 
   const handleLogout = async () => {
     setLoggingOut(true)
@@ -235,12 +249,18 @@ export default function StoreHeader() {
           aria-label="Điều hướng chính"
         >
           {navigation.map((item) => {
-            const active = item.category
-              ? pathname === '/catalog' &&
-                (activeCategory === item.category ||
-                  CATEGORY_GROUPS[item.category]?.includes(activeCategory))
+            const active = item.to === '/catalog'
+              ? pathname === '/catalog' || pathname.startsWith('/products/')
               : pathname === item.to ||
                 (item.to === '/blog' && pathname.startsWith('/blog/'))
+            if (item.to === 'categories') return (
+              <button key={item.to} type="button" ref={categoryTrigger}
+                className={`store-nav__link${categoriesOpen ? ' store-nav__link--active' : ''}`}
+                aria-expanded={categoriesOpen} aria-controls="store-category-panel"
+                onClick={() => setCategoriesOpen(open => !open)}>
+                <HeaderIcon name="grid" /><span>Danh mục</span><ChevronDown size={15} className={categoriesOpen ? 'is-open' : ''} />
+              </button>
+            )
             return (
               <Link
                 key={item.to}
@@ -254,6 +274,27 @@ export default function StoreHeader() {
             )
           })}
         </nav>
+        {categoriesOpen && (
+          <div className="store-category-panel" id="store-category-panel" ref={categoryPanel}>
+            <div className="store-category-panel__heading"><div><strong>Bạn đang tìm gì?</strong><span>Chọn danh mục để khám phá sản phẩm</span></div>
+              <button type="button" aria-label="Đóng danh mục" onClick={() => { setCategoriesOpen(false); categoryTrigger.current?.focus() }}><X size={20} /></button>
+            </div>
+            <div className="store-category-panel__groups">
+              {[
+                { name: 'Máy tính để bàn', ids: CATEGORY_GROUPS.pc },
+                { name: 'Linh kiện máy tính', ids: CATEGORY_GROUPS.components },
+                { name: 'Màn hình & phụ kiện', ids: ['monitor', ...CATEGORY_GROUPS.gear] },
+              ].map(group => <div key={group.name}><h2>{group.name}</h2>
+                {CATEGORIES.filter(category => group.ids.includes(category.id)).map(category => (
+                  <Link key={category.id} to={`/catalog?category=${category.id}`} onClick={() => setCategoriesOpen(false)} aria-current={pathname === '/catalog' && activeCategory === category.id ? 'page' : undefined}>
+                    <CategoryIcon name={category.icon} /><span>{category.name}</span>
+                  </Link>
+                ))}
+              </div>)}
+            </div>
+            <Link className="store-category-panel__all" to="/catalog" onClick={() => setCategoriesOpen(false)}>Xem tất cả sản phẩm</Link>
+          </div>
+        )}
       </div>
     </header>
   )

@@ -612,21 +612,6 @@
 .store-button--cyan:hover {
   background: #9cebf3;
 }
-.breadcrumbs {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 9px;
-  margin-bottom: 24px;
-  color: #8c9bac;
-  font-size: 11px;
-}
-.breadcrumbs a {
-  color: #57748c;
-}
-.breadcrumbs a:hover {
-  color: #137b99;
-}
 .page-heading {
   margin-bottom: 28px;
 }
@@ -1703,4 +1688,30 @@
   .article-card {
     transition: none;
   }
+}
+/* Full technical information follows the purchase panel in the same page width. */
+.product-technical { margin:40px 0; padding:24px; border:1px solid #dbe5ed; border-radius:14px; background:#fff; }
+.product-technical__heading { display:flex; align-items:center; justify-content:space-between; gap:20px; margin-bottom:20px; }
+.product-technical__heading h2 { margin:4px 0 0; font-size:24px; }
+.product-technical__heading > span { font-size:13px; color:#60778a; }
+.product-technical__layout { display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:28px; align-items:start; }
+.product-technical table { width:100%; border-collapse:collapse; font-size:14px; overflow-wrap:anywhere; }
+.product-technical caption { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; }
+.product-technical th,.product-technical td { padding:12px 14px; text-align:left; border-bottom:1px solid #e7edf2; line-height:1.6; }
+.product-technical th { width:36%; color:#4b6579; font-weight:500; }
+.product-technical tr:nth-child(odd) { background:#f6f9fb; }
+.product-technical td { color:#173b52; }
+.product-technical td small { display:block; margin-top:4px; color:#806241; font-size:11px; }
+.product-technical__sources { border-left:1px solid #e2ebf1; padding-left:24px; font-size:13px; line-height:1.7; color:#597186; }
+.product-technical__sources h3 { margin:0 0 12px; font-size:15px; color:#173b52; }
+.product-technical__sources a { display:block; margin-bottom:14px; color:#007d97; text-decoration:underline; text-underline-offset:3px; }
+.product-technical__sources a span { display:block; color:#708598; font-size:11px; text-decoration:none; }
+.product-technical__sources p { margin:12px 0 0; }
+.product-technical__demo { padding:10px 12px; background:#edf7fa; border-radius:8px; }
+@media(max-width:800px) {
+  .product-technical { padding:16px; margin:24px 0; }
+  .product-technical__heading { align-items:flex-start; flex-direction:column; gap:8px; }
+  .product-technical__layout { grid-template-columns:minmax(0,1fr); gap:20px; }
+  .product-technical__sources { padding:16px 0 0; border-left:0; border-top:1px solid #e2ebf1; }
+  .product-technical th,.product-technical td { padding:10px 8px; font-size:12px; }
 }

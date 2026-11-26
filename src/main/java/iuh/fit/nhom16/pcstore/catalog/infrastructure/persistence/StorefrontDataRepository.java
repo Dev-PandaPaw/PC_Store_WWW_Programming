@@ -19,6 +19,10 @@ public interface StorefrontDataRepository extends Repository<Product, UUID> {
                 'category', c.slug, 'brand', p.brand, 'description', p.description,
                 'price', p.price, 'originalPrice', GREATEST(s.original_price, p.price),
                 'specs', s.specs, 'stockOnHand', GREATEST(p.stock_on_hand - p.reserved_quantity, 0),
+                'technicalSpecs', COALESCE(s.provenance->'technicalSpecs','[]'::jsonb),
+                'specSources', COALESCE(s.provenance->'specSources','[]'::jsonb),
+                'specNotes', COALESCE(s.provenance->'specNotes','[]'::jsonb),
+                'demoCatalog', COALESCE((s.provenance->>'demoCatalog')::boolean,false),
                 'image', (SELECT i.storage_key FROM product_images i
                           WHERE i.product_id = p.id ORDER BY i.is_cover DESC, i.sort_order, i.id LIMIT 1)
               ) AS product,

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import Breadcrumbs from '../components/Breadcrumbs'
 import { useCart } from '../contexts/cartContextStore'
 import { useAuth } from '../contexts/authContextStore'
 import { formatVND } from '../utils/cart'
@@ -79,7 +79,7 @@ export default function PcBuildPage() {
   const changes = selected ? proposalChanges(selected, items) : null
   const search = result?.advice?.build_search
   return <div className="pc-build-page">
-    <nav className="breadcrumbs"><Link to="/cart">Giỏ hàng</Link><span>/</span><span>Build PC</span></nav>
+    <Breadcrumbs items={[{ label: 'Giỏ hàng', to: '/cart' }, { label: 'Build PC' }]} />
     <header><p className="section-eyebrow">HOÀN THIỆN GÓC MÁY CỦA BẠN</p>
       <h1>Build PC theo ngân sách</h1>
       <p>Giữ các món đang chọn, tìm phần còn thiếu và xem kỹ trước khi cập nhật giỏ.</p></header>

@@ -2,6 +2,7 @@ import React from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { ArrowDownWideNarrow, ChevronLeft, ChevronRight, Info, Package, Search, ShoppingBag } from 'lucide-react'
 import { mockOrders } from '../data/mockOrders'
+import Breadcrumbs from '../components/Breadcrumbs'
 import '../styles/order-history.css'
 
 // Nhãn và tone badge theo UI_SCREEN_SPEC §4.2 — Order và Payment là hai domain riêng.
@@ -101,11 +102,7 @@ export default function OrderHistoryPage({ orders = mockOrders }) {
   return (
     <section className="order-history" aria-labelledby="oh-title">
       {/* Breadcrumb */}
-      <nav className="breadcrumbs" aria-label="Đường dẫn">
-        <Link to="/">Trang chủ</Link>
-        <span aria-hidden="true">/</span>
-        <span aria-current="page">Đơn hàng của tôi</span>
-      </nav>
+      <Breadcrumbs items={[{ label: 'Đơn hàng của tôi' }]} />
 
       {/* Tiêu đề trang */}
       <header className="oh-heading">

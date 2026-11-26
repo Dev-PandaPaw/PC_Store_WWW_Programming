@@ -1,0 +1,46 @@
+[
+  {
+    "slug": "kingston-fury-beast-16gb-ddr5",
+    "category": "ram",
+    "name": "RAM Kingston FURY Beast 16GB DDR5-6000 KF560C36BBE2-16",
+    "brand": "Kingston",
+    "price": 1490000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "status": "verified",
+    "image": "products/catalog-kingston-fury-beast-16gb-ddr5.svg",
+    "facts": {
+      "part_number": "KF560C36BBE2-16", "capacity_gb": 16, "module_count": 1,
+      "memory_type": "DDR5", "form_factor": "UDIMM", "speed_mts": 6000,
+      "cas_latency": 36, "voltage_v": 1.35, "height_mm": 34.9,
+      "jedec_speed_mts": 4800, "jedec_voltage_v": 1.1, "memory_profile": "AMD EXPO 1.1 / Intel XMP 3.0",
+      "verified_fields": ["part_number", "capacity_gb", "module_count", "memory_type", "form_factor", "speed_mts", "cas_latency", "voltage_v", "height_mm", "jedec_speed_mts", "jedec_voltage_v", "memory_profile"]
+    },
+    "verifiedFields": ["part_number", "capacity_gb", "module_count", "memory_type", "form_factor", "speed_mts", "cas_latency", "voltage_v", "height_mm", "jedec_speed_mts", "jedec_voltage_v", "memory_profile"],
+    "sources": [{"name": "Kingston", "url": "https://www.kingston.com/datasheets/KF560C36BBE2-16.pdf", "checkedAt": "2026-11-26", "kind": "manufacturer", "fields": ["part_number", "capacity_gb", "module_count", "memory_type", "form_factor", "speed_mts", "cas_latency", "voltage_v", "height_mm", "jedec_speed_mts", "jedec_voltage_v", "memory_profile"]}],
+    "notes": ["6000 MT/s ở 1.35 V là profile EXPO/XMP; mặc định JEDEC 4800 MT/s ở 1.1 V. Không cam kết tốc độ ép xung khi chưa kiểm tra CPU, BIOS và QVL.", "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."]
+  },
+  {
+    "slug": "kingston-fury-beast-64gb-ddr5",
+    "category": "ram",
+    "name": "RAM Kingston FURY Beast 64GB (2 × 32GB) DDR5-6000 KF560C36BBEK2-64",
+    "brand": "Kingston",
+    "price": 4990000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "status": "verified",
+    "image": "products/catalog-kingston-fury-beast-64gb-ddr5.svg",
+    "facts": {
+      "part_number": "KF560C36BBEK2-64", "capacity_gb": 64, "module_count": 2,
+      "memory_type": "DDR5", "form_factor": "UDIMM", "speed_mts": 6000,
+      "cas_latency": 36, "voltage_v": 1.35, "height_mm": 34.9,
+      "jedec_speed_mts": 4800, "jedec_voltage_v": 1.1, "memory_profile": "AMD EXPO 1.0 / Intel XMP 3.0",
+      "verified_fields": ["part_number", "capacity_gb", "module_count", "memory_type", "form_factor", "speed_mts", "cas_latency", "voltage_v", "height_mm", "jedec_speed_mts", "jedec_voltage_v", "memory_profile"]
+    },
+    "verifiedFields": ["part_number", "capacity_gb", "module_count", "memory_type", "form_factor", "speed_mts", "cas_latency", "voltage_v", "height_mm", "jedec_speed_mts", "jedec_voltage_v", "memory_profile"],
+    "sources": [{"name": "Kingston", "url": "https://www.kingston.com/datasheets/KF560C36BBEK2-64.pdf", "checkedAt": "2026-11-26", "kind": "manufacturer", "fields": ["part_number", "capacity_gb", "module_count", "memory_type", "form_factor", "speed_mts", "cas_latency", "voltage_v", "height_mm", "jedec_speed_mts", "jedec_voltage_v", "memory_profile"]}],
+    "notes": ["6000 MT/s ở 1.35 V là profile EXPO/XMP; mặc định JEDEC 4800 MT/s ở 1.1 V. Hai thanh dual-rank 32GB, cần kiểm tra QVL và BIOS khi bật EXPO/XMP.", "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."]
+  }
+]

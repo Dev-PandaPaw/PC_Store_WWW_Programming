@@ -18,6 +18,12 @@ import iuh.fit.nhom16.pcstore.cart.exception.CartException;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
+    // Multipart limits can be raised before a controller is selected, so scoped AI advice cannot handle them.
+    @ExceptionHandler(org.springframework.web.multipart.MaxUploadSizeExceededException.class)
+    public org.springframework.http.ResponseEntity<?> oversizedUpload(org.springframework.web.multipart.MaxUploadSizeExceededException error) {
+        return org.springframework.http.ResponseEntity.status(413).body(Map.of("error",Map.of(
+                "code","ATTACHMENT_TOO_LARGE","message","File tải lên quá lớn. File thông số trong chat tối đa 5 MB.")));
+    }
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(RestExceptionHandler.class);
 
     @ExceptionHandler(iuh.fit.nhom16.pcstore.sales.exception.OrderException.class)

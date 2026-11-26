@@ -217,6 +217,7 @@ a.store-account:hover {
 }
 
 .store-header__bottom {
+  position: relative;
   border-top: 1px solid #347693;
   border-bottom: 1px solid #285570;
   background:
@@ -224,6 +225,44 @@ a.store-account:hover {
     radial-gradient(ellipse at 100% 0%, rgb(52 140 181 / 22%), transparent 45%),
     linear-gradient(180deg, var(--header-surface), #0b304a);
   box-shadow: inset 0 1px 0 rgb(132 220 255 / 6%);
+}
+
+.store-nav > button { font-family: inherit; }
+.store-nav__link > svg:last-child:not(.store-icon) { transition: transform 160ms ease; }
+.store-nav__link > .is-open { transform: rotate(180deg); }
+.store-category-panel {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: min(900px, calc(100vw - 32px));
+  max-height: calc(100dvh - 200px);
+  overflow-y: auto;
+  transform: translateX(-50%);
+  padding: 24px;
+  border: 1px solid #d6e3eb;
+  border-top: 3px solid var(--header-accent);
+  border-radius: 0 0 12px 12px;
+  background: #fff;
+  color: #173b53;
+  box-shadow: 0 20px 40px #08263d26;
+}
+.store-category-panel__heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.store-category-panel__heading strong { display: block; font-size: 20px; }
+.store-category-panel__heading span { display: block; margin-top: 4px; font-size: 14px; color: #5b7081; }
+.store-category-panel__heading button { display: grid; place-items: center; min-width: 44px; min-height: 44px; border-radius: 6px; }
+.store-category-panel__heading button:hover { background: #edf7fa; }
+.store-category-panel__groups { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.store-category-panel__groups h2 { font-size: 14px; font-weight: 750; margin-bottom: 10px; color: #527183; }
+.store-category-panel__groups a { display: flex; gap: 10px; align-items: center; min-height: 44px; padding: 8px; border-radius: 5px; font-size: 14px; }
+.store-category-panel__groups a > svg { width: 18px; height: 18px; color: #147a96; }
+.store-category-panel__groups a:hover, .store-category-panel__groups a[aria-current] { color: #086b83; background: #edf7fa; }
+.store-category-panel__all { display: block; margin-top: 18px; padding-top: 16px; border-top: 1px solid #dfe9ee; font-weight: 650; font-size: 14px; color: #087b95; }
+.store-category-panel :is(a, button):focus-visible { outline-color: #087b95; }
+@media (max-width: 600px) {
+  .store-category-panel { padding: 18px; max-height: calc(100dvh - 220px); }
+  .store-category-panel__groups { grid-template-columns: 1fr; gap: 18px; }
+  .store-category-panel__groups > div { display: grid; grid-template-columns: 1fr 1fr; }
+  .store-category-panel__groups h2 { grid-column: 1 / -1; }
 }
 
 .store-nav {
