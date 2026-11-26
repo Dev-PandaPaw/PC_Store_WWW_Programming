@@ -76,7 +76,6 @@ public class OrderService {
 
     public Quote quote(UUID actor, QuoteRequest request) {
         Account customer = actors.require(actor, "CUSTOMER");
-        requireVerifiedPhone(customer);
 
         ResolvedShipping resolvedShipping = ShippingPolicy.verifyAndResolve(
                 request.resolvedShippingMethod(), request.shipping());
@@ -188,7 +187,6 @@ public class OrderService {
         if (quote.items() == null || quote.items().isEmpty()) {
             throw OrderException.conflict("EMPTY_ORDER_ITEMS", "Đơn hàng không có sản phẩm nào được chọn.");
         }
-        requireVerifiedPhone(customer);
 
         // Verify all selected items in the quote still exist in the customer's cart with sufficient quantity,
         // WITHOUT rejecting or wiping unrelated items/quantities added in another tab!
@@ -645,12 +643,6 @@ public class OrderService {
     private void requireValidCartVersion(CartSession cart, long version) {
         if (cart.version() != version) {
             throw OrderException.conflict("CART_VERSION_CONFLICT", "Giỏ hàng đã thay đổi. Vui lòng tải lại giỏ hàng.");
-        }
-    }
-
-    private void requireVerifiedPhone(Account customer) {
-        if (!customer.phoneVerified()) {
-            throw OrderException.conflict("PHONE_NOT_VERIFIED", "Tài khoản cần xác minh số điện thoại trước khi đặt hàng.");
         }
     }
 

@@ -23,6 +23,17 @@ test('rejecting one addition preserves later additions and removing all pending 
   assert.equal(projectCart(base, []).totalQuantity, 2)
 })
 
+test('new pending product immediately exposes available stock, price and totals, then rolls back on rejection', () => {
+  const empty = { cartVersion: 0, items: [], totalQuantity: 0, subtotal: 0 }
+  const operation = { type: 'add', id: 'gpu', quantity: 2,
+    product: { name: 'GPU', price: 400, stockOnHand: 10, availableQuantity: 3 } }
+  const projected = projectCart(empty, [operation])
+  assert.equal(projected.items[0].availableQuantity, 3)
+  assert.equal(projected.totalQuantity, 2)
+  assert.equal(projected.subtotal, 800)
+  assert.deepEqual(projectCart(empty, []), empty)
+})
+
 test('latest quantity remains visible when an earlier quantity is acknowledged or rejected', () => {
   const operations = [{ type: 'quantity', id: 'cpu', quantity: 6 }, { type: 'quantity', id: 'cpu', quantity: 9 }]
   assert.equal(projectCart(base, operations).totalQuantity, 9)

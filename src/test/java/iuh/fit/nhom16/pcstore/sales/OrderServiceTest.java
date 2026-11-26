@@ -300,12 +300,14 @@ class OrderServiceTest {
     }
 
     @Test
-    void unverifiedPhoneCannotCheckout() {
+    void unverifiedPhoneCanQuoteAndCheckout() {
         when(actors.require(actor, "CUSTOMER")).thenReturn(
                 new Account(actor, "Customer", "mail", "+84912345678", false, List.of("CUSTOMER")));
-        assertEquals("PHONE_NOT_VERIFIED", assertThrows(OrderException.class,
-                () -> service.place(actor, "request-123", new PlaceRequest(quoteId, PaymentMethod.COD))).code());
-        verify(orders, never()).reserve(any(), anyInt());
+        Quote quoted = service.quote(actor, new QuoteRequest(3, validShipping()));
+        assertEquals(actor, quoted.customerId());
+        assertEquals(id, service.place(actor, "request-123", new PlaceRequest(quoteId, PaymentMethod.COD)).id());
+        verify(orders).create(any(), any(), eq(PaymentMethod.COD), eq(OrderStatus.PENDING_CONFIRMATION), eq("mail"), any());
+        verify(orders).reserve(product, 2);
     }
 
     @Test

@@ -43,13 +43,25 @@ class CartRepositoryTest {
 
         CartSession locked = repository.lock(userId, opId);
 
-        verify(carts).ensureCartExists(any(UUID.class), eq(userId));
+        verify(carts, never()).ensureCartExists(any(UUID.class), any(UUID.class));
         verify(carts).findByUserIdForUpdate(userId);
         assertEquals(cartId, locked.mergeId());
         assertEquals(3L, locked.version());
         assertEquals(Map.of(productId, 2), locked.quantities());
         assertNotNull(locked.appliedAdd(opId));
         assertEquals(2, locked.appliedAdd(opId).quantity());
+    }
+
+    @Test
+    void missingCartIsCreatedThenLocked() {
+        UUID userId = UUID.randomUUID();
+        CartEntity entity = new CartEntity(UUID.randomUUID(), userId);
+        when(carts.findByUserIdForUpdate(userId)).thenReturn(Optional.empty(), Optional.of(entity));
+
+        assertEquals(entity.getId(), repository.lock(userId).mergeId());
+
+        verify(carts).ensureCartExists(any(UUID.class), eq(userId));
+        verify(carts, times(2)).findByUserIdForUpdate(userId);
     }
 
     @Test

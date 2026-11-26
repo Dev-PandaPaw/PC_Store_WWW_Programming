@@ -38,9 +38,12 @@ public class CartRepository {
     }
 
     public CartSession lock(UUID userId, UUID operationId) {
-        carts.ensureCartExists(UUID.randomUUID(), userId);
         CartEntity entity = carts.findByUserIdForUpdate(userId)
-                .orElseThrow(() -> new IllegalStateException("Cart row missing after ensureCartExists for user " + userId));
+                .orElseGet(() -> {
+                    carts.ensureCartExists(UUID.randomUUID(), userId);
+                    return carts.findByUserIdForUpdate(userId)
+                            .orElseThrow(() -> new IllegalStateException("Cart row missing after ensureCartExists for user " + userId));
+                });
 
         Map<UUID, Integer> quantities = new LinkedHashMap<>();
         for (CartItemEntity item : entity.getItems()) {

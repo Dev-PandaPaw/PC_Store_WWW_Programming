@@ -6,7 +6,7 @@ export function projectCart(confirmed, operations) {
     if (type === 'add') {
       if (existing) existing.quantity += quantity
       else items.push({ productId: id, name: product.name, sku: product.sku,
-        unitPrice: product.price, quantity, availableQuantity: product.stockOnHand ?? 99,
+        unitPrice: product.price, quantity, availableQuantity: product.availableQuantity ?? product.stockOnHand ?? 99,
         purchasable: true, image: product.image || '' })
     } else if (type === 'quantity' && existing) existing.quantity = quantity
     else if (type === 'remove') items = items.filter(item => item.productId !== id)

@@ -89,7 +89,6 @@ export function CartProvider({ children }) {
     enqueue(async () => {
       if (!active) return
       try {
-        await cartApi.csrf()
         const { data } = await cartApi.get()
         if (active && current === generation.current) {
           apply(data)
@@ -184,9 +183,17 @@ export function CartProvider({ children }) {
       : catalogProduct
   }, [PRODUCTS, stockOverrides])
 
-  const dispatchAddOperation = useCallback(({ knownProduct, quantity, onAccepted, operationId }) => {
+  const dispatchAddOperation = useCallback(({ knownProduct, quantity, operationId, optimistic = true }) => {
     const current = generation.current
     const queuedAt = performance.now()
+    const entry = { type: 'add', id: knownProduct.id, product: knownProduct, quantity, token: Symbol(operationId) }
+    const settle = () => {
+      pending.current = pending.current.filter(item => item.token !== entry.token)
+    }
+    if (optimistic) {
+      pending.current.push(entry)
+      setCart(projectCart(cartRef.current, pending.current))
+    }
     addingLockRef.current = true
     setAddingIds(prev => (prev.includes(knownProduct.id) ? prev : [...prev, knownProduct.id]))
     setNotice('')
@@ -207,28 +214,34 @@ export function CartProvider({ children }) {
           addRequest: cartApi.add,
           getCart: cartApi.get,
           onCartLoaded: fresh => {
-            if (current === generation.current) apply(fresh)
+            if (current === generation.current) {
+              // A lost response may already have committed this add on the server.
+              settle()
+              apply(fresh)
+            }
           },
         })
         if (current !== generation.current) {
           return { success: false, message: 'Tài khoản đã thay đổi.', operationId }
         }
+        settle()
         apply(data)
         setNotice('')
         setRetryableAdd(null)
         setSuccessNotice({ name: knownProduct.name, quantity, token: Symbol('cart.add.success') })
-        onAccepted?.()
         return { success: true, operationId }
       } catch (error) {
         const message = messageFor(error)
         const availableFromError = error?.response?.data?.availableQuantity
         const remainingFromError = error?.response?.data?.remainingAddableQuantity
         if (current === generation.current) {
+          settle()
+          setCart(projectCart(cartRef.current, pending.current))
           if (typeof availableFromError === 'number') {
             setStockOverrides(prev => ({ ...prev, [knownProduct.id]: availableFromError }))
           }
           if (isRetryableAddError(error)) {
-            setRetryableAdd({ product: knownProduct, quantity, onAccepted, operationId })
+            setRetryableAdd({ product: knownProduct, quantity, operationId })
           } else {
             setRetryableAdd(null)
           }
@@ -282,12 +295,13 @@ export function CartProvider({ children }) {
       return Promise.resolve({ success: false, message: attempt.message })
     }
 
-    return dispatchAddOperation({
+    const result = dispatchAddOperation({
       knownProduct,
       quantity,
-      onAccepted,
       operationId: attempt.operationId,
     })
+    onAccepted?.()
+    return result
   }, [ready, resolveKnownProduct, dispatchAddOperation])
 
   // Retries an EXISTING unacknowledged add operation using its original operationId,
@@ -323,8 +337,8 @@ export function CartProvider({ children }) {
     return dispatchAddOperation({
       knownProduct,
       quantity: retryableAdd.quantity,
-      onAccepted: retryableAdd.onAccepted,
       operationId: attempt.operationId,
+      optimistic: false,
     })
   }, [ready, retryableAdd, resolveKnownProduct, dispatchAddOperation])
 
@@ -408,8 +422,8 @@ export function CartProvider({ children }) {
         <div className="cart-notice cart-notice--pending" role="status" aria-live="polite">
           <LoaderCircle size={20} className="cart-add-spinner" aria-hidden="true" />
           <div className="cart-notice__content">
-            <strong>Đang thêm vào giỏ hàng…</strong>
-            <span>Vui lòng chờ hệ thống lưu thay đổi.</span>
+            <strong>Đang đồng bộ giỏ hàng…</strong>
+            <span>Giỏ hàng đã cập nhật trên màn hình.</span>
           </div>
         </div>
       )}
