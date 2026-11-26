@@ -171,31 +171,6 @@
 .order-created-notice > p { color: #15803d; margin-bottom: 10px; }
 .orders-page button:disabled { cursor: not-allowed; opacity: .5; }
 
-.admin-orders__dialog {
-  position: fixed;
-  inset: 0;
-  width: min(720px, calc(100% - 2rem));
-  max-height: calc(100dvh - 2rem);
-  margin: auto;
-  padding: 1rem 1.25rem;
-  overflow: auto;
-  border: 1px solid var(--admin-line);
-  border-radius: 10px;
-  background: #fff;
-  color: var(--admin-ink);
-  box-shadow: 0 12px 40px rgb(15 23 42 / 20%);
-}
-.admin-orders__dialog::backdrop { background: rgb(15 23 42 / 45%); }
-.admin-orders__dialog-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--admin-line);
-  margin-bottom: 1rem;
-}
-.admin-orders__dialog-heading h2 { font-size: 1.2rem; font-weight: 700; }
 .admin-orders__dialog .order-list-card { margin: 0; padding: 0; border: 0; border-radius: 0; box-shadow: none; }
 .admin-orders__dialog .order-list-card__label { display: none; }
 .admin-orders__dialog .order-row { flex-wrap: wrap; gap: 0.55rem 1rem; }

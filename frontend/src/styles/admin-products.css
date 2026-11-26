@@ -44,9 +44,11 @@
 .admin-editor__footer { position: sticky; bottom: 0; display: flex; justify-content: flex-end; gap: 9px; margin: 0 -25px; padding: 14px 25px; border-top: 1px solid #e8edf1; background: rgb(255 255 255 / 96%); }
 
 @media (max-width: 600px) {
-  .admin-shell__inner { width: calc(100% - 28px); height: 56px; gap: 15px; }
+  .admin-shell__inner { width: calc(100% - 28px); height: 56px; gap: 0.65rem; }
   .admin-shell__brand { font-size: 12px; }
-  .admin-shell__nav a { padding: 0 6px; font-size: 11px; }
+  .admin-shell__nav { min-width: 0; overflow-x: auto; scrollbar-width: none; }
+  .admin-shell__nav a { flex: 0 0 auto; padding: 0 6px; font-size: 11px; white-space: nowrap; }
+  .admin-shell__account { flex: 0 0 auto; }
   .admin-shell__user,
   .admin-shell__store-link { display: none; }
   .admin-editor__head { padding: 17px; }

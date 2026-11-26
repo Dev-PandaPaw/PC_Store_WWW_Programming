@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Check, LoaderCircle, Plus, RefreshCw, Sparkles, X } from 'lucide-react'
 import http from '../services/http'
-import { syncVectorDatabase } from '../services/recommendations'
+import { syncVectorDatabase } from '../services/vectorSync'
 import '../styles/admin-products.css'
 
 const emptyForm = {
@@ -23,9 +23,12 @@ const slugify = value => value.toLowerCase().trim()
 
 function getErrorMessage(error) {
   const data = error?.response?.data
-  if (data?.detail || data?.message) return data.detail || data.message
+  const message = data?.error?.message || data?.detail || data?.message
+  if (message) return message
   if (error?.response?.status === 403) return 'Yêu cầu bị từ chối (403). Hãy tải lại trang quản trị và thử lại.'
   if (error?.response?.status === 401) return 'Chưa xác thực được tài khoản quản trị. Hãy tải lại trang và thử lại.'
+  if (error?.response?.status === 404) return 'Không tìm thấy tài nguyên trên máy chủ.'
+  if (error?.code === 'ECONNABORTED' || error?.code === 'ETIMEDOUT') return 'Đã hết thời gian chờ phản hồi. Hãy kiểm tra kết quả trước khi thử lại.'
   return error?.message || 'Đã xảy ra lỗi. Vui lòng thử lại.'
 }
 
@@ -179,23 +182,13 @@ export default function AdminProductsPage() {
     setSyncingVector(true)
     setNotice(null)
     try {
-      const result = await syncVectorDatabase()
+      const { productCount, documentCount } = await syncVectorDatabase()
       setNotice({
         type: 'success',
-        text: `Đã vector hoá thành công ${result.count || products.length} sản phẩm vào Vector Store.`,
+        text: `Đã đồng bộ ${productCount} sản phẩm (${documentCount} tài liệu vector).`,
       })
     } catch (error) {
-      if (error?.response?.status === 404) {
-        setNotice({
-          type: 'success',
-          text: `Đã vector hoá thành công ${products.length} sản phẩm vào Vector Store.`,
-        })
-      } else {
-        setNotice({
-          type: 'error',
-          text: `Lỗi đồng bộ Vector AI: ${getErrorMessage(error)}`,
-        })
-      }
+      setNotice({ type: 'error', text: `Lỗi đồng bộ Vector AI: ${getErrorMessage(error)}` })
     } finally {
       setSyncingVector(false)
     }

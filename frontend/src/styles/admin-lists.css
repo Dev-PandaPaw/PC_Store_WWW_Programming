@@ -125,6 +125,32 @@
 .admin-list__notice button { display: inline-flex; color: inherit; }
 .admin-list__pagination { align-items: center; margin-top: 1rem; color: #475569; font-size: 0.85rem; }
 
+.admin-list__dialog {
+  position: fixed;
+  inset: 0;
+  width: min(var(--admin-dialog-max, 720px), calc(100% - 2rem));
+  max-height: calc(100dvh - 2rem);
+  margin: auto;
+  padding: 1rem 1.25rem;
+  overflow: auto;
+  border: 1px solid var(--admin-line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--admin-ink);
+  box-shadow: 0 12px 40px rgb(15 23 42 / 20%);
+}
+.admin-list__dialog::backdrop { background: rgb(15 23 42 / 45%); }
+.admin-list__dialog-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--admin-line);
+}
+.admin-list__dialog-heading h2 { font-size: 1.2rem; font-weight: 700; }
+
 @media (max-width: 600px) {
   .admin-list { padding-inline: 1rem; }
   .admin-list__heading { align-items: flex-start; }

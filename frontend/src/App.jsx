@@ -15,6 +15,7 @@ import RegisterPage from "./pages/RegisterPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ProfilePage from "./pages/ProfilePage";
 import AdminUsersPage from "./pages/AdminUsersPage";
+import AdminVectorsPage from "./pages/AdminVectorsPage";
 import BlogPage from "./pages/BlogPage";
 import ArticlePage from "./pages/ArticlePage";
 import ProductDetailPage from "./pages/ProductDetailPage";
@@ -94,6 +95,7 @@ export default function App() {
           <Route path="products" element={<AdminProductsPage />} />
           <Route path="orders" element={<OrdersPage management />} />
           <Route path="users" element={<AdminUsersPage />} />
+          <Route path="vectors" element={<AdminVectorsPage />} />
         </Route>
       </Routes>
     </>
