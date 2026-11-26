@@ -45,6 +45,20 @@ assumptions:
     source: src/main/java/iuh/fit/nhom16/pcstore/ai/SourcedGoogleChatModel.java; src/main/java/iuh/fit/nhom16/pcstore/advisory/GameRequirementsService.java; postman/mocks/pixelcore-google-genai/default.js; https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash-lite
     updated_at: '2026-10-30'
 fingerprints:
+  - id: send-photo-then-recommend
+    date: '2026-11-26'
+    commit: uncommitted chat attachment UX fix
+    evidence: Selecting or pasting a file now queues it without inference. Sending immediately shows the original photo, then calls multipart extraction and catalog advice. HardwareAttachmentHttpTest verifies automatic RAM upgrade advice from extracted current-machine facts and a short follow-up. Browser checks at 1440, 768 and 390 pixels cover immediate photo visibility, no extraction form, drop/paste and retry preservation. A live Gemini call read an i5-12400F, B760 DDR4, 16GB DDR4 and CX650 screenshot; photo-only input returned a 32GB DDR4 catalog kit. A live short performance reply retained RAM and budget constraints. Synthetic fixture tests validate protocol and control flow, not OCR accuracy for arbitrary images.
+  - id: hardware-attachment-multimodal
+    date: '2026-11-26'
+    commit: uncommitted attachment extension
+    cli: Existing Postman advisor simulation; HardwareAttachmentHttpTest
+    evidence: Real Spring AI and Google SDK serialize image/PDF bytes as inlineData; the fixture checks MIME and byte count, then returns synthetic hardware facts. Tests cover extracted-current-machine matching, unsupported files, invalid extraction, unreadable files and quota. Fixtures do not establish OCR accuracy. A live synthetic hardware screenshot was separately read by the configured Gemini model, and the real database returned DDR4 RAM below 4000000 VND with preliminary compatibility notes.
+  - id: component-build-vector-pipeline
+    date: '2026-11-26'
+    commit: uncommitted component-build extension
+    cli: Existing Postman advisor and embedding simulations, Spring AI HTTP integration tests
+    evidence: ComponentBuildHttpTest exercises real Spring AI embeddings, vector retrieval, structured option selection, budget follow-up, forged option rejection and embedding quota failure. ComponentBuildAdvisorTest checks complete groups, budget, stock, socket and DDR conflicts. Fixture vectors are synthetic and do not establish semantic relevance. Live local-profile requests using the configured Gemini model and real database returned eight components totaling 31320000 VND within 35000000 VND, with draft compatibility data correctly labeled needs_verification.
   - id: game-requirements-and-cheapest
     date: '2026-10-30'
     commit: uncommitted extension; previous migration findings retained above

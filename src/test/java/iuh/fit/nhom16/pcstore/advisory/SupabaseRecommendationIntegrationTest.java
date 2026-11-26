@@ -127,6 +127,16 @@ class SupabaseRecommendationIntegrationTest {
         assertTrue(recommendations.similar(source,List.of()).products().isEmpty());
         System.out.println("PASS Supabase migrations, cosine 768D, history isolation, live stock/socket guardrails (vector namespace: "+extensionSchema+")");
     }
+    @Test void catalogReadsStructuredSocketJsonWithoutLegacyColumn() {
+        jdbc.execute("ALTER TABLE product_component_specs ADD COLUMN specs JSONB NOT NULL DEFAULT '{}'::jsonb");
+        jdbc.update("UPDATE product_component_specs SET specs=jsonb_build_object('socket',socket)");
+        jdbc.execute("ALTER TABLE product_component_specs DROP COLUMN socket");
+
+        assertEquals(5,catalog.indexableProducts().size());
+        assertEquals("LGA1700",catalog.findAll(Set.of(source)).get(source).socket());
+        jdbc.update("UPDATE product_component_specs SET specs='{}'::jsonb WHERE product_id=?",source);
+        assertNull(catalog.findAll(Set.of(source)).get(source).socket());
+    }
     @Test @EnabledIfSystemProperty(named="recommendation.live",matches="true")
     void configuredGoogleEmbeddingProduces768FiniteDimensions() {
         String key=setting("GEMINI_API_KEY",""); assertFalse(key.isBlank(),"Configure GEMINI_API_KEY");

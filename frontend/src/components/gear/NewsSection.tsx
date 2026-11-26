@@ -23,7 +23,7 @@ export const NewsSection: React.FC = () => {
       </Link>
     </div>
     <div className="article-grid">
-      {ARTICLES.map((article) => (
+      {ARTICLES.slice(0, 4).map((article) => (
         <ArticleCard key={article.slug} article={article} />
       ))}
     </div>

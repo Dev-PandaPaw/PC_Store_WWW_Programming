@@ -1,0 +1,5136 @@
+[
+  {
+    "slug": "corsair-cx650-bronze",
+    "category": "psu",
+    "name": "Nguồn máy tính Corsair CX650 - 80 Plus Bronze (650W) CP-9020278-NA",
+    "brand": "Corsair",
+    "price": 1390000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "wattage_w": 650,
+      "form_factor": "ATX",
+      "length_mm": 125,
+      "eps_8pin_count": 1,
+      "atx_24pin_count": 1,
+      "pcie_8pin_count": 2,
+      "pcie_16pin_count": 0,
+      "pcie_connectors": "2 × PCIe 6+2-pin; 0 × 16-pin",
+      "efficiency_rating": "80 Plus Bronze",
+      "modularity": "Non-modular",
+      "verified_fields": [
+        "atx_24pin_count",
+        "efficiency_rating",
+        "eps_8pin_count",
+        "form_factor",
+        "length_mm",
+        "modularity",
+        "pcie_16pin_count",
+        "pcie_8pin_count",
+        "pcie_connectors",
+        "wattage_w"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://www.corsair.com/us/en/p/psu/cp-9020278-na/cx-series-cx650-650-watt-80-plus-bronze-atx-power-supply-cp-9020278-na",
+        "name": "Corsair",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "wattage_w",
+          "form_factor",
+          "length_mm",
+          "eps_8pin_count",
+          "atx_24pin_count",
+          "pcie_8pin_count",
+          "pcie_16pin_count",
+          "pcie_connectors",
+          "efficiency_rating",
+          "modularity"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [],
+    "verifiedFields": [
+      "atx_24pin_count",
+      "efficiency_rating",
+      "eps_8pin_count",
+      "form_factor",
+      "length_mm",
+      "modularity",
+      "pcie_16pin_count",
+      "pcie_8pin_count",
+      "pcie_connectors",
+      "wattage_w"
+    ],
+    "status": "verified",
+    "image": "products/catalog-corsair-cx650-bronze.svg"
+  },
+  {
+    "slug": "corsair-frame-4000d-black",
+    "category": "case",
+    "name": "Vỏ máy tính Corsair FRAME 4000D Modular Mid-Tower Black (CC-9011290-WW)",
+    "brand": "Corsair",
+    "price": 1990000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "max_gpu_length_mm": 430,
+      "max_cooler_height_mm": 170,
+      "max_psu_length_mm": 220,
+      "supported_motherboard_form_factors": [
+        "ATX",
+        "MATX",
+        "MINIITX",
+        "EATX"
+      ],
+      "supported_psu_form_factors": [
+        "ATX"
+      ],
+      "expansion_slots": 7,
+      "supported_radiator_sizes_mm": [
+        120,
+        140,
+        240,
+        280,
+        360
+      ],
+      "color": "Black",
+      "form_factor": "Mid-Tower",
+      "verified_fields": [
+        "color",
+        "expansion_slots",
+        "max_cooler_height_mm",
+        "max_gpu_length_mm",
+        "max_psu_length_mm",
+        "supported_motherboard_form_factors",
+        "supported_psu_form_factors",
+        "supported_radiator_sizes_mm"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://www.corsair.com/uk/en/p/pc-cases/cc-9011290-ww/frame-4000d-modular-mid-tower-pc-case-cc-9011290-ww",
+        "name": "Corsair",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "max_gpu_length_mm",
+          "max_cooler_height_mm",
+          "max_psu_length_mm",
+          "supported_motherboard_form_factors",
+          "supported_psu_form_factors",
+          "expansion_slots",
+          "supported_radiator_sizes_mm",
+          "color"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [],
+    "verifiedFields": [
+      "color",
+      "expansion_slots",
+      "max_cooler_height_mm",
+      "max_gpu_length_mm",
+      "max_psu_length_mm",
+      "supported_motherboard_form_factors",
+      "supported_psu_form_factors",
+      "supported_radiator_sizes_mm"
+    ],
+    "status": "verified",
+    "image": "products/catalog-corsair-frame-4000d-black.svg"
+  },
+  {
+    "slug": "msi-rtx-5060-ti-shadow-2x",
+    "category": "vga",
+    "name": "Card màn hình MSI GeForce RTX 5060 Ti Shadow 2X OC Plus 8GB",
+    "brand": "MSI",
+    "price": 16990000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "gpu_model": "RTX 5060 Ti 8G SHADOW 2X OC PLUS",
+      "vram_gb": 8,
+      "memory_type": "GDDR7",
+      "memory_bus_bits": 128,
+      "length_mm": 226,
+      "width_mm": 126,
+      "thickness_mm": 41,
+      "recommended_psu_w": 600,
+      "pci_slot": "PCIEX16",
+      "pcie_8pin_count": 1,
+      "pcie_16pin_count": 0,
+      "power_connectors": "1 × PCIe 8-pin; 0 × 16-pin",
+      "board_power_w": 180,
+      "verified_fields": [
+        "board_power_w",
+        "gpu_model",
+        "length_mm",
+        "memory_bus_bits",
+        "memory_type",
+        "pci_slot",
+        "pcie_16pin_count",
+        "pcie_8pin_count",
+        "power_connectors",
+        "recommended_psu_w",
+        "thickness_mm",
+        "vram_gb",
+        "width_mm"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://www.msi.com/Graphics-Card/GeForce-RTX-5060-Ti-8G-SHADOW-2X-OC-PLUS/Specification",
+        "name": "MSI",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "gpu_model",
+          "vram_gb",
+          "memory_type",
+          "memory_bus_bits",
+          "length_mm",
+          "width_mm",
+          "thickness_mm",
+          "recommended_psu_w",
+          "pci_slot",
+          "pcie_8pin_count",
+          "pcie_16pin_count",
+          "power_connectors",
+          "board_power_w"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [],
+    "verifiedFields": [
+      "board_power_w",
+      "gpu_model",
+      "length_mm",
+      "memory_bus_bits",
+      "memory_type",
+      "pci_slot",
+      "pcie_16pin_count",
+      "pcie_8pin_count",
+      "power_connectors",
+      "recommended_psu_w",
+      "thickness_mm",
+      "vram_gb",
+      "width_mm"
+    ],
+    "status": "verified",
+    "image": "products/catalog-msi-rtx-5060-ti-shadow-2x.svg"
+  },
+  {
+    "slug": "amd-ryzen-5-7500f-tray",
+    "category": "cpu",
+    "name": "Bộ vi xử lý AMD Ryzen 5 7500F / 3.7GHz Boost 5.0GHz / 6 nhân 12 luồng / 38MB / AM5 (Tray)",
+    "brand": "AMD",
+    "price": 4790000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "socket": "AM5",
+      "cores": 6,
+      "threads": 12,
+      "base_clock_ghz": 3.7,
+      "boost_clock_ghz": 5.0,
+      "l3_cache_mb": 32,
+      "tdp_w": 65,
+      "supported_memory_types": [
+        "DDR5"
+      ],
+      "integrated_graphics": "Không có",
+      "family": "ryzen-7000",
+      "verified_fields": [
+        "base_clock_ghz",
+        "boost_clock_ghz",
+        "cores",
+        "family",
+        "integrated_graphics",
+        "l3_cache_mb",
+        "socket",
+        "supported_memory_types",
+        "tdp_w",
+        "threads"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://www.amd.com/en/products/processors/desktops/ryzen/7000-series/amd-ryzen-5-7500f.html",
+        "name": "AMD",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "socket",
+          "cores",
+          "threads",
+          "base_clock_ghz",
+          "boost_clock_ghz",
+          "l3_cache_mb",
+          "tdp_w",
+          "supported_memory_types",
+          "integrated_graphics",
+          "family"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [],
+    "verifiedFields": [
+      "base_clock_ghz",
+      "boost_clock_ghz",
+      "cores",
+      "family",
+      "integrated_graphics",
+      "l3_cache_mb",
+      "socket",
+      "supported_memory_types",
+      "tdp_w",
+      "threads"
+    ],
+    "status": "verified",
+    "image": "products/catalog-amd-ryzen-5-7500f-tray.svg"
+  },
+  {
+    "slug": "corsair-3500x-white",
+    "category": "case",
+    "name": "Vỏ máy tính Corsair 3500X TG Mid Tower White (CC-9011277-WW)",
+    "brand": "Corsair",
+    "price": 1990000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "max_gpu_length_mm": 410,
+      "max_cooler_height_mm": 170,
+      "max_psu_length_mm": 180,
+      "supported_motherboard_form_factors": [
+        "ATX",
+        "MATX",
+        "MINIITX",
+        "EATX"
+      ],
+      "supported_psu_form_factors": [
+        "ATX"
+      ],
+      "expansion_slots": 7,
+      "supported_radiator_sizes_mm": [
+        120,
+        240,
+        280,
+        360
+      ],
+      "color": "White",
+      "form_factor": "Mid-Tower",
+      "verified_fields": [
+        "color",
+        "expansion_slots",
+        "max_cooler_height_mm",
+        "max_gpu_length_mm",
+        "max_psu_length_mm",
+        "supported_motherboard_form_factors",
+        "supported_psu_form_factors",
+        "supported_radiator_sizes_mm"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://www.corsair.com/us/en/p/pc-cases/cc-9011277-ww/3500x-mid-tower-pc-case-white-cc-9011277-ww",
+        "name": "Corsair",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "max_gpu_length_mm",
+          "max_cooler_height_mm",
+          "max_psu_length_mm",
+          "supported_motherboard_form_factors",
+          "supported_psu_form_factors",
+          "expansion_slots",
+          "supported_radiator_sizes_mm",
+          "color"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giới hạn GPU giữ mức thận trọng 410 mm của bản nhập cũ; trang hãng hiện ghi 425 mm. Kiểm tra revision thực tế khi lắp."
+    ],
+    "verifiedFields": [
+      "color",
+      "expansion_slots",
+      "max_cooler_height_mm",
+      "max_gpu_length_mm",
+      "max_psu_length_mm",
+      "supported_motherboard_form_factors",
+      "supported_psu_form_factors",
+      "supported_radiator_sizes_mm"
+    ],
+    "status": "needs_review",
+    "image": "products/catalog-corsair-3500x-white.svg"
+  },
+  {
+    "slug": "kingmax-blade-x-16gb-ddr4",
+    "category": "ram",
+    "name": "Ram Kingmax Blade X 1x16GB DDR4 Bus 3200Mhz",
+    "brand": "KINGMAX",
+    "price": 3390000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "speed_mhz": "3200",
+      "capacity_gb": "16",
+      "memory_type": "DDR4",
+      "verified_fields": []
+    },
+    "sources": [
+      {
+        "url": "https://gearvn.com/products/ram-kingmax-blade-x-1x16gb-ddr4-bus-3200mhz",
+        "name": "GearVN",
+        "checkedAt": "2026-10-25",
+        "kind": "retailer_snapshot",
+        "fields": []
+      }
+    ],
+    "notes": [
+      "Cần đối chiếu mã module trên tem để xác minh timing, điện áp và chiều cao tản RAM.",
+      "Dữ liệu nhập cũ: cần đối chiếu mã sản phẩm/phiên bản thực tế trước khi kết luận tương thích; không tự điền thông số chưa có nguồn."
+    ],
+    "verifiedFields": [],
+    "status": "needs_review",
+    "image": "products/catalog-kingmax-blade-x-16gb-ddr4.svg"
+  },
+  {
+    "slug": "zotac-rtx-5060-twin-edge-oc",
+    "category": "vga",
+    "name": "Card màn hình Zotac GeForce RTX 5060 Twin Edge OC 8GB",
+    "brand": "Zotac",
+    "price": 11490000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "gpu_model": "RTX 5060 Twin Edge OC",
+      "vram_gb": 8,
+      "memory_type": "GDDR7",
+      "memory_bus_bits": 128,
+      "length_mm": 220.5,
+      "width_mm": 120.25,
+      "thickness_mm": 41.6,
+      "recommended_psu_w": 550,
+      "pci_slot": "PCIEX16",
+      "pcie_8pin_count": 1,
+      "pcie_16pin_count": 0,
+      "power_connectors": "1 × PCIe 8-pin; 0 × 16-pin",
+      "board_power_w": 145,
+      "verified_fields": [
+        "board_power_w",
+        "gpu_model",
+        "length_mm",
+        "memory_bus_bits",
+        "memory_type",
+        "pci_slot",
+        "pcie_16pin_count",
+        "pcie_8pin_count",
+        "power_connectors",
+        "recommended_psu_w",
+        "thickness_mm",
+        "vram_gb",
+        "width_mm"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://www.zotacstore.com/us/gaming-geforce-rtx-5060-twin-edge-oc",
+        "name": "Zotac",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "gpu_model",
+          "vram_gb",
+          "memory_type",
+          "memory_bus_bits",
+          "length_mm",
+          "width_mm",
+          "thickness_mm",
+          "recommended_psu_w",
+          "pci_slot",
+          "pcie_8pin_count",
+          "pcie_16pin_count",
+          "power_connectors",
+          "board_power_w"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [],
+    "verifiedFields": [
+      "board_power_w",
+      "gpu_model",
+      "length_mm",
+      "memory_bus_bits",
+      "memory_type",
+      "pci_slot",
+      "pcie_16pin_count",
+      "pcie_8pin_count",
+      "power_connectors",
+      "recommended_psu_w",
+      "thickness_mm",
+      "vram_gb",
+      "width_mm"
+    ],
+    "status": "verified",
+    "image": "products/catalog-zotac-rtx-5060-twin-edge-oc.svg"
+  },
+  {
+    "slug": "lian-li-o11-vision-compact-black",
+    "category": "case",
+    "name": "Vỏ máy tính Lian Li O11 Vision Compact Black",
+    "brand": "Lian Li",
+    "price": 2990000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "max_gpu_length_mm": 408,
+      "max_cooler_height_mm": 167,
+      "max_psu_length_mm": 219,
+      "supported_motherboard_form_factors": [
+        "ATX",
+        "MATX",
+        "MINIITX",
+        "EATX"
+      ],
+      "supported_psu_form_factors": [
+        "ATX"
+      ],
+      "expansion_slots": 7,
+      "supported_radiator_sizes_mm": [
+        240,
+        280,
+        360
+      ],
+      "color": "Black",
+      "verified_fields": [
+        "color",
+        "expansion_slots",
+        "max_cooler_height_mm",
+        "max_gpu_length_mm",
+        "max_psu_length_mm",
+        "supported_motherboard_form_factors",
+        "supported_psu_form_factors",
+        "supported_radiator_sizes_mm"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://lian-li.com/product/o11-vision-compact/",
+        "name": "Lian Li",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "max_gpu_length_mm",
+          "max_cooler_height_mm",
+          "max_psu_length_mm",
+          "supported_motherboard_form_factors",
+          "supported_psu_form_factors",
+          "expansion_slots",
+          "supported_radiator_sizes_mm",
+          "color"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "PSU phải ngắn hơn 220 mm. E-ATX rộng dưới 280 mm; radiator nóc chỉ dùng khi chuyển sang nắp mesh. Kiểm tra khoảng trống thực tế của radiator và quạt."
+    ],
+    "verifiedFields": [
+      "color",
+      "expansion_slots",
+      "max_cooler_height_mm",
+      "max_gpu_length_mm",
+      "max_psu_length_mm",
+      "supported_motherboard_form_factors",
+      "supported_psu_form_factors",
+      "supported_radiator_sizes_mm"
+    ],
+    "status": "needs_review",
+    "image": "products/catalog-lian-li-o11-vision-compact-black.svg"
+  },
+  {
+    "slug": "kingston-nv3-1tb",
+    "category": "storage",
+    "name": "Ổ cứng SSD Kingston NV3 1TB M.2 PCIe NVMe Gen4",
+    "brand": "Kingston",
+    "price": 4990000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "part_number": "SNV3S/1000G",
+      "capacity_gb": 1000,
+      "interface": "NVME",
+      "form_factor": "M.2",
+      "m2_form_factor": "2280",
+      "pcie_generation": 4,
+      "pcie_lanes": 4,
+      "read_mbs": 6000,
+      "write_mbs": 4000,
+      "storage_type": "SSD",
+      "verified_fields": [
+        "capacity_gb",
+        "form_factor",
+        "interface",
+        "m2_form_factor",
+        "part_number",
+        "pcie_generation",
+        "pcie_lanes",
+        "read_mbs",
+        "write_mbs"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://www.kingston.com/datasheets/snv3s_en.pdf",
+        "name": "Kingston",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "part_number",
+          "capacity_gb",
+          "interface",
+          "form_factor",
+          "m2_form_factor",
+          "pcie_generation",
+          "pcie_lanes",
+          "read_mbs",
+          "write_mbs"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [],
+    "verifiedFields": [
+      "capacity_gb",
+      "form_factor",
+      "interface",
+      "m2_form_factor",
+      "part_number",
+      "pcie_generation",
+      "pcie_lanes",
+      "read_mbs",
+      "write_mbs"
+    ],
+    "status": "verified",
+    "image": "products/catalog-kingston-nv3-1tb.svg"
+  },
+  {
+    "slug": "corsair-vengeance-rgb-32gb-ddr5-white",
+    "category": "ram",
+    "name": "Ram Corsair Vengeance RGB White 32GB (2x16GB) 6000 DDR5 (CMH32GX5M2E6000C36W)",
+    "brand": "Corsair",
+    "price": 13990000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "part_number": "CMH32GX5M2E6000C36W",
+      "capacity_gb": 32,
+      "module_count": 2,
+      "memory_type": "DDR5",
+      "form_factor": "UDIMM",
+      "speed_mts": 6000,
+      "cas_latency": 36,
+      "speed_mhz": "6000",
+      "verified_fields": [
+        "capacity_gb",
+        "cas_latency",
+        "form_factor",
+        "memory_type",
+        "module_count",
+        "part_number",
+        "speed_mts"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://www.corsair.com/ww/en/p/memory/cmh32gx5m2e6000c36w/vengeance-rgb-32gb-2x16gb-ddr5-dram-6000mts-cl36-memory-kit-white-cmh32gx5m2e6000c36w",
+        "name": "Corsair",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "part_number",
+          "capacity_gb",
+          "module_count",
+          "memory_type",
+          "form_factor",
+          "speed_mts",
+          "cas_latency"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [],
+    "verifiedFields": [
+      "capacity_gb",
+      "cas_latency",
+      "form_factor",
+      "memory_type",
+      "module_count",
+      "part_number",
+      "speed_mts"
+    ],
+    "status": "verified",
+    "image": "products/catalog-corsair-vengeance-rgb-32gb-ddr5-white.svg"
+  },
+  {
+    "slug": "samsung-990-pro-2tb",
+    "category": "storage",
+    "name": "Ổ Cứng SSD Samsung 990 PRO 2TB PCIe Gen4 NVMe (MZ-V9P2T0BW)",
+    "brand": "Samsung",
+    "price": 16990000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "part_number": "MZ-V9P2T0",
+      "capacity_gb": 2000,
+      "interface": "NVME",
+      "form_factor": "M.2",
+      "m2_form_factor": "2280",
+      "pcie_generation": 4,
+      "pcie_lanes": 4,
+      "read_mbs": 7450,
+      "write_mbs": 6900,
+      "storage_type": "SSD",
+      "verified_fields": [
+        "capacity_gb",
+        "form_factor",
+        "interface",
+        "m2_form_factor",
+        "part_number",
+        "pcie_generation",
+        "pcie_lanes",
+        "read_mbs",
+        "write_mbs"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://download.semiconductor.samsung.com/resources/data-sheet/Samsung_NVMe_SSD_990_PRO_Datasheet_Rev.1.0_10129514049640.pdf",
+        "name": "Samsung",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "part_number",
+          "capacity_gb",
+          "interface",
+          "form_factor",
+          "m2_form_factor",
+          "pcie_generation",
+          "pcie_lanes",
+          "read_mbs",
+          "write_mbs"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [],
+    "verifiedFields": [
+      "capacity_gb",
+      "form_factor",
+      "interface",
+      "m2_form_factor",
+      "part_number",
+      "pcie_generation",
+      "pcie_lanes",
+      "read_mbs",
+      "write_mbs"
+    ],
+    "status": "verified",
+    "image": "products/catalog-samsung-990-pro-2tb.svg"
+  },
+  {
+    "slug": "asus-tuf-b760m-plus-wifi-ii",
+    "category": "mainboard",
+    "name": "Bo mạch chủ ASUS TUF GAMING B760M-PLUS WIFI II DDR5",
+    "brand": "ASUS",
+    "price": 4290000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "socket": "LGA1700",
+      "memory_type": "DDR5",
+      "ram_type": "DDR5",
+      "max_memory_gb": 192,
+      "dimm_slots": 4,
+      "memory_form_factor": "UDIMM",
+      "m2_slots": 3,
+      "m2_form_factors": [
+        "2280"
+      ],
+      "storage_interfaces": [
+        "NVME",
+        "SATA"
+      ],
+      "sata_ports": 4,
+      "form_factor": "MATX",
+      "eps_8pin_count": 2,
+      "atx_24pin_count": 1,
+      "chipset": "B760",
+      "supported_cpu_families": [
+        "intel-core-12",
+        "intel-core-13",
+        "intel-core-14"
+      ],
+      "gpu_slot": "PCIEX16",
+      "verified_fields": [
+        "atx_24pin_count",
+        "chipset",
+        "dimm_slots",
+        "eps_8pin_count",
+        "form_factor",
+        "gpu_slot",
+        "m2_form_factors",
+        "m2_slots",
+        "max_memory_gb",
+        "memory_form_factor",
+        "memory_type",
+        "ram_type",
+        "sata_ports",
+        "socket",
+        "storage_interfaces",
+        "supported_cpu_families"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://www.asus.com/motherboards-components/motherboards/tuf-gaming/tuf-gaming-b760m-plus-wifi-ii/techspec/",
+        "name": "ASUS",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "socket",
+          "memory_type",
+          "ram_type",
+          "max_memory_gb",
+          "dimm_slots",
+          "memory_form_factor",
+          "m2_slots",
+          "m2_form_factors",
+          "storage_interfaces",
+          "sata_ports",
+          "form_factor",
+          "eps_8pin_count",
+          "atx_24pin_count",
+          "chipset",
+          "supported_cpu_families",
+          "gpu_slot"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [],
+    "verifiedFields": [
+      "atx_24pin_count",
+      "chipset",
+      "dimm_slots",
+      "eps_8pin_count",
+      "form_factor",
+      "gpu_slot",
+      "m2_form_factors",
+      "m2_slots",
+      "max_memory_gb",
+      "memory_form_factor",
+      "memory_type",
+      "ram_type",
+      "sata_ports",
+      "socket",
+      "storage_interfaces",
+      "supported_cpu_families"
+    ],
+    "status": "verified",
+    "image": "products/catalog-asus-tuf-b760m-plus-wifi-ii.svg"
+  },
+  {
+    "slug": "corsair-rm750e-gold",
+    "category": "psu",
+    "name": "Nguồn máy tính Corsair RM750e - 80 Plus Gold - Full Modular (750W) (CP-9020248-NA)",
+    "brand": "Corsair",
+    "price": 2890000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "wattage_w": 750,
+      "form_factor": "ATX",
+      "length_mm": 140,
+      "eps_8pin_count": 2,
+      "atx_24pin_count": 1,
+      "pcie_8pin_count": 3,
+      "pcie_16pin_count": 0,
+      "pcie_connectors": "3 × PCIe 6+2-pin; 0 × 16-pin",
+      "efficiency_rating": "80 Plus Gold",
+      "modularity": "Full modular",
+      "verified_fields": [
+        "atx_24pin_count",
+        "efficiency_rating",
+        "eps_8pin_count",
+        "form_factor",
+        "length_mm",
+        "modularity",
+        "pcie_16pin_count",
+        "pcie_8pin_count",
+        "pcie_connectors",
+        "wattage_w"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://www.corsair.com/ww/en/p/psu/cp-9020248-in/rme-series-rm750e-fully-modular-low-noise-atx-power-supply-cp-9020248-in",
+        "name": "Corsair",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "wattage_w",
+          "form_factor",
+          "length_mm",
+          "eps_8pin_count",
+          "atx_24pin_count",
+          "pcie_8pin_count",
+          "pcie_16pin_count",
+          "pcie_connectors",
+          "efficiency_rating",
+          "modularity"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [],
+    "verifiedFields": [
+      "atx_24pin_count",
+      "efficiency_rating",
+      "eps_8pin_count",
+      "form_factor",
+      "length_mm",
+      "modularity",
+      "pcie_16pin_count",
+      "pcie_8pin_count",
+      "pcie_connectors",
+      "wattage_w"
+    ],
+    "status": "verified",
+    "image": "products/catalog-corsair-rm750e-gold.svg"
+  },
+  {
+    "slug": "corsair-rm850e-gold-atx30",
+    "category": "psu",
+    "name": "Nguồn máy tính Corsair RM850e ATX 3.0 - 80 Plus Gold - Full Modular (850W) (CP-9020263-NA)",
+    "brand": "Corsair",
+    "price": 3290000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "wattage_w": 850,
+      "form_factor": "ATX",
+      "length_mm": 140,
+      "eps_8pin_count": 2,
+      "atx_24pin_count": 1,
+      "pcie_8pin_count": 3,
+      "pcie_16pin_count": 1,
+      "pcie_connectors": "3 × PCIe 6+2-pin; 1 × 16-pin",
+      "efficiency_rating": "80 Plus Gold",
+      "modularity": "Full modular",
+      "verified_fields": [
+        "atx_24pin_count",
+        "efficiency_rating",
+        "eps_8pin_count",
+        "form_factor",
+        "length_mm",
+        "modularity",
+        "pcie_8pin_count",
+        "pcie_connectors",
+        "wattage_w"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://www.corsair.com/us/en/p/psu/CP-9020263-NA/rme-series-rm850e-fully-modular-low-noise-atx-power-supply-cp-9020263-na",
+        "name": "Corsair",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "wattage_w",
+          "form_factor",
+          "length_mm",
+          "eps_8pin_count",
+          "atx_24pin_count",
+          "pcie_8pin_count",
+          "pcie_16pin_count",
+          "pcie_connectors",
+          "efficiency_rating",
+          "modularity"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Trang hãng hiện ghi ATX 3.1 và cáp 12V-2x6, khác tên ATX 3.0 trong bản nhập cũ. Cần xác minh bộ cáp theo revision đang bán."
+    ],
+    "verifiedFields": [
+      "atx_24pin_count",
+      "efficiency_rating",
+      "eps_8pin_count",
+      "form_factor",
+      "length_mm",
+      "modularity",
+      "pcie_8pin_count",
+      "pcie_connectors",
+      "wattage_w"
+    ],
+    "status": "needs_review",
+    "image": "products/catalog-corsair-rm850e-gold-atx30.svg"
+  },
+  {
+    "slug": "intel-core-i5-12400f-tray",
+    "category": "cpu",
+    "name": "Bộ vi xử lý Intel Core i5 12400F / 2.5GHz Turbo 4.4GHz / 6 Nhân 12 Luồng / 18MB / LGA 1700  (TRAY)",
+    "brand": "Intel",
+    "price": 4190000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "socket": "LGA1700",
+      "cores": 6,
+      "threads": 12,
+      "base_clock_ghz": 2.5,
+      "boost_clock_ghz": 4.4,
+      "l3_cache_mb": 18,
+      "tdp_w": 65,
+      "max_power_w": 117,
+      "supported_memory_types": [
+        "DDR4",
+        "DDR5"
+      ],
+      "integrated_graphics": "Không có",
+      "family": "intel-core-12",
+      "verified_fields": [
+        "base_clock_ghz",
+        "boost_clock_ghz",
+        "cores",
+        "family",
+        "integrated_graphics",
+        "l3_cache_mb",
+        "max_power_w",
+        "socket",
+        "supported_memory_types",
+        "tdp_w",
+        "threads"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://www.intel.com/content/www/us/en/products/sku/134587/intel-core-i512400f-processor-18m-cache-up-to-4-40-ghz/specifications.html",
+        "name": "Intel",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "socket",
+          "cores",
+          "threads",
+          "base_clock_ghz",
+          "boost_clock_ghz",
+          "l3_cache_mb",
+          "tdp_w",
+          "max_power_w",
+          "supported_memory_types",
+          "integrated_graphics",
+          "family"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [],
+    "verifiedFields": [
+      "base_clock_ghz",
+      "boost_clock_ghz",
+      "cores",
+      "family",
+      "integrated_graphics",
+      "l3_cache_mb",
+      "max_power_w",
+      "socket",
+      "supported_memory_types",
+      "tdp_w",
+      "threads"
+    ],
+    "status": "verified",
+    "image": "products/catalog-intel-core-i5-12400f-tray.svg"
+  },
+  {
+    "slug": "deepcool-ag400-argb",
+    "category": "cooling",
+    "name": "Tản nhiệt DEEPCOOL AG400 ARGB",
+    "brand": "DeepCool",
+    "price": 390000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "cooler_type": "AIR",
+      "height_mm": 150,
+      "supported_sockets": [
+        "LGA1700",
+        "LGA1200",
+        "LGA1151",
+        "AM4",
+        "AM5"
+      ],
+      "max_tdp_w": 220,
+      "ram_clearance_unrestricted": true,
+      "fan_size_mm": 120,
+      "heatpipes": 4,
+      "fan_connector": "4-pin PWM",
+      "cooling_type": "Air",
+      "verified_fields": [
+        "cooler_type",
+        "fan_connector",
+        "fan_size_mm",
+        "heatpipes",
+        "height_mm",
+        "max_tdp_w",
+        "ram_clearance_unrestricted",
+        "supported_sockets"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://global.deepcool.com/products/Cooling/cpuaircoolers/AG400-ARGB-120mm-CPU-Cooler/2022/16084.shtml",
+        "name": "DeepCool",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "cooler_type",
+          "height_mm",
+          "supported_sockets",
+          "max_tdp_w",
+          "ram_clearance_unrestricted",
+          "fan_size_mm",
+          "heatpipes",
+          "fan_connector"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [],
+    "verifiedFields": [
+      "cooler_type",
+      "fan_connector",
+      "fan_size_mm",
+      "heatpipes",
+      "height_mm",
+      "max_tdp_w",
+      "ram_clearance_unrestricted",
+      "supported_sockets"
+    ],
+    "status": "verified",
+    "image": "products/catalog-deepcool-ag400-argb.svg"
+  },
+  {
+    "slug": "cooler-master-hyper-212-spectrum-v3",
+    "category": "cooling",
+    "name": "Tản nhiệt Cooler Master Hyper 212 Spectrum V3 ARGB",
+    "brand": "Cooler Master",
+    "price": 390000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "cooler_type": "AIR",
+      "height_mm": 152,
+      "supported_sockets": [
+        "LGA1700",
+        "LGA1200",
+        "LGA1151",
+        "AM4",
+        "AM5"
+      ],
+      "fan_size_mm": 120,
+      "heatpipes": 4,
+      "fan_connector": "4-pin PWM",
+      "cooling_type": "Air",
+      "verified_fields": [
+        "cooler_type",
+        "fan_connector",
+        "fan_size_mm",
+        "heatpipes",
+        "height_mm",
+        "supported_sockets"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://www.coolermaster.com/en-global/products/hyper-212-spectrum-v3/",
+        "name": "Cooler Master",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "cooler_type",
+          "height_mm",
+          "supported_sockets",
+          "fan_size_mm",
+          "heatpipes",
+          "fan_connector"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [],
+    "verifiedFields": [
+      "cooler_type",
+      "fan_connector",
+      "fan_size_mm",
+      "heatpipes",
+      "height_mm",
+      "supported_sockets"
+    ],
+    "status": "verified",
+    "image": "products/catalog-cooler-master-hyper-212-spectrum-v3.svg"
+  },
+  {
+    "slug": "zotac-rtx-5070-solid-oc",
+    "category": "vga",
+    "name": "Card màn hình ZOTAC GAMING GeForce RTX 5070 SOLID OC (ZT-B50700J-10P)",
+    "brand": "Zotac",
+    "price": 29990000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "gpu_model": "RTX 5070 SOLID OC",
+      "vram_gb": 12,
+      "memory_type": "GDDR7",
+      "memory_bus_bits": 192,
+      "length_mm": 304.4,
+      "width_mm": 115.8,
+      "thickness_mm": 41.6,
+      "recommended_psu_w": 650,
+      "pci_slot": "PCIEX16",
+      "pcie_8pin_count": 0,
+      "pcie_16pin_count": 1,
+      "power_connectors": "0 × PCIe 8-pin; 1 × 16-pin",
+      "board_power_w": 250,
+      "tdp_w": "250",
+      "verified_fields": [
+        "board_power_w",
+        "gpu_model",
+        "length_mm",
+        "memory_bus_bits",
+        "memory_type",
+        "pci_slot",
+        "pcie_16pin_count",
+        "pcie_8pin_count",
+        "power_connectors",
+        "recommended_psu_w",
+        "thickness_mm",
+        "vram_gb",
+        "width_mm"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://www.zotac.com/us/product/graphics_card/zotac-gaming-geforce-rtx-5070-solid-oc",
+        "name": "Zotac",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "gpu_model",
+          "vram_gb",
+          "memory_type",
+          "memory_bus_bits",
+          "length_mm",
+          "width_mm",
+          "thickness_mm",
+          "recommended_psu_w",
+          "pci_slot",
+          "pcie_8pin_count",
+          "pcie_16pin_count",
+          "power_connectors",
+          "board_power_w"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [],
+    "verifiedFields": [
+      "board_power_w",
+      "gpu_model",
+      "length_mm",
+      "memory_bus_bits",
+      "memory_type",
+      "pci_slot",
+      "pcie_16pin_count",
+      "pcie_8pin_count",
+      "power_connectors",
+      "recommended_psu_w",
+      "thickness_mm",
+      "vram_gb",
+      "width_mm"
+    ],
+    "status": "verified",
+    "image": "products/catalog-zotac-rtx-5070-solid-oc.svg"
+  },
+  {
+    "slug": "vga-asus-rog-strix-rtx-4080-super-16gb",
+    "category": "vga",
+    "name": "Card màn hình ASUS ROG Strix GeForce RTX 4080 SUPER 16GB",
+    "brand": "ASUS",
+    "price": 31900000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "gpu_model": "ROG STRIX RTX 4080 SUPER",
+      "vram_gb": 16,
+      "memory_type": "GDDR6X",
+      "memory_bus_bits": 256,
+      "length_mm": 357.6,
+      "width_mm": 149.3,
+      "thickness_mm": 70.1,
+      "recommended_psu_w": 850,
+      "pci_slot": "PCIEX16",
+      "pcie_8pin_count": 0,
+      "pcie_16pin_count": 1,
+      "power_connectors": "0 × PCIe 8-pin; 1 × 16-pin",
+      "verified_fields": [
+        "gpu_model",
+        "length_mm",
+        "memory_bus_bits",
+        "memory_type",
+        "pci_slot",
+        "pcie_16pin_count",
+        "pcie_8pin_count",
+        "power_connectors",
+        "recommended_psu_w",
+        "thickness_mm",
+        "vram_gb",
+        "width_mm"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://rog.asus.com/graphics-cards/graphics-cards/rog-strix/rog-strix-rtx4080s-16g-gaming/spec/",
+        "name": "ASUS",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "gpu_model",
+          "vram_gb",
+          "memory_type",
+          "memory_bus_bits",
+          "length_mm",
+          "width_mm",
+          "thickness_mm",
+          "recommended_psu_w",
+          "pci_slot",
+          "pcie_8pin_count",
+          "pcie_16pin_count",
+          "power_connectors"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho giữ nguyên từ dữ liệu mẫu có sẵn."
+    ],
+    "verifiedFields": [
+      "gpu_model",
+      "length_mm",
+      "memory_bus_bits",
+      "memory_type",
+      "pci_slot",
+      "pcie_16pin_count",
+      "pcie_8pin_count",
+      "power_connectors",
+      "recommended_psu_w",
+      "thickness_mm",
+      "vram_gb",
+      "width_mm"
+    ],
+    "status": "needs_review",
+    "image": "products/catalog-vga-asus-rog-strix-rtx-4080-super-16gb.svg"
+  },
+  {
+    "slug": "vga-gigabyte-rtx-4060-windforce-oc-8gb",
+    "category": "vga",
+    "name": "Card màn hình GIGABYTE GeForce RTX 4060 WINDFORCE OC 8GB",
+    "brand": "GIGABYTE",
+    "price": 7990000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "gpu_model": "RTX 4060 WINDFORCE OC 8G",
+      "vram_gb": 8,
+      "memory_type": "GDDR6",
+      "memory_bus_bits": 128,
+      "length_mm": 192,
+      "width_mm": 120,
+      "thickness_mm": 41,
+      "recommended_psu_w": 450,
+      "pci_slot": "PCIEX16",
+      "pcie_8pin_count": 1,
+      "pcie_16pin_count": 0,
+      "power_connectors": "1 × PCIe 8-pin; 0 × 16-pin",
+      "verified_fields": [
+        "gpu_model",
+        "length_mm",
+        "memory_bus_bits",
+        "memory_type",
+        "pci_slot",
+        "pcie_16pin_count",
+        "pcie_8pin_count",
+        "power_connectors",
+        "recommended_psu_w",
+        "thickness_mm",
+        "vram_gb",
+        "width_mm"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://www.gigabyte.com/Graphics-Card/GV-N4060WF2OC-8GD/sp",
+        "name": "GIGABYTE",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "gpu_model",
+          "vram_gb",
+          "memory_type",
+          "memory_bus_bits",
+          "length_mm",
+          "width_mm",
+          "thickness_mm",
+          "recommended_psu_w",
+          "pci_slot",
+          "pcie_8pin_count",
+          "pcie_16pin_count",
+          "power_connectors"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho giữ nguyên từ dữ liệu mẫu có sẵn."
+    ],
+    "verifiedFields": [
+      "gpu_model",
+      "length_mm",
+      "memory_bus_bits",
+      "memory_type",
+      "pci_slot",
+      "pcie_16pin_count",
+      "pcie_8pin_count",
+      "power_connectors",
+      "recommended_psu_w",
+      "thickness_mm",
+      "vram_gb",
+      "width_mm"
+    ],
+    "status": "needs_review",
+    "image": "products/catalog-vga-gigabyte-rtx-4060-windforce-oc-8gb.svg"
+  },
+  {
+    "slug": "cpu-intel-core-i5-14600k",
+    "category": "cpu",
+    "name": "Bộ vi xử lý Intel Core i5 14600K (Up to 5.3GHz, 14 Cores 20 Threads)",
+    "brand": "Intel",
+    "price": 7490000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "socket": "LGA1700",
+      "cores": 14,
+      "threads": 20,
+      "base_clock_ghz": 3.5,
+      "boost_clock_ghz": 5.3,
+      "l3_cache_mb": 24,
+      "tdp_w": 125,
+      "max_power_w": 181,
+      "supported_memory_types": [
+        "DDR4",
+        "DDR5"
+      ],
+      "integrated_graphics": "Intel UHD 770",
+      "family": "intel-core-14",
+      "verified_fields": [
+        "base_clock_ghz",
+        "boost_clock_ghz",
+        "cores",
+        "family",
+        "integrated_graphics",
+        "l3_cache_mb",
+        "max_power_w",
+        "socket",
+        "supported_memory_types",
+        "tdp_w",
+        "threads"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://www.intel.com/content/www/us/en/products/sku/236799/intel-core-i5-processor-14600k-24m-cache-up-to-5-30-ghz/specifications.html",
+        "name": "Intel",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "socket",
+          "cores",
+          "threads",
+          "base_clock_ghz",
+          "boost_clock_ghz",
+          "l3_cache_mb",
+          "tdp_w",
+          "max_power_w",
+          "supported_memory_types",
+          "integrated_graphics",
+          "family"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho giữ nguyên từ dữ liệu mẫu có sẵn."
+    ],
+    "verifiedFields": [
+      "base_clock_ghz",
+      "boost_clock_ghz",
+      "cores",
+      "family",
+      "integrated_graphics",
+      "l3_cache_mb",
+      "max_power_w",
+      "socket",
+      "supported_memory_types",
+      "tdp_w",
+      "threads"
+    ],
+    "status": "needs_review",
+    "image": "products/catalog-cpu-intel-core-i5-14600k.svg"
+  },
+  {
+    "slug": "cpu-amd-ryzen-7-7800x3d",
+    "category": "cpu",
+    "name": "Bộ vi xử lý AMD Ryzen 7 7800X3D (Up to 5.0GHz, 8 Cores 16 Threads, 3D V-Cache)",
+    "brand": "AMD",
+    "price": 10890000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "socket": "AM5",
+      "cores": 8,
+      "threads": 16,
+      "base_clock_ghz": 4.2,
+      "boost_clock_ghz": 5.0,
+      "l3_cache_mb": 96,
+      "tdp_w": 120,
+      "supported_memory_types": [
+        "DDR5"
+      ],
+      "integrated_graphics": "AMD Radeon Graphics",
+      "family": "ryzen-7000",
+      "verified_fields": [
+        "base_clock_ghz",
+        "boost_clock_ghz",
+        "cores",
+        "family",
+        "integrated_graphics",
+        "l3_cache_mb",
+        "socket",
+        "supported_memory_types",
+        "tdp_w",
+        "threads"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://www.amd.com/en/products/processors/desktops/ryzen/7000-series/amd-ryzen-7-7800x3d.html",
+        "name": "AMD",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "socket",
+          "cores",
+          "threads",
+          "base_clock_ghz",
+          "boost_clock_ghz",
+          "l3_cache_mb",
+          "tdp_w",
+          "supported_memory_types",
+          "integrated_graphics",
+          "family"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho giữ nguyên từ dữ liệu mẫu có sẵn."
+    ],
+    "verifiedFields": [
+      "base_clock_ghz",
+      "boost_clock_ghz",
+      "cores",
+      "family",
+      "integrated_graphics",
+      "l3_cache_mb",
+      "socket",
+      "supported_memory_types",
+      "tdp_w",
+      "threads"
+    ],
+    "status": "needs_review",
+    "image": "products/catalog-cpu-amd-ryzen-7-7800x3d.svg"
+  },
+  {
+    "slug": "ram-corsair-vengeance-rgb-32gb-ddr5-6000",
+    "category": "ram",
+    "name": "RAM Corsair Vengeance RGB 32GB (2x16GB) DDR5 6000MHz Black",
+    "brand": "Corsair",
+    "price": 3290000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "speed_mhz": "6000",
+      "capacity_gb": "32",
+      "memory_type": "DDR5",
+      "verified_fields": []
+    },
+    "sources": [],
+    "notes": [
+      "Cần đối chiếu mã module trên tem để xác minh timing, điện áp và chiều cao tản RAM.",
+      "Dữ liệu nhập cũ: cần đối chiếu mã sản phẩm/phiên bản thực tế trước khi kết luận tương thích; không tự điền thông số chưa có nguồn.",
+      "Giá và tồn kho giữ nguyên từ dữ liệu mẫu có sẵn."
+    ],
+    "verifiedFields": [],
+    "status": "needs_review",
+    "image": "products/catalog-ram-corsair-vengeance-rgb-32gb-ddr5-6000.svg"
+  },
+  {
+    "slug": "ssd-samsung-990-pro-1tb",
+    "category": "storage",
+    "name": "Ổ cứng SSD Samsung 990 PRO 1TB M.2 NVMe PCIe 4.0",
+    "brand": "Samsung",
+    "price": 2790000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "part_number": "MZ-V9P1T0",
+      "capacity_gb": 1000,
+      "interface": "NVME",
+      "form_factor": "M.2",
+      "m2_form_factor": "2280",
+      "pcie_generation": 4,
+      "pcie_lanes": 4,
+      "read_mbs": 7450,
+      "write_mbs": 6900,
+      "storage_type": "SSD",
+      "verified_fields": [
+        "capacity_gb",
+        "form_factor",
+        "interface",
+        "m2_form_factor",
+        "part_number",
+        "pcie_generation",
+        "pcie_lanes",
+        "read_mbs",
+        "write_mbs"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://download.semiconductor.samsung.com/resources/data-sheet/Samsung_NVMe_SSD_990_PRO_Datasheet_Rev.1.0_10129514049640.pdf",
+        "name": "Samsung",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "part_number",
+          "capacity_gb",
+          "interface",
+          "form_factor",
+          "m2_form_factor",
+          "pcie_generation",
+          "pcie_lanes",
+          "read_mbs",
+          "write_mbs"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho giữ nguyên từ dữ liệu mẫu có sẵn."
+    ],
+    "verifiedFields": [
+      "capacity_gb",
+      "form_factor",
+      "interface",
+      "m2_form_factor",
+      "part_number",
+      "pcie_generation",
+      "pcie_lanes",
+      "read_mbs",
+      "write_mbs"
+    ],
+    "status": "needs_review",
+    "image": "products/catalog-ssd-samsung-990-pro-1tb.svg"
+  },
+  {
+    "slug": "corsair-nautilus-360-argb-black",
+    "category": "cooling",
+    "name": "Tản nhiệt AIO Corsair NAUTILUS 360 ARGB Black",
+    "brand": "Corsair",
+    "price": 2490000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "cooler_type": "AIO",
+      "radiator_size_mm": 360,
+      "supported_sockets": [
+        "LGA1700",
+        "LGA1851",
+        "AM4",
+        "AM5"
+      ],
+      "fan_size_mm": 120,
+      "fan_count": 3,
+      "cooling_type": "AIO",
+      "verified_fields": [
+        "cooler_type",
+        "fan_count",
+        "fan_size_mm",
+        "radiator_size_mm",
+        "supported_sockets"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://www.corsair.com/us/en/p/cpu-coolers/cw-9060093-ww/nautilus-360-rs-argb-liquid-cpu-cooler-cw-9060093-ww",
+        "name": "Corsair",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "cooler_type",
+          "radiator_size_mm",
+          "supported_sockets",
+          "fan_size_mm",
+          "fan_count"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Có nhiều revision NAUTILUS 360 RS ARGB; cần xác minh mã CW trên hộp và tổng độ dày radiator + quạt trước khi lắp."
+    ],
+    "verifiedFields": [
+      "cooler_type",
+      "fan_count",
+      "fan_size_mm",
+      "radiator_size_mm",
+      "supported_sockets"
+    ],
+    "status": "needs_review",
+    "image": "products/catalog-corsair-nautilus-360-argb-black.svg"
+  },
+  {
+    "slug": "msi-pro-b760m-a-wifi-ddr4",
+    "category": "mainboard",
+    "name": "Bo mạch chủ MSI PRO B760M-A WIFI DDR4",
+    "brand": "MSI",
+    "price": 3490000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "socket": "LGA1700",
+      "memory_type": "DDR4",
+      "ram_type": "DDR4",
+      "max_memory_gb": 128,
+      "dimm_slots": 4,
+      "memory_form_factor": "UDIMM",
+      "m2_slots": 2,
+      "m2_form_factors": [
+        "2280"
+      ],
+      "storage_interfaces": [
+        "NVME",
+        "SATA"
+      ],
+      "sata_ports": 4,
+      "form_factor": "MATX",
+      "eps_8pin_count": 2,
+      "atx_24pin_count": 1,
+      "chipset": "B760",
+      "supported_cpu_families": [
+        "intel-core-12",
+        "intel-core-13",
+        "intel-core-14"
+      ],
+      "gpu_slot": "PCIEX16",
+      "verified_fields": [
+        "atx_24pin_count",
+        "chipset",
+        "dimm_slots",
+        "eps_8pin_count",
+        "form_factor",
+        "gpu_slot",
+        "m2_form_factors",
+        "m2_slots",
+        "max_memory_gb",
+        "memory_form_factor",
+        "memory_type",
+        "ram_type",
+        "sata_ports",
+        "socket",
+        "storage_interfaces",
+        "supported_cpu_families"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://www.msi.com/Motherboard/PRO-B760M-A-WIFI-DDR4/Specification",
+        "name": "MSI",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "socket",
+          "memory_type",
+          "ram_type",
+          "max_memory_gb",
+          "dimm_slots",
+          "memory_form_factor",
+          "m2_slots",
+          "m2_form_factors",
+          "storage_interfaces",
+          "sata_ports",
+          "form_factor",
+          "eps_8pin_count",
+          "atx_24pin_count",
+          "chipset",
+          "supported_cpu_families",
+          "gpu_slot"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [],
+    "verifiedFields": [
+      "atx_24pin_count",
+      "chipset",
+      "dimm_slots",
+      "eps_8pin_count",
+      "form_factor",
+      "gpu_slot",
+      "m2_form_factors",
+      "m2_slots",
+      "max_memory_gb",
+      "memory_form_factor",
+      "memory_type",
+      "ram_type",
+      "sata_ports",
+      "socket",
+      "storage_interfaces",
+      "supported_cpu_families"
+    ],
+    "status": "verified",
+    "image": "products/catalog-msi-pro-b760m-a-wifi-ddr4.svg"
+  },
+  {
+    "slug": "samsung-9100-pro-1tb",
+    "category": "storage",
+    "name": "Ổ cứng SSD Samsung 9100 PRO NVMe M.2 1TB Gen5",
+    "brand": "Samsung",
+    "price": 6990000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "part_number": "MZ-VAP1T0",
+      "capacity_gb": 1000,
+      "interface": "NVME",
+      "form_factor": "M.2",
+      "m2_form_factor": "2280",
+      "pcie_generation": 5,
+      "pcie_lanes": 4,
+      "storage_type": "SSD",
+      "verified_fields": [
+        "capacity_gb",
+        "form_factor",
+        "interface",
+        "m2_form_factor",
+        "part_number",
+        "pcie_generation",
+        "pcie_lanes"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://download.semiconductor.samsung.com/resources/data-sheet/Samsung_NVMe_SSD_9100_PRO_Datasheet_Rev.2.0.pdf",
+        "name": "Samsung",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "part_number",
+          "capacity_gb",
+          "interface",
+          "form_factor",
+          "m2_form_factor",
+          "pcie_generation",
+          "pcie_lanes"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [],
+    "verifiedFields": [
+      "capacity_gb",
+      "form_factor",
+      "interface",
+      "m2_form_factor",
+      "part_number",
+      "pcie_generation",
+      "pcie_lanes"
+    ],
+    "status": "verified",
+    "image": "products/catalog-samsung-9100-pro-1tb.svg"
+  },
+  {
+    "slug": "acer-altos-p130f7-i5",
+    "category": "pc-office",
+    "name": "PC GVN x Acer - Máy bộ Altos P130F7 (I5/RAM 8GB/SSD 512GB)",
+    "brand": "ACER",
+    "price": 12990000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "imported_spec_1": "Core i5-11600",
+      "imported_spec_2": "RAM 8GB",
+      "imported_spec_3": "SSD 512GB",
+      "imported_spec_4": "Đồ họa tích hợp",
+      "verified_fields": []
+    },
+    "sources": [
+      {
+        "url": "https://gearvn.com/products/may-bo-acer-atlos-p130f7-i5-ram-8gb-ssd-512gb",
+        "name": "GearVN",
+        "checkedAt": "2026-10-25",
+        "kind": "retailer_snapshot",
+        "fields": []
+      }
+    ],
+    "notes": [
+      "Dữ liệu nhập cũ: cần đối chiếu mã sản phẩm/phiên bản thực tế trước khi kết luận tương thích; không tự điền thông số chưa có nguồn.",
+      "PC lắp sẵn: model nguồn, mainboard, RAM và vỏ có thể thay đổi theo đợt; không dùng bản mô tả rút gọn để xác nhận nâng cấp linh kiện."
+    ],
+    "verifiedFields": [],
+    "status": "needs_review",
+    "image": "products/catalog-acer-altos-p130f7-i5.svg"
+  },
+  {
+    "slug": "pc-gvn-i5-12400f-rtx-5060",
+    "category": "pc-gaming",
+    "name": "PC GVN Intel i5-12400F/ VGA RTX 5060 (Main H)",
+    "brand": "GEARVN",
+    "price": 26890000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "imported_spec_1": "Core i5-12400F",
+      "imported_spec_2": "RTX 5060 8GB",
+      "imported_spec_3": "RAM 16GB",
+      "imported_spec_4": "SSD 512GB",
+      "imported_spec_5": "H610M",
+      "verified_fields": []
+    },
+    "sources": [
+      {
+        "url": "https://gearvn.com/products/pc-gvn-intel-i5-12400f-vga-rtx-5060-main-h",
+        "name": "GearVN",
+        "checkedAt": "2026-10-25",
+        "kind": "retailer_snapshot",
+        "fields": []
+      }
+    ],
+    "notes": [
+      "Dữ liệu nhập cũ: cần đối chiếu mã sản phẩm/phiên bản thực tế trước khi kết luận tương thích; không tự điền thông số chưa có nguồn.",
+      "PC lắp sẵn: model nguồn, mainboard, RAM và vỏ có thể thay đổi theo đợt; không dùng bản mô tả rút gọn để xác nhận nâng cấp linh kiện."
+    ],
+    "verifiedFields": [],
+    "status": "needs_review",
+    "image": "products/catalog-pc-gvn-i5-12400f-rtx-5060.svg"
+  },
+  {
+    "slug": "demo-pc-gaming-buu-i5-rtx-4060",
+    "category": "pc-office",
+    "name": "PC Gaming Demo Buu i5 RTX 4060",
+    "brand": "PixelCore Demo",
+    "price": 24990000,
+    "stock": 50,
+    "new": false,
+    "expose": false,
+    "facts": {
+      "imported_description": "Sản phẩm mẫu để kiểm tra chức năng thêm sản phẩm trong trang quản trị.",
+      "verified_fields": []
+    },
+    "sources": [],
+    "notes": [
+      "Dữ liệu nhập cũ: cần đối chiếu mã sản phẩm/phiên bản thực tế trước khi kết luận tương thích; không tự điền thông số chưa có nguồn.",
+      "PC lắp sẵn: model nguồn, mainboard, RAM và vỏ có thể thay đổi theo đợt; không dùng bản mô tả rút gọn để xác nhận nâng cấp linh kiện."
+    ],
+    "verifiedFields": [],
+    "status": "needs_review"
+  },
+  {
+    "slug": "pc-gaming-dragon-r5-7600-rtx-4060",
+    "category": "pc-gaming",
+    "name": "PC Gaming Dragon Ryzen 5 7600 / RTX 4060 8GB",
+    "brand": "PC Store Custom",
+    "price": 19900000,
+    "stock": 50,
+    "new": false,
+    "expose": false,
+    "facts": {
+      "imported_description": "Bộ máy Esports quốc dân, tối ưu game bắn súng CS2, Valorant 300+ FPS. CPU Ryzen 5 7600, 16GB RAM DDR5, RTX 4060 8GB, SSD 500GB.",
+      "verified_fields": []
+    },
+    "sources": [],
+    "notes": [
+      "Dữ liệu nhập cũ: cần đối chiếu mã sản phẩm/phiên bản thực tế trước khi kết luận tương thích; không tự điền thông số chưa có nguồn.",
+      "PC lắp sẵn: model nguồn, mainboard, RAM và vỏ có thể thay đổi theo đợt; không dùng bản mô tả rút gọn để xác nhận nâng cấp linh kiện."
+    ],
+    "verifiedFields": [],
+    "status": "needs_review"
+  },
+  {
+    "slug": "logitech-g502-hero",
+    "category": "mouse",
+    "name": "Chuột Logitech G502 Hero Gaming",
+    "brand": "Logitech",
+    "price": 920000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "connection": [
+        "USB có dây"
+      ],
+      "sensor": "HERO 25K",
+      "dpi_min": 100,
+      "dpi_max": 25600,
+      "polling_rate_hz": 1000,
+      "weight_g": 121,
+      "backlight": "LIGHTSYNC RGB",
+      "verified_fields": [
+        "backlight",
+        "connection",
+        "dpi_max",
+        "dpi_min",
+        "polling_rate_hz",
+        "sensor",
+        "weight_g"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://support.logi.com/hc/de-at/articles/360023303534-Specification-G502-HERO-Gaming-Mouse",
+        "name": "Logitech",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "connection",
+          "sensor",
+          "dpi_min",
+          "dpi_max",
+          "polling_rate_hz",
+          "weight_g",
+          "backlight"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [],
+    "verifiedFields": [
+      "backlight",
+      "connection",
+      "dpi_max",
+      "dpi_min",
+      "polling_rate_hz",
+      "sensor",
+      "weight_g"
+    ],
+    "status": "verified",
+    "image": "products/catalog-logitech-g502-hero.svg"
+  },
+  {
+    "slug": "viewsonic-vx24g30-w",
+    "category": "monitor",
+    "name": "Màn hình ViewSonic VX24G30-W 24\" IPS 240Hz chuyên game",
+    "brand": "ViewSonic",
+    "price": 2990000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "screen_size_in": 23.8,
+      "panel_type": "IPS",
+      "resolution": "1920 × 1080",
+      "refresh_rate_hz": 240,
+      "video_ports": [
+        "HDMI × 2",
+        "DisplayPort × 1"
+      ],
+      "brightness_nits": 300,
+      "vesa": "100 × 100 mm",
+      "response_time": "0.8 ms MPRT",
+      "verified_fields": [
+        "brightness_nits",
+        "panel_type",
+        "refresh_rate_hz",
+        "resolution",
+        "response_time",
+        "screen_size_in",
+        "vesa",
+        "video_ports"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://www.viewsonic.com/global/products/sheet/VX24G30-W",
+        "name": "ViewSonic",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "screen_size_in",
+          "panel_type",
+          "resolution",
+          "refresh_rate_hz",
+          "video_ports",
+          "brightness_nits",
+          "vesa",
+          "response_time"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Trang hãng có thông tin phiên bản HDMI không thống nhất giữa sơ đồ và bảng cổng; cần kiểm tra revision nếu cần HDMI tốc độ cụ thể."
+    ],
+    "verifiedFields": [
+      "brightness_nits",
+      "panel_type",
+      "refresh_rate_hz",
+      "resolution",
+      "response_time",
+      "screen_size_in",
+      "vesa",
+      "video_ports"
+    ],
+    "status": "needs_review",
+    "image": "products/catalog-viewsonic-vx24g30-w.svg"
+  },
+  {
+    "slug": "logitech-g304-wireless-black",
+    "category": "mouse",
+    "name": "Chuột Logitech G304 Wireless",
+    "brand": "Logitech",
+    "price": 725000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "connection": [
+        "LIGHTSPEED 2.4 GHz (USB receiver)"
+      ],
+      "sensor": "HERO",
+      "dpi_min": 200,
+      "dpi_max": 12000,
+      "weight_g": 99,
+      "battery": "1 × AA",
+      "dimensions": "116.6 × 62.15 × 38.2 mm",
+      "verified_fields": [
+        "battery",
+        "connection",
+        "dimensions",
+        "dpi_max",
+        "dpi_min",
+        "sensor",
+        "weight_g"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://support.logi.com/hc/en-au/articles/360023303474-G304-LIGHTSPEED-Wireless-Gaming-Mouse-Technical-Specifications",
+        "name": "Logitech",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "connection",
+          "sensor",
+          "dpi_min",
+          "dpi_max",
+          "weight_g",
+          "battery",
+          "dimensions"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [],
+    "verifiedFields": [
+      "battery",
+      "connection",
+      "dimensions",
+      "dpi_max",
+      "dpi_min",
+      "sensor",
+      "weight_g"
+    ],
+    "status": "verified",
+    "image": "products/catalog-logitech-g304-wireless-black.svg"
+  },
+  {
+    "slug": "pc-gvn-i5-12400f-rtx-3050",
+    "category": "pc-gaming",
+    "name": "PC GVN Intel i5-12400F/ VGA RTX 3050 (Main H)",
+    "brand": "GEARVN",
+    "price": 17990000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "imported_spec_1": "Core i5-12400F",
+      "imported_spec_2": "RTX 3050 6GB",
+      "imported_spec_3": "RAM 16GB",
+      "imported_spec_4": "SSD 512GB",
+      "imported_spec_5": "H610M",
+      "verified_fields": []
+    },
+    "sources": [
+      {
+        "url": "https://gearvn.com/products/pc-gvn-intel-i5-13400f-vga-rtx-3050-main-h",
+        "name": "GearVN",
+        "checkedAt": "2026-10-25",
+        "kind": "retailer_snapshot",
+        "fields": []
+      }
+    ],
+    "notes": [
+      "Dữ liệu nhập cũ: cần đối chiếu mã sản phẩm/phiên bản thực tế trước khi kết luận tương thích; không tự điền thông số chưa có nguồn.",
+      "PC lắp sẵn: model nguồn, mainboard, RAM và vỏ có thể thay đổi theo đợt; không dùng bản mô tả rút gọn để xác nhận nâng cấp linh kiện."
+    ],
+    "verifiedFields": [],
+    "status": "needs_review",
+    "image": "products/catalog-pc-gvn-i5-12400f-rtx-3050.svg"
+  },
+  {
+    "slug": "pc-workstation-creator-r9-7900x-rtx4070ti",
+    "category": "pc-workstation",
+    "name": "PC Workstation Creator Ryzen 9 7900X / 64GB RAM / RTX 4070 Ti Super",
+    "brand": "PC Store Custom",
+    "price": 54500000,
+    "stock": 50,
+    "new": false,
+    "expose": false,
+    "facts": {
+      "imported_description": "Trạm làm việc chuyên nghiệp cho kiến trúc sư, dựng hình 3D Blender, Render V-Ray và Premiere Pro 4K.",
+      "verified_fields": []
+    },
+    "sources": [],
+    "notes": [
+      "Dữ liệu nhập cũ: cần đối chiếu mã sản phẩm/phiên bản thực tế trước khi kết luận tương thích; không tự điền thông số chưa có nguồn.",
+      "PC lắp sẵn: model nguồn, mainboard, RAM và vỏ có thể thay đổi theo đợt; không dùng bản mô tả rút gọn để xác nhận nâng cấp linh kiện."
+    ],
+    "verifiedFields": [],
+    "status": "needs_review"
+  },
+  {
+    "slug": "acer-kg251q-z1",
+    "category": "monitor",
+    "name": "Màn hình Acer KG251Q Z1 25\" 240Hz chuyên game",
+    "brand": "Acer",
+    "price": 3090000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "screen_size_in": 24.5,
+      "panel_type": "VA",
+      "resolution": "1920 × 1080",
+      "response_time": "1 ms VRB",
+      "brightness_nits": 250,
+      "video_ports": [
+        "HDMI 2.0 × 2",
+        "DisplayPort 1.4 × 1"
+      ],
+      "verified_fields": [
+        "brightness_nits",
+        "panel_type",
+        "resolution",
+        "response_time",
+        "screen_size_in",
+        "video_ports"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://www.acer.com/es-es/monitors/gaming/nitro-kg1/pdp/UM.KX1EE.101",
+        "name": "Acer",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "screen_size_in",
+          "panel_type",
+          "resolution",
+          "response_time",
+          "brightness_nits",
+          "video_ports"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [],
+    "verifiedFields": [
+      "brightness_nits",
+      "panel_type",
+      "resolution",
+      "response_time",
+      "screen_size_in",
+      "video_ports"
+    ],
+    "status": "verified",
+    "image": "products/catalog-acer-kg251q-z1.svg"
+  },
+  {
+    "slug": "dareu-ek87-pro-black",
+    "category": "keyboard",
+    "name": "Bàn phím Không dây DareU EK87 Pro RGB Đen Dream Switch",
+    "brand": "DareU",
+    "price": 1050000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "layout": "TKL",
+      "key_count": 87,
+      "connection": [
+        "USB-C",
+        "Bluetooth 5.1",
+        "2.4 GHz"
+      ],
+      "switch_type": "DareU Dream Linear",
+      "hot_swap": true,
+      "keycaps": "PBT",
+      "backlight": "RGB",
+      "battery_mah": 4000,
+      "dimensions": "364 × 136 × 41 mm",
+      "verified_fields": [
+        "backlight",
+        "battery_mah",
+        "connection",
+        "dimensions",
+        "hot_swap",
+        "key_count",
+        "keycaps",
+        "layout",
+        "switch_type"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://dareu.com/products/dareu-ek87pro-wireless-gaming-keyboard/",
+        "name": "DareU",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "layout",
+          "key_count",
+          "connection",
+          "switch_type",
+          "hot_swap",
+          "keycaps",
+          "backlight",
+          "battery_mah",
+          "dimensions"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [],
+    "verifiedFields": [
+      "backlight",
+      "battery_mah",
+      "connection",
+      "dimensions",
+      "hot_swap",
+      "key_count",
+      "keycaps",
+      "layout",
+      "switch_type"
+    ],
+    "status": "verified",
+    "image": "products/catalog-dareu-ek87-pro-black.svg"
+  },
+  {
+    "slug": "asus-tuf-vg259q5a",
+    "category": "monitor",
+    "name": "Màn hình Asus TUF GAMING VG259Q5A 25\" Fast IPS 200Hz Gsync chuyên game",
+    "brand": "ASUS",
+    "price": 2990000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "screen_size_in": 24.5,
+      "panel_type": "Fast IPS",
+      "resolution": "1920 × 1080",
+      "refresh_rate_hz": 200,
+      "video_ports": [
+        "HDMI 2.0 × 2",
+        "DisplayPort 1.4 × 1"
+      ],
+      "brightness_nits": 300,
+      "vesa": "100 × 100 mm",
+      "response_time": "1 ms GTG (tối thiểu 0.3 ms)",
+      "speakers": "2 × 2 W",
+      "verified_fields": [
+        "brightness_nits",
+        "panel_type",
+        "refresh_rate_hz",
+        "resolution",
+        "response_time",
+        "screen_size_in",
+        "speakers",
+        "vesa",
+        "video_ports"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://www.asus.com/displays-desktops/monitors/tuf-gaming/tuf-gaming-vg259q5a/techspec/",
+        "name": "ASUS",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "screen_size_in",
+          "panel_type",
+          "resolution",
+          "refresh_rate_hz",
+          "video_ports",
+          "brightness_nits",
+          "vesa",
+          "response_time",
+          "speakers"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [],
+    "verifiedFields": [
+      "brightness_nits",
+      "panel_type",
+      "refresh_rate_hz",
+      "resolution",
+      "response_time",
+      "screen_size_in",
+      "speakers",
+      "vesa",
+      "video_ports"
+    ],
+    "status": "verified",
+    "image": "products/catalog-asus-tuf-vg259q5a.svg"
+  },
+  {
+    "slug": "pc-gvn-i7-14700f-rtx-5060",
+    "category": "pc-workstation",
+    "name": "PC GVN Intel i7-14700F/ VGA RTX 5060",
+    "brand": "GEARVN",
+    "price": 42990000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "imported_spec_1": "Core i7-14700F",
+      "imported_spec_2": "RTX 5060 8GB",
+      "imported_spec_3": "RAM 16GB",
+      "imported_spec_4": "SSD 512GB",
+      "imported_spec_5": "Z790 DDR4",
+      "verified_fields": []
+    },
+    "sources": [
+      {
+        "url": "https://gearvn.com/products/pc-gvn-intel-i7-14700f-vga-rtx-5060",
+        "name": "GearVN",
+        "checkedAt": "2026-10-25",
+        "kind": "retailer_snapshot",
+        "fields": []
+      }
+    ],
+    "notes": [
+      "Dữ liệu nhập cũ: cần đối chiếu mã sản phẩm/phiên bản thực tế trước khi kết luận tương thích; không tự điền thông số chưa có nguồn.",
+      "PC lắp sẵn: model nguồn, mainboard, RAM và vỏ có thể thay đổi theo đợt; không dùng bản mô tả rút gọn để xác nhận nâng cấp linh kiện."
+    ],
+    "verifiedFields": [],
+    "status": "needs_review",
+    "image": "products/catalog-pc-gvn-i7-14700f-rtx-5060.svg"
+  },
+  {
+    "slug": "pc-gaming-titan-i7-14700f-rtx-4070",
+    "category": "pc-gaming",
+    "name": "PC Gaming Titan Core i7 14700F / RTX 4070 12GB",
+    "brand": "PC Store Custom",
+    "price": 33500000,
+    "stock": 50,
+    "new": false,
+    "expose": false,
+    "facts": {
+      "imported_description": "Chiến mượt mọi tựa game AAA ở độ phân giải 2K. CPU Intel i7 14700F, 32GB RAM DDR5, RTX 4070 12GB, SSD 1TB NVMe, Nguồn 750W Gold.",
+      "verified_fields": []
+    },
+    "sources": [],
+    "notes": [
+      "Dữ liệu nhập cũ: cần đối chiếu mã sản phẩm/phiên bản thực tế trước khi kết luận tương thích; không tự điền thông số chưa có nguồn.",
+      "PC lắp sẵn: model nguồn, mainboard, RAM và vỏ có thể thay đổi theo đợt; không dùng bản mô tả rút gọn để xác nhận nâng cấp linh kiện."
+    ],
+    "verifiedFields": [],
+    "status": "needs_review"
+  },
+  {
+    "slug": "akko-5075b-plus-red-vietnam",
+    "category": "keyboard",
+    "name": "Bàn phím AKKO 5075B Plus Red World Tour VIET NAM",
+    "brand": "AKKO",
+    "price": 1490000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "layout": "75%",
+      "connection": [
+        "USB-C",
+        "Bluetooth",
+        "2.4 GHz"
+      ],
+      "hot_swap": true,
+      "backlight": "RGB",
+      "battery_mah": 3000,
+      "verified_fields": [
+        "backlight",
+        "battery_mah",
+        "connection",
+        "hot_swap",
+        "layout"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://en.akkogear.com/product/world-tour-vietnam-5075b-plus-mechanical-keyboard/",
+        "name": "AKKO",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "layout",
+          "connection",
+          "hot_swap",
+          "backlight",
+          "battery_mah"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [],
+    "verifiedFields": [
+      "backlight",
+      "battery_mah",
+      "connection",
+      "hot_swap",
+      "layout"
+    ],
+    "status": "verified",
+    "image": "products/catalog-akko-5075b-plus-red-vietnam.svg"
+  },
+  {
+    "slug": "akko-5075b-plus-black-gold",
+    "category": "keyboard",
+    "name": "Bàn phím AKKO 5075B Plus Black & Gold Creamy Yellow Pro switch",
+    "brand": "AKKO",
+    "price": 1290000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "layout": "75%",
+      "connection": [
+        "USB-C",
+        "Bluetooth",
+        "2.4 GHz"
+      ],
+      "hot_swap": true,
+      "backlight": "RGB",
+      "battery_mah": 3000,
+      "verified_fields": [
+        "backlight",
+        "battery_mah",
+        "connection",
+        "hot_swap",
+        "layout"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://en.akkogear.com/product/black-gold-5075b-plus-mechanical-keyboard/",
+        "name": "AKKO",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "layout",
+          "connection",
+          "hot_swap",
+          "backlight",
+          "battery_mah"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [],
+    "verifiedFields": [
+      "backlight",
+      "battery_mah",
+      "connection",
+      "hot_swap",
+      "layout"
+    ],
+    "status": "verified",
+    "image": "products/catalog-akko-5075b-plus-black-gold.svg"
+  },
+  {
+    "slug": "logitech-g102-lightsync-black",
+    "category": "mouse",
+    "name": "Chuột Logitech G102 LightSync Black",
+    "brand": "Logitech",
+    "price": 400000,
+    "stock": 50,
+    "new": false,
+    "expose": true,
+    "facts": {
+      "connection": [
+        "USB có dây"
+      ],
+      "dpi_min": 200,
+      "dpi_max": 8000,
+      "weight_g": 85,
+      "backlight": "LIGHTSYNC RGB",
+      "verified_fields": [
+        "backlight",
+        "connection",
+        "dpi_max",
+        "dpi_min",
+        "weight_g"
+      ]
+    },
+    "sources": [
+      {
+        "url": "https://www.logitechg.com/en-in/shop/p/g102-lightsync-rgb-gaming-mouse",
+        "name": "Logitech",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "connection",
+          "dpi_min",
+          "dpi_max",
+          "weight_g",
+          "backlight"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [],
+    "verifiedFields": [
+      "backlight",
+      "connection",
+      "dpi_max",
+      "dpi_min",
+      "weight_g"
+    ],
+    "status": "verified",
+    "image": "products/catalog-logitech-g102-lightsync-black.svg"
+  },
+  {
+    "slug": "intel-core-i3-12100f",
+    "category": "cpu",
+    "name": "CPU Intel Core i3-12100F",
+    "brand": "Intel",
+    "price": 1890000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "socket": "LGA1700",
+      "cores": 4,
+      "threads": 8,
+      "base_clock_ghz": 3.3,
+      "boost_clock_ghz": 4.3,
+      "l3_cache_mb": 12,
+      "tdp_w": 58,
+      "max_power_w": 89,
+      "supported_memory_types": [
+        "DDR4",
+        "DDR5"
+      ],
+      "integrated_graphics": "Không có",
+      "family": "intel-core-12",
+      "verified_fields": [
+        "base_clock_ghz",
+        "boost_clock_ghz",
+        "cores",
+        "family",
+        "integrated_graphics",
+        "l3_cache_mb",
+        "max_power_w",
+        "socket",
+        "supported_memory_types",
+        "tdp_w",
+        "threads"
+      ]
+    },
+    "verifiedFields": [
+      "base_clock_ghz",
+      "boost_clock_ghz",
+      "cores",
+      "family",
+      "integrated_graphics",
+      "l3_cache_mb",
+      "max_power_w",
+      "socket",
+      "supported_memory_types",
+      "tdp_w",
+      "threads"
+    ],
+    "sources": [
+      {
+        "url": "https://www.intel.com/content/www/us/en/products/sku/132223/intel-core-i312100f-processor-12m-cache-up-to-4-30-ghz/specifications.html",
+        "name": "Intel",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "socket",
+          "cores",
+          "threads",
+          "base_clock_ghz",
+          "boost_clock_ghz",
+          "l3_cache_mb",
+          "tdp_w",
+          "max_power_w",
+          "supported_memory_types",
+          "integrated_graphics",
+          "family"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/catalog-intel-core-i3-12100f.svg"
+  },
+  {
+    "slug": "intel-core-i5-12400",
+    "category": "cpu",
+    "name": "CPU Intel Core i5-12400",
+    "brand": "Intel",
+    "price": 3190000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "socket": "LGA1700",
+      "cores": 6,
+      "threads": 12,
+      "base_clock_ghz": 2.5,
+      "boost_clock_ghz": 4.4,
+      "l3_cache_mb": 18,
+      "tdp_w": 65,
+      "max_power_w": 117,
+      "supported_memory_types": [
+        "DDR4",
+        "DDR5"
+      ],
+      "integrated_graphics": "Intel UHD 730",
+      "family": "intel-core-12",
+      "verified_fields": [
+        "base_clock_ghz",
+        "boost_clock_ghz",
+        "cores",
+        "family",
+        "integrated_graphics",
+        "l3_cache_mb",
+        "max_power_w",
+        "socket",
+        "supported_memory_types",
+        "tdp_w",
+        "threads"
+      ]
+    },
+    "verifiedFields": [
+      "base_clock_ghz",
+      "boost_clock_ghz",
+      "cores",
+      "family",
+      "integrated_graphics",
+      "l3_cache_mb",
+      "max_power_w",
+      "socket",
+      "supported_memory_types",
+      "tdp_w",
+      "threads"
+    ],
+    "sources": [
+      {
+        "url": "https://www.intel.com/content/www/us/en/products/sku/134586/intel-core-i512400-processor-18m-cache-up-to-4-40-ghz/specifications.html",
+        "name": "Intel",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "socket",
+          "cores",
+          "threads",
+          "base_clock_ghz",
+          "boost_clock_ghz",
+          "l3_cache_mb",
+          "tdp_w",
+          "max_power_w",
+          "supported_memory_types",
+          "integrated_graphics",
+          "family"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/catalog-intel-core-i5-12400.svg"
+  },
+  {
+    "slug": "intel-core-i5-14400f",
+    "category": "cpu",
+    "name": "CPU Intel Core i5-14400F",
+    "brand": "Intel",
+    "price": 4290000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "socket": "LGA1700",
+      "cores": 10,
+      "threads": 16,
+      "base_clock_ghz": 2.5,
+      "boost_clock_ghz": 4.7,
+      "l3_cache_mb": 20,
+      "tdp_w": 65,
+      "max_power_w": 148,
+      "supported_memory_types": [
+        "DDR4",
+        "DDR5"
+      ],
+      "integrated_graphics": "Không có",
+      "family": "intel-core-14",
+      "verified_fields": [
+        "base_clock_ghz",
+        "boost_clock_ghz",
+        "cores",
+        "family",
+        "integrated_graphics",
+        "l3_cache_mb",
+        "max_power_w",
+        "socket",
+        "supported_memory_types",
+        "tdp_w",
+        "threads"
+      ]
+    },
+    "verifiedFields": [
+      "base_clock_ghz",
+      "boost_clock_ghz",
+      "cores",
+      "family",
+      "integrated_graphics",
+      "l3_cache_mb",
+      "max_power_w",
+      "socket",
+      "supported_memory_types",
+      "tdp_w",
+      "threads"
+    ],
+    "sources": [
+      {
+        "url": "https://www.intel.com/content/www/us/en/products/sku/236777/intel-core-i5-processor-14400f-20m-cache-up-to-4-70-ghz/specifications.html",
+        "name": "Intel",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "socket",
+          "cores",
+          "threads",
+          "base_clock_ghz",
+          "boost_clock_ghz",
+          "l3_cache_mb",
+          "tdp_w",
+          "max_power_w",
+          "supported_memory_types",
+          "integrated_graphics",
+          "family"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/catalog-intel-core-i5-14400f.svg"
+  },
+  {
+    "slug": "amd-ryzen-5-5600",
+    "category": "cpu",
+    "name": "CPU AMD Ryzen 5-5600",
+    "brand": "AMD",
+    "price": 2490000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "socket": "AM4",
+      "cores": 6,
+      "threads": 12,
+      "base_clock_ghz": 3.5,
+      "boost_clock_ghz": 4.4,
+      "l3_cache_mb": 32,
+      "tdp_w": 65,
+      "supported_memory_types": [
+        "DDR4"
+      ],
+      "integrated_graphics": "Không có",
+      "family": "ryzen-5000",
+      "verified_fields": [
+        "base_clock_ghz",
+        "boost_clock_ghz",
+        "cores",
+        "family",
+        "integrated_graphics",
+        "l3_cache_mb",
+        "socket",
+        "supported_memory_types",
+        "tdp_w",
+        "threads"
+      ]
+    },
+    "verifiedFields": [
+      "base_clock_ghz",
+      "boost_clock_ghz",
+      "cores",
+      "family",
+      "integrated_graphics",
+      "l3_cache_mb",
+      "socket",
+      "supported_memory_types",
+      "tdp_w",
+      "threads"
+    ],
+    "sources": [
+      {
+        "url": "https://www.amd.com/en/support/downloads/drivers.html/processors/ryzen/ryzen-5000-series/amd-ryzen-5-5600.html",
+        "name": "AMD",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "socket",
+          "cores",
+          "threads",
+          "base_clock_ghz",
+          "boost_clock_ghz",
+          "l3_cache_mb",
+          "tdp_w",
+          "supported_memory_types",
+          "integrated_graphics",
+          "family"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/catalog-amd-ryzen-5-5600.svg"
+  },
+  {
+    "slug": "amd-ryzen-5-5600g",
+    "category": "cpu",
+    "name": "CPU AMD Ryzen 5-5600G",
+    "brand": "AMD",
+    "price": 2690000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "socket": "AM4",
+      "cores": 6,
+      "threads": 12,
+      "base_clock_ghz": 3.9,
+      "boost_clock_ghz": 4.4,
+      "l3_cache_mb": 16,
+      "tdp_w": 65,
+      "supported_memory_types": [
+        "DDR4"
+      ],
+      "integrated_graphics": "Radeon Graphics 7 nhân",
+      "family": "ryzen-5000",
+      "verified_fields": [
+        "base_clock_ghz",
+        "boost_clock_ghz",
+        "cores",
+        "family",
+        "integrated_graphics",
+        "l3_cache_mb",
+        "socket",
+        "supported_memory_types",
+        "tdp_w",
+        "threads"
+      ]
+    },
+    "verifiedFields": [
+      "base_clock_ghz",
+      "boost_clock_ghz",
+      "cores",
+      "family",
+      "integrated_graphics",
+      "l3_cache_mb",
+      "socket",
+      "supported_memory_types",
+      "tdp_w",
+      "threads"
+    ],
+    "sources": [
+      {
+        "url": "https://www.amd.com/en/support/downloads/drivers.html/processors/ryzen/ryzen-5000-series/amd-ryzen-5-5600g.html",
+        "name": "AMD",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "socket",
+          "cores",
+          "threads",
+          "base_clock_ghz",
+          "boost_clock_ghz",
+          "l3_cache_mb",
+          "tdp_w",
+          "supported_memory_types",
+          "integrated_graphics",
+          "family"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/catalog-amd-ryzen-5-5600g.svg"
+  },
+  {
+    "slug": "amd-ryzen-5-7600",
+    "category": "cpu",
+    "name": "CPU AMD Ryzen 5-7600",
+    "brand": "AMD",
+    "price": 4590000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "socket": "AM5",
+      "cores": 6,
+      "threads": 12,
+      "base_clock_ghz": 3.8,
+      "boost_clock_ghz": 5.1,
+      "l3_cache_mb": 32,
+      "tdp_w": 65,
+      "supported_memory_types": [
+        "DDR5"
+      ],
+      "integrated_graphics": "AMD Radeon Graphics",
+      "family": "ryzen-7000",
+      "verified_fields": [
+        "base_clock_ghz",
+        "boost_clock_ghz",
+        "cores",
+        "family",
+        "integrated_graphics",
+        "l3_cache_mb",
+        "socket",
+        "supported_memory_types",
+        "tdp_w",
+        "threads"
+      ]
+    },
+    "verifiedFields": [
+      "base_clock_ghz",
+      "boost_clock_ghz",
+      "cores",
+      "family",
+      "integrated_graphics",
+      "l3_cache_mb",
+      "socket",
+      "supported_memory_types",
+      "tdp_w",
+      "threads"
+    ],
+    "sources": [
+      {
+        "url": "https://www.amd.com/en/products/processors/desktops/ryzen/7000-series/amd-ryzen-5-7600.html",
+        "name": "AMD",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "socket",
+          "cores",
+          "threads",
+          "base_clock_ghz",
+          "boost_clock_ghz",
+          "l3_cache_mb",
+          "tdp_w",
+          "supported_memory_types",
+          "integrated_graphics",
+          "family"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/catalog-amd-ryzen-5-7600.svg"
+  },
+  {
+    "slug": "amd-ryzen-7-7700",
+    "category": "cpu",
+    "name": "CPU AMD Ryzen 7-7700",
+    "brand": "AMD",
+    "price": 6490000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "socket": "AM5",
+      "cores": 8,
+      "threads": 16,
+      "base_clock_ghz": 3.8,
+      "boost_clock_ghz": 5.3,
+      "l3_cache_mb": 32,
+      "tdp_w": 65,
+      "supported_memory_types": [
+        "DDR5"
+      ],
+      "integrated_graphics": "AMD Radeon Graphics",
+      "family": "ryzen-7000",
+      "verified_fields": [
+        "base_clock_ghz",
+        "boost_clock_ghz",
+        "cores",
+        "family",
+        "integrated_graphics",
+        "l3_cache_mb",
+        "socket",
+        "supported_memory_types",
+        "tdp_w",
+        "threads"
+      ]
+    },
+    "verifiedFields": [
+      "base_clock_ghz",
+      "boost_clock_ghz",
+      "cores",
+      "family",
+      "integrated_graphics",
+      "l3_cache_mb",
+      "socket",
+      "supported_memory_types",
+      "tdp_w",
+      "threads"
+    ],
+    "sources": [
+      {
+        "url": "https://www.amd.com/en/products/processors/desktops/ryzen/7000-series/amd-ryzen-7-7700.html",
+        "name": "AMD",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "socket",
+          "cores",
+          "threads",
+          "base_clock_ghz",
+          "boost_clock_ghz",
+          "l3_cache_mb",
+          "tdp_w",
+          "supported_memory_types",
+          "integrated_graphics",
+          "family"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/catalog-amd-ryzen-7-7700.svg"
+  },
+  {
+    "slug": "msi-pro-h610m-g-ddr4",
+    "category": "mainboard",
+    "name": "Mainboard MSI PRO H610M-G DDR4",
+    "brand": "MSI",
+    "price": 1790000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "socket": "LGA1700",
+      "memory_type": "DDR4",
+      "ram_type": "DDR4",
+      "max_memory_gb": 64,
+      "dimm_slots": 2,
+      "memory_form_factor": "UDIMM",
+      "m2_slots": 1,
+      "m2_form_factors": [
+        "2280"
+      ],
+      "storage_interfaces": [
+        "NVME",
+        "SATA"
+      ],
+      "sata_ports": 4,
+      "form_factor": "MATX",
+      "eps_8pin_count": 1,
+      "atx_24pin_count": 1,
+      "chipset": "H610",
+      "supported_cpu_families": [
+        "intel-core-12",
+        "intel-core-13",
+        "intel-core-14"
+      ],
+      "gpu_slot": "PCIEX16",
+      "verified_fields": [
+        "atx_24pin_count",
+        "chipset",
+        "dimm_slots",
+        "eps_8pin_count",
+        "form_factor",
+        "gpu_slot",
+        "m2_form_factors",
+        "m2_slots",
+        "max_memory_gb",
+        "memory_form_factor",
+        "memory_type",
+        "ram_type",
+        "sata_ports",
+        "socket",
+        "storage_interfaces",
+        "supported_cpu_families"
+      ]
+    },
+    "verifiedFields": [
+      "atx_24pin_count",
+      "chipset",
+      "dimm_slots",
+      "eps_8pin_count",
+      "form_factor",
+      "gpu_slot",
+      "m2_form_factors",
+      "m2_slots",
+      "max_memory_gb",
+      "memory_form_factor",
+      "memory_type",
+      "ram_type",
+      "sata_ports",
+      "socket",
+      "storage_interfaces",
+      "supported_cpu_families"
+    ],
+    "sources": [
+      {
+        "url": "https://www.msi.com/Motherboard/PRO-H610M-G-DDR4/Specification",
+        "name": "MSI",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "socket",
+          "memory_type",
+          "ram_type",
+          "max_memory_gb",
+          "dimm_slots",
+          "memory_form_factor",
+          "m2_slots",
+          "m2_form_factors",
+          "storage_interfaces",
+          "sata_ports",
+          "form_factor",
+          "eps_8pin_count",
+          "atx_24pin_count",
+          "chipset",
+          "supported_cpu_families",
+          "gpu_slot"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/msi-pro-h610m-g-ddr4.webp",
+    "imageSource": "https://storage-asset.msi.com/global/picture/product/product_1653874089f558c1be9da2ebf31bfe259c09522b11.webp"
+  },
+  {
+    "slug": "msi-b550m-pro-vdh-wifi",
+    "category": "mainboard",
+    "name": "Mainboard MSI B550M PRO-VDH WIFI",
+    "brand": "MSI",
+    "price": 2590000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "socket": "AM4",
+      "memory_type": "DDR4",
+      "ram_type": "DDR4",
+      "max_memory_gb": 128,
+      "dimm_slots": 4,
+      "memory_form_factor": "UDIMM",
+      "m2_slots": 2,
+      "m2_form_factors": [
+        "2280"
+      ],
+      "storage_interfaces": [
+        "NVME",
+        "SATA"
+      ],
+      "sata_ports": 4,
+      "form_factor": "MATX",
+      "eps_8pin_count": 1,
+      "atx_24pin_count": 1,
+      "chipset": "B550",
+      "supported_cpu_families": [
+        "ryzen-3000",
+        "ryzen-4000",
+        "ryzen-5000"
+      ],
+      "gpu_slot": "PCIEX16",
+      "verified_fields": [
+        "atx_24pin_count",
+        "chipset",
+        "dimm_slots",
+        "eps_8pin_count",
+        "form_factor",
+        "gpu_slot",
+        "m2_form_factors",
+        "m2_slots",
+        "max_memory_gb",
+        "memory_form_factor",
+        "memory_type",
+        "ram_type",
+        "sata_ports",
+        "socket",
+        "storage_interfaces",
+        "supported_cpu_families"
+      ]
+    },
+    "verifiedFields": [
+      "atx_24pin_count",
+      "chipset",
+      "dimm_slots",
+      "eps_8pin_count",
+      "form_factor",
+      "gpu_slot",
+      "m2_form_factors",
+      "m2_slots",
+      "max_memory_gb",
+      "memory_form_factor",
+      "memory_type",
+      "ram_type",
+      "sata_ports",
+      "socket",
+      "storage_interfaces",
+      "supported_cpu_families"
+    ],
+    "sources": [
+      {
+        "url": "https://www.msi.com/Motherboard/B550M-PRO-VDH-WIFI/Specification",
+        "name": "MSI",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "socket",
+          "memory_type",
+          "ram_type",
+          "max_memory_gb",
+          "dimm_slots",
+          "memory_form_factor",
+          "m2_slots",
+          "m2_form_factors",
+          "storage_interfaces",
+          "sata_ports",
+          "form_factor",
+          "eps_8pin_count",
+          "atx_24pin_count",
+          "chipset",
+          "supported_cpu_families",
+          "gpu_slot"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/catalog-msi-b550m-pro-vdh-wifi.svg"
+  },
+  {
+    "slug": "msi-b650-gaming-plus-wifi",
+    "category": "mainboard",
+    "name": "Mainboard MSI B650 GAMING PLUS WIFI",
+    "brand": "MSI",
+    "price": 4190000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "socket": "AM5",
+      "memory_type": "DDR5",
+      "ram_type": "DDR5",
+      "max_memory_gb": 256,
+      "dimm_slots": 4,
+      "memory_form_factor": "UDIMM",
+      "m2_slots": 2,
+      "m2_form_factors": [
+        "2280"
+      ],
+      "storage_interfaces": [
+        "NVME",
+        "SATA"
+      ],
+      "sata_ports": 4,
+      "form_factor": "ATX",
+      "eps_8pin_count": 2,
+      "atx_24pin_count": 1,
+      "chipset": "B650",
+      "supported_cpu_families": [
+        "ryzen-7000",
+        "ryzen-8000",
+        "ryzen-9000"
+      ],
+      "gpu_slot": "PCIEX16",
+      "verified_fields": [
+        "atx_24pin_count",
+        "chipset",
+        "dimm_slots",
+        "eps_8pin_count",
+        "form_factor",
+        "gpu_slot",
+        "m2_form_factors",
+        "m2_slots",
+        "max_memory_gb",
+        "memory_form_factor",
+        "memory_type",
+        "ram_type",
+        "sata_ports",
+        "socket",
+        "storage_interfaces",
+        "supported_cpu_families"
+      ]
+    },
+    "verifiedFields": [
+      "atx_24pin_count",
+      "chipset",
+      "dimm_slots",
+      "eps_8pin_count",
+      "form_factor",
+      "gpu_slot",
+      "m2_form_factors",
+      "m2_slots",
+      "max_memory_gb",
+      "memory_form_factor",
+      "memory_type",
+      "ram_type",
+      "sata_ports",
+      "socket",
+      "storage_interfaces",
+      "supported_cpu_families"
+    ],
+    "sources": [
+      {
+        "url": "https://www.msi.com/Motherboard/B650-GAMING-PLUS-WIFI/Specification",
+        "name": "MSI",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "socket",
+          "memory_type",
+          "ram_type",
+          "max_memory_gb",
+          "dimm_slots",
+          "memory_form_factor",
+          "m2_slots",
+          "m2_form_factors",
+          "storage_interfaces",
+          "sata_ports",
+          "form_factor",
+          "eps_8pin_count",
+          "atx_24pin_count",
+          "chipset",
+          "supported_cpu_families",
+          "gpu_slot"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/msi-b650-gaming-plus-wifi.webp",
+    "imageSource": "https://storage-asset.msi.com/global/picture/product/product_1681456847b0ea0e25f792d9f157c17bc8df9db04a.webp"
+  },
+  {
+    "slug": "kingston-fury-beast-8gb-ddr4",
+    "category": "ram",
+    "name": "RAM Kingston FURY Beast 8GB (1 thanh) DDR4-3200 KF432C16BB_8",
+    "brand": "Kingston",
+    "price": 490000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "part_number": "KF432C16BB/8",
+      "capacity_gb": 8,
+      "module_count": 1,
+      "memory_type": "DDR4",
+      "form_factor": "UDIMM",
+      "speed_mts": 3200,
+      "cas_latency": 16,
+      "voltage_v": 1.35,
+      "height_mm": 34,
+      "jedec_speed_mts": 2400,
+      "jedec_voltage_v": 1.2,
+      "memory_profile": "Intel XMP 2.0",
+      "verified_fields": [
+        "capacity_gb",
+        "cas_latency",
+        "form_factor",
+        "height_mm",
+        "jedec_speed_mts",
+        "jedec_voltage_v",
+        "memory_profile",
+        "memory_type",
+        "module_count",
+        "part_number",
+        "speed_mts",
+        "voltage_v"
+      ]
+    },
+    "verifiedFields": [
+      "capacity_gb",
+      "cas_latency",
+      "form_factor",
+      "height_mm",
+      "jedec_speed_mts",
+      "jedec_voltage_v",
+      "memory_profile",
+      "memory_type",
+      "module_count",
+      "part_number",
+      "speed_mts",
+      "voltage_v"
+    ],
+    "sources": [
+      {
+        "url": "https://www.kingston.com/datasheets/KF432C16BB_8.pdf",
+        "name": "Kingston",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "part_number",
+          "capacity_gb",
+          "module_count",
+          "memory_type",
+          "form_factor",
+          "speed_mts",
+          "cas_latency",
+          "voltage_v",
+          "height_mm"
+        ],
+        "kind": "manufacturer"
+      },
+      {
+        "url": "https://www.kingston.com/datasheets/KF432C16BB_8.pdf",
+        "name": "Kingston",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "jedec_speed_mts",
+          "jedec_voltage_v",
+          "memory_profile"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "3200 MT/s, CL16 và 1.35 V là cấu hình XMP; mặc định JEDEC 2400 MT/s ở 1.2 V. H610 có thể giới hạn tùy chọn XMP.",
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/catalog-kingston-fury-beast-8gb-ddr4.svg"
+  },
+  {
+    "slug": "kingston-fury-beast-16gb-ddr4",
+    "category": "ram",
+    "name": "RAM Kingston FURY Beast 16GB (1 thanh) DDR4-3200 KF432C16BB_16",
+    "brand": "Kingston",
+    "price": 890000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "part_number": "KF432C16BB/16",
+      "capacity_gb": 16,
+      "module_count": 1,
+      "memory_type": "DDR4",
+      "form_factor": "UDIMM",
+      "speed_mts": 3200,
+      "cas_latency": 16,
+      "voltage_v": 1.35,
+      "height_mm": 34,
+      "jedec_speed_mts": 2400,
+      "jedec_voltage_v": 1.2,
+      "memory_profile": "Intel XMP 2.0",
+      "verified_fields": [
+        "capacity_gb",
+        "cas_latency",
+        "form_factor",
+        "height_mm",
+        "jedec_speed_mts",
+        "jedec_voltage_v",
+        "memory_profile",
+        "memory_type",
+        "module_count",
+        "part_number",
+        "speed_mts",
+        "voltage_v"
+      ]
+    },
+    "verifiedFields": [
+      "capacity_gb",
+      "cas_latency",
+      "form_factor",
+      "height_mm",
+      "jedec_speed_mts",
+      "jedec_voltage_v",
+      "memory_profile",
+      "memory_type",
+      "module_count",
+      "part_number",
+      "speed_mts",
+      "voltage_v"
+    ],
+    "sources": [
+      {
+        "url": "https://www.kingston.com/datasheets/KF432C16BB_16.pdf",
+        "name": "Kingston",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "part_number",
+          "capacity_gb",
+          "module_count",
+          "memory_type",
+          "form_factor",
+          "speed_mts",
+          "cas_latency",
+          "voltage_v",
+          "height_mm"
+        ],
+        "kind": "manufacturer"
+      },
+      {
+        "url": "https://www.kingston.com/datasheets/KF432C16BB_16.pdf",
+        "name": "Kingston",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "jedec_speed_mts",
+          "jedec_voltage_v",
+          "memory_profile"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "3200 MT/s, CL16 và 1.35 V là cấu hình XMP; mặc định JEDEC 2400 MT/s ở 1.2 V. H610 có thể giới hạn tùy chọn XMP.",
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/catalog-kingston-fury-beast-16gb-ddr4.svg"
+  },
+  {
+    "slug": "kingston-fury-beast-32gb-ddr4",
+    "category": "ram",
+    "name": "RAM Kingston FURY Beast 32GB (2 thanh) DDR4-3200 KF432C16BBK2_32",
+    "brand": "Kingston",
+    "price": 1690000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "part_number": "KF432C16BBK2/32",
+      "capacity_gb": 32,
+      "module_count": 2,
+      "memory_type": "DDR4",
+      "form_factor": "UDIMM",
+      "speed_mts": 3200,
+      "cas_latency": 16,
+      "voltage_v": 1.35,
+      "height_mm": 34,
+      "jedec_speed_mts": 2400,
+      "jedec_voltage_v": 1.2,
+      "memory_profile": "Intel XMP 2.0",
+      "verified_fields": [
+        "capacity_gb",
+        "cas_latency",
+        "form_factor",
+        "height_mm",
+        "jedec_speed_mts",
+        "jedec_voltage_v",
+        "memory_profile",
+        "memory_type",
+        "module_count",
+        "part_number",
+        "speed_mts",
+        "voltage_v"
+      ]
+    },
+    "verifiedFields": [
+      "capacity_gb",
+      "cas_latency",
+      "form_factor",
+      "height_mm",
+      "jedec_speed_mts",
+      "jedec_voltage_v",
+      "memory_profile",
+      "memory_type",
+      "module_count",
+      "part_number",
+      "speed_mts",
+      "voltage_v"
+    ],
+    "sources": [
+      {
+        "url": "https://www.kingston.com/datasheets/KF432C16BBK2_32.pdf",
+        "name": "Kingston",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "part_number",
+          "capacity_gb",
+          "module_count",
+          "memory_type",
+          "form_factor",
+          "speed_mts",
+          "cas_latency",
+          "voltage_v",
+          "height_mm"
+        ],
+        "kind": "manufacturer"
+      },
+      {
+        "url": "https://www.kingston.com/datasheets/KF432C16BBK2_32.pdf",
+        "name": "Kingston",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "jedec_speed_mts",
+          "jedec_voltage_v",
+          "memory_profile"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "3200 MT/s, CL16 và 1.35 V là cấu hình XMP; mặc định JEDEC 2400 MT/s ở 1.2 V. H610 có thể giới hạn tùy chọn XMP.",
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/catalog-kingston-fury-beast-32gb-ddr4.svg"
+  },
+  {
+    "slug": "kingston-fury-beast-32gb-ddr5",
+    "category": "ram",
+    "name": "RAM Kingston FURY Beast 32GB (2 thanh) DDR5-6000 KF560C36BBE2K2-32",
+    "brand": "Kingston",
+    "price": 2690000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "part_number": "KF560C36BBE2K2-32",
+      "capacity_gb": 32,
+      "module_count": 2,
+      "memory_type": "DDR5",
+      "form_factor": "UDIMM",
+      "speed_mts": 6000,
+      "cas_latency": 36,
+      "voltage_v": 1.35,
+      "height_mm": 34.9,
+      "jedec_speed_mts": 4800,
+      "jedec_voltage_v": 1.1,
+      "memory_profile": "AMD EXPO / Intel XMP 3.0",
+      "verified_fields": [
+        "capacity_gb",
+        "cas_latency",
+        "form_factor",
+        "height_mm",
+        "jedec_speed_mts",
+        "jedec_voltage_v",
+        "memory_profile",
+        "memory_type",
+        "module_count",
+        "part_number",
+        "speed_mts",
+        "voltage_v"
+      ]
+    },
+    "verifiedFields": [
+      "capacity_gb",
+      "cas_latency",
+      "form_factor",
+      "height_mm",
+      "jedec_speed_mts",
+      "jedec_voltage_v",
+      "memory_profile",
+      "memory_type",
+      "module_count",
+      "part_number",
+      "speed_mts",
+      "voltage_v"
+    ],
+    "sources": [
+      {
+        "url": "https://www.kingston.com/datasheets/KF560C36BBE2K2-32.pdf",
+        "name": "Kingston",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "part_number",
+          "capacity_gb",
+          "module_count",
+          "memory_type",
+          "form_factor",
+          "speed_mts",
+          "cas_latency",
+          "voltage_v",
+          "height_mm"
+        ],
+        "kind": "manufacturer"
+      },
+      {
+        "url": "https://www.kingston.com/datasheets/KF560C36BBE2K2-32.pdf",
+        "name": "Kingston",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "jedec_speed_mts",
+          "jedec_voltage_v",
+          "memory_profile"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/catalog-kingston-fury-beast-32gb-ddr5.svg"
+  },
+  {
+    "slug": "kingston-nv3-2tb",
+    "category": "storage",
+    "name": "SSD Kingston NV3 2000GB M.2 NVMe PCIe 4.0",
+    "brand": "Kingston",
+    "price": 2990000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "part_number": "SNV3S/2000G",
+      "capacity_gb": 2000,
+      "interface": "NVME",
+      "form_factor": "M.2",
+      "m2_form_factor": "2280",
+      "pcie_generation": 4,
+      "pcie_lanes": 4,
+      "read_mbs": 6000,
+      "write_mbs": 5000,
+      "verified_fields": [
+        "capacity_gb",
+        "form_factor",
+        "interface",
+        "m2_form_factor",
+        "part_number",
+        "pcie_generation",
+        "pcie_lanes",
+        "read_mbs",
+        "write_mbs"
+      ]
+    },
+    "verifiedFields": [
+      "capacity_gb",
+      "form_factor",
+      "interface",
+      "m2_form_factor",
+      "part_number",
+      "pcie_generation",
+      "pcie_lanes",
+      "read_mbs",
+      "write_mbs"
+    ],
+    "sources": [
+      {
+        "url": "https://www.kingston.com/datasheets/snv3s_en.pdf",
+        "name": "Kingston",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "part_number",
+          "capacity_gb",
+          "interface",
+          "form_factor",
+          "m2_form_factor",
+          "pcie_generation",
+          "pcie_lanes",
+          "read_mbs",
+          "write_mbs"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/catalog-kingston-nv3-2tb.svg"
+  },
+  {
+    "slug": "crucial-p3-plus-500gb",
+    "category": "storage",
+    "name": "SSD Crucial P3 Plus 500GB M.2 NVMe PCIe 4.0",
+    "brand": "Crucial",
+    "price": 790000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "part_number": "CT500P3PSSD8",
+      "capacity_gb": 500,
+      "interface": "NVME",
+      "form_factor": "M.2",
+      "m2_form_factor": "2280",
+      "pcie_generation": 4,
+      "pcie_lanes": 4,
+      "read_mbs": 4700,
+      "write_mbs": 1900,
+      "verified_fields": [
+        "capacity_gb",
+        "form_factor",
+        "interface",
+        "m2_form_factor",
+        "part_number",
+        "pcie_generation",
+        "pcie_lanes",
+        "read_mbs",
+        "write_mbs"
+      ]
+    },
+    "verifiedFields": [
+      "capacity_gb",
+      "form_factor",
+      "interface",
+      "m2_form_factor",
+      "part_number",
+      "pcie_generation",
+      "pcie_lanes",
+      "read_mbs",
+      "write_mbs"
+    ],
+    "sources": [
+      {
+        "url": "https://www.crucial.com/content/dam/crucial/ssd-products/p3-plus/flyers/b2c/crucial-p3plus-productflyer-consumer.pdf",
+        "name": "Crucial",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "part_number",
+          "capacity_gb",
+          "interface",
+          "form_factor",
+          "m2_form_factor",
+          "pcie_generation",
+          "pcie_lanes",
+          "read_mbs",
+          "write_mbs"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/catalog-crucial-p3-plus-500gb.svg"
+  },
+  {
+    "slug": "crucial-p3-plus-1000gb",
+    "category": "storage",
+    "name": "SSD Crucial P3 Plus 1000GB M.2 NVMe PCIe 4.0",
+    "brand": "Crucial",
+    "price": 1390000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "part_number": "CT1000P3PSSD8",
+      "capacity_gb": 1000,
+      "interface": "NVME",
+      "form_factor": "M.2",
+      "m2_form_factor": "2280",
+      "pcie_generation": 4,
+      "pcie_lanes": 4,
+      "read_mbs": 5000,
+      "write_mbs": 3600,
+      "verified_fields": [
+        "capacity_gb",
+        "form_factor",
+        "interface",
+        "m2_form_factor",
+        "part_number",
+        "pcie_generation",
+        "pcie_lanes",
+        "read_mbs",
+        "write_mbs"
+      ]
+    },
+    "verifiedFields": [
+      "capacity_gb",
+      "form_factor",
+      "interface",
+      "m2_form_factor",
+      "part_number",
+      "pcie_generation",
+      "pcie_lanes",
+      "read_mbs",
+      "write_mbs"
+    ],
+    "sources": [
+      {
+        "url": "https://www.crucial.com/content/dam/crucial/ssd-products/p3-plus/flyers/b2c/crucial-p3plus-productflyer-consumer.pdf",
+        "name": "Crucial",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "part_number",
+          "capacity_gb",
+          "interface",
+          "form_factor",
+          "m2_form_factor",
+          "pcie_generation",
+          "pcie_lanes",
+          "read_mbs",
+          "write_mbs"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/catalog-crucial-p3-plus-1000gb.svg"
+  },
+  {
+    "slug": "crucial-p3-plus-2000gb",
+    "category": "storage",
+    "name": "SSD Crucial P3 Plus 2000GB M.2 NVMe PCIe 4.0",
+    "brand": "Crucial",
+    "price": 2490000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "part_number": "CT2000P3PSSD8",
+      "capacity_gb": 2000,
+      "interface": "NVME",
+      "form_factor": "M.2",
+      "m2_form_factor": "2280",
+      "pcie_generation": 4,
+      "pcie_lanes": 4,
+      "read_mbs": 5000,
+      "write_mbs": 4200,
+      "verified_fields": [
+        "capacity_gb",
+        "form_factor",
+        "interface",
+        "m2_form_factor",
+        "part_number",
+        "pcie_generation",
+        "pcie_lanes",
+        "read_mbs",
+        "write_mbs"
+      ]
+    },
+    "verifiedFields": [
+      "capacity_gb",
+      "form_factor",
+      "interface",
+      "m2_form_factor",
+      "part_number",
+      "pcie_generation",
+      "pcie_lanes",
+      "read_mbs",
+      "write_mbs"
+    ],
+    "sources": [
+      {
+        "url": "https://www.crucial.com/content/dam/crucial/ssd-products/p3-plus/flyers/b2c/crucial-p3plus-productflyer-consumer.pdf",
+        "name": "Crucial",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "part_number",
+          "capacity_gb",
+          "interface",
+          "form_factor",
+          "m2_form_factor",
+          "pcie_generation",
+          "pcie_lanes",
+          "read_mbs",
+          "write_mbs"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/catalog-crucial-p3-plus-2000gb.svg"
+  },
+  {
+    "slug": "msi-rtx-3050-ventus-2x-6g-oc",
+    "category": "vga",
+    "name": "VGA MSI RTX 3050 VENTUS 2X 6G OC",
+    "brand": "MSI",
+    "price": 3890000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "gpu_model": "RTX 3050 VENTUS 2X 6G OC",
+      "vram_gb": 6,
+      "memory_type": "GDDR6",
+      "memory_bus_bits": 96,
+      "length_mm": 189,
+      "width_mm": 109,
+      "thickness_mm": 42,
+      "recommended_psu_w": 300,
+      "pci_slot": "PCIEX16",
+      "pcie_8pin_count": 0,
+      "pcie_16pin_count": 0,
+      "power_connectors": "0 × PCIe 8-pin; 0 × 16-pin",
+      "board_power_w": 70,
+      "verified_fields": [
+        "board_power_w",
+        "gpu_model",
+        "length_mm",
+        "memory_bus_bits",
+        "memory_type",
+        "pci_slot",
+        "pcie_16pin_count",
+        "pcie_8pin_count",
+        "power_connectors",
+        "recommended_psu_w",
+        "thickness_mm",
+        "vram_gb",
+        "width_mm"
+      ]
+    },
+    "verifiedFields": [
+      "board_power_w",
+      "gpu_model",
+      "length_mm",
+      "memory_bus_bits",
+      "memory_type",
+      "pci_slot",
+      "pcie_16pin_count",
+      "pcie_8pin_count",
+      "power_connectors",
+      "recommended_psu_w",
+      "thickness_mm",
+      "vram_gb",
+      "width_mm"
+    ],
+    "sources": [
+      {
+        "url": "https://www.msi.com/Graphics-Card/GeForce-RTX-3050-VENTUS-2X-6G-OC/Specification",
+        "name": "MSI",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "gpu_model",
+          "vram_gb",
+          "memory_type",
+          "memory_bus_bits",
+          "length_mm",
+          "width_mm",
+          "thickness_mm",
+          "recommended_psu_w",
+          "pci_slot",
+          "pcie_8pin_count",
+          "pcie_16pin_count",
+          "power_connectors",
+          "board_power_w"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/catalog-msi-rtx-3050-ventus-2x-6g-oc.svg"
+  },
+  {
+    "slug": "sapphire-pulse-rx-6600",
+    "category": "vga",
+    "name": "VGA Sapphire PULSE Radeon RX 6600",
+    "brand": "Sapphire",
+    "price": 4990000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "gpu_model": "PULSE Radeon RX 6600",
+      "vram_gb": 8,
+      "memory_type": "GDDR6",
+      "memory_bus_bits": 128,
+      "length_mm": 193,
+      "width_mm": 120.05,
+      "thickness_mm": 40.05,
+      "recommended_psu_w": 500,
+      "pci_slot": "PCIEX16",
+      "pcie_8pin_count": 1,
+      "pcie_16pin_count": 0,
+      "power_connectors": "1 × PCIe 8-pin; 0 × 16-pin",
+      "board_power_w": 140,
+      "verified_fields": [
+        "board_power_w",
+        "gpu_model",
+        "length_mm",
+        "memory_bus_bits",
+        "memory_type",
+        "pci_slot",
+        "pcie_16pin_count",
+        "pcie_8pin_count",
+        "power_connectors",
+        "recommended_psu_w",
+        "thickness_mm",
+        "vram_gb",
+        "width_mm"
+      ]
+    },
+    "verifiedFields": [
+      "board_power_w",
+      "gpu_model",
+      "length_mm",
+      "memory_bus_bits",
+      "memory_type",
+      "pci_slot",
+      "pcie_16pin_count",
+      "pcie_8pin_count",
+      "power_connectors",
+      "recommended_psu_w",
+      "thickness_mm",
+      "vram_gb",
+      "width_mm"
+    ],
+    "sources": [
+      {
+        "url": "https://www.sapphiretech.com/en/news/sapphire-pulse-rx-6600",
+        "name": "Sapphire",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "gpu_model",
+          "vram_gb",
+          "memory_type",
+          "memory_bus_bits",
+          "length_mm",
+          "width_mm",
+          "thickness_mm",
+          "recommended_psu_w",
+          "pci_slot",
+          "pcie_8pin_count",
+          "pcie_16pin_count",
+          "power_connectors",
+          "board_power_w"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/catalog-sapphire-pulse-rx-6600.svg"
+  },
+  {
+    "slug": "sapphire-pulse-rx-7600",
+    "category": "vga",
+    "name": "VGA Sapphire PULSE Radeon RX 7600",
+    "brand": "Sapphire",
+    "price": 6490000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "gpu_model": "PULSE Radeon RX 7600",
+      "vram_gb": 8,
+      "memory_type": "GDDR6",
+      "memory_bus_bits": 128,
+      "length_mm": 240,
+      "width_mm": 107.1,
+      "thickness_mm": 44.07,
+      "recommended_psu_w": 550,
+      "pci_slot": "PCIEX16",
+      "pcie_8pin_count": 1,
+      "pcie_16pin_count": 0,
+      "power_connectors": "1 × PCIe 8-pin; 0 × 16-pin",
+      "board_power_w": 185,
+      "verified_fields": [
+        "board_power_w",
+        "gpu_model",
+        "length_mm",
+        "memory_bus_bits",
+        "memory_type",
+        "pci_slot",
+        "pcie_16pin_count",
+        "pcie_8pin_count",
+        "power_connectors",
+        "recommended_psu_w",
+        "thickness_mm",
+        "vram_gb",
+        "width_mm"
+      ]
+    },
+    "verifiedFields": [
+      "board_power_w",
+      "gpu_model",
+      "length_mm",
+      "memory_bus_bits",
+      "memory_type",
+      "pci_slot",
+      "pcie_16pin_count",
+      "pcie_8pin_count",
+      "power_connectors",
+      "recommended_psu_w",
+      "thickness_mm",
+      "vram_gb",
+      "width_mm"
+    ],
+    "sources": [
+      {
+        "url": "https://www.sapphiretech.com/en/consumer/pulse-radeon-rx-7600-8g-gddr6",
+        "name": "Sapphire",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "gpu_model",
+          "vram_gb",
+          "memory_type",
+          "memory_bus_bits",
+          "length_mm",
+          "width_mm",
+          "thickness_mm",
+          "recommended_psu_w",
+          "pci_slot",
+          "pcie_8pin_count",
+          "pcie_16pin_count",
+          "power_connectors",
+          "board_power_w"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/catalog-sapphire-pulse-rx-7600.svg"
+  },
+  {
+    "slug": "msi-rtx-4060-ventus-2x-black",
+    "category": "vga",
+    "name": "VGA MSI RTX 4060 VENTUS 2X BLACK 8G OC",
+    "brand": "MSI",
+    "price": 7890000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "gpu_model": "RTX 4060 VENTUS 2X BLACK 8G OC",
+      "vram_gb": 8,
+      "memory_type": "GDDR6",
+      "memory_bus_bits": 128,
+      "length_mm": 199,
+      "width_mm": 120,
+      "thickness_mm": 41,
+      "recommended_psu_w": 550,
+      "pci_slot": "PCIEX16",
+      "pcie_8pin_count": 1,
+      "pcie_16pin_count": 0,
+      "power_connectors": "1 × PCIe 8-pin; 0 × 16-pin",
+      "board_power_w": 120,
+      "verified_fields": [
+        "board_power_w",
+        "gpu_model",
+        "length_mm",
+        "memory_bus_bits",
+        "memory_type",
+        "pci_slot",
+        "pcie_16pin_count",
+        "pcie_8pin_count",
+        "power_connectors",
+        "recommended_psu_w",
+        "thickness_mm",
+        "vram_gb",
+        "width_mm"
+      ]
+    },
+    "verifiedFields": [
+      "board_power_w",
+      "gpu_model",
+      "length_mm",
+      "memory_bus_bits",
+      "memory_type",
+      "pci_slot",
+      "pcie_16pin_count",
+      "pcie_8pin_count",
+      "power_connectors",
+      "recommended_psu_w",
+      "thickness_mm",
+      "vram_gb",
+      "width_mm"
+    ],
+    "sources": [
+      {
+        "url": "https://www.msi.com/Graphics-Card/GeForce-RTX-4060-VENTUS-2X-BLACK-8G-OC/Specification",
+        "name": "MSI",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "gpu_model",
+          "vram_gb",
+          "memory_type",
+          "memory_bus_bits",
+          "length_mm",
+          "width_mm",
+          "thickness_mm",
+          "recommended_psu_w",
+          "pci_slot",
+          "pcie_8pin_count",
+          "pcie_16pin_count",
+          "power_connectors",
+          "board_power_w"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/catalog-msi-rtx-4060-ventus-2x-black.svg"
+  },
+  {
+    "slug": "msi-mag-a550bn",
+    "category": "psu",
+    "name": "Nguồn MSI MAG A550BN",
+    "brand": "MSI",
+    "price": 890000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "wattage_w": 550,
+      "form_factor": "ATX",
+      "length_mm": 140,
+      "eps_8pin_count": 1,
+      "atx_24pin_count": 1,
+      "pcie_8pin_count": 2,
+      "pcie_16pin_count": 0,
+      "pcie_connectors": "2 × PCIe 6+2-pin; 0 × 16-pin",
+      "efficiency_rating": "80 Plus Bronze",
+      "modularity": "Non-modular",
+      "verified_fields": [
+        "atx_24pin_count",
+        "efficiency_rating",
+        "eps_8pin_count",
+        "form_factor",
+        "length_mm",
+        "modularity",
+        "pcie_16pin_count",
+        "pcie_8pin_count",
+        "pcie_connectors",
+        "wattage_w"
+      ]
+    },
+    "verifiedFields": [
+      "atx_24pin_count",
+      "efficiency_rating",
+      "eps_8pin_count",
+      "form_factor",
+      "length_mm",
+      "modularity",
+      "pcie_16pin_count",
+      "pcie_8pin_count",
+      "pcie_connectors",
+      "wattage_w"
+    ],
+    "sources": [
+      {
+        "url": "https://www.msi.com/Power-Supply/MAG-A550BN/Specification",
+        "name": "MSI",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "wattage_w",
+          "form_factor",
+          "length_mm",
+          "eps_8pin_count",
+          "atx_24pin_count",
+          "pcie_8pin_count",
+          "pcie_16pin_count",
+          "pcie_connectors",
+          "efficiency_rating",
+          "modularity"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/msi-mag-a550bn.webp",
+    "imageSource": "https://storage-asset.msi.com/global/picture/product/product_16264026911b468295cf2cd594cc57b1ceb5ab5d63.webp"
+  },
+  {
+    "slug": "msi-mag-a650bn",
+    "category": "psu",
+    "name": "Nguồn MSI MAG A650BN",
+    "brand": "MSI",
+    "price": 1090000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "wattage_w": 650,
+      "form_factor": "ATX",
+      "length_mm": 140,
+      "eps_8pin_count": 1,
+      "atx_24pin_count": 1,
+      "pcie_8pin_count": 2,
+      "pcie_16pin_count": 0,
+      "pcie_connectors": "2 × PCIe 6+2-pin; 0 × 16-pin",
+      "efficiency_rating": "80 Plus Bronze",
+      "modularity": "Non-modular",
+      "verified_fields": [
+        "atx_24pin_count",
+        "efficiency_rating",
+        "eps_8pin_count",
+        "form_factor",
+        "length_mm",
+        "modularity",
+        "pcie_16pin_count",
+        "pcie_8pin_count",
+        "pcie_connectors",
+        "wattage_w"
+      ]
+    },
+    "verifiedFields": [
+      "atx_24pin_count",
+      "efficiency_rating",
+      "eps_8pin_count",
+      "form_factor",
+      "length_mm",
+      "modularity",
+      "pcie_16pin_count",
+      "pcie_8pin_count",
+      "pcie_connectors",
+      "wattage_w"
+    ],
+    "sources": [
+      {
+        "url": "https://www.msi.com/Power-Supply/MAG-A650BN/Specification",
+        "name": "MSI",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "wattage_w",
+          "form_factor",
+          "length_mm",
+          "eps_8pin_count",
+          "atx_24pin_count",
+          "pcie_8pin_count",
+          "pcie_16pin_count",
+          "pcie_connectors",
+          "efficiency_rating",
+          "modularity"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/msi-mag-a650bn.webp",
+    "imageSource": "https://storage-asset.msi.com/global/picture/product/product_16264026911b468295cf2cd594cc57b1ceb5ab5d63.webp"
+  },
+  {
+    "slug": "msi-mag-a750gl-pcie5",
+    "category": "psu",
+    "name": "Nguồn MSI MAG A750GL PCIE5",
+    "brand": "MSI",
+    "price": 2490000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "wattage_w": 750,
+      "form_factor": "ATX",
+      "length_mm": 140,
+      "eps_8pin_count": 2,
+      "atx_24pin_count": 1,
+      "pcie_8pin_count": 3,
+      "pcie_16pin_count": 1,
+      "pcie_connectors": "3 × PCIe 6+2-pin; 1 × 16-pin",
+      "efficiency_rating": "80 Plus Gold",
+      "modularity": "Full modular",
+      "verified_fields": [
+        "atx_24pin_count",
+        "efficiency_rating",
+        "eps_8pin_count",
+        "form_factor",
+        "length_mm",
+        "modularity",
+        "pcie_16pin_count",
+        "pcie_8pin_count",
+        "pcie_connectors",
+        "wattage_w"
+      ]
+    },
+    "verifiedFields": [
+      "atx_24pin_count",
+      "efficiency_rating",
+      "eps_8pin_count",
+      "form_factor",
+      "length_mm",
+      "modularity",
+      "pcie_16pin_count",
+      "pcie_8pin_count",
+      "pcie_connectors",
+      "wattage_w"
+    ],
+    "sources": [
+      {
+        "url": "https://www.msi.com/Power-Supply/MAG-A750GL-PCIE5/Specification",
+        "name": "MSI",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "wattage_w",
+          "form_factor",
+          "length_mm",
+          "eps_8pin_count",
+          "atx_24pin_count",
+          "pcie_8pin_count",
+          "pcie_16pin_count",
+          "pcie_connectors",
+          "efficiency_rating",
+          "modularity"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/msi-mag-a750gl-pcie5.webp",
+    "imageSource": "https://storage-asset.msi.com/global/picture/product/product_172969279806bd5452bb9791ef35824869d85224c9.webp"
+  },
+  {
+    "slug": "montech-air-100-argb-black",
+    "category": "case",
+    "name": "Case Montech AIR 100 ARGB Black",
+    "brand": "Montech",
+    "price": 1390000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "max_gpu_length_mm": 330,
+      "max_cooler_height_mm": 161,
+      "max_psu_length_mm": 160,
+      "supported_motherboard_form_factors": [
+        "MATX",
+        "MINIITX"
+      ],
+      "supported_psu_form_factors": [
+        "ATX"
+      ],
+      "expansion_slots": 4,
+      "supported_radiator_sizes_mm": [
+        120,
+        140,
+        240,
+        280
+      ],
+      "color": "Black",
+      "verified_fields": [
+        "color",
+        "expansion_slots",
+        "max_cooler_height_mm",
+        "max_gpu_length_mm",
+        "max_psu_length_mm",
+        "supported_motherboard_form_factors",
+        "supported_psu_form_factors",
+        "supported_radiator_sizes_mm"
+      ]
+    },
+    "verifiedFields": [
+      "color",
+      "expansion_slots",
+      "max_cooler_height_mm",
+      "max_gpu_length_mm",
+      "max_psu_length_mm",
+      "supported_motherboard_form_factors",
+      "supported_psu_form_factors",
+      "supported_radiator_sizes_mm"
+    ],
+    "sources": [
+      {
+        "url": "https://www.montechpc.com/air-100-argb",
+        "name": "Montech",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "max_gpu_length_mm",
+          "max_cooler_height_mm",
+          "max_psu_length_mm",
+          "supported_motherboard_form_factors",
+          "supported_psu_form_factors",
+          "expansion_slots",
+          "supported_radiator_sizes_mm",
+          "color"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/catalog-montech-air-100-argb-black.svg"
+  },
+  {
+    "slug": "montech-air-100-argb-white",
+    "category": "case",
+    "name": "Case Montech AIR 100 ARGB White",
+    "brand": "Montech",
+    "price": 1390000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "max_gpu_length_mm": 330,
+      "max_cooler_height_mm": 161,
+      "max_psu_length_mm": 160,
+      "supported_motherboard_form_factors": [
+        "MATX",
+        "MINIITX"
+      ],
+      "supported_psu_form_factors": [
+        "ATX"
+      ],
+      "expansion_slots": 4,
+      "supported_radiator_sizes_mm": [
+        120,
+        140,
+        240,
+        280
+      ],
+      "color": "White",
+      "verified_fields": [
+        "color",
+        "expansion_slots",
+        "max_cooler_height_mm",
+        "max_gpu_length_mm",
+        "max_psu_length_mm",
+        "supported_motherboard_form_factors",
+        "supported_psu_form_factors",
+        "supported_radiator_sizes_mm"
+      ]
+    },
+    "verifiedFields": [
+      "color",
+      "expansion_slots",
+      "max_cooler_height_mm",
+      "max_gpu_length_mm",
+      "max_psu_length_mm",
+      "supported_motherboard_form_factors",
+      "supported_psu_form_factors",
+      "supported_radiator_sizes_mm"
+    ],
+    "sources": [
+      {
+        "url": "https://www.montechpc.com/air-100-argb",
+        "name": "Montech",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "max_gpu_length_mm",
+          "max_cooler_height_mm",
+          "max_psu_length_mm",
+          "supported_motherboard_form_factors",
+          "supported_psu_form_factors",
+          "expansion_slots",
+          "supported_radiator_sizes_mm",
+          "color"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/catalog-montech-air-100-argb-white.svg"
+  },
+  {
+    "slug": "deepcool-ak620",
+    "category": "cooling",
+    "name": "Tản nhiệt CPU DeepCool AK620",
+    "brand": "DeepCool",
+    "price": 1490000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "cooler_type": "AIR",
+      "height_mm": 160,
+      "supported_sockets": [
+        "LGA1851",
+        "LGA1700",
+        "LGA1200",
+        "AM4",
+        "AM5"
+      ],
+      "ram_clearance_mm": 43,
+      "fan_size_mm": 120,
+      "heatpipes": 6,
+      "fan_count": 2,
+      "fan_connector": "4-pin PWM",
+      "verified_fields": [
+        "cooler_type",
+        "fan_connector",
+        "fan_count",
+        "fan_size_mm",
+        "heatpipes",
+        "height_mm",
+        "ram_clearance_mm",
+        "supported_sockets"
+      ]
+    },
+    "verifiedFields": [
+      "cooler_type",
+      "fan_connector",
+      "fan_count",
+      "fan_size_mm",
+      "heatpipes",
+      "height_mm",
+      "ram_clearance_mm",
+      "supported_sockets"
+    ],
+    "sources": [
+      {
+        "url": "https://global.deepcool.com/products/Cooling/cpuaircoolers/AK620-High-Performance-CPU-Cooler-1851-1700-AM5/2024/13067.shtml",
+        "name": "DeepCool",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "cooler_type",
+          "height_mm",
+          "supported_sockets",
+          "ram_clearance_mm",
+          "fan_size_mm",
+          "heatpipes",
+          "fan_count",
+          "fan_connector"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/catalog-deepcool-ak620.svg"
+  },
+  {
+    "slug": "msi-pro-mp251",
+    "category": "monitor",
+    "name": "Màn hình MSI PRO MP251 24.5 inch IPS 100Hz",
+    "brand": "MSI",
+    "price": 1790000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "screen_size_in": 24.5,
+      "panel_type": "IPS",
+      "resolution": "1920 × 1080",
+      "refresh_rate_hz": 100,
+      "video_ports": [
+        "HDMI 1.4b × 1",
+        "VGA × 1"
+      ],
+      "brightness_nits": 300,
+      "vesa": "100 × 100 mm",
+      "speakers": "2 × 2 W",
+      "response_time": "4 ms GTG / 1 ms MPRT",
+      "verified_fields": [
+        "brightness_nits",
+        "panel_type",
+        "refresh_rate_hz",
+        "resolution",
+        "response_time",
+        "screen_size_in",
+        "speakers",
+        "vesa",
+        "video_ports"
+      ]
+    },
+    "verifiedFields": [
+      "brightness_nits",
+      "panel_type",
+      "refresh_rate_hz",
+      "resolution",
+      "response_time",
+      "screen_size_in",
+      "speakers",
+      "vesa",
+      "video_ports"
+    ],
+    "sources": [
+      {
+        "url": "https://storage-asset.msi.com/datasheet/pro-monitors/us/PRO-MP251.pdf",
+        "name": "MSI",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "screen_size_in",
+          "panel_type",
+          "resolution",
+          "refresh_rate_hz",
+          "video_ports",
+          "brightness_nits",
+          "vesa",
+          "speakers",
+          "response_time"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/catalog-msi-pro-mp251.svg"
+  },
+  {
+    "slug": "msi-g274qpf-e2",
+    "category": "monitor",
+    "name": "Màn hình MSI G274QPF E2 27 inch QHD 180Hz",
+    "brand": "MSI",
+    "price": 5490000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "screen_size_in": 27,
+      "panel_type": "Rapid IPS",
+      "resolution": "2560 × 1440",
+      "refresh_rate_hz": 180,
+      "video_ports": [
+        "HDMI 2.0b × 2",
+        "DisplayPort 1.4a × 1",
+        "USB-C DP Alt Mode 15W × 1"
+      ],
+      "brightness_nits": 400,
+      "vesa": "75 × 75 mm",
+      "response_time": "1 ms GTG",
+      "height_adjustment_mm": 130,
+      "verified_fields": [
+        "brightness_nits",
+        "height_adjustment_mm",
+        "panel_type",
+        "refresh_rate_hz",
+        "resolution",
+        "response_time",
+        "screen_size_in",
+        "vesa",
+        "video_ports"
+      ]
+    },
+    "verifiedFields": [
+      "brightness_nits",
+      "height_adjustment_mm",
+      "panel_type",
+      "refresh_rate_hz",
+      "resolution",
+      "response_time",
+      "screen_size_in",
+      "vesa",
+      "video_ports"
+    ],
+    "sources": [
+      {
+        "url": "https://www.msi.com/Monitor/G274QPF-E2/Specification",
+        "name": "MSI",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "screen_size_in",
+          "panel_type",
+          "resolution",
+          "refresh_rate_hz",
+          "video_ports",
+          "brightness_nits",
+          "vesa",
+          "response_time",
+          "height_adjustment_mm"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "180 Hz qua DisplayPort/USB-C, tối đa 144 Hz qua HDMI ở QHD.",
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/msi-g274qpf-e2.webp",
+    "imageSource": "https://storage-asset.msi.com/global/picture/product/product_1700099130ad594dadfaadab3aea2d99ddc5181f49.webp"
+  },
+  {
+    "slug": "aoc-24g4",
+    "category": "monitor",
+    "name": "Màn hình AOC 24G4 23.8 inch Fast IPS 180Hz",
+    "brand": "AOC",
+    "price": 2990000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "screen_size_in": 23.8,
+      "panel_type": "Fast IPS",
+      "resolution": "1920 × 1080",
+      "refresh_rate_hz": 180,
+      "video_ports": [
+        "HDMI",
+        "DisplayPort"
+      ],
+      "response_time": "0.5 ms MPRT",
+      "verified_fields": [
+        "panel_type",
+        "refresh_rate_hz",
+        "resolution",
+        "response_time",
+        "screen_size_in",
+        "video_ports"
+      ]
+    },
+    "verifiedFields": [
+      "panel_type",
+      "refresh_rate_hz",
+      "resolution",
+      "response_time",
+      "screen_size_in",
+      "video_ports"
+    ],
+    "sources": [
+      {
+        "url": "https://saas.aoc.com/product/24G4",
+        "name": "AOC",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "screen_size_in",
+          "panel_type",
+          "resolution",
+          "refresh_rate_hz",
+          "video_ports",
+          "response_time"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/catalog-aoc-24g4.svg"
+  },
+  {
+    "slug": "lg-ultragear-27gp850-b",
+    "category": "monitor",
+    "name": "Màn hình LG UltraGear 27GP850-B 27 inch QHD",
+    "brand": "LG",
+    "price": 6990000,
+    "stock": 20,
+    "new": true,
+    "expose": true,
+    "facts": {
+      "screen_size_in": 27,
+      "panel_type": "Nano IPS",
+      "resolution": "2560 × 1440",
+      "refresh_rate_hz": 165,
+      "video_ports": [
+        "HDMI",
+        "DisplayPort 1.4",
+        "USB hub"
+      ],
+      "response_time": "1 ms GTG",
+      "overclock_hz": 180,
+      "verified_fields": [
+        "overclock_hz",
+        "panel_type",
+        "refresh_rate_hz",
+        "resolution",
+        "response_time",
+        "screen_size_in",
+        "video_ports"
+      ]
+    },
+    "verifiedFields": [
+      "overclock_hz",
+      "panel_type",
+      "refresh_rate_hz",
+      "resolution",
+      "response_time",
+      "screen_size_in",
+      "video_ports"
+    ],
+    "sources": [
+      {
+        "url": "https://www.lg.com/us/monitors/lg-27gp850-b-gaming-monitor",
+        "name": "LG",
+        "checkedAt": "2026-11-26",
+        "fields": [
+          "screen_size_in",
+          "panel_type",
+          "resolution",
+          "refresh_rate_hz",
+          "video_ports",
+          "response_time",
+          "overclock_hz"
+        ],
+        "kind": "manufacturer"
+      }
+    ],
+    "notes": [
+      "180 Hz là chế độ ép xung qua DisplayPort 1.4; mức mặc định 165 Hz.",
+      "Giá và tồn kho mẫu để thử chọn cấu hình; cần xác nhận giá bán và hàng thực tế."
+    ],
+    "status": "verified",
+    "image": "products/catalog-lg-ultragear-27gp850-b.svg"
+  }
+]

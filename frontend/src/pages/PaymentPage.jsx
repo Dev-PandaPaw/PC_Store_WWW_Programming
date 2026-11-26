@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { useParams, Link, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
+import Breadcrumbs from '../components/Breadcrumbs'
 import axios from 'axios'
 import {
   CreditCard,
@@ -87,13 +88,7 @@ export default function PaymentPage() {
   return (
     <div className="payment-page-container">
       {/* ── Breadcrumbs & Steps ── */}
-      <nav className="breadcrumbs" aria-label="Đường dẫn" style={{ marginBottom: '16px' }}>
-        <Link to="/">Trang chủ</Link>
-        <span>/</span>
-        <Link to="/cart">Giỏ hàng</Link>
-        <span>/</span>
-        <span>Thanh toán đơn hàng</span>
-      </nav>
+      <Breadcrumbs items={[{ label: 'Giỏ hàng', to: '/cart' }, { label: 'Thanh toán đơn hàng' }]} style={{ marginBottom: '16px' }} />
 
       {/* ── Step Indicator kiểu GEARVN ── */}
       <div className="checkout-steps">

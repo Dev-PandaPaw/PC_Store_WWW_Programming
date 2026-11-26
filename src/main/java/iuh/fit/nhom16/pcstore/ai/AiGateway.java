@@ -5,6 +5,7 @@ import com.google.genai.errors.ApiException;
 import com.google.genai.types.HttpOptions;
 import com.google.genai.types.HttpRetryOptions;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.content.Media;
 import org.springframework.ai.converter.BeanOutputConverter;
 import org.springframework.ai.google.genai.GoogleGenAiChatOptions;
 import org.springframework.beans.factory.DisposableBean;
@@ -57,11 +58,18 @@ public class AiGateway implements DisposableBean {
     public <T> T ask(String system, Object context, Class<T> type, String client) {
         return invoke(system,context,type,client,false).value();
     }
+    public <T> T askWithMedia(String system, Object context, List<Media> media, Class<T> type, String client) {
+        return invoke(system,context,type,client,false,media).value();
+    }
     public <T> Grounded<T> askGrounded(String system, Object context, Class<T> type, String client) {
         return invoke(system,context,type,client,true);
     }
     @SuppressWarnings("unchecked")
     private <T> Grounded<T> invoke(String system, Object context, Class<T> type, String client, boolean grounded) {
+        return invoke(system,context,type,client,grounded,List.of());
+    }
+    @SuppressWarnings("unchecked")
+    private <T> Grounded<T> invoke(String system, Object context, Class<T> type, String client, boolean grounded,List<Media> media) {
         if (chat == null) throw new AiFailure(503, "AI_NOT_CONFIGURED", "Trợ lý AI tạm thời chưa sẵn sàng.");
         try (var lease = limiter.acquire(client)) {
             var converter = new BeanOutputConverter<>(type);
@@ -76,7 +84,7 @@ public class AiGateway implements DisposableBean {
                 }
                 schema = root.toString();
             }
-            var response = chat.prompt().system(system).user(json.writeValueAsString(context))
+            var response = chat.prompt().system(system).user(user -> user.text(json.writeValueAsString(context)).media(media.toArray(Media[]::new)))
                     .options(GoogleGenAiChatOptions.builder().responseSchema(schema).googleSearchRetrieval(grounded))
                     .call().chatResponse();
             if (response == null || response.getResult() == null) throw new IllegalArgumentException("Empty AI response");

@@ -21,6 +21,11 @@ Quy ước làm việc:
 
 - [Quy ước commit](project/COMMIT_CONVENTION.md)
 
+Spring AI — mục 3.3 của Văn Nhựt:
+
+- [Bài trình bày 3.3 từ đầu đến cuối — lời nói, code demo copy trực tiếp và giải thích 6 file Java](DEMO_SPRING_AI_3_3_VAN_NHUT.md)
+- [Hướng dẫn triển khai và kiểm thử 3.3](SPRING_AI_3_3_VAN_NHUT.md)
+
 Các tài liệu dưới đây là đặc tả trước triển khai, không phải bằng chứng ứng dụng đã được code.
 
 ## Đồng bộ báo cáo lần 1 — v2.1

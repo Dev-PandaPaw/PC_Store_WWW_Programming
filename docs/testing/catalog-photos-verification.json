@@ -1,0 +1,112 @@
+{
+  "checkedAt": "2026-11-26",
+  "migration": "V23__catalog_product_photos.sql",
+  "sourcesManifest": "src/main/resources/catalog/product-photo-catalog.json",
+  "database": {
+    "total": 78,
+    "visible": 74,
+    "replaced": 31,
+    "placeholderImages": 0,
+    "pricesStockAndSpecsPreserved": true
+  },
+  "browser": [
+    {
+      "width": 1440,
+      "products": 74,
+      "placeholderImages": 0,
+      "brokenImages": 0,
+      "detailPhotos": 1,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 390,
+      "products": 74,
+      "placeholderImages": 0,
+      "brokenImages": 0,
+      "detailPhotos": 1,
+      "overflow": false,
+      "errors": []
+    }
+  ],
+  "liveBuild": {
+    "query": "Build PC linh kiện rời AMD DDR5 RAM 64GB dưới 30 triệu",
+    "http": 200,
+    "model": "gemini-3.5-flash-lite",
+    "ram": "RAM Kingston FURY Beast 64GB (2 × 32GB) DDR5-6000 KF560C36BBEK2-64",
+    "total": 27420000,
+    "status": "compatible",
+    "checks": [
+      {
+        "label": "CPU và mainboard",
+        "status": "passed"
+      },
+      {
+        "label": "RAM: chuẩn, dung lượng và số thanh",
+        "status": "passed"
+      },
+      {
+        "label": "Nguồn và đầu cấp điện",
+        "status": "passed"
+      },
+      {
+        "label": "Chiều dài GPU, PSU và khổ mainboard",
+        "status": "passed"
+      },
+      {
+        "label": "Socket và khoảng trống tản khí",
+        "status": "passed"
+      },
+      {
+        "label": "SSD M.2 NVMe",
+        "status": "passed"
+      }
+    ],
+    "photos": 8,
+    "photoDetails": [
+      {
+        "complete": true,
+        "width": 480,
+        "asset": "products/corsair-3500x-white.png"
+      },
+      {
+        "complete": true,
+        "width": 480,
+        "asset": "products/amd-ryzen-5-7600.png"
+      },
+      {
+        "complete": true,
+        "width": 1000,
+        "asset": "products/msi-b650-gaming-plus-wifi.webp"
+      },
+      {
+        "complete": true,
+        "width": 416,
+        "asset": "products/kingston-fury-beast-64gb-ddr5.webp"
+      },
+      {
+        "complete": true,
+        "width": 1330,
+        "asset": "products/vga-gigabyte-rtx-4060-windforce-oc-8gb.png"
+      },
+      {
+        "complete": true,
+        "width": 1350,
+        "asset": "products/crucial-p3-plus-500gb.jpg"
+      },
+      {
+        "complete": true,
+        "width": 1024,
+        "asset": "products/msi-mag-a750gl-pcie5.webp"
+      },
+      {
+        "complete": true,
+        "width": 480,
+        "asset": "products/deepcool-ag400-argb.jpg"
+      }
+    ],
+    "errors": []
+  },
+  "productionBuild": "passed; existing JavaScript chunk size warning remains",
+  "review": "All 31 replacement photos were inspected visually. Correct black/white case variants, SSD capacities, RAM generations and module counts were checked. Generic family RAM photos are documented in the manifest. Original 43 storefront photos are preserved."
+}

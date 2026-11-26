@@ -1,11 +1,53 @@
 openapi: 3.0.3
 info:
   title: PixelCore AI product advisor
-  version: 2.1.0
+  version: 2.3.0
   description: Spring AI ChatClient and Google GenAI ChatModel run inside Spring Boot. Existing chat response contract is preserved. Read-only product advice; Gemini never supplies prices, stock, URLs or unrestricted product text.
 servers:
   - url: http://localhost:8080
 paths:
+  /api/ai/attachments/analyze:
+    post:
+      operationId: analyzeHardwareAttachment
+      description: >-
+        Requires CSRF. Reads one PNG/JPEG/WebP image, PDF, or UTF-8 TXT/CSV/JSON file, at most 5 MiB.
+        Image/PDF bytes are passed inline through Spring AI to the configured Gemini model.
+        Files are not published or stored by this endpoint. Returns extracted hardware facts for review;
+        unknown fields stay empty/zero, low confidence is explicit. Does not recommend products yet.
+      parameters:
+        - in: header
+          name: X-XSRF-TOKEN
+          required: true
+          schema: {type: string}
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file: {type: string, format: binary}
+      responses:
+        '200':
+          description: Extracted facts for the user to review and edit; readable false means no usable PC specifications were found
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [readable, components, notes]
+                properties:
+                  readable: {type: boolean}
+                  components: {type: array, maxItems: 12, items: {$ref: '#/components/schemas/HardwarePart'}}
+                  notes: {type: array, maxItems: 6, items: {type: string}}
+        '400': {description: Empty, invalid, unreadable or malformed file}
+        '403': {description: Missing or invalid CSRF}
+        '413': {description: File exceeds 5 MiB or text exceeds 32 KiB}
+        '415': {description: Unsupported file type or signature does not match the extension}
+        '429': {description: AI quota or local rate limit; Retry-After applies}
+        '502': {description: Invalid structured extraction or provider error}
+        '503': {description: AI model or key unavailable}
+        '504': {description: AI timeout}
   /api/ai/status:
     get:
       operationId: getAiStatus
@@ -41,6 +83,15 @@ paths:
               required: [message, history]
               properties:
                 message: {type: string, minLength: 1, maxLength: 1200}
+                hardware:
+                  type: object
+                  nullable: true
+                  description: Reviewed hardware context, kept separate from purchase criteria. Current-machine parts are never interpreted as mandatory models for the new purchase. No file bytes or client URLs accepted here. Uncertain model readings require review before recommendations. Conflicting known sockets and DDR standards are rejected; missing facts remain needs_verification. Clients retain this context explicitly for follow-up messages and can clear it at any time.
+                  required: [use, components, filename]
+                  properties:
+                    use: {type: string, enum: [current, desired]}
+                    filename: {type: string, maxLength: 160}
+                    components: {type: array, minItems: 1, maxItems: 12, items: {$ref: '#/components/schemas/HardwarePart'}}
                 history:
                   type: array
                   maxItems: 14
@@ -70,9 +121,47 @@ paths:
                     type: object
                     nullable: true
                     description: Optional sourced game requirement report. Includes title, minimum, recommended, sources, checkedAt, lookupStatus and selectedTarget. A dated reference is distinguished from a live grounded lookup. Product cards may include gameFit explaining component checks.
+                  build:
+                    type: object
+                    nullable: true
+                    description: >-
+                      Separate-component build, never a prebuilt PC. Missing budget asks for clarification.
+                      Spring AI vector retrieval ranks current database products; a bounded server-side
+                      solver selects one purchasable item per required category within the total budget.
+                      Known compatibility conflicts are rejected. Unknown or draft specifications are
+                      explicitly needs_verification, never certified compatible. No-match returns no partial
+                      build as a complete PC. Preview uses actual product photos, not a rendered assembled PC.
+                    required: [status, total, budget, items, checks, missingCategories, retrieval]
+                    properties:
+                      status: {type: string, enum: [needs_verification, compatible, no_match]}
+                      total: {type: integer, minimum: 0}
+                      budget: {type: integer, minimum: 1}
+                      retrieval: {type: string, enum: [vector]}
+                      items:
+                        type: array
+                        maxItems: 8
+                        items:
+                          type: object
+                          required: [category, label, productId, quantity]
+                          properties:
+                            category: {type: string}
+                            label: {type: string}
+                            productId: {type: string, format: uuid}
+                            quantity: {type: integer, enum: [1]}
+                      checks:
+                        type: array
+                        items:
+                          type: object
+                          required: [label, status, detail]
+                          properties:
+                            label: {type: string}
+                            status: {type: string, enum: [passed, needs_verification]}
+                            detail: {type: string}
+                      missingCategories: {type: array, items: {type: string}}
                   products:
                     type: array
-                    maxItems: 4
+                    maxItems: 8
+                    description: Up to four ordinary recommendations, or exactly eight separate components for a complete build. Current database prices and available stock are rechecked after selection.
                     items:
                       type: object
                       required: [id, slug, name, price, image, url, stockOnHand, reasons, specs]
@@ -86,6 +175,12 @@ paths:
                         stockOnHand: {type: integer, minimum: 0, description: 'Available warehouse units from the catalog, unchanged by the advisor. Imported listings start at zero; listing a product for sale is separate from confirming stock. A listing badge must not claim in-stock unless this value is positive.'}
                         reasons: {type: array, items: {type: string}}
                         specs: {type: array, items: {type: object}}
+                        hardwareFit:
+                          type: object
+                          description: Optional preliminary checks against reviewed attachment data; never a full compatibility certification
+                          properties:
+                            status: {type: string, enum: [needs_verification]}
+                            checks: {type: array, items: {type: string}}
         '400': {description: Invalid or oversized message/history}
         '403': {description: Missing or invalid CSRF token}
         '413': {description: Request body larger than 24 KiB}
@@ -96,3 +191,17 @@ paths:
         '502': {description: Invalid Gemini response or provider error; no unverified products returned}
         '503': {description: 'Missing key, unavailable model, or catalog unavailable'}
         '504': {description: Upstream timeout}
+components:
+  schemas:
+    HardwarePart:
+      type: object
+      additionalProperties: false
+      required: [category, model, socket, memoryType, capacityGb, wattageW, confidence]
+      properties:
+        category: {type: string, enum: [cpu, mainboard, ram, vga, storage, psu, case, cooling, monitor, mouse, keyboard]}
+        model: {type: string, minLength: 1, maxLength: 160}
+        socket: {type: string, maxLength: 24, description: Empty when not visible or supplied}
+        memoryType: {type: string, enum: ['', DDR3, DDR4, DDR5]}
+        capacityGb: {type: integer, minimum: 0, maximum: 100000, description: Zero when unknown; RAM/storage capacity in GB}
+        wattageW: {type: integer, minimum: 0, maximum: 5000, description: PSU capacity only; zero when unknown}
+        confidence: {type: string, enum: [high, low]}

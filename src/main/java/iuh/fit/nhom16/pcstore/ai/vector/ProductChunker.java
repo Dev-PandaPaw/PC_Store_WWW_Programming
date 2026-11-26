@@ -2,6 +2,7 @@ package iuh.fit.nhom16.pcstore.ai.vector;
 
 import iuh.fit.nhom16.pcstore.catalog.domain.Product;
 import iuh.fit.nhom16.pcstore.catalog.domain.ProductSpec;
+import iuh.fit.nhom16.pcstore.catalog.api.dto.StoreProduct.TechnicalSpec;
 import org.springframework.ai.document.Document;
 import org.springframework.stereotype.Component;
 
@@ -19,12 +20,19 @@ public class ProductChunker {
     static final int DESCRIPTION_CHUNK_SIZE = 1200;
 
     public List<Document> chunk(Product product) {
+        return chunk(product,List.of());
+    }
+
+    public List<Document> chunk(Product product,List<TechnicalSpec> technicalSpecs) {
         Objects.requireNonNull(product.getId(), "Product must have a database ID");
         StringBuilder context = new StringBuilder();
         field(context, "Sản phẩm", product.getName());
         field(context, "SKU", product.getSku());
         if (product.getCategory() != null) field(context, "Danh mục", product.getCategory().getName());
         field(context, "Thương hiệu", product.getBrand());
+        for(TechnicalSpec detail:technicalSpecs) {
+            field(context,detail.label()+(detail.verified()?"":" (bản nhập cũ, chưa xác minh)"),detail.value());
+        }
         ProductSpec spec = product.getSpec();
         if (spec != null) {
             field(context, "CPU", spec.getCpu());

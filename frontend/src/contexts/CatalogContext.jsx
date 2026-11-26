@@ -3,7 +3,7 @@ import http from '../services/http'
 import { matchesCategory, selectFlashDeals, CATEGORIES } from '../data/storeData'
 import { resolveProductImage } from '../assets/productImages'
 import initialProductsRaw from '../data/catalog-core.json'
-import { ARTICLES as initialArticles } from '../data/articles'
+import { ARTICLES as initialArticles, mergeArticles } from '../data/articles'
 
 const initialProducts = initialProductsRaw.map((p) => ({
   ...p,
@@ -78,7 +78,7 @@ export function CatalogProvider({ children }) {
 
   const value = useMemo(() => ({
     PRODUCTS: data.products,
-    ARTICLES: data.articles,
+    ARTICLES: mergeArticles(data.articles),
     categories: data.categories,
     FLASH_DEAL_PRODUCTS: selectFlashDeals(data.products),
     findProduct: slug => data.products.find(product => product.slug === slug),
