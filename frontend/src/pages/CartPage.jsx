@@ -5,6 +5,7 @@ import { useCart } from '../contexts/cartContextStore'
 import { formatVND } from '../utils/cart'
 import { SELECTED_CART_STORAGE_KEY, calculateSelectedPreview } from '../utils/checkout'
 import CartDemoPanel from '../components/CartDemoPanel'
+import Breadcrumbs from '../components/Breadcrumbs'
 import CartQuantity from '../components/CartQuantity'
 import PersonalizedRecommendations from '../components/PersonalizedRecommendations'
 
@@ -118,14 +119,10 @@ export default function CartPage() {
 
   return (
     <div className="cart-page">
+      <Breadcrumbs items={[{ label: 'Giỏ hàng' }]} />
       <CartDemoPanel />
       <Link className="store-button" to="/build-pc">Hoàn thiện cấu hình từ giỏ hàng</Link>
       <Link className="text-link" to="/orders">Đơn hàng của tôi</Link>
-      <nav className="breadcrumbs" aria-label="Đường dẫn">
-        <Link to="/">Trang chủ</Link>
-        <span>/</span>
-        <span>Giỏ hàng</span>
-      </nav>
       <div className="page-heading">
         <p className="section-eyebrow">GÓC MÁY TIẾP THEO CỦA BẠN</p>
         <h1>Giỏ hàng ({totalCount}).</h1>

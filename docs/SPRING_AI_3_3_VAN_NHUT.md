@@ -2,6 +2,8 @@
 
 Tài liệu hướng dẫn đọc code, chạy và kiểm thử phần 3.3 theo [kế hoạch phân công](KE_HOACH_PHAN_CONG_CONG_VIEC_SPRING_AI_NHOM16.md). Kết quả kiểm tra ngày **09/11/2026**, giờ Việt Nam: **24/24 test mục 3.3 pass**, bao gồm test Gemini thật. Test hồi quy toàn backend: **162 test được báo cáo, 141 pass, 21 skip, 0 failure, 0 error**. Các test có điều kiện về database/live không đủ cấu hình sẽ skip, không được tính là pass.
 
+Để trình bày với giảng viên, xem [kịch bản demo, lời diễn đạt và giải thích 6 file gốc](DEMO_SPRING_AI_3_3_VAN_NHUT.md). Kịch bản đối chiếu code ngày 10/11/2026, gồm API xem embedding thật được bổ sung sau lần kiểm thử ban đầu.
+
 ## 1. Phần này làm gì, liên quan search/tư vấn ra sao?
 
 Search và tư vấn đã có sẵn trước thay đổi này:
@@ -227,6 +229,54 @@ Ví dụ hợp đồng thành công, các con số dưới đây chỉ minh họ
 | 502 | `VECTOR_EMBEDDING_FAILED`: provider lỗi, timeout hoặc vector không hợp lệ. |
 
 Metadata giá/tồn kho là snapshot tại lần đồng bộ. Phía 3.4 phải đọc lại giá, trạng thái và số lượng có thể mua từ DB trước khi gợi ý/đặt hàng.
+
+## Xem document và mảng embedding thật trong DevTools
+
+API chỉ đọc: `GET /api/admin/vector/documents?offset=0&limit=100`, yêu cầu quyền Admin.
+Response có `storage`, `total`, `offset`, `limit` và `documents`. Mỗi document có:
+
+- `id`, `text`, `metadata`: nội dung/định danh đã lưu trong index.
+- `embedding`: mảng số đầy đủ lấy từ store, không phải dữ liệu sản phẩm nguồn và không phải vector giả.
+- `dimensions`: số phần tử trong `embedding`, mặc định 768.
+
+GET không đọc lại catalog, không reindex và không gọi Gemini. Chế độ RAM đọc snapshot hiện tại;
+chế độ semantic đọc trực tiếp bảng `product_semantic_vectors`. Giới hạn mỗi trang từ 1 đến 100;
+dùng `offset` để xem tiếp nếu có hơn 100 document. Kết quả sắp theo document ID và có `Cache-Control: no-store`.
+Nếu backend vừa restart ở chế độ RAM, response có `total=0` cho tới khi reindex thành công.
+
+Hai file mới: `ai/vector/ProductVectorInspectionService.java` và `ai/vector/AdminVectorInspectionController.java`.
+Hợp đồng API: [`postman/specs/vector-inspection.openapi.yaml`](../postman/specs/vector-inspection.openapi.yaml).
+
+Mở frontend, F12 → Console, chạy:
+
+```js
+(async () => {
+  const username = prompt('Tên Admin', 'admin');
+  const password = prompt('Mật khẩu Admin');
+  if (!username || !password) return;
+  const response = await fetch('/api/admin/vector/documents?limit=100', {
+    credentials: 'include',
+    headers: { Authorization: 'Basic ' + btoa(username + ':' + password) }
+  });
+  const result = await response.json();
+  if (!response.ok) { console.error('HTTP', response.status, result); return; }
+  window.vectorDocuments = result.documents;
+  console.log('Document và vector thật:', result);
+  console.table(vectorDocuments.map(d => ({
+    productId: d.metadata.productId,
+    dimensions: d.dimensions,
+    firstNumbers: d.embedding.slice(0, 6).join(', ')
+  })));
+  if (vectorDocuments.length) {
+    console.log('Văn bản document đầu:', vectorDocuments[0].text);
+    console.log('Mảng số đầy đủ:', vectorDocuments[0].embedding);
+  }
+})();
+```
+
+Đọc lại bằng GET không tốn thêm lượt embedding. Trong Console, `vectorDocuments[0].embedding`
+cho xem toàn bộ mảng số; `vectorDocuments[0].text` cho xem text đã dùng tạo vector.
+Response `POST /reindex` vẫn chỉ trả tổng kết như trước.
 
 ## 7. Kiểm thử và minh chứng
 

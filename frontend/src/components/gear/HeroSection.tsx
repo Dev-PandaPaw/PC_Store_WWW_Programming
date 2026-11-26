@@ -40,18 +40,18 @@ export const HeroSection: React.FC = () => (
       </div>
       <div className="hero-promos">
         <PromoBanner
-          to="/catalog?category=pc-gaming&keyword=i5"
+          to="/blog/pc-i5-rtx-5060-tu-23-trieu"
           src={pcI5Banner}
-          alt="PC Intel Core i5 và RTX 5060 — khám phá PC Gaming"
+          alt="PC Intel Core i5 và RTX 5060 — xem thông tin chương trình"
           width={1000}
           height={500}
           className="hero-promo"
           priority
         />
         <PromoBanner
-          to="/advisory"
+          to="/blog/build-pc-tang-man-hinh-240hz"
           src={buildPcBanner}
-          alt="Build PC tặng màn hình Gaming 240Hz — tư vấn cấu hình"
+          alt="Build PC tặng màn hình Gaming 240Hz — xem thông tin chương trình"
           width={1000}
           height={500}
           className="hero-promo"

@@ -1,4 +1,7 @@
-export const ARTICLES = [
+import { EXTRA_ARTICLES } from './articles-extra'
+import { PROMOTION_ARTICLES } from './articles-promotions'
+
+const ORIGINAL_ARTICLES = [
   {
     slug: 'chon-cpu-va-gpu-cho-pc-gaming',
     title: 'Chọn CPU và GPU: cân bằng trước, nâng cấp sau',
@@ -223,3 +226,15 @@ export const ARTICLES = [
     ],
   },
 ]
+
+export const ARTICLES = [...ORIGINAL_ARTICLES, ...EXTRA_ARTICLES, ...PROMOTION_ARTICLES]
+
+// Preserve the editorial library when the API or an older cache contains fewer articles.
+export function mergeArticles(published = []) {
+  const articles = new Map(ARTICLES.map(article => [article.slug, article]))
+  for (const article of published) {
+    const local = articles.get(article.slug)
+    articles.set(article.slug, { ...local, ...article, sources: article.sources || local?.sources || [] })
+  }
+  return [...articles.values()]
+}

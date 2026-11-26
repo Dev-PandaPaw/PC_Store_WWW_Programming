@@ -1,0 +1,281 @@
+[
+  {
+    "slug": "amd-ryzen-5-5600",
+    "imageUrl": "https://product.hstatic.net/200000722513/product/gearvn-amd-ryzen-5-5600-1_cc489afe754e4bee9479a0f465c19ad8_2d93e97db43746a3a0985ec1fe0ed249.png",
+    "sourcePage": "https://gearvn.com/products/amd-ryzen-5-5600",
+    "reviewNote": "",
+    "storageKey": "products/amd-ryzen-5-5600.png",
+    "sha256": "1506d1559c23ae835ed73059509c91440d1f7bda76356da7764e77048ece4fc8",
+    "sizeBytes": 133478
+  },
+  {
+    "slug": "amd-ryzen-5-5600g",
+    "imageUrl": "https://product.hstatic.net/200000722513/product/a_amdryzen5_wgraphics_3dpib_right_row_99e7de9476c8487fa129b02a0d338ea3_c4301323354744c18da49d272dff73ab.png",
+    "sourcePage": "https://gearvn.com/products/amd-ryzen-5-5600g",
+    "reviewNote": "",
+    "storageKey": "products/amd-ryzen-5-5600g.png",
+    "sha256": "49dbed6738e81bb0f718adb4546908ec83028abfb2888bf6fdb62cdbcc95ad50",
+    "sizeBytes": 711904
+  },
+  {
+    "slug": "amd-ryzen-5-7600",
+    "imageUrl": "https://product.hstatic.net/200000722513/product/gearvn-amd-ryzen-5-7600-1_fea6e6c8d31a452fb221d1d78261bc47_3169b43038fd4de98a0d0e32feca33a0.png",
+    "sourcePage": "https://gearvn.com/products/amd-ryzen-5-7600",
+    "reviewNote": "",
+    "storageKey": "products/amd-ryzen-5-7600.png",
+    "sha256": "8f71a4fb417a8992ce65752b8fc41aff8680dafe5779731f2857388d1739717b",
+    "sizeBytes": 68665
+  },
+  {
+    "slug": "intel-core-i3-12100f",
+    "imageUrl": "https://product.hstatic.net/200000722513/product/12100f_d81914f75c254dba985d80033b522662_c3458e8ae6a24c8881b4ae103f0b6a6d.png",
+    "sourcePage": "https://gearvn.com/products/intel-core-i3-12100f",
+    "reviewNote": "",
+    "storageKey": "products/intel-core-i3-12100f.png",
+    "sha256": "684b7c0818cde881e48170ecc456fa3176a3ef12c9e61c90b0750a1186aceafd",
+    "sizeBytes": 1101850
+  },
+  {
+    "slug": "intel-core-i5-12400",
+    "imageUrl": "https://product.hstatic.net/200000722513/product/12400_7150a7594d524982ba859a04ed952903_938a2a0ca05546eb940547a6d50e7bda.png",
+    "sourcePage": "https://gearvn.com/products/intel-core-i5-12400",
+    "reviewNote": "",
+    "storageKey": "products/intel-core-i5-12400.png",
+    "sha256": "f720faaa4456e290a99a6651ecf8e09638a416e8ab366d080dcf689e1c643fa0",
+    "sizeBytes": 712414
+  },
+  {
+    "slug": "intel-core-i5-14400f",
+    "imageUrl": "https://product.hstatic.net/200000722513/product/n22561-001-i5f-_univ_2e1135c9919d46ce97e95d2e19cb74f3.png",
+    "sourcePage": "https://gearvn.com/products/bo-vi-xu-ly-intel-core-i5-14400f",
+    "reviewNote": "",
+    "storageKey": "products/intel-core-i5-14400f.png",
+    "sha256": "aee655f8b4c20ebfc36922c794ad94d118d6be2b57b7139fe53cf99eeb050031",
+    "sizeBytes": 318725
+  },
+  {
+    "slug": "cpu-intel-core-i5-14600k",
+    "imageUrl": "https://product.hstatic.net/200000722513/product/n22490-001-rpl-i5k-univ_png_dd9c15cdc33d45e5963d0a5f73f47f1d.png",
+    "sourcePage": "https://gearvn.com/products/intel-core-i5-14600k",
+    "reviewNote": "",
+    "storageKey": "products/cpu-intel-core-i5-14600k.png",
+    "sha256": "fdb06113d6631337c29c92965d5af61dcc1783b10c61de635e602e9bd00494ae",
+    "sizeBytes": 252281
+  },
+  {
+    "slug": "amd-ryzen-7-7700",
+    "imageUrl": "https://www.amd.com/content/dam/amd/en/images/products/processors/ryzen/2505503-ryzen-7-7700.jpg",
+    "sourcePage": "https://www.amd.com/en/products/processors/desktops/ryzen/7000-series/amd-ryzen-7-7700.html",
+    "reviewNote": "",
+    "storageKey": "products/amd-ryzen-7-7700.jpg",
+    "sha256": "0c4ec5c9989dbfee7c463721621461b92b11fe745897b85a5c97071b5f761a52",
+    "sizeBytes": 76814
+  },
+  {
+    "slug": "cpu-amd-ryzen-7-7800x3d",
+    "imageUrl": "https://www.amd.com/content/dam/amd/en/images/products/processors/ryzen/2505503-ryzen-7-7800x3d.jpg",
+    "sourcePage": "https://www.amd.com/en/products/processors/desktops/ryzen/7000-series/amd-ryzen-7-7800x3d.html",
+    "reviewNote": "",
+    "storageKey": "products/cpu-amd-ryzen-7-7800x3d.jpg",
+    "sha256": "d4bba53b57a5ecb571b43aec32b72d8beeb98ccd20b96900ccba36710b734de6",
+    "sizeBytes": 85033
+  },
+  {
+    "slug": "kingston-fury-beast-8gb-ddr4",
+    "imageUrl": "https://media.kingston.com/kingston/product/FURY_Beast_Black_DDR4_1-lg.jpg",
+    "sourcePage": "https://www.kingston.com/en/memory/gaming/kingston-fury-beast-ddr4-memory",
+    "reviewNote": "Manufacturer family photo, matching DDR generation, black heat spreader and module count; capacity is identified by the product specification.",
+    "storageKey": "products/kingston-fury-beast-8gb-ddr4.jpg",
+    "sha256": "14a5224c4ca6f626015afe581deebc036db332cb35e98e9930ab010e0e976362",
+    "sizeBytes": 14883
+  },
+  {
+    "slug": "kingston-fury-beast-16gb-ddr4",
+    "imageUrl": "https://media.kingston.com/kingston/product/FURY_Beast_Black_DDR4_1-lg.jpg",
+    "sourcePage": "https://www.kingston.com/en/memory/gaming/kingston-fury-beast-ddr4-memory",
+    "reviewNote": "Manufacturer family photo, matching DDR generation, black heat spreader and module count; capacity is identified by the product specification.",
+    "storageKey": "products/kingston-fury-beast-16gb-ddr4.jpg",
+    "sha256": "14a5224c4ca6f626015afe581deebc036db332cb35e98e9930ab010e0e976362",
+    "sizeBytes": 14883
+  },
+  {
+    "slug": "kingston-fury-beast-32gb-ddr4",
+    "imageUrl": "https://media.kingston.com/kingston/product/FURY_Beast_Black_DDR4_2_angle-lg.jpg",
+    "sourcePage": "https://www.kingston.com/en/memory/gaming/kingston-fury-beast-ddr4-memory",
+    "reviewNote": "Manufacturer family photo, matching DDR generation, black heat spreader and module count; capacity is identified by the product specification.",
+    "storageKey": "products/kingston-fury-beast-32gb-ddr4.webp",
+    "sha256": "ed78d7a50d1a9be75f5ce56d0af12a8312b0d7c03db09216ce4c84b7755ba567",
+    "sizeBytes": 42596
+  },
+  {
+    "slug": "kingston-fury-beast-16gb-ddr5",
+    "imageUrl": "https://media.kingston.com/kingston/product/FURY_Beast_Black_DDR5_1-lg.jpg",
+    "sourcePage": "https://www.kingston.com/en/memory/gaming/kingston-fury-beast-ddr5-memory",
+    "reviewNote": "Manufacturer family photo, matching DDR generation, black heat spreader and module count; capacity is identified by the product specification.",
+    "storageKey": "products/kingston-fury-beast-16gb-ddr5.jpg",
+    "sha256": "d80a4f17d0d52152ce4bbb1159405b8ca980659d2b0396c8e6e76405dc186548",
+    "sizeBytes": 25647
+  },
+  {
+    "slug": "kingston-fury-beast-32gb-ddr5",
+    "imageUrl": "https://media.kingston.com/kingston/product/FURY_Beast_Black_EXPO_DDR5_2_angle-lg.jpg",
+    "sourcePage": "https://www.kingston.com/en/memory/gaming/kingston-fury-beast-ddr5-memory",
+    "reviewNote": "Manufacturer family photo, matching DDR generation, black heat spreader and module count; capacity is identified by the product specification.",
+    "storageKey": "products/kingston-fury-beast-32gb-ddr5.webp",
+    "sha256": "243bfd9ea527be9e4f306e802ecf2200128d829cd2cfc84573144269cd2c6854",
+    "sizeBytes": 37720
+  },
+  {
+    "slug": "kingston-fury-beast-64gb-ddr5",
+    "imageUrl": "https://media.kingston.com/kingston/product/FURY_Beast_Black_EXPO_DDR5_2_angle-lg.jpg",
+    "sourcePage": "https://www.kingston.com/en/memory/gaming/kingston-fury-beast-ddr5-memory",
+    "reviewNote": "Manufacturer family photo, matching DDR generation, black heat spreader and module count; capacity is identified by the product specification.",
+    "storageKey": "products/kingston-fury-beast-64gb-ddr5.webp",
+    "sha256": "243bfd9ea527be9e4f306e802ecf2200128d829cd2cfc84573144269cd2c6854",
+    "sizeBytes": 37720
+  },
+  {
+    "slug": "ram-corsair-vengeance-rgb-32gb-ddr5-6000",
+    "imageUrl": "https://assets.corsair.com/image/upload/c_pad,q_auto,h_1024,w_1024,f_auto/products/Memory/vengeance-rgb-ddr5-blk-config/Gallery/Vengeance-RGB-DDR5-2UP-BLACK_01.webp",
+    "sourcePage": "https://www.corsair.com/us/en/p/memory/cmh32gx5m2d6000c36/vengeance-rgb-32gb-2x16gb-ddr5-dram-6000mhz-c36-memory-kit-black-cmh32gx5m2d6000c36",
+    "reviewNote": "Black DDR5 RGB two-module family photo; legacy product does not identify the exact Corsair part number.",
+    "storageKey": "products/ram-corsair-vengeance-rgb-32gb-ddr5-6000.webp",
+    "sha256": "3b1da16f69f1adc5571f62de2a2e7893e4e97a1621be38b7ea80aa7725f89395",
+    "sizeBytes": 65830
+  },
+  {
+    "slug": "crucial-p3-plus-500gb",
+    "imageUrl": "https://www.cfd.co.jp/webpim/product/image/c/crucial-p3-plus-m2-series/ct500p3pssd8jp/ct500p3pssd8jp__0100.jpg",
+    "sourcePage": "https://www.cfd.co.jp/biz/product/detail/ct500p3pssd8jp.html",
+    "reviewNote": "Japanese distributor product photo of the matching P3 Plus capacity.",
+    "storageKey": "products/crucial-p3-plus-500gb.jpg",
+    "sha256": "6114cfb7f719535575b087852fba39226883f9733ad9a60d5921fd713b9c3429",
+    "sizeBytes": 98018
+  },
+  {
+    "slug": "crucial-p3-plus-1000gb",
+    "imageUrl": "https://www.cfd.co.jp/webpim/product/image/c/crucial-p3-plus-m2-series/ct1000p3pssd8jp/ct1000p3pssd8jp__0100.jpg",
+    "sourcePage": "https://www.cfd.co.jp/biz/product/detail/ct1000p3pssd8jp.html",
+    "reviewNote": "Japanese distributor product photo of the matching P3 Plus capacity.",
+    "storageKey": "products/crucial-p3-plus-1000gb.jpg",
+    "sha256": "d759a431a77b5e703c29bd6c90e903f25551711c19d7c3a7a89481c5ff133ca4",
+    "sizeBytes": 97170
+  },
+  {
+    "slug": "crucial-p3-plus-2000gb",
+    "imageUrl": "https://www.cfd.co.jp/webpim/product/image/c/crucial-p3-plus-m2-series/ct2000p3pssd8jp/ct2000p3pssd8jp__0100.jpg",
+    "sourcePage": "https://www.cfd.co.jp/biz/product/detail/ct2000p3pssd8jp.html",
+    "reviewNote": "Japanese distributor product photo of the matching P3 Plus capacity.",
+    "storageKey": "products/crucial-p3-plus-2000gb.jpg",
+    "sha256": "9bf6c65b47ab9758396c5a10d60c0b4bc720f052db8952f8279a8680a61904b6",
+    "sizeBytes": 97195
+  },
+  {
+    "slug": "kingston-nv3-2tb",
+    "imageUrl": "https://media.kingston.com/kingston/product/SNV3S_2000GB-lg.jpg",
+    "sourcePage": "https://www.kingston.com/en/ssd/nv3-nvme-pcie-ssd?partnum=snv3s%2F2000g",
+    "reviewNote": "",
+    "storageKey": "products/kingston-nv3-2tb.jpg",
+    "sha256": "1a30ba0c45c2feccb97fea732d91c0de1a6a2c2b69616c0606c7c92a895f9de8",
+    "sizeBytes": 53293
+  },
+  {
+    "slug": "ssd-samsung-990-pro-1tb",
+    "imageUrl": "https://images.samsung.com/is/image/samsung/p6pim/uk/mz-v9p1t0bw/gallery/uk-990pro-nvme-m2-ssd-mz-v9p1t0bw-534234835?$1164_776_PNG$",
+    "sourcePage": "https://www.samsung.com/uk/memory-storage/nvme-ssd/990-pro-1tb-nvme-pcie-gen-4-mz-v9p1t0bw/",
+    "reviewNote": "",
+    "storageKey": "products/ssd-samsung-990-pro-1tb.png",
+    "sha256": "03f09a920019632b1bea1515415d617816bb4e83f55752e1560a54f3010195ac",
+    "sizeBytes": 287884
+  },
+  {
+    "slug": "sapphire-pulse-rx-7600",
+    "imageUrl": "https://media.cdn.sapphiretech.com.cn/-/media/sites/sapphire/pim/product-images/11324_01_rx7600_pulse_8ggddr6/rx7600_pulse_lite_box_card_amd_374x265.ashx?v=e15edf6a8831418c9bf3f16f2432f8a8",
+    "sourcePage": "https://www.sapphiretech.com/en/consumer/pulse-radeon-rx-7600-8g-gddr6",
+    "reviewNote": "",
+    "storageKey": "products/sapphire-pulse-rx-7600.png",
+    "sha256": "087090e1925f1d97832045ce925f872c31b3af3e30834a29cd351d5fefd6ceb8",
+    "sizeBytes": 68529
+  },
+  {
+    "slug": "sapphire-pulse-rx-6600",
+    "imageUrl": "https://media.cdn.sapphiretech.com.cn/-/media/sites/sapphire/pim/product-images/11310_01_rx6600_pulse_8ggddr6/11310_01_rx6600_pulse_c02_374x256.ashx?v=388daa9df3494c459dd78e9c48432fba",
+    "sourcePage": "https://www.sapphiretech.com/en/consumer/pulse-radeon-rx-6600-8g-gddr6",
+    "reviewNote": "",
+    "storageKey": "products/sapphire-pulse-rx-6600.png",
+    "sha256": "978b2dfa8ad3513f68a9b909f12923b0f514eae0105410a9c3da9810c9c75cc1",
+    "sizeBytes": 23761
+  },
+  {
+    "slug": "vga-asus-rog-strix-rtx-4080-super-16gb",
+    "imageUrl": "https://dlcdnwebimgs.asus.com/gain/2B7AD534-F177-4658-B2ED-95CA9FB1677B/w717/h525/fwebp",
+    "sourcePage": "https://rog.asus.com/graphics-cards/graphics-cards/rog-strix/rog-strix-rtx4080s-16g-gaming/",
+    "reviewNote": "",
+    "storageKey": "products/vga-asus-rog-strix-rtx-4080-super-16gb.webp",
+    "sha256": "8af981868d63f6e1ec5c0657802ef2539bf801dc0948aa16f5103e81aece4109",
+    "sizeBytes": 18602
+  },
+  {
+    "slug": "vga-gigabyte-rtx-4060-windforce-oc-8gb",
+    "imageUrl": "https://www.gigabyte.com/FileUpload/Global/KeyFeature/2421/innergigabyteimages/kf-img.png",
+    "sourcePage": "https://www.gigabyte.com/Graphics-Card/GV-N4060WF2OC-8GD",
+    "reviewNote": "",
+    "storageKey": "products/vga-gigabyte-rtx-4060-windforce-oc-8gb.png",
+    "sha256": "d7d4ebe8bc2c441b0dab39721e6e43e4b4e1a8cedf395d2f125e34ae1726e032",
+    "sizeBytes": 803839
+  },
+  {
+    "slug": "montech-air-100-argb-black",
+    "imageUrl": "https://www.ryans.com/storage/products/main/montech-air-100-argb-mid-tower-black-micro-atx-11645871991.webp",
+    "sourcePage": "https://www.ryans.com/montech-air-100-argb-mid-tower-black-micro-atx-gaming-desktop-casing",
+    "reviewNote": "",
+    "storageKey": "products/montech-air-100-argb-black.webp",
+    "sha256": "21c6ba60e2282089aae109e9c97fd41c2b70573a9cadf84f8a03a3e4d807f940",
+    "sizeBytes": 105554
+  },
+  {
+    "slug": "montech-air-100-argb-white",
+    "imageUrl": "https://www.ryans.com/storage/products/main/montech-air-100-argb-mid-tower-white-micro-atx-11645871570.webp",
+    "sourcePage": "https://www.ryans.com/montech-air-100-argb-mid-tower-white-micro-atx-gaming-desktop-casing",
+    "reviewNote": "",
+    "storageKey": "products/montech-air-100-argb-white.webp",
+    "sha256": "4299d56f455d252c6dc0283f5223523fbe178f3c0068b54b590ca7b0bf47623f",
+    "sizeBytes": 97020
+  },
+  {
+    "slug": "deepcool-ak620",
+    "imageUrl": "https://cdn.deepcool.com/public/ProductFile/DEEPCOOL/Cooling/CPUAirCoolers/AK620/Gallery/800X800/01.jpg",
+    "sourcePage": "https://global.deepcool.com/products/Cooling/cpuaircoolers/AK620-High-Performance-CPU-Cooler-1851-1700-AM5/2024/13067.shtml",
+    "reviewNote": "",
+    "storageKey": "products/deepcool-ak620.webp",
+    "sha256": "1f48cf7ee956975a334ebb904c2cc8553b83a290216984eb66805ff2a940711a",
+    "sizeBytes": 69230
+  },
+  {
+    "slug": "aoc-24g4",
+    "imageUrl": "https://cdn.sanity.io/images/hf5b3axp/production/20a4a6e6cd8b1c6989189fe41db3bcf18d8fc511-2000x1500.png",
+    "sourcePage": "https://www.aoc.com/ph/gaming/monitors/24g4",
+    "reviewNote": "",
+    "storageKey": "products/aoc-24g4.png",
+    "sha256": "339160f681d0452063a37661138dfd8605287e267e23fca4ce70e5fe25a4e4a3",
+    "sizeBytes": 575519
+  },
+  {
+    "slug": "msi-pro-mp251",
+    "imageUrl": "https://storage-asset.msi.com/global/picture/product/product_16964691785d67cfa559cdef49a85b33fff9b1dc40.webp",
+    "sourcePage": "https://www.msi.com/Business-Productivity-Monitor/PRO-MP251/Gallery",
+    "reviewNote": "",
+    "storageKey": "products/msi-pro-mp251.webp",
+    "sha256": "fac70f699224a94f7a29e4a545738f904a2d18aa56755faf7d72425155fa05b1",
+    "sizeBytes": 75522
+  },
+  {
+    "slug": "lg-ultragear-27gp850-b",
+    "imageUrl": "https://media.us.lg.com/transform/ecomm-PDPGallery-1100x730/0d1e62da-95ec-40e6-b2a3-0ef94b03aea3/md08000370-Z-01-jpg",
+    "sourcePage": "https://www.lg.com/us/monitors/lg-27gp850-b-gaming-monitor",
+    "reviewNote": "",
+    "storageKey": "products/lg-ultragear-27gp850-b.jpg",
+    "sha256": "f3f66dd0731753f6b7ce598d709032563b2debe2d653a2af160679662832d097",
+    "sizeBytes": 40561
+  }
+]

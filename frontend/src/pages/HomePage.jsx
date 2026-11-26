@@ -20,7 +20,7 @@ export default function HomePage() {
     <div className="storefront">
       <HeroSection />
       <PromoBanner
-        to="/catalog?category=pc"
+        to="/blog/gian-hang-pixelcore-uu-dai-hoc-sinh-sinh-vien"
         src={collectionBanner}
         alt="Gian hàng Pixel Core — PC văn phòng, gaming và cấu hình cao cấp"
         width={2172}
@@ -53,7 +53,7 @@ export default function HomePage() {
       />
 
       <PromoBanner
-        to="/advisory"
+        to="/blog/build-pc-tang-man-hinh-240hz"
         src={buildWideBanner}
         alt="Build PC tặng màn hình — giá chỉ từ 11.990.000 đồng, quà tặng màn hình 240Hz"
         width={1000}

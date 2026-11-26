@@ -1,0 +1,114 @@
+{
+  "checkedAt": "2026-11-26",
+  "behavior": "Queue attachment locally; on Send show the original photo, extract visible hardware through Spring AI, then retrieve and recommend catalog components without an extraction form. Reuse per-conversation facts for follow-ups.",
+  "live": {
+    "imageVisibleBeforeAnalysis": true,
+    "noUploadBeforeSend": true,
+    "noExtractionForm": true,
+    "originalPhotoPreserved": true,
+    "extractedModels": [
+      "Intel Core i5-12400F",
+      "MSI PRO B760M-A WIFI DDR4",
+      "16 GB DDR4 3200 MHz",
+      "Corsair CX650"
+    ],
+    "recommendations": [
+      "RAM Kingston FURY Beast 32GB (2 thanh) DDR4-3200 KF432C16BBK2/32"
+    ],
+    "followUpOutcome": "recommendations",
+    "followUpGroups": [
+      "ram"
+    ],
+    "errors": []
+  },
+  "livePhotoOnly": {
+    "photoOnly": true,
+    "http": 200,
+    "outcome": "recommendations",
+    "message": "Mình đọc được Intel Core i5-12400F, MSI PRO B760M-A WIFI DDR4, 16 GB DDR4 3200 MHz, Corsair CX650. Dưới đây là linh kiện phù hợp để bạn tham khảo nâng cấp, kèm giá và những điểm cần đối chiếu trước khi lắp.",
+    "products": [
+      {
+        "name": "RAM Kingston FURY Beast 32GB (2 thanh) DDR4-3200 KF432C16BBK2/32",
+        "category": "ram",
+        "price": 1690000
+      }
+    ],
+    "originalPhotoVisible": true
+  },
+  "liveLegacyConversationCorrection": {
+    "http": 200,
+    "outcome": "recommendations",
+    "products": 8,
+    "total": 29620000,
+    "budget": 30000000,
+    "buildIntentRetained": true
+  },
+  "browserWithStubbedResponses": [
+    {
+      "width": 768,
+      "input": "drop",
+      "noUploadBeforeSend": true,
+      "sentPhotoVisible": true,
+      "retryKeepsOriginalPhoto": true,
+      "turnsAfterRetry": 1,
+      "products": 1,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 390,
+      "input": "paste",
+      "noUploadBeforeSend": true,
+      "sentPhotoVisible": true,
+      "retryKeepsOriginalPhoto": true,
+      "turnsAfterRetry": 1,
+      "products": 1,
+      "overflow": false,
+      "errors": []
+    }
+  ],
+  "targetedTests": [
+    {
+      "name": "HardwareMatchAdvisorTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "ComponentBuildAdvisorTest",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "HardwareAttachmentServiceTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "HardwareAttachmentHttpTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "ComponentBuildHttpTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "passedTests": 34,
+  "frontendBuild": "passed; existing bundle size warning",
+  "limits": [
+    "Live OCR evidence uses a synthetic hardware screenshot containing clear text; arbitrary or blurry images may need a clearer photo.",
+    "The first live attempt ran during explicit vector reindex and returned VECTOR_REINDEX_IN_PROGRESS; checks passed after reindex completed.",
+    "Product compatibility remains preliminary where catalog facts are missing. Local VectorStore is memory-backed."
+  ]
+}

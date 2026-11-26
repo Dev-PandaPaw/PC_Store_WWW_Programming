@@ -1,6 +1,6 @@
 // Vite bundles every checked-in product photo and rewrites URLs for dev and production.
 // Database image keys remain stable across machines and builds.
-const images = import.meta.glob('./products/*.{png,jpg,jpeg,webp}', {
+const images = import.meta.glob('./products/*.{png,jpg,jpeg,webp,svg}', {
   eager: true,
   query: '?url',
   import: 'default',
@@ -8,7 +8,7 @@ const images = import.meta.glob('./products/*.{png,jpg,jpeg,webp}', {
 
 export function resolveProductImage(key) {
   if (!key || typeof key !== 'string') {
-    return images['./products/pc-gvn-i5-12400f-rtx-3050.png'] || ''
+    return images['./products/catalog-product.svg'] || ''
   }
 
   // Nếu đã là URL tuyệt đối hoặc asset Vite đã bundle
@@ -45,7 +45,7 @@ export function resolveProductImage(key) {
 
   // 4. Fallback ảnh mặc định hợp lệ để không bị 404
   if (!image) {
-    return images['./products/pc-gvn-i5-12400f-rtx-3050.png'] || ''
+    return images['./products/catalog-product.svg'] || ''
   }
 
   return image

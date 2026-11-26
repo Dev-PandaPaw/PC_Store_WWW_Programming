@@ -28,11 +28,26 @@ scripts:
         pm.expect(new Set(data.products.map(p => p.slug)).size).to.equal(data.products.length);
         data.products.forEach(p => {
           pm.expect(p.id).to.match(/^[0-9a-f]{8}-[0-9a-f-]{27}$/);
-          pm.expect(p.image).to.match(/^products\/[a-z0-9-]+\.(png|jpe?g|webp)$/);
+          pm.expect(p.image).to.match(/^products\/[a-z0-9-]+\.(png|jpe?g|webp|svg)$/);
           pm.expect(p.price).to.be.above(0);
           pm.expect(p.originalPrice).to.be.at.least(p.price);
           pm.expect(p.specs.length).to.be.above(0);
           pm.expect(p.stockOnHand).to.be.at.least(0);
+        });
+      });
+      pm.test('expanded catalog exposes technical facts and provenance', () => {
+        pm.expect(data.products.length).to.be.at.least(66);
+        pm.expect(data.products.filter(p => p.demoCatalog).length).to.be.at.least(32);
+        data.products.forEach(p => {
+          pm.expect(p.technicalSpecs.length).to.be.above(0);
+          p.technicalSpecs.forEach(s => {
+            pm.expect(s.label).to.be.a('string').and.not.empty;
+            pm.expect(s.value).to.be.a('string').and.not.empty;
+            pm.expect(s.verified).to.be.a('boolean');
+          });
+          pm.expect(p.specSources).to.be.an('array');
+          pm.expect(p.specNotes).to.be.an('array');
+          p.specSources.forEach(s => pm.expect(s.url).to.match(/^https:\/\//));
         });
       });
       pm.test('four full articles are available inside the storefront', () => {
