@@ -15,13 +15,13 @@ export default function LoginPage() {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const redirectPath = loginDestination(location.state?.from)
+  const requestedPage = location.state?.from
 
   React.useEffect(() => {
     if (user && !loading) {
-      navigate(redirectPath, { replace: true })
+      navigate(loginDestination(requestedPage, user), { replace: true })
     }
-  }, [user, loading, navigate, redirectPath])
+  }, [user, loading, navigate, requestedPage])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -29,8 +29,8 @@ export default function LoginPage() {
     setError('')
     setSubmitting(true)
     try {
-      await login(username.trim(), password)
-      navigate(redirectPath, { replace: true })
+      const account = await login(username.trim(), password)
+      navigate(loginDestination(requestedPage, account), { replace: true })
     } catch (err) {
       const msg = err.response?.data?.message || err.response?.data?.detail || 'Email hoặc mật khẩu không chính xác.'
       setError(msg)

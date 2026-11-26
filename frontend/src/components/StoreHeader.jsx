@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useCart } from '../contexts/cartContextStore'
 import { useAuth } from '../contexts/authContextStore'
+import { ADMIN_HOME, hasAdminRole } from '../utils/authorization'
 import { CATEGORY_GROUPS } from '../data/storeData'
 import BrandLogo from './BrandLogo'
 import '../styles/store-header.css'
@@ -122,7 +123,7 @@ export default function StoreHeader() {
   const { pathname, search } = useLocation()
   const navigate = useNavigate()
   const { totalCount, ready: cartReady } = useCart()
-  const { user, logout } = useAuth()
+  const { user, loading, logout } = useAuth()
   const [loggingOut, setLoggingOut] = useState(false)
   const [keyword, setKeyword] = useState(
     () => new URLSearchParams(search).get('keyword') || '',
@@ -202,23 +203,12 @@ export default function StoreHeader() {
                   >
                     {user.fullName || user.username}
                   </Link>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                    {Array.isArray(user.roles) && user.roles.some((r) => r === 'ROLE_ADMIN' || r === 'ADMIN') ? (
-                      <Link
-                        to="/admin/users"
-                        style={{ fontSize: '0.7rem', color: '#9ad3e0', textDecoration: 'none' }}
-                      >
-                        Quản trị
-                      </Link>
+                  <div className="store-account__links">
+                    {!loading && (hasAdminRole(user) ? (
+                      <Link to={ADMIN_HOME}>Quản trị</Link>
                     ) : (
-                      <Link
-                        to="/account/profile"
-                        style={{ fontSize: '0.7rem', color: '#9ad3e0', textDecoration: 'none' }}
-                      >
-                        Hồ sơ
-                      </Link>
-                    )}
-                    <span style={{ fontSize: '0.65rem', color: '#4c7e96' }} aria-hidden="true">•</span>
+                      <Link to="/account/profile">Hồ sơ</Link>
+                    ))}
                     <button type="button" onClick={handleLogout} disabled={loggingOut}>
                       {loggingOut ? 'Đang thoát...' : 'Đăng xuất'}
                     </button>

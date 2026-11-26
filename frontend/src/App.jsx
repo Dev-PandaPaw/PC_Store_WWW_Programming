@@ -2,9 +2,11 @@ import React from "react";
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import StoreShell from "./components/StoreShell";
 import AdminShell from "./components/AdminShell";
+import { ADMIN_HOME } from "./utils/authorization";
 
 import HomePage from "./pages/HomePage";
 import CatalogPage from "./pages/CatalogPage";
+import AdminProductsPage from "./pages/AdminProductsPage";
 import AiChatPage from "./pages/AiChatPage";
 import CartPage from "./pages/CartPage";
 import PcBuildPage from "./pages/PcBuildPage";
@@ -86,8 +88,8 @@ export default function App() {
 
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminShell />}>
-          <Route index element={<CatalogPage />} />
-          <Route path="products" element={<CatalogPage />} />
+          <Route index element={<Navigate to={ADMIN_HOME} replace />} />
+          <Route path="products" element={<AdminProductsPage />} />
           <Route path="orders" element={<OrdersPage management />} />
           <Route path="users" element={<AdminUsersPage />} />
         </Route>

@@ -1,3 +1,5 @@
+import { ADMIN_HOME, hasAdminRole } from './authorization.js'
+
 export const SELECTED_CART_STORAGE_KEY = 'pcstore:selectedCartIds'
 
 export function shippingFromCustomer(customer) {
@@ -11,9 +13,10 @@ export function shippingFromCustomer(customer) {
   }
 }
 
-export function loginDestination(from) {
+export function loginDestination(from, user) {
   if (from && typeof from === 'object') from = `${from.pathname || '/'}${from.search || ''}`
-  return typeof from === 'string' && /^\/(?!\/|\\)/.test(from) && !from.startsWith('/login') ? from : '/'
+  if (typeof from === 'string' && /^\/(?!\/|\\)/.test(from) && !from.startsWith('/login')) return from
+  return hasAdminRole(user) ? ADMIN_HOME : '/'
 }
 
 // A late account response must never replace what the customer is typing.

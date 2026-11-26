@@ -59,6 +59,19 @@ test('login returns to checkout and rejects external redirect destinations', () 
   }
 })
 
+test('normal and test admin accounts default to product management after signing in', () => {
+  for (const role of ['ROLE_ADMIN', 'ADMIN']) {
+    const account = { roles: ['ROLE_CUSTOMER', role] }
+    assert.equal(loginDestination(undefined, account), '/admin/products')
+    assert.equal(loginDestination('/admin/orders?page=2', account), '/admin/orders?page=2')
+    assert.equal(loginDestination('/checkout', account), '/checkout')
+    assert.equal(loginDestination('//example.com', account), '/admin/products')
+  }
+
+  assert.equal(loginDestination(undefined, { roles: ['ROLE_CUSTOMER', 'ROLE_STAFF'] }), '/')
+  assert.equal(loginDestination(undefined, { roles: 'ROLE_ADMIN' }), '/')
+})
+
 test('province suggestions support Vietnamese with and without accents', () => {
   assert.equal(provinces.length, 63)
   assert.equal(filterAddresses(provinces, 'ho chi minh')[0].name, 'Thành phố Hồ Chí Minh')
