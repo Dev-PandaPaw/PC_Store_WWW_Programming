@@ -168,27 +168,6 @@ export async function getSimilarProducts(productId, options = {}) {
   return getFallbackPersonalizedProducts(limit, 'similar')
 }
 
-export async function syncVectorDatabase() {
-  try {
-    const response = await http.post('/v1/admin/recommendations/reindex', {}, { timeout: 30000 })
-    return {
-      success: true,
-      count: response.data?.count ?? response.data?.indexedCount ?? response.data?.total ?? 0,
-      message: response.data?.message || 'Đã vector hoá thành công sản phẩm vào Vector Store.',
-    }
-  } catch (err) {
-    if (err?.response?.status === 404) {
-      const fallbackResponse = await http.post('/admin/vector/reindex', {}, { timeout: 30000 })
-      return {
-        success: true,
-        count: fallbackResponse.data?.count ?? fallbackResponse.data?.indexedCount ?? 0,
-        message: fallbackResponse.data?.message || 'Đã vector hoá thành công sản phẩm vào Vector Store.',
-      }
-    }
-    throw err
-  }
-}
-
 function getRecentUserInterests() {
   try {
     const raw = localStorage.getItem('pc_recent_interests')

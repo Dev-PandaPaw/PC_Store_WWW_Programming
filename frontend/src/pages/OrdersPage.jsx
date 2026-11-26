@@ -162,8 +162,8 @@ function AdminOrderDetails({ order, busy, error, run, onClose }) {
   }, [])
 
   return (
-    <dialog ref={dialog} className="admin-orders__dialog" aria-labelledby="admin-order-details-title" onClose={onClose}>
-      <header className="admin-orders__dialog-heading">
+    <dialog ref={dialog} className="admin-list__dialog admin-orders__dialog" aria-labelledby="admin-order-details-title" onClose={onClose}>
+      <header className="admin-list__dialog-heading">
         <h2 id="admin-order-details-title">Chi tiết đơn hàng</h2>
         <button
           type="button" className="admin-list__button admin-list__button--small" aria-label="Đóng chi tiết đơn hàng"

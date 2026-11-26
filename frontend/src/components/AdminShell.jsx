@@ -72,6 +72,12 @@ export default function AdminShell() {
             >
               Tài khoản
             </NavLink>
+            <NavLink
+              to="/admin/vectors"
+              className={({ isActive }) => (isActive ? "is-active" : "")}
+            >
+              Vector AI
+            </NavLink>
           </nav>
           <div className="admin-shell__account">
             <span className="admin-shell__user">
