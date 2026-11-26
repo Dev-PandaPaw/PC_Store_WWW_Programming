@@ -168,14 +168,19 @@ a.store-account:hover {
   white-space: nowrap;
 }
 
-.store-account--signed-in button {
-  display: block;
+.store-account__links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.store-account__links :is(a, button) {
   color: #9ad3e0;
   font-size: 0.7rem;
   text-align: left;
 }
 
-.store-account--signed-in button:hover {
+.store-account__links :is(a, button):hover {
   color: #fff;
   text-decoration: underline;
 }

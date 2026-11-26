@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useCart } from '../contexts/cartContextStore'
 import { useAuth } from '../contexts/authContextStore'
+import { ADMIN_HOME, hasAdminRole } from '../utils/authorization'
 import { CATEGORY_GROUPS } from '../data/storeData'
 import BrandLogo from './BrandLogo'
 import '../styles/store-header.css'
@@ -122,7 +123,7 @@ export default function StoreHeader() {
   const { pathname, search } = useLocation()
   const navigate = useNavigate()
   const { totalCount } = useCart()
-  const { user, logout } = useAuth()
+  const { user, loading, logout } = useAuth()
   const [loggingOut, setLoggingOut] = useState(false)
   const [keyword, setKeyword] = useState(
     () => new URLSearchParams(search).get('keyword') || '',
@@ -195,9 +196,12 @@ export default function StoreHeader() {
                   <span className="store-account__name">
                     {user.fullName || user.username}
                   </span>
-                  <button type="button" onClick={handleLogout} disabled={loggingOut}>
-                    {loggingOut ? 'Đang thoát...' : 'Đăng xuất'}
-                  </button>
+                  <div className="store-account__links">
+                    {!loading && hasAdminRole(user) && <Link to={ADMIN_HOME}>Quản trị</Link>}
+                    <button type="button" onClick={handleLogout} disabled={loggingOut}>
+                      {loggingOut ? 'Đang thoát...' : 'Đăng xuất'}
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (
