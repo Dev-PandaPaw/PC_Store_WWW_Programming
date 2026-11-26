@@ -1,21 +1,20 @@
 package iuh.fit.nhom16.pcstore.identity.web;
 
+import iuh.fit.nhom16.pcstore.cart.security.CartOwnerResolver;
+import iuh.fit.nhom16.pcstore.cart.service.CartStorageService;
 import iuh.fit.nhom16.pcstore.identity.application.AuthService;
 import iuh.fit.nhom16.pcstore.identity.domain.User;
 import iuh.fit.nhom16.pcstore.identity.infrastructure.UserRepository;
+import iuh.fit.nhom16.pcstore.identity.model.AuthenticatedAccount;
 import iuh.fit.nhom16.pcstore.identity.web.dto.ForgotPasswordRequest;
 import iuh.fit.nhom16.pcstore.identity.web.dto.LoginRequest;
 import iuh.fit.nhom16.pcstore.identity.web.dto.RegisterRequest;
 import iuh.fit.nhom16.pcstore.identity.web.dto.ResetPasswordRequest;
 import iuh.fit.nhom16.pcstore.identity.web.dto.UserDto;
-import iuh.fit.nhom16.pcstore.identity.model.AuthenticatedAccount;
-import iuh.fit.nhom16.pcstore.cart.service.CartStorageService;
-import iuh.fit.nhom16.pcstore.cart.security.CartOwnerResolver;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.web.util.WebUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,6 +25,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.util.WebUtils;
 
 import java.util.Map;
 import java.util.Set;
@@ -33,16 +33,14 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
-@ConditionalOnProperty(name="app.test-login.enabled", havingValue="false", matchIfMissing=true)
+@ConditionalOnProperty(name = "app.test-login.enabled", havingValue = "false", matchIfMissing = true)
 public class AuthController {
 
     private final AuthService authService;
-    private final UserRepository userRepository;
     private final CartStorageService carts;
 
     public AuthController(AuthService authService, UserRepository userRepository, CartStorageService carts) {
         this.authService = authService;
-        this.userRepository = userRepository;
         this.carts = carts;
     }
 
@@ -56,10 +54,7 @@ public class AuthController {
     public ResponseEntity<UserDto> login(@Valid @RequestBody LoginRequest req, HttpServletRequest request) {
         User user = authService.authenticate(req.username(), req.password());
 
-        // Tạo Spring Security Authentication
-        Set<SimpleGrantedAuthority> authorities = user.getRoles().stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toSet());
+        Set<SimpleGrantedAuthority> authorities = toAuthorities(user.getRoles());
 
         HttpSession session = request.getSession(true);
         synchronized (WebUtils.getSessionMutex(session)) {
@@ -67,7 +62,7 @@ public class AuthController {
             var cart = carts.merge(session, user.getId());
             request.changeSessionId();
             session.removeAttribute(CartOwnerResolver.DEMO_OWNER);
-            var identity = new AuthenticatedAccount(user.getId(), user.getEmail());
+            var identity = new AuthenticatedAccount(user.getId(), user.getEmail(), user.getSessionVersion());
             var authentication = UsernamePasswordAuthenticationToken.authenticated(identity, null, authorities);
             SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
             securityContext.setAuthentication(authentication);
@@ -88,21 +83,21 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserDto> getCurrentUser() {
+    public ResponseEntity<UserDto> getCurrentUser(HttpServletRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Chưa đăng nhập");
+        try {
+            User user = authService.requireAuthenticatedUser(auth);
+            return ResponseEntity.ok(UserDto.fromEntity(user));
+        } catch (ResponseStatusException ex) {
+            if (ex.getStatusCode() == HttpStatus.UNAUTHORIZED || ex.getStatusCode() == HttpStatus.FORBIDDEN) {
+                SecurityContextHolder.clearContext();
+                HttpSession session = request != null ? request.getSession(false) : null;
+                if (session != null) {
+                    session.invalidate();
+                }
+            }
+            throw ex;
         }
-
-        String email = auth.getName();
-        User user = userRepository.findByEmailIgnoreCase(email)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Tài khoản không tồn tại"));
-
-        if (!user.isActive()) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Tài khoản của bạn đã bị khóa");
-        }
-
-        return ResponseEntity.ok(UserDto.fromEntity(user));
     }
 
     @PostMapping("/forgot-password")
@@ -117,5 +112,15 @@ public class AuthController {
     public ResponseEntity<Map<String, String>> resetPassword(@Valid @RequestBody ResetPasswordRequest req) {
         authService.resetPasswordWithOtp(req);
         return ResponseEntity.ok(Map.of("message", "Đặt lại mật khẩu thành công. Vui lòng đăng nhập với mật khẩu mới."));
+    }
+
+    public static Set<SimpleGrantedAuthority> toAuthorities(Set<String> roles) {
+        if (roles == null) return Set.of();
+        return roles.stream()
+                .filter(role -> role != null && !role.isBlank())
+                .map(String::trim)
+                .map(role -> role.startsWith("ROLE_") ? role : "ROLE_" + role)
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toSet());
     }
 }

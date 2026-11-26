@@ -11,12 +11,14 @@ public record UserDto(
     String email,
     String fullName,
     String phone,
+    boolean phoneVerified,
     String recipientName,
     String province,
     String district,
     String ward,
     String addressLine,
     String status,
+    String statusReason,
     Set<String> roles,
     Instant createdAt,
     CartResponse cart
@@ -28,18 +30,20 @@ public record UserDto(
             user.getEmail(),
             user.getFullName(),
             user.getPhone(),
+            user.getPhoneVerifiedAt() != null,
             user.getRecipientName(),
             user.getProvince(),
             user.getDistrict(),
             user.getWard(),
             user.getAddressLine(),
             user.getStatus(),
+            user.getStatusReason(),
             user.getRoles(),
             user.getCreatedAt(), null
         );
     }
     public UserDto withCart(CartResponse cart) {
-        return new UserDto(id, email, fullName, phone, recipientName, province, district, ward,
-                addressLine, status, roles, createdAt, cart);
+        return new UserDto(id, email, fullName, phone, phoneVerified, recipientName, province, district, ward,
+                addressLine, status, statusReason, roles, createdAt, cart);
     }
 }

@@ -7,6 +7,7 @@
     "test:cart": "node --test scripts/optimistic-cart.test.mjs scripts/login-cart.test.mjs scripts/cart-stock.test.mjs scripts/cart-add-idempotency.test.mjs scripts/cart-deadline.test.mjs",
     "test:catalog": "node --test scripts/catalog.test.mjs",
     "test:checkout": "node --test scripts/checkout.test.mjs",
+    "test:tracking": "node --test scripts/user-tracking.test.mjs",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"

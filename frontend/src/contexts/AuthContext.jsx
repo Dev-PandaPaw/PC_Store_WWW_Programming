@@ -50,6 +50,33 @@ export function AuthProvider({ children }) {
     const { data } = await http.post('/auth/register', { email, password, fullName, phone })
     return data
   }
+  const updateCachedUser = nextUser => {
+    setSession(prev => {
+      const merged = nextUser ? { ...(prev.user || {}), ...nextUser } : null
+      cacheUser(merged)
+      return { ...prev, user: merged }
+    })
+  }
+  const refreshUser = async () => {
+    const current = ++revision.current
+    try {
+      const { data } = await http.get('/auth/me')
+      const { user: freshUser } = splitLoginResponse(data)
+      if (current === revision.current) {
+        setSession(prev => ({ ...prev, user: freshUser }))
+        cacheUser(freshUser)
+      }
+      return freshUser
+    } catch {
+      if (current === revision.current) {
+        setSession({ user: null, loginCart: null })
+        cacheUser(null)
+      }
+      return null
+    } finally {
+      if (current === revision.current) setLoading(false)
+    }
+  }
   const logout = async () => {
     const current = ++revision.current
     try {
@@ -61,5 +88,9 @@ export function AuthProvider({ children }) {
       }
     }
   }
-  return <AuthContext.Provider value={{ user, loginCart, loading, login, logout, register }}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={{ user, loginCart, loading, login, logout, register, updateCachedUser, refreshUser }}>
+      {children}
+    </AuthContext.Provider>
+  )
 }

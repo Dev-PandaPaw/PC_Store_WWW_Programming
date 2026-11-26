@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -15,26 +17,44 @@ public class EmailService {
     private static final Logger log = LoggerFactory.getLogger(EmailService.class);
 
     private final JavaMailSender mailSender;
+    private final Environment environment;
 
     @Value("${spring.mail.username:}")
     private String fromEmail;
 
-    public EmailService(@Autowired(required = false) JavaMailSender mailSender) {
+    @Autowired
+    public EmailService(@Autowired(required = false) JavaMailSender mailSender,
+                        @Autowired(required = false) Environment environment) {
         this.mailSender = mailSender;
+        this.environment = environment;
+    }
+
+    public EmailService(JavaMailSender mailSender) {
+        this(mailSender, null);
     }
 
     public void sendOtpEmail(String toEmail, String otpCode) {
         String subject = "[PixelCore PC Store] Mã xác thực OTP đặt lại mật khẩu";
-        String htmlContent = buildOtpHtmlContent(otpCode);
+        String intro = "Chào bạn, chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn.";
+        dispatchOtpEmail(toEmail, subject, intro, otpCode, 10);
+    }
 
-        // In ra log console phục vụ test nhanh và backup khi không có mạng
-        log.info("==================================================================");
-        log.info(" [OTP NOTIFICATION] Gửi mã OTP đến: {}", toEmail);
-        log.info(" [MÃ OTP 6 CHỮ SỐ]: >>> {} <<< (Hiệu lực: 10 phút)", otpCode);
-        log.info("==================================================================");
+    public void sendPhoneVerificationOtpEmail(String toEmail, String phone, String otpCode) {
+        String subject = "[PixelCore PC Store] Mã OTP xác minh số điện thoại";
+        String intro = "Chào bạn, đây là mã xác minh cho số điện thoại nhận hàng " + phone + " trên tài khoản của bạn.";
+        dispatchOtpEmail(toEmail, subject, intro, otpCode, 5);
+    }
+
+    private void dispatchOtpEmail(String toEmail, String subject, String intro, String otpCode, int validMinutes) {
+        boolean isLocalDemo = environment == null || environment.acceptsProfiles(Profiles.of("local", "default", "test", "order-fixtures"));
+
+        if (isLocalDemo && (mailSender == null || fromEmail == null || fromEmail.isBlank())) {
+            log.info("[LOCAL DEMO OTP] Đích: {} | Hiệu lực: {} phút | Mã giả lập môi trường dev: {}", toEmail, validMinutes, otpCode);
+            return;
+        }
 
         if (mailSender == null || fromEmail == null || fromEmail.isBlank()) {
-            log.warn("Gmail SMTP chưa cấu hình spring.mail.username. Đã in mã OTP ra console để kiểm thử.");
+            log.warn("Chưa cấu hình SMTP spring.mail.username để gửi email xác thực tới {}", toEmail);
             return;
         }
 
@@ -45,16 +65,19 @@ public class EmailService {
             helper.setFrom(fromEmail, "PixelCore PC Store");
             helper.setTo(toEmail);
             helper.setSubject(subject);
-            helper.setText(htmlContent, true);
+            helper.setText(buildOtpHtmlContent(intro, otpCode, validMinutes), true);
 
             mailSender.send(message);
-            log.info("Đã gửi thành công email OTP đến: {}", toEmail);
+            log.info("Đã gửi email xác thực thành công đến: {}", toEmail);
         } catch (Exception e) {
-            log.error("Không thể gửi email qua Gmail SMTP: {}. Mã OTP vẫn hiển thị ở console để tiếp tục kiểm thử.", e.getMessage());
+            log.error("Không thể gửi email qua SMTP tới {}: {}", toEmail, e.getMessage());
+            if (isLocalDemo) {
+                log.info("[LOCAL DEMO OTP - SMTP FALLBACK] Đích: {} | Mã giả lập môi trường dev: {}", toEmail, otpCode);
+            }
         }
     }
 
-    private String buildOtpHtmlContent(String otpCode) {
+    private String buildOtpHtmlContent(String intro, String otpCode, int validMinutes) {
         return """
             <!DOCTYPE html>
             <html lang="vi">
@@ -79,13 +102,13 @@ public class EmailService {
                         <h1>PIXELCORE PC STORE</h1>
                     </div>
                     <div class="content">
-                        <div class="greeting">Chào bạn, chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn.</div>
+                        <div class="greeting">%s</div>
                         <p style="color: #64748b; font-size: 14px; margin: 0;">Mã xác thực OTP của bạn là:</p>
                         <div class="otp-box">
                             <span class="otp-code">%s</span>
                         </div>
                         <div class="warning">
-                            Mã OTP này có hiệu lực trong vòng <strong>10 phút</strong>.<br>
+                            Mã OTP này có hiệu lực trong vòng <strong>%d phút</strong>.<br>
                             Vì lý do an toàn, vui lòng <strong>không chia sẻ mã này</strong> cho bất kỳ ai khác.<br>
                             Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email.
                         </div>
@@ -96,6 +119,6 @@ public class EmailService {
                 </div>
             </body>
             </html>
-            """.formatted(otpCode);
+            """.formatted(intro, otpCode, validMinutes);
     }
 }

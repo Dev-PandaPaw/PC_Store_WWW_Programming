@@ -6,7 +6,7 @@ import useAdminAccess from '../hooks/useAdminAccess'
 import CartDemoPanel from './CartDemoPanel'
 
 export default function AdminShell() {
-  const { logout } = useAuth()
+  const { user, logout } = useAuth()
   const access = useAdminAccess()
 
   if (!access.account) return <main className="orders-page">
@@ -31,9 +31,15 @@ export default function AdminShell() {
             <NavLink to="/admin/products" className={({ isActive }) => isActive ? 'is-active' : ''}>
               Sản phẩm
             </NavLink>
+            <NavLink to="/admin/orders" className={({ isActive }) => isActive ? 'is-active' : ''}>
+              Đơn hàng
+            </NavLink>
+            <NavLink to="/admin/users" className={({ isActive }) => isActive ? 'is-active' : ''}>
+              Tài khoản
+            </NavLink>
           </nav>
           <div className="admin-shell__account">
-            <span className="admin-shell__user"><i />{user?.fullName || user?.username || 'Quản trị viên'}</span>
+            <span className="admin-shell__user"><i />{user?.fullName || user?.username || access.account?.name || 'Quản trị viên'}</span>
             <Link to="/" className="admin-shell__store-link">Cửa hàng <ArrowUpRight size={14} /></Link>
             <button type="button" onClick={logout} aria-label="Đăng xuất"><LogOut size={16} /></button>
           </div>

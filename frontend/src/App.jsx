@@ -10,6 +10,9 @@ import CartPage from "./pages/CartPage";
 import PcBuildPage from "./pages/PcBuildPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ProfilePage from "./pages/ProfilePage";
+import AdminUsersPage from "./pages/AdminUsersPage";
 import BlogPage from "./pages/BlogPage";
 import ArticlePage from "./pages/ArticlePage";
 import ProductDetailPage from "./pages/ProductDetailPage";
@@ -60,11 +63,24 @@ export default function App() {
           <Route path="/orders" element={<OrdersPage />} />
           <Route path="/account/orders" element={<OrderHistoryPage />} />
           <Route
+            path="/account/profile"
+            element={
+              <RequireLogin>
+                <ProfilePage />
+              </RequireLogin>
+            }
+          />
+          <Route
+            path="/profile"
+            element={<Navigate to="/account/profile" replace />}
+          />
+          <Route
             path="/manage-orders"
             element={<Navigate to="/admin/orders" replace />}
           />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
 
@@ -73,6 +89,7 @@ export default function App() {
           <Route index element={<CatalogPage />} />
           <Route path="products" element={<CatalogPage />} />
           <Route path="orders" element={<OrdersPage management />} />
+          <Route path="users" element={<AdminUsersPage />} />
         </Route>
       </Routes>
     </>

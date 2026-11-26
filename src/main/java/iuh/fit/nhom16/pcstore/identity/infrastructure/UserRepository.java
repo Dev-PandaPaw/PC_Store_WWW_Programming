@@ -20,7 +20,12 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     boolean existsByPhone(String phone);
 
+    boolean existsByPhoneAndIdNot(String phone, UUID id);
+
     boolean existsByIdAndStatusIgnoreCase(UUID id, String status);
+
+    @Query("SELECT COUNT(DISTINCT u.id) FROM User u JOIN u.roles r WHERE UPPER(u.status) = 'ACTIVE' AND r IN ('ROLE_ADMIN', 'ADMIN')")
+    long countActiveAdmins();
 
     @Query("SELECT u FROM User u WHERE " +
            "(:query IS NULL OR :query = '' OR " +

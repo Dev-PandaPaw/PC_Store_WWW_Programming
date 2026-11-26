@@ -121,7 +121,7 @@ function HeaderIcon({ name, className = '' }) {
 export default function StoreHeader() {
   const { pathname, search } = useLocation()
   const navigate = useNavigate()
-  const { totalCount } = useCart()
+  const { totalCount, ready: cartReady } = useCart()
   const { user, logout } = useAuth()
   const [loggingOut, setLoggingOut] = useState(false)
   const [keyword, setKeyword] = useState(
@@ -179,10 +179,12 @@ export default function StoreHeader() {
             <Link
               to="/cart"
               className="store-cart"
-              aria-label={`Giỏ hàng (${totalCount} sản phẩm)`}
+              aria-label={cartReady ? `Giỏ hàng (${totalCount} sản phẩm)` : 'Giỏ hàng'}
             >
               <HeaderIcon name="cart" />
-              <span className="store-cart__count">{totalCount}</span>
+              {cartReady && totalCount > 0 && (
+                <span className="store-cart__count">{totalCount}</span>
+              )}
             </Link>
             {user ? (
               <div className="store-account store-account--signed-in">
@@ -192,12 +194,35 @@ export default function StoreHeader() {
                   <HeaderIcon name="user" />
                 )}
                 <div>
-                  <span className="store-account__name">
+                  <Link
+                    to="/account/profile"
+                    className="store-account__name"
+                    style={{ color: 'inherit', textDecoration: 'none' }}
+                    title="Hồ sơ tài khoản"
+                  >
                     {user.fullName || user.username}
-                  </span>
-                  <button type="button" onClick={handleLogout} disabled={loggingOut}>
-                    {loggingOut ? 'Đang thoát...' : 'Đăng xuất'}
-                  </button>
+                  </Link>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                    {Array.isArray(user.roles) && user.roles.some((r) => r === 'ROLE_ADMIN' || r === 'ADMIN') ? (
+                      <Link
+                        to="/admin/users"
+                        style={{ fontSize: '0.7rem', color: '#9ad3e0', textDecoration: 'none' }}
+                      >
+                        Quản trị
+                      </Link>
+                    ) : (
+                      <Link
+                        to="/account/profile"
+                        style={{ fontSize: '0.7rem', color: '#9ad3e0', textDecoration: 'none' }}
+                      >
+                        Hồ sơ
+                      </Link>
+                    )}
+                    <span style={{ fontSize: '0.65rem', color: '#4c7e96' }} aria-hidden="true">•</span>
+                    <button type="button" onClick={handleLogout} disabled={loggingOut}>
+                      {loggingOut ? 'Đang thoát...' : 'Đăng xuất'}
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (

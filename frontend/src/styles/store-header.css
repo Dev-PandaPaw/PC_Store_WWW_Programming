@@ -146,10 +146,24 @@
 }
 
 .store-account {
-  min-width: 150px;
-  padding: 0.5rem 1.15rem;
+  width: 192px;
+  min-width: 192px;
+  max-width: 192px;
+  height: 48px;
+  padding: 0.45rem 0.9rem;
   font-size: 0.9rem;
   font-weight: 600;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.store-account--signed-in {
+  justify-content: flex-start;
+}
+
+.store-account--signed-in > div {
+  min-width: 0;
+  flex: 1;
 }
 
 .store-cart:hover,
@@ -289,8 +303,10 @@ a.store-account:hover {
   }
 
   .store-account {
-    min-width: 130px;
-    padding-inline: 0.75rem;
+    width: 168px;
+    min-width: 168px;
+    max-width: 168px;
+    padding-inline: 0.7rem;
   }
 
   .store-nav {
@@ -363,6 +379,8 @@ a.store-account:hover {
   .store-account {
     width: 42px;
     min-width: 42px;
+    max-width: 42px;
+    height: 42px;
     min-height: 42px;
     padding: 0;
   }
@@ -372,7 +390,8 @@ a.store-account:hover {
   }
 
   .store-account--signed-in {
-    width: auto;
+    width: 100px;
+    min-width: 100px;
     max-width: 100px;
     gap: 0.35rem;
     padding-inline: 0.4rem;
