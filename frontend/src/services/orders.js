@@ -15,6 +15,8 @@ export const orderApi = {
   get: (id, management = false) => http.get(`${management ? admin : customer}/${id}`),
   list: (management, page = 0) => http.get(management ? admin : customer, { params: { page } }),
   cancel: order => http.post(`${customer}/${order.id}/cancel`, { version: order.version, status: 'CANCELLED', reason: 'Khách hàng hủy đơn' }),
+  createVnpayUrl: (orderId, amount, idempotencyKey) =>
+    http.post('/v1/payments/vnpay/create-url', { orderId, amount, idempotencyKey }),
   transition: (order, status, reason) => http.patch(`${admin}/${order.id}/status`, { version: order.version, status, reason }),
   quantity: (order, productId, quantity, reason) => http.patch(`${admin}/${order.id}/items/${productId}`, { version: order.version, quantity, reason }),
 }

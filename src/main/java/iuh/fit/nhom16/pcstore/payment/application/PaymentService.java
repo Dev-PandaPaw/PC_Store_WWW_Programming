@@ -1,295 +1,444 @@
 package iuh.fit.nhom16.pcstore.payment.application;
 
-import iuh.fit.nhom16.pcstore.payment.domain.PaymentAttempt;
-import iuh.fit.nhom16.pcstore.payment.infrastructure.PaymentAttemptRepository;
 import iuh.fit.nhom16.pcstore.payment.infrastructure.vnpay.VNPayConfig;
 import iuh.fit.nhom16.pcstore.payment.infrastructure.vnpay.VNPayUtil;
-import iuh.fit.nhom16.pcstore.sales.domain.Order;
-import iuh.fit.nhom16.pcstore.sales.infrastructure.OrderRepository;
+import iuh.fit.nhom16.pcstore.sales.exception.OrderException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+import java.math.RoundingMode;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.UUID;
 
 /**
- * Xử lý nghiệp vụ thanh toán: tạo URL VNPay và xử lý callback.
+ * Xử lý nghiệp vụ thanh toán VNPay Sandbox đồng bộ với bảng {@code sales_orders},
+ * {@code sales_payment_attempts}, {@code sales_payment_events} và {@code sales_history}.
  */
 @Service
 public class PaymentService {
 
     private static final ZoneId VIETNAM_ZONE = ZoneId.of("Asia/Ho_Chi_Minh");
     private static final DateTimeFormatter VNPAY_DATE_FORMAT =
-        DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+            DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+    private static final int MAX_REFERENCE_LENGTH = 50;
 
     private final VNPayConfig vnPayConfig;
-    private final PaymentAttemptRepository paymentAttemptRepository;
-    private final OrderRepository orderRepository;
+    private final JdbcTemplate jdbc;
 
-    public PaymentService(VNPayConfig vnPayConfig,
-                          PaymentAttemptRepository paymentAttemptRepository,
-                          OrderRepository orderRepository) {
-        this.vnPayConfig               = vnPayConfig;
-        this.paymentAttemptRepository  = paymentAttemptRepository;
-        this.orderRepository           = orderRepository;
+    @Autowired
+    public PaymentService(VNPayConfig vnPayConfig, JdbcTemplate jdbc) {
+        this.vnPayConfig = vnPayConfig;
+        this.jdbc = jdbc;
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // TẠO URL THANH TOÁN VNPAY
-    // ─────────────────────────────────────────────────────────────────────────
+    private record SalesOrderRow(
+            UUID id,
+            String code,
+            UUID customerId,
+            BigDecimal total,
+            String paymentMethod,
+            String status,
+            String paymentStatus,
+            Instant expiresAt
+    ) {}
 
-    /**
-     * Tạo URL chuyển hướng sang cổng thanh toán VNPay Sandbox.
-     *
-     * <p>Luồng:
-     * <ol>
-     *   <li>Kiểm tra đơn hàng hợp lệ và chưa được thanh toán.</li>
-     *   <li>Kiểm tra idempotency: nếu đã có PaymentAttempt PENDING với cùng {@code idempotencyKey},
-     *       tái sử dụng bản ghi đó thay vì tạo mới (tránh duplicate).</li>
-     *   <li>Tạo PaymentAttempt mới nếu chưa có.</li>
-     *   <li>Build tham số VNPay v2.1.0 và tính vnp_SecureHash.</li>
-     *   <li>Trả về URL đầy đủ (encode) để frontend redirect.</li>
-     * </ol>
-     *
-     * @param orderId         UUID đơn hàng cần thanh toán
-     * @param amount          Số tiền (VND, không nhân 100) — phải khớp với grand_total của đơn
-     * @param idempotencyKey  Khóa duy nhất của lần yêu cầu này, dùng làm vnp_TxnRef.
-     *                        Thường là UUID.randomUUID().toString() do frontend tạo và lưu lại.
-     * @param request         HTTP request hiện tại (để lấy IP và base URL)
-     * @return                URL đầy đủ để redirect sang VNPay Sandbox
-     */
-    @Transactional
+    private record PaymentAttemptRow(
+            UUID orderId,
+            String reference,
+            BigDecimal amount,
+            String status,
+            String paymentUrl
+    ) {}
+
     public String createVnPayPaymentUrl(UUID orderId,
-                                        BigDecimal amount,
+                                        BigDecimal requestedAmount,
                                         String idempotencyKey,
                                         HttpServletRequest request) {
+        return createVnPayPaymentUrl(null, orderId, requestedAmount, idempotencyKey, request);
+    }
 
-        // 1. Kiểm tra đơn hàng tồn tại và chưa thanh toán
-        Order order = orderRepository.findById(orderId)
-            .orElseThrow(() -> new IllegalArgumentException(
-                "Không tìm thấy đơn hàng với id: " + orderId));
+    /**
+     * Tạo URL chuyển hướng sang cổng thanh toán VNPay Sandbox cho đơn hàng trong {@code sales_orders}.
+     */
+    @Transactional
+    public String createVnPayPaymentUrl(UUID actorId,
+                                        UUID orderId,
+                                        BigDecimal requestedAmount,
+                                        String idempotencyKey,
+                                        HttpServletRequest request) {
+        String reference = normalizeReference(idempotencyKey);
+        SalesOrderRow order = lockSalesOrder(orderId);
 
-        if (Order.STATUS_CONFIRMED.equals(order.getStatus())
-                || Order.STATUS_AWAITING_CONFIRMATION.equals(order.getStatus())
-                || Order.STATUS_SHIPPING.equals(order.getStatus())
-                || Order.STATUS_DELIVERED.equals(order.getStatus())) {
-            throw new IllegalStateException("Đơn hàng " + orderId + " đã được thanh toán hoặc đang được xử lý.");
+        if (actorId != null && !actorId.equals(order.customerId())) {
+            throw OrderException.missing();
+        }
+        if (!"VNPAY".equalsIgnoreCase(order.paymentMethod())) {
+            throw OrderException.conflict(
+                    "PAYMENT_METHOD_INVALID",
+                    "Đơn hàng " + order.code() + " không sử dụng phương thức thanh toán VNPay.");
+        }
+        if ("PAID".equalsIgnoreCase(order.paymentStatus())
+                || isAlreadyProcessedStatus(order.status())) {
+            throw OrderException.conflict(
+                    "ORDER_ALREADY_PAID",
+                    "Đơn hàng " + order.code() + " đã được thanh toán hoặc đang được xử lý.");
+        }
+        if ("CANCELLED".equalsIgnoreCase(order.status())
+                || "EXPIRED".equalsIgnoreCase(order.status())) {
+            throw OrderException.conflict(
+                    "ORDER_NOT_PAYABLE",
+                    "Đơn hàng " + order.code() + " đã bị hủy hoặc hết hạn thanh toán.");
+        }
+        if (order.expiresAt() != null && !order.expiresAt().isAfter(Instant.now())) {
+            throw OrderException.conflict(
+                    "ORDER_EXPIRED",
+                    "Đơn hàng " + order.code() + " đã hết hạn thanh toán. Vui lòng đặt lại đơn mới.");
+        }
+        if (requestedAmount != null && order.total().compareTo(requestedAmount) != 0) {
+            throw OrderException.conflict(
+                    "AMOUNT_MISMATCH",
+                    "Số tiền thanh toán (" + requestedAmount + ") không khớp với tổng tiền đơn hàng (" + order.total() + ").");
         }
 
-        if (Order.STATUS_CANCELLED.equals(order.getStatus())
-                || Order.STATUS_EXPIRED.equals(order.getStatus())) {
-            throw new IllegalStateException("Đơn hàng " + orderId + " đã bị hủy hoặc hết hạn.");
+        // Kiểm tra payment attempt hiện có của đơn hàng (idempotency & retry)
+        PaymentAttemptRow existingAttempt = lockAttemptByOrderId(orderId);
+        if (existingAttempt != null) {
+            if ("SUCCESS".equalsIgnoreCase(existingAttempt.status())) {
+                throw OrderException.conflict(
+                        "ORDER_ALREADY_PAID",
+                        "Giao dịch cho đơn hàng " + order.code() + " đã hoàn tất trước đó.");
+            }
+            if ("PENDING".equalsIgnoreCase(existingAttempt.status())
+                    && reference.equals(existingAttempt.reference())
+                    && existingAttempt.paymentUrl() != null
+                    && !existingAttempt.paymentUrl().isBlank()) {
+                return existingAttempt.paymentUrl();
+            }
         }
 
-        if (order.getGrandTotal() != null && amount.compareTo(order.getGrandTotal()) != 0) {
-            throw new IllegalArgumentException(
-                "Số tiền thanh toán (" + amount + ") không khớp với tổng tiền đơn hàng (" + order.getGrandTotal() + ")");
+        // Tránh dùng trùng mã tham chiếu cho hai đơn hàng khác nhau
+        List<UUID> refOwners = jdbc.queryForList(
+                "SELECT order_id FROM sales_payment_attempts WHERE reference = ?",
+                UUID.class,
+                reference);
+        if (!refOwners.isEmpty() && !orderId.equals(refOwners.getFirst())) {
+            throw OrderException.conflict(
+                    "IDEMPOTENCY_CONFLICT",
+                    "Mã tham chiếu thanh toán đã được sử dụng cho đơn hàng khác.");
         }
 
-        // 2. Idempotency: tái sử dụng PENDING attempt nếu đã tạo trước đó với cùng key
-        paymentAttemptRepository
-            .findByPaymentReferenceForUpdate(idempotencyKey)
-            .ifPresent(existing -> {
-                if (PaymentAttempt.STATUS_SUCCESS.equals(existing.getStatus())) {
-                    throw new IllegalStateException("Giao dịch " + idempotencyKey + " đã được xử lý thành công.");
-                }
-                // PENDING hoặc FAILED: bỏ qua, cho phép tiếp tục tạo URL mới
-            });
-
-        // 3. Tạo mới PaymentAttempt chỉ khi chưa tồn tại
-        boolean attemptAlreadyExists = paymentAttemptRepository
-            .findByPaymentReferenceForUpdate(idempotencyKey)
-            .isPresent();
-
-        if (!attemptAlreadyExists) {
-            PaymentAttempt attempt = new PaymentAttempt(
-                orderId, idempotencyKey, PaymentAttempt.GATEWAY_VNPAY, amount
-            );
-            paymentAttemptRepository.save(attempt);
-        }
-
-        // 4. Build tham số VNPay
-        String vnpCreateDate = ZonedDateTime.now(VIETNAM_ZONE).format(VNPAY_DATE_FORMAT);
-        String vnpExpireDate = ZonedDateTime.now(VIETNAM_ZONE).plusMinutes(15).format(VNPAY_DATE_FORMAT);
-        String vnpIpAddr     = VNPayUtil.getIpAddress(request);
-        String backendCallbackUrl = buildBackendCallbackUrl(request);
-
-        // vnp_Amount phải là số nguyên (VND × 100), không có dấu thập phân
-        String vnpAmount = amount.multiply(BigDecimal.valueOf(100)).toBigIntegerExact().toString();
+        BigDecimal authoritativeAmount = order.total().setScale(0, RoundingMode.HALF_UP);
+        String vnpAmount = authoritativeAmount.multiply(BigDecimal.valueOf(100)).toBigInteger().toString();
+        ZonedDateTime nowVn = ZonedDateTime.now(VIETNAM_ZONE);
+        String vnpCreateDate = nowVn.format(VNPAY_DATE_FORMAT);
+        String vnpExpireDate = nowVn.plusMinutes(15).format(VNPAY_DATE_FORMAT);
 
         Map<String, String> vnpParams = new HashMap<>();
-        vnpParams.put("vnp_Version",    "2.1.0");
-        vnpParams.put("vnp_Command",    "pay");
-        vnpParams.put("vnp_TmnCode",    vnPayConfig.getTmnCode());
-        vnpParams.put("vnp_Amount",     vnpAmount);
-        vnpParams.put("vnp_CurrCode",   "VND");
-        vnpParams.put("vnp_TxnRef",     idempotencyKey);
-        vnpParams.put("vnp_OrderInfo",  "Thanh toan don hang " + orderId);
-        vnpParams.put("vnp_OrderType",  "other");
-        vnpParams.put("vnp_Locale",     "vn");
-        vnpParams.put("vnp_ReturnUrl",  backendCallbackUrl);
-        vnpParams.put("vnp_IpAddr",     vnpIpAddr);
+        vnpParams.put("vnp_Version", "2.1.0");
+        vnpParams.put("vnp_Command", "pay");
+        vnpParams.put("vnp_TmnCode", vnPayConfig.getTmnCode());
+        vnpParams.put("vnp_Amount", vnpAmount);
+        vnpParams.put("vnp_CurrCode", "VND");
+        vnpParams.put("vnp_TxnRef", reference);
+        vnpParams.put("vnp_OrderInfo", "Thanh toan don hang " + order.code());
+        vnpParams.put("vnp_OrderType", "other");
+        vnpParams.put("vnp_Locale", "vn");
+        vnpParams.put("vnp_ReturnUrl", buildBackendCallbackUrl(request));
+        vnpParams.put("vnp_IpAddr", VNPayUtil.getIpAddress(request));
         vnpParams.put("vnp_CreateDate", vnpCreateDate);
         vnpParams.put("vnp_ExpireDate", vnpExpireDate);
 
-        // 5. Tính chữ ký — dùng raw values (chưa URL-encode) đúng theo VNPay spec
-        String secureHash = VNPayUtil.hashAllFields(vnpParams, vnPayConfig.getHashSecret());
+        String paymentUrl = vnPayConfig.getPayUrl() + "?" + VNPayUtil.buildSignedQuery(vnpParams, vnPayConfig.getHashSecret());
 
-        // 6. Build URL — values phải được URL-encode khi ghép vào query string
-        StringBuilder urlBuilder = new StringBuilder(vnPayConfig.getPayUrl()).append("?");
-        new TreeMap<>(vnpParams).forEach((key, value) ->
-            urlBuilder
-                .append(urlEncode(key))
-                .append("=")
-                .append(urlEncode(value))
-                .append("&")
-        );
-        // Append vnp_SecureHash ở cuối (không nằm trong phần hash)
-        urlBuilder.append("vnp_SecureHash=").append(secureHash);
+        jdbc.update("""
+                INSERT INTO sales_payment_attempts (order_id, reference, amount, status, transaction_code, payment_url)
+                VALUES (?, ?, ?, 'PENDING', NULL, ?)
+                ON CONFLICT (order_id) DO UPDATE
+                SET reference = EXCLUDED.reference,
+                    amount = EXCLUDED.amount,
+                    status = 'PENDING',
+                    transaction_code = NULL,
+                    payment_url = EXCLUDED.payment_url
+                """,
+                orderId, reference, authoritativeAmount, paymentUrl);
 
-        return urlBuilder.toString();
+        return paymentUrl;
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // XỬ LÝ CALLBACK VNPAY
-    // ─────────────────────────────────────────────────────────────────────────
-
     /**
-     * Xử lý phản hồi VNPay gửi về (Return URL redirect).
-     *
-     * <p>Bảo đảm:
-     * <ul>
-     *   <li><strong>Xác minh chữ ký:</strong> tính lại HMAC-SHA512 và so sánh với vnp_SecureHash.</li>
-     *   <li><strong>Idempotency:</strong> nếu PaymentAttempt đã SUCCESS, trả về ngay mà không cập nhật lặp.</li>
-     *   <li><strong>Atomic:</strong> cập nhật PaymentAttempt và Order trong cùng một transaction.</li>
-     * </ul>
-     *
-     * @param params Tất cả tham số VNPay gửi về (gồm vnp_SecureHash)
-     * @return       Kết quả xử lý — controller dùng để redirect về frontend
+     * Xử lý callback (Return URL) từ VNPay: xác minh chữ ký HMAC-SHA512, kiểm tra số tiền,
+     * đảm bảo idempotency, lưu log sự kiện và cập nhật trạng thái đơn hàng trong {@code sales_orders}.
      */
     @Transactional
     public CallbackResult processVnPayCallback(Map<String, String> params) {
         String receivedHash = params.get("vnp_SecureHash");
-        String txnRef       = params.get("vnp_TxnRef");
+        String txnRef = params.get("vnp_TxnRef");
         String responseCode = params.get("vnp_ResponseCode");
+        String transactionStatus = params.get("vnp_TransactionStatus");
         String transactionNo = params.get("vnp_TransactionNo");
+        String bankCode = params.get("vnp_BankCode");
+        String rawVnpAmount = params.get("vnp_Amount");
 
         if (receivedHash == null || txnRef == null || responseCode == null) {
             return CallbackResult.invalidRequest("Thiếu tham số bắt buộc từ VNPay");
         }
 
-        // 1. Tách vnp_SecureHash và vnp_SecureHashType ra trước khi tính lại hash
         Map<String, String> signableParams = new HashMap<>(params);
         signableParams.remove("vnp_SecureHash");
         signableParams.remove("vnp_SecureHashType");
 
-        // 2. Xác minh chữ ký
         String expectedHash = VNPayUtil.hashAllFields(signableParams, vnPayConfig.getHashSecret());
         if (!expectedHash.equalsIgnoreCase(receivedHash)) {
-            return CallbackResult.invalidSignature("Chữ ký VNPay không hợp lệ — có thể bị giả mạo");
+            return CallbackResult.invalidSignature("Chữ ký VNPay không hợp lệ");
         }
 
-        // 3. Tra cứu PaymentAttempt với lock để tránh xử lý đồng thời
-        PaymentAttempt attempt = paymentAttemptRepository
-            .findByPaymentReferenceForUpdate(txnRef)
-            .orElseGet(() -> {
-                // Trường hợp hiếm: callback đến trước khi attempt được lưu xong
-                // Không throw để tránh lỗi 500 — VNPay có thể retry
-                return null;
-            });
-
+        PaymentAttemptRow attempt = lockAttemptByReference(txnRef);
         if (attempt == null) {
-            return CallbackResult.failure(txnRef, "Không tìm thấy bản ghi giao dịch: " + txnRef);
+            return CallbackResult.failure(txnRef, null, responseCode, transactionNo, bankCode, rawVnpAmount,
+                    "Không tìm thấy giao dịch tham chiếu: " + txnRef);
         }
 
-        // 4. Idempotency: đã xử lý thành công rồi → không làm gì thêm
-        if (PaymentAttempt.STATUS_SUCCESS.equals(attempt.getStatus())) {
-            return CallbackResult.success(txnRef, "Giao dịch đã được xử lý trước đó (idempotent)");
+        SalesOrderRow order = lockSalesOrderOrNull(attempt.orderId());
+        if (order == null) {
+            return CallbackResult.failure(txnRef, attempt.orderId(), responseCode, transactionNo, bankCode, rawVnpAmount,
+                    "Không tìm thấy đơn hàng tương ứng.");
         }
 
-        // 5. VNPay từ chối giao dịch (responseCode != "00")
-        if (!"00".equals(responseCode)) {
-            attempt.setStatus(PaymentAttempt.STATUS_FAILED);
-            attempt.setTransactionCode(transactionNo);
-            paymentAttemptRepository.save(attempt);
-            return CallbackResult.failure(txnRef, "VNPay từ chối giao dịch — mã lỗi: " + responseCode);
+        // Kiểm tra số tiền callback khớp với attempt (VNPay trả về VND * 100)
+        if (!isMatchingVnpAmount(rawVnpAmount, attempt.amount())) {
+            recordPaymentEvent(order.id(), transactionNo, responseCode, transactionStatus);
+            return CallbackResult.failure(txnRef, order.id(), responseCode, transactionNo, bankCode, rawVnpAmount,
+                    "Số tiền callback không khớp với đơn hàng.");
         }
 
-        // 6. Thanh toán thành công — cập nhật PaymentAttempt
-        attempt.setStatus(PaymentAttempt.STATUS_SUCCESS);
-        attempt.setTransactionCode(transactionNo);
-        paymentAttemptRepository.save(attempt);
+        // Idempotency: nếu attempt đã SUCCESS thì trả về thành công luôn, không cập nhật lặp
+        if ("SUCCESS".equalsIgnoreCase(attempt.status())) {
+            return CallbackResult.success(txnRef, order.id(), responseCode, transactionNo, bankCode, rawVnpAmount,
+                    "Giao dịch đã được ghi nhận trước đó.");
+        }
 
-        // 7. Cập nhật trạng thái đơn hàng
-        orderRepository.findById(attempt.getOrderId()).ifPresent(order -> {
-            order.setStatus(Order.STATUS_CONFIRMED);
-            orderRepository.save(order);
-        });
+        recordPaymentEvent(order.id(), transactionNo, responseCode, transactionStatus);
 
-        return CallbackResult.success(txnRef, "Thanh toán thành công");
+        boolean approved = "00".equals(responseCode)
+                && (transactionStatus == null || transactionStatus.isBlank() || "00".equals(transactionStatus));
+
+        if (!approved) {
+            jdbc.update("""
+                    UPDATE sales_payment_attempts
+                    SET status = 'FAILED', transaction_code = ?
+                    WHERE order_id = ?
+                    """, transactionNo, order.id());
+            if ("UNPAID".equalsIgnoreCase(order.paymentStatus())) {
+                jdbc.update("""
+                        UPDATE sales_orders
+                        SET payment_status = 'FAILED', version = version + 1, updated_at = CURRENT_TIMESTAMP
+                        WHERE id = ?
+                        """, order.id());
+            }
+            return CallbackResult.failure(txnRef, order.id(), responseCode, transactionNo, bankCode, rawVnpAmount,
+                    "Thanh toán không thành công (mã VNPay: " + responseCode + ")");
+        }
+
+        // Thanh toán được VNPay duyệt
+        jdbc.update("""
+                UPDATE sales_payment_attempts
+                SET status = 'SUCCESS', transaction_code = ?
+                WHERE order_id = ?
+                """, transactionNo, order.id());
+
+        if ("CANCELLED".equalsIgnoreCase(order.status()) || "EXPIRED".equalsIgnoreCase(order.status())) {
+            // Đơn đã hết hạn hoặc bị hủy trước khi tiền về: không tự phục hồi đơn, đánh dấu cần đối soát/hoàn tiền
+            jdbc.update("""
+                    UPDATE sales_orders
+                    SET payment_status = 'REVIEW_REQUIRED', version = version + 1, updated_at = CURRENT_TIMESTAMP
+                    WHERE id = ?
+                    """, order.id());
+            insertHistory(order.id(), order.status(), order.status(),
+                    "VNPay báo thanh toán thành công khi đơn đã " + order.status() + " — chuyển đối soát hoàn tiền (Mã GD: " + safeText(transactionNo) + ")");
+            return CallbackResult.failure(txnRef, order.id(), responseCode, transactionNo, bankCode, rawVnpAmount,
+                    "Đơn hàng đã hết hạn trước khi thanh toán hoàn tất. Giao dịch đã được ghi nhận để đối soát hoàn tiền.");
+        }
+
+        jdbc.update("""
+                UPDATE sales_orders
+                SET status = 'CONFIRMED', payment_status = 'PAID', version = version + 1, updated_at = CURRENT_TIMESTAMP
+                WHERE id = ?
+                """, order.id());
+        insertHistory(order.id(), order.status(), "CONFIRMED",
+                "Thanh toán VNPay Sandbox thành công (Mã GD: " + safeText(transactionNo) + ")");
+
+        return CallbackResult.success(txnRef, order.id(), responseCode, transactionNo, bankCode, rawVnpAmount,
+                "Thanh toán thành công");
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // PRIVATE HELPERS
-    // ─────────────────────────────────────────────────────────────────────────
+    private SalesOrderRow lockSalesOrder(UUID orderId) {
+        SalesOrderRow row = lockSalesOrderOrNull(orderId);
+        if (row == null) {
+            throw OrderException.missing();
+        }
+        return row;
+    }
 
-    /**
-     * Xây dựng URL backend callback từ request hiện tại.
-     * VNPay sẽ redirect trình duyệt khách hàng về URL này sau khi thanh toán.
-     */
+    private SalesOrderRow lockSalesOrderOrNull(UUID orderId) {
+        return jdbc.query("""
+                SELECT id, code, customer_id, total, payment_method, status, payment_status, expires_at
+                FROM sales_orders
+                WHERE id = ?
+                FOR UPDATE
+                """, (rs, n) -> {
+            Timestamp expiresTs = rs.getTimestamp("expires_at");
+            return new SalesOrderRow(
+                    rs.getObject("id", UUID.class),
+                    rs.getString("code"),
+                    rs.getObject("customer_id", UUID.class),
+                    rs.getBigDecimal("total"),
+                    rs.getString("payment_method"),
+                    rs.getString("status"),
+                    rs.getString("payment_status"),
+                    expiresTs != null ? expiresTs.toInstant() : null
+            );
+        }, orderId).stream().findFirst().orElse(null);
+    }
+
+    private PaymentAttemptRow lockAttemptByOrderId(UUID orderId) {
+        return jdbc.query("""
+                SELECT order_id, reference, amount, status, payment_url
+                FROM sales_payment_attempts
+                WHERE order_id = ?
+                FOR UPDATE
+                """, (rs, n) -> new PaymentAttemptRow(
+                rs.getObject("order_id", UUID.class),
+                rs.getString("reference"),
+                rs.getBigDecimal("amount"),
+                rs.getString("status"),
+                rs.getString("payment_url")
+        ), orderId).stream().findFirst().orElse(null);
+    }
+
+    private PaymentAttemptRow lockAttemptByReference(String reference) {
+        return jdbc.query("""
+                SELECT order_id, reference, amount, status, payment_url
+                FROM sales_payment_attempts
+                WHERE reference = ?
+                FOR UPDATE
+                """, (rs, n) -> new PaymentAttemptRow(
+                rs.getObject("order_id", UUID.class),
+                rs.getString("reference"),
+                rs.getBigDecimal("amount"),
+                rs.getString("status"),
+                rs.getString("payment_url")
+        ), reference).stream().findFirst().orElse(null);
+    }
+
+    private void recordPaymentEvent(UUID orderId, String transactionNo, String responseCode, String transactionStatus) {
+        jdbc.update("""
+                INSERT INTO sales_payment_events (order_id, transaction_code, response_code, transaction_status)
+                VALUES (?, ?, ?, ?)
+                """, orderId, transactionNo, responseCode, transactionStatus);
+    }
+
+    private void insertHistory(UUID orderId, String fromStatus, String toStatus, String reason) {
+        jdbc.update("""
+                INSERT INTO sales_history (order_id, from_status, to_status, actor_id, reason)
+                VALUES (?, ?, ?, NULL, ?)
+                """, orderId, fromStatus, toStatus, reason);
+    }
+
+    private static boolean isAlreadyProcessedStatus(String status) {
+        return "CONFIRMED".equalsIgnoreCase(status)
+                || "PROCESSING".equalsIgnoreCase(status)
+                || "SHIPPING".equalsIgnoreCase(status)
+                || "DELIVERED".equalsIgnoreCase(status)
+                || "COMPLETED".equalsIgnoreCase(status);
+    }
+
+    private static String normalizeReference(String idempotencyKey) {
+        if (idempotencyKey == null || idempotencyKey.isBlank()) {
+            throw new IllegalArgumentException("idempotencyKey không được để trống.");
+        }
+        String trimmed = idempotencyKey.trim();
+        if (trimmed.length() > MAX_REFERENCE_LENGTH) {
+            throw new IllegalArgumentException("idempotencyKey không được vượt quá " + MAX_REFERENCE_LENGTH + " ký tự.");
+        }
+        return trimmed;
+    }
+
+    private static boolean isMatchingVnpAmount(String rawVnpAmount, BigDecimal attemptAmount) {
+        if (rawVnpAmount == null || rawVnpAmount.isBlank() || attemptAmount == null) {
+            return false;
+        }
+        try {
+            BigDecimal callbackVnd = new BigDecimal(rawVnpAmount).divide(BigDecimal.valueOf(100), 2, RoundingMode.UNNECESSARY);
+            return callbackVnd.compareTo(attemptAmount) == 0;
+        } catch (RuntimeException ex) {
+            return false;
+        }
+    }
+
+    private static String safeText(String value) {
+        return value == null || value.isBlank() ? "N/A" : value;
+    }
+
     private String buildBackendCallbackUrl(HttpServletRequest request) {
-        String scheme = request.getScheme();           // "http" hoặc "https"
-        String host   = request.getServerName();       // "localhost"
-        int    port   = request.getServerPort();       // 8080
-
-        // Bỏ qua port mặc định khi build URL
-        boolean isDefaultPort = (port == 80 && "http".equals(scheme))
-                             || (port == 443 && "https".equals(scheme));
-
-        String base = isDefaultPort
-            ? scheme + "://" + host
-            : scheme + "://" + host + ":" + port;
-
+        String forwardedProto = firstHeaderValue(request.getHeader("X-Forwarded-Proto"));
+        String forwardedHost = firstHeaderValue(request.getHeader("X-Forwarded-Host"));
+        String scheme = forwardedProto != null ? forwardedProto : request.getScheme();
+        if (forwardedHost != null) {
+            return scheme + "://" + forwardedHost + "/api/v1/payments/vnpay/callback";
+        }
+        String host = request.getServerName();
+        int port = request.getServerPort();
+        boolean isDefaultPort = (port == 80 && "http".equalsIgnoreCase(scheme))
+                || (port == 443 && "https".equalsIgnoreCase(scheme));
+        String base = isDefaultPort ? scheme + "://" + host : scheme + "://" + host + ":" + port;
         return base + "/api/v1/payments/vnpay/callback";
     }
 
-    private static String urlEncode(String value) {
-        return URLEncoder.encode(value, StandardCharsets.UTF_8);
+    private static String firstHeaderValue(String header) {
+        if (header == null || header.isBlank()) {
+            return null;
+        }
+        return header.contains(",") ? header.split(",")[0].trim() : header.trim();
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // INNER RECORD — Kết quả callback
-    // ─────────────────────────────────────────────────────────────────────────
-
-    /**
-     * Kết quả xử lý callback VNPay.
-     * Controller dùng {@code success} để quyết định redirect về trang thành công hay thất bại.
-     */
-    public record CallbackResult(boolean success, String txnRef, String message, String errorType) {
-
-        public static CallbackResult success(String txnRef, String message) {
-            return new CallbackResult(true, txnRef, message, null);
+    public record CallbackResult(
+            boolean success,
+            String txnRef,
+            UUID orderId,
+            String responseCode,
+            String transactionNo,
+            String bankCode,
+            String vnpAmount,
+            String message,
+            String errorType
+    ) {
+        public static CallbackResult success(String txnRef, UUID orderId, String responseCode,
+                                             String transactionNo, String bankCode, String vnpAmount, String message) {
+            return new CallbackResult(true, txnRef, orderId, responseCode, transactionNo, bankCode, vnpAmount, message, null);
         }
 
-        public static CallbackResult failure(String txnRef, String message) {
-            return new CallbackResult(false, txnRef, message, "PAYMENT_FAILED");
+        public static CallbackResult failure(String txnRef, UUID orderId, String responseCode,
+                                             String transactionNo, String bankCode, String vnpAmount, String message) {
+            return new CallbackResult(false, txnRef, orderId, responseCode, transactionNo, bankCode, vnpAmount, message, "PAYMENT_FAILED");
         }
 
         public static CallbackResult invalidSignature(String message) {
-            return new CallbackResult(false, null, message, "INVALID_SIGNATURE");
+            return new CallbackResult(false, null, null, null, null, null, null, message, "INVALID_SIGNATURE");
         }
 
         public static CallbackResult invalidRequest(String message) {
-            return new CallbackResult(false, null, message, "INVALID_REQUEST");
+            return new CallbackResult(false, null, null, null, null, null, null, message, "INVALID_REQUEST");
         }
     }
 }

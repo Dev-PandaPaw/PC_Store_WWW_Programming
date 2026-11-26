@@ -104,7 +104,7 @@ export default function PaymentCompletePage() {
 
             {/* Nút điều hướng */}
             <div className="complete-actions">
-              <Link to="/account/orders" className="btn-complete-primary">
+              <Link to={orderId ? `/orders` : '/orders'} className="btn-complete-primary">
                 <FileText size={18} />
                 <span>Xem đơn hàng của tôi</span>
               </Link>
@@ -153,7 +153,7 @@ export default function PaymentCompletePage() {
                   <span>Thử thanh toán lại</span>
                 </Link>
               ) : (
-                <Link to="/account/orders" className="btn-complete-primary">
+                <Link to="/orders" className="btn-complete-primary">
                   <RotateCcw size={18} />
                   <span>Về lịch sử đơn hàng</span>
                 </Link>

@@ -4,40 +4,28 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
- * Tiện ích xử lý tích hợp VNPay Sandbox.
- *
- * <p>Lớp này là pure-static utility, không có state và không phụ thuộc Spring context.
- * Dễ unit-test trực tiếp mà không cần context.
- *
- * <p>Tham khảo: VNPay Technical Specification v2.1.0 — mục "Tạo chữ ký checksum".
+ * Tiện ích xử lý tích hợp VNPay Sandbox v2.1.0.
  */
 public final class VNPayUtil {
 
     private VNPayUtil() {
-        // Không cho phép khởi tạo — đây là utility class
     }
 
     /**
-     * Tính HMAC-SHA512 của {@code data} với khóa {@code key}.
-     *
-     * <p>Kết quả trả về dạng hex string chữ thường (lowercase), đúng định dạng VNPay yêu cầu.
-     *
-     * @param key       khóa bí mật (hashSecret từ VNPayConfig)
-     * @param data      chuỗi cần băm (query string chưa encode)
-     * @return          chuỗi hex 128 ký tự
-     * @throws IllegalStateException nếu JVM không hỗ trợ HmacSHA512 (không bao giờ xảy ra trên JDK 11+)
+     * Tính HMAC-SHA512 của {@code data} với khóa {@code key}, trả về chuỗi hex chữ thường.
      */
     public static String hmacSHA512(String key, String data) {
         try {
             Mac mac = Mac.getInstance("HmacSHA512");
             SecretKeySpec secretKey = new SecretKeySpec(
-                key.getBytes(StandardCharsets.UTF_8), "HmacSHA512"
+                    key.getBytes(StandardCharsets.UTF_8), "HmacSHA512"
             );
             mac.init(secretKey);
             byte[] hash = mac.doFinal(data.getBytes(StandardCharsets.UTF_8));
@@ -47,66 +35,86 @@ public final class VNPayUtil {
                 hexResult.append(String.format("%02x", b));
             }
             return hexResult.toString();
-
         } catch (Exception e) {
             throw new IllegalStateException("Không thể tính HMAC-SHA512: " + e.getMessage(), e);
         }
     }
 
     /**
-     * Lấy địa chỉ IP thực của client, có xử lý trường hợp request qua proxy/load-balancer.
-     *
-     * <p>Ưu tiên: X-Forwarded-For → Proxy-Client-IP → WL-Proxy-Client-IP → RemoteAddr.
-     * Nếu X-Forwarded-For chứa nhiều IP (danh sách qua nhiều proxy), lấy IP đầu tiên (IP gốc).
-     *
-     * @param request HTTP request hiện tại
-     * @return IP string (ví dụ: "127.0.0.1") — không bao giờ null
+     * Lấy địa chỉ IPv4 thực của client (chuẩn hóa IPv6 loopback về 127.0.0.1 theo yêu cầu VNPay).
      */
     public static String getIpAddress(HttpServletRequest request) {
         String[] ipHeaders = {
-            "X-Forwarded-For",
-            "Proxy-Client-IP",
-            "WL-Proxy-Client-IP",
-            "HTTP_X_FORWARDED_FOR",
-            "HTTP_CLIENT_IP"
+                "X-Forwarded-For",
+                "Proxy-Client-IP",
+                "WL-Proxy-Client-IP",
+                "HTTP_X_FORWARDED_FOR",
+                "HTTP_CLIENT_IP"
         };
 
+        String resolved = null;
         for (String header : ipHeaders) {
             String ip = request.getHeader(header);
             if (ip != null && !ip.isBlank() && !"unknown".equalsIgnoreCase(ip)) {
-                // X-Forwarded-For có thể là "client, proxy1, proxy2" — lấy IP client đầu tiên
-                return ip.contains(",") ? ip.split(",")[0].trim() : ip.trim();
+                resolved = ip.contains(",") ? ip.split(",")[0].trim() : ip.trim();
+                break;
             }
         }
-
-        return request.getRemoteAddr();
+        if (resolved == null || resolved.isBlank()) {
+            resolved = request.getRemoteAddr();
+        }
+        if (resolved == null || resolved.isBlank()
+                || "0:0:0:0:0:0:0:1".equals(resolved) || "::1".equals(resolved)) {
+            return "127.0.0.1";
+        }
+        return resolved;
     }
 
     /**
-     * Tạo checksum VNPay từ toàn bộ tham số thanh toán.
-     *
-     * <p>Thuật toán theo VNPay Technical Spec v2.1.0:
-     * <ol>
-     *   <li>Loại bỏ các entry có value null hoặc blank.</li>
-     *   <li>Sắp xếp các key theo thứ tự từ điển (lexicographic, case-sensitive).</li>
-     *   <li>Nối thành chuỗi {@code key=value&key=value} — <strong>giá trị RAW, không URL-encode</strong>.</li>
-     *   <li>Tính HMAC-SHA512 với {@code secretKey}.</li>
-     * </ol>
-     *
-     * <p><strong>Lưu ý:</strong> Khi gọi hàm này để xác minh callback, phải loại bỏ
-     * {@code vnp_SecureHash} và {@code vnp_SecureHashType} ra khỏi {@code fields} trước.
-     *
-     * @param fields    toàn bộ tham số (trừ vnp_SecureHash)
-     * @param secretKey khóa bí mật từ VNPayConfig.getHashSecret()
-     * @return          checksum hex 128 ký tự
+     * Tạo chuỗi dữ liệu ký theo VNPay v2.1.0: sắp xếp theo key và URL-encode giá trị trước khi ghép {@code key=value}.
+     */
+    public static String buildHashData(Map<String, String> fields) {
+        return new TreeMap<>(fields).entrySet().stream()
+                .filter(entry -> entry.getKey() != null && !entry.getKey().isBlank())
+                .filter(entry -> entry.getValue() != null && !entry.getValue().isBlank())
+                .map(entry -> entry.getKey() + "=" + urlEncode(entry.getValue()))
+                .collect(Collectors.joining("&"));
+    }
+
+    /**
+     * Tạo checksum VNPay HMAC-SHA512 từ toàn bộ tham số (đã loại {@code vnp_SecureHash}).
      */
     public static String hashAllFields(Map<String, String> fields, String secretKey) {
-        // TreeMap tự sắp xếp key theo thứ tự từ điển — đúng yêu cầu VNPay
-        String rawQueryString = new TreeMap<>(fields).entrySet().stream()
-            .filter(entry -> entry.getValue() != null && !entry.getValue().isBlank())
-            .map(entry -> entry.getKey() + "=" + entry.getValue())
-            .collect(Collectors.joining("&"));
+        return hmacSHA512(secretKey, buildHashData(fields));
+    }
 
-        return hmacSHA512(secretKey, rawQueryString);
+    /**
+     * Build query string đã URL-encode kèm {@code vnp_SecureHash} ở cuối theo VNPay v2.1.0.
+     */
+    public static String buildSignedQuery(Map<String, String> fields, String secretKey) {
+        StringBuilder hashData = new StringBuilder();
+        StringBuilder query = new StringBuilder();
+        boolean first = true;
+        for (Map.Entry<String, String> entry : new TreeMap<>(fields).entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            if (key == null || key.isBlank() || value == null || value.isBlank()) {
+                continue;
+            }
+            if (!first) {
+                hashData.append('&');
+                query.append('&');
+            }
+            String encodedValue = urlEncode(value);
+            hashData.append(key).append('=').append(encodedValue);
+            query.append(urlEncode(key)).append('=').append(encodedValue);
+            first = false;
+        }
+        String secureHash = hmacSHA512(secretKey, hashData.toString());
+        return query + "&vnp_SecureHash=" + secureHash;
+    }
+
+    public static String urlEncode(String value) {
+        return URLEncoder.encode(value, StandardCharsets.US_ASCII);
     }
 }

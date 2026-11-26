@@ -290,7 +290,7 @@ export default function ProfilePage() {
         </div>
         <div style={{ display: 'flex', gap: '0.6rem' }}>
           <Link
-            to="/account/orders"
+            to="/orders"
             style={{
               padding: '0.55rem 0.95rem',
               border: '1px solid #cbd5e1',

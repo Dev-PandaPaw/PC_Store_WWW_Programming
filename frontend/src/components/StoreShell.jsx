@@ -13,8 +13,8 @@ export default function StoreShell() {
       <StoreHeader />
 
       <main className={`main-content${pathname === '/' ? ' main-content--home' : ''}`}>
-        {/* The order-history and checkout pages use independent fixtures/APIs and need no catalog API */}
-        {pathname === '/account/orders' || pathname.startsWith('/checkout') ? (
+        {/* The orders and checkout pages use independent APIs and need no catalog API */}
+        {pathname === '/orders' || pathname === '/account/orders' || pathname.startsWith('/checkout') ? (
           <Outlet />
         ) : (
           <CatalogBoundary>

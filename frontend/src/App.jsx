@@ -19,7 +19,6 @@ import BlogPage from "./pages/BlogPage";
 import ArticlePage from "./pages/ArticlePage";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import OrderHistoryPage from "./pages/OrderHistoryPage";
 import PaymentPage from "./pages/PaymentPage";
 import PaymentCompletePage from "./pages/PaymentCompletePage";
 
@@ -63,7 +62,10 @@ export default function App() {
           <Route path="/checkout/payment/:orderId" element={<PaymentPage />} />
           <Route path="/checkout/complete" element={<PaymentCompletePage />} />
           <Route path="/orders" element={<OrdersPage />} />
-          <Route path="/account/orders" element={<OrderHistoryPage />} />
+          <Route
+            path="/account/orders"
+            element={<Navigate to="/orders" replace />}
+          />
           <Route
             path="/account/profile"
             element={

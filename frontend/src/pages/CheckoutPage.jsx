@@ -91,6 +91,7 @@ export default function CheckoutPage() {
   const [error, setError] = useState('')
   const [reconfirmNotice, setReconfirmNotice] = useState('')
   const [busy, setBusy] = useState(false)
+  const [redirectingVnpay, setRedirectingVnpay] = useState(false)
   const [accountLoading, setAccountLoading] = useState(false)
   const [now, setNow] = useState(Date.now())
 
@@ -247,6 +248,24 @@ export default function CheckoutPage() {
     }
   }
 
+  const redirectToVnpay = async (orderId, total) => {
+    setRedirectingVnpay(true)
+    setError('')
+    try {
+      const paymentKey = crypto.randomUUID()
+      const { data } = await orderApi.createVnpayUrl(orderId, total, paymentKey)
+      if (data?.paymentUrl && data.paymentUrl.startsWith('http')) {
+        window.location.assign(data.paymentUrl)
+        return true
+      }
+      throw new Error('Không nhận được đường dẫn thanh toán VNPay hợp lệ.')
+    } catch (payErr) {
+      setError(payErr?.response?.data?.detail || payErr.message || 'Chưa thể chuyển sang VNPay lúc này. Vui lòng bấm Thanh toán qua VNPay bên dưới.')
+      setRedirectingVnpay(false)
+      return false
+    }
+  }
+
   const place = async () => {
     if (sending.current || !quote || !remaining) return
     sending.current = true
@@ -269,7 +288,6 @@ export default function CheckoutPage() {
       timedOutKeys.current.delete(idempotencyKey)
       try { sessionStorage.removeItem(storageKey) } catch { /* ignore */ }
       if (revision !== identityRevision.current) return
-      setCreated(order)
       setReconfirmNotice(recoveredFromTimeout
         ? 'Kết nối bị gián đoạn nhưng đơn hàng đã được tạo thành công trước đó. Hệ thống không tạo thêm đơn trùng.'
         : '')
@@ -279,6 +297,13 @@ export default function CheckoutPage() {
       setSelectedIds(remainingSelected)
       try { sessionStorage.setItem(SELECTED_CART_STORAGE_KEY, JSON.stringify(remainingSelected)) } catch { /* ignore */ }
       await refresh()
+
+      if (order.paymentMethod === 'VNPAY' && order.paymentStatus !== 'PAID') {
+        const redirected = await redirectToVnpay(order.id, order.total)
+        if (redirected) return
+      }
+
+      setCreated(order)
       window.scrollTo(0, 0)
     } catch (err) {
       if (revision !== identityRevision.current) return
@@ -399,7 +424,19 @@ export default function CheckoutPage() {
             </p>
           )}
           <div className="checkout-footer">
-            <Link className="store-button" to="/orders">Theo dõi đơn hàng <ArrowRight size={16} /></Link>
+            {created.paymentMethod === 'VNPAY' && created.paymentStatus !== 'PAID' && (
+              <button
+                type="button"
+                className="store-button"
+                disabled={redirectingVnpay}
+                onClick={() => redirectToVnpay(created.id, created.total)}
+              >
+                {redirectingVnpay ? 'Đang chuyển sang VNPay…' : 'Thanh toán qua VNPay ngay'} <ArrowRight size={16} />
+              </button>
+            )}
+            <Link className={created.paymentMethod === 'VNPAY' && created.paymentStatus !== 'PAID' ? 'checkout-back' : 'store-button'} to="/orders">
+              Theo dõi đơn hàng <ArrowRight size={16} />
+            </Link>
             <Link className="checkout-back" to="/cart">Về giỏ hàng</Link>
           </div>
         </section>
@@ -742,7 +779,13 @@ export default function CheckoutPage() {
               {busy ? 'Đang xử lý đặt hàng…' : 'Xác nhận đặt hàng'} <ArrowRight size={17} />
             </button>
           </div>
-          {busy && <p className="checkout-status" role="status">Đang kiểm tra lại giá, tồn kho, voucher và tạo đơn hàng…</p>}
+          {busy && (
+            <p className="checkout-status" role="status">
+              {redirectingVnpay
+                ? 'Đang kết nối cổng thanh toán VNPay Sandbox…'
+                : 'Đang kiểm tra lại giá, tồn kho, voucher và tạo đơn hàng…'}
+            </p>
+          )}
         </section>
       )}
       <p className="checkout-assurance"><ShieldCheck size={15} /> Thông tin của bạn chỉ được sử dụng để xử lý và giao đơn hàng.</p>
