@@ -59,6 +59,16 @@ class CartStorageServiceTest {
     }
 
     @Test
+    void getUserCartUsesReadOnlySnapshotWithoutTakingWriterLock() {
+        when(repository.read(owner)).thenReturn(new CartSession(UUID.randomUUID(), 4, Map.of(productId, 2)));
+        assertEquals(2, storage.get(new MockHttpSession(), owner).totalQuantity());
+        verify(repository).read(owner);
+        verify(repository, never()).lock(any());
+        verify(repository, never()).save(any());
+        verify(manager).getTransaction(argThat(definition -> definition.isReadOnly()));
+    }
+
+    @Test
     void guestCartIsSessionOnlyAndIndependent() {
         MockHttpSession one = new MockHttpSession();
         storage.execute(one, null, cart -> rules.add(cart, new AddItemRequest(productId, 2, 0L)));

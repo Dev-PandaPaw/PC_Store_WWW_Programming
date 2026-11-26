@@ -33,7 +33,7 @@ public class CartController {
 
     @GetMapping
     public CartResponse getCart(HttpSession session, Authentication authentication) {
-        return storage.execute(session, owners.resolve(authentication, session), cartService::get);
+        return storage.get(session, owners.resolve(authentication, session));
     }
 
     @PostMapping("/items")

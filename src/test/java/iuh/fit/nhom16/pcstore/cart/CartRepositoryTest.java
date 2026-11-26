@@ -65,6 +65,25 @@ class CartRepositoryTest {
     }
 
     @Test
+    void readReturnsSnapshotWithoutCreatingOrLockingCart() {
+        UUID userId = UUID.randomUUID();
+        UUID productId = UUID.randomUUID();
+        CartEntity entity = new CartEntity(UUID.randomUUID(), userId);
+        entity.setVersion(7);
+        entity.syncItems(Map.of(productId, 3));
+        when(carts.findSnapshotByUserId(userId)).thenReturn(Optional.of(entity));
+
+        CartSession snapshot = repository.read(userId);
+        assertEquals(7, snapshot.version());
+        assertEquals(Map.of(productId, 3), snapshot.quantities());
+        verify(carts, never()).findByUserIdForUpdate(any());
+        verify(carts, never()).ensureCartExists(any(), any());
+
+        when(carts.findSnapshotByUserId(userId)).thenReturn(Optional.empty());
+        assertTrue(repository.read(userId).quantities().isEmpty());
+    }
+
+    @Test
     void saveUpdatesEntityItemsInPlaceWithoutRecreatingKeptProductAndPersistsAddOperations() {
         UUID userId = UUID.randomUUID();
         UUID cartId = UUID.randomUUID();
@@ -80,7 +99,6 @@ class CartRepositoryTest {
                 .findFirst().orElseThrow().getLineId();
 
         when(carts.findById(cartId)).thenReturn(Optional.of(entity));
-        when(addOperations.existsById(new CartAddOperationId(cartId, opId))).thenReturn(false);
 
         CartSession session = new CartSession(cartId, 4L, Map.of(keptProduct, 3, addedProduct, 1));
         session.recordAppliedAdd(new CartSession.AppliedAddOperation(opId, addedProduct, 1, 4L));
@@ -95,9 +113,10 @@ class CartRepositoryTest {
         assertEquals(3, keptItem.getQuantity());
         assertEquals(4L, entity.getVersion());
 
-        verify(carts).saveAndFlush(entity);
-        verify(addOperations).save(any(CartAddOperationEntity.class));
-        verify(addOperations).flush();
+        verify(carts).save(entity);
+        verify(addOperations).insertIfAbsent(cartId, opId, addedProduct, 1, 4L);
+        verify(addOperations, never()).existsById(any());
+        verify(addOperations, never()).save(any());
         assertTrue(session.pendingAppliedAdds().isEmpty());
     }
 
@@ -112,7 +131,7 @@ class CartRepositoryTest {
 
         repository.save(new CartSession(cartId, 5L, Map.of()));
         assertTrue(entity.getItems().isEmpty());
-        verify(carts).saveAndFlush(entity);
+        verify(carts).save(entity);
 
         when(mergeReceipts.claimIfAbsent(guestId, cartId)).thenReturn(1);
         assertTrue(repository.claimMerge(guestId, cartId));

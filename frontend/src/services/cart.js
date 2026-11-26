@@ -1,18 +1,18 @@
 import http from './http'
 
-const options = { timeout: 15000 }
+const options = { timeout: 8000 }
 
 export const cartApi = {
   csrf: () => http.get('/csrf', options),
-  get: () => http.get('/v1/cart', options),
+  get: (requestOptions = {}) => http.get('/v1/cart', { ...options, ...requestOptions }),
   merge: () => http.post('/v1/cart/merge', null, options),
-  add: (productId, quantity, cartVersion, operationId) =>
+  add: (productId, quantity, cartVersion, operationId, requestOptions = {}) =>
     http.post(
       '/v1/cart/items',
       operationId ? { productId, quantity, cartVersion, operationId } : { productId, quantity, cartVersion },
       operationId
-        ? { ...options, headers: { 'Idempotency-Key': operationId } }
-        : options,
+        ? { ...options, ...requestOptions, headers: { 'Idempotency-Key': operationId } }
+        : { ...options, ...requestOptions },
     ),
   update: (productId, quantity, cartVersion) => http.patch(`/v1/cart/items/${productId}`, { quantity, cartVersion }, options),
   remove: (productId, cartVersion) => http.delete(`/v1/cart/items/${productId}`, { ...options, params: { cartVersion } }),

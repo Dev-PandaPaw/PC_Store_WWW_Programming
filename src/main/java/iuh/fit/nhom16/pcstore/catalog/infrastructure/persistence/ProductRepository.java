@@ -4,6 +4,8 @@ import iuh.fit.nhom16.pcstore.catalog.domain.Product;
 import iuh.fit.nhom16.pcstore.catalog.api.dto.CartProductSnapshot;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
+import jakarta.persistence.QueryHint;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
@@ -36,6 +38,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
      * (checkout reservations / admin inventory changes) cannot interleave between cart stock check and commit,
      * while still allowing concurrent cart additions on the same product without blocking each other.
      */
+    @QueryHints(@QueryHint(name = "jakarta.persistence.query.timeout", value = "3000"))
     @Query(value = """
             SELECT p.id AS id, p.sku AS sku, p.name AS name, p.price AS price,
                    p.status AS status, p.stock_on_hand AS stockOnHand, p.reserved_quantity AS reservedQuantity

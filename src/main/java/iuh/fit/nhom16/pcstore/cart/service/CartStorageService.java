@@ -17,11 +17,21 @@ public class CartStorageService {
     private final CartRepository repository;
     private final TransactionTemplate transactions;
     private final CartService rules;
+    private final TransactionTemplate reads;
 
     public CartStorageService(CartRepository repository, TransactionTemplate transactions, CartService rules) {
         this.repository = repository;
         this.transactions = transactions;
         this.rules = rules;
+        this.reads = new TransactionTemplate(transactions.getTransactionManager());
+        this.reads.setReadOnly(true);
+    }
+
+    public CartResponse get(HttpSession session, UUID userId) {
+        if (userId != null) {
+            return reads.execute(status -> rules.get(repository.read(userId)));
+        }
+        return execute(session, null, rules::get);
     }
 
     public CartResponse execute(HttpSession session, UUID userId, Function<CartSession, CartResponse> operation) {

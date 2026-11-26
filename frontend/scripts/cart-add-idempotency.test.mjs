@@ -187,3 +187,40 @@ test('non-retryable stock conflict is not retried and preserves operationId', as
     },
   )
 })
+
+test('timeouts and server failures release the queue without another GET + POST cycle', async () => {
+  for (const error of [
+    Object.assign(new Error('timeout'), { code: 'ECONNABORTED' }),
+    Object.assign(new Error('timeout'), { code: 'ETIMEDOUT' }),
+    Object.assign(new Error('busy'), { response: { status: 503, data: {} } }),
+  ]) {
+    let posts = 0
+    let reads = 0
+    const operationId = createAddOperationId()
+    await assert.rejects(executeIdempotentAdd({
+      productId: 'gpu', quantity: 1, operationId, getVersion: () => 0,
+      addRequest: async () => { posts += 1; throw error },
+      getCart: async () => { reads += 1; return { data: { cartVersion: 1 } } },
+    }), caught => caught === error && caught.operationId === operationId)
+    assert.equal(posts, 1)
+    assert.equal(reads, 0)
+  }
+})
+
+test('version conflict refreshes once and retries with the original operation ID', async () => {
+  const operationId = createAddOperationId()
+  const calls = []
+  const result = await executeIdempotentAdd({
+    productId: 'gpu', quantity: 1, operationId, getVersion: () => 0,
+    addRequest: async (_id, _qty, version, op) => {
+      calls.push({ version, op })
+      if (calls.length === 1) throw Object.assign(new Error('stale'), {
+        response: { status: 409, data: { errorCode: 'CART_VERSION_CONFLICT' } },
+      })
+      return { data: { cartVersion: 5, totalQuantity: 1 } }
+    },
+    getCart: async () => ({ data: { cartVersion: 4 } }),
+  })
+  assert.equal(result.retried, true)
+  assert.deepEqual(calls, [{ version: 0, op: operationId }, { version: 4, op: operationId }])
+})

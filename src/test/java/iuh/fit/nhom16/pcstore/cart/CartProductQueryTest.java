@@ -6,6 +6,7 @@ import iuh.fit.nhom16.pcstore.cart.entity.CartEntity;
 import iuh.fit.nhom16.pcstore.cart.entity.CartItemEntity;
 import iuh.fit.nhom16.pcstore.cart.entity.CartItemId;
 import iuh.fit.nhom16.pcstore.cart.entity.CartMergeReceiptEntity;
+import iuh.fit.nhom16.pcstore.cart.repository.CartJpaRepository;
 import iuh.fit.nhom16.pcstore.catalog.api.dto.CartProductSnapshot;
 import iuh.fit.nhom16.pcstore.catalog.domain.Category;
 import iuh.fit.nhom16.pcstore.catalog.domain.Product;
@@ -28,6 +29,8 @@ class CartProductQueryTest {
         String hql = ProductRepository.class.getMethod("findCartProducts", Collection.class)
                 .getAnnotation(Query.class).value();
         String lockSql = ProductRepository.class.getMethod("lockCartProductRows", Collection.class)
+                .getAnnotation(Query.class).value();
+        String snapshotHql = CartJpaRepository.class.getMethod("findSnapshotByUserId", UUID.class)
                 .getAnnotation(Query.class).value();
         assertTrue(lockSql.toUpperCase().contains("FOR SHARE"));
         assertTrue(lockSql.toUpperCase().contains("ORDER BY"));
@@ -53,6 +56,8 @@ class CartProductQueryTest {
                     .setParameter("ids", List.of(UUID.randomUUID())));
             assertDoesNotThrow(() -> session.createSelectionQuery("SELECT c FROM CartEntity c WHERE c.userId = :uid", CartEntity.class)
                     .setParameter("uid", UUID.randomUUID()));
+            assertDoesNotThrow(() -> session.createSelectionQuery(snapshotHql, CartEntity.class)
+                    .setParameter("userId", UUID.randomUUID()));
         }
     }
 }

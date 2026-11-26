@@ -4,16 +4,20 @@ import { pcBuildApi } from '../services/pcBuild'
 import { useCatalog } from './catalogContextStore'
 import { useAuth } from './authContextStore'
 import { projectCart } from '../utils/optimisticCart'
+import { runWithCartDeadline } from '../utils/cartDeadline'
 import { cartFromLogin } from '../utils/loginCart'
 import { cartStockError, productCartState } from '../utils/cartStock'
 import { executeIdempotentAdd, isRetryableAddError, prepareAddAttempt } from '../utils/cartAddIdempotency'
 import './CartNotice.css'
-import { CheckCircle2, LoaderCircle, X } from 'lucide-react'
+import { CheckCircle2, X } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 import { CartContext } from './cartContextStore'
 const emptyCart = () => ({ cartVersion: 0, items: [], totalQuantity: 0, subtotal: 0 })
-const messageFor = error => error?.response?.data?.detail || 'Không thể cập nhật giỏ hàng. Vui lòng thử lại.'
+const messageFor = error => error?.response?.data?.detail ||
+  (['ECONNABORTED', 'ETIMEDOUT'].includes(error?.code)
+    ? 'Đồng bộ giỏ hàng quá thời gian chờ. Bấm thử lại thao tác thêm để kiểm tra và đồng bộ, không cộng trùng sản phẩm.'
+    : 'Không thể cập nhật giỏ hàng. Vui lòng thử lại.')
 
 export function CartProvider({ children }) {
   const { PRODUCTS } = useCatalog()
@@ -197,30 +201,40 @@ export function CartProvider({ children }) {
     addingLockRef.current = true
     setAddingIds(prev => (prev.includes(knownProduct.id) ? prev : [...prev, knownProduct.id]))
     setNotice('')
-    setSuccessNotice(null)
+    if (optimistic) {
+      setSuccessNotice({ name: knownProduct.name, quantity, token: Symbol('cart.add.accepted') })
+    }
 
-    return enqueue(async () => {
+    return (async () => {
       const startedAt = performance.now()
-      if (import.meta.env.DEV) performance.measure('cart.add.queue', { start: queuedAt, end: startedAt })
       try {
-        if (current !== generation.current) {
-          return { success: false, message: 'Tài khoản đã thay đổi. Vui lòng thử lại.', operationId }
-        }
-        const { data } = await executeIdempotentAdd({
-          productId: knownProduct.id,
-          quantity,
-          operationId,
-          getVersion: () => cartRef.current.cartVersion,
-          addRequest: cartApi.add,
-          getCart: cartApi.get,
-          onCartLoaded: fresh => {
-            if (current === generation.current) {
-              // A lost response may already have committed this add on the server.
-              settle()
-              apply(fresh)
-            }
-          },
-        })
+        const { data } = await runWithCartDeadline(signal => enqueue(async () => {
+          // Expired queued operations must never send a delayed POST.
+          signal.throwIfAborted()
+          if (current !== generation.current) throw new Error('Tài khoản đã thay đổi. Vui lòng thử lại.')
+          if (import.meta.env.DEV) performance.measure('cart.add.queue', { start: queuedAt, end: performance.now() })
+          return executeIdempotentAdd({
+            productId: knownProduct.id,
+            quantity,
+            operationId,
+            getVersion: () => cartRef.current.cartVersion,
+            addRequest: (...args) => {
+              signal.throwIfAborted()
+              return cartApi.add(...args, { signal })
+            },
+            getCart: () => {
+              signal.throwIfAborted()
+              return cartApi.get({ signal })
+            },
+            onCartLoaded: fresh => {
+              if (!signal.aborted && current === generation.current) {
+                // A lost response may already have committed this add on the server.
+                settle()
+                apply(fresh)
+              }
+            },
+          })
+        }))
         if (current !== generation.current) {
           return { success: false, message: 'Tài khoản đã thay đổi.', operationId }
         }
@@ -228,13 +242,16 @@ export function CartProvider({ children }) {
         apply(data)
         setNotice('')
         setRetryableAdd(null)
-        setSuccessNotice({ name: knownProduct.name, quantity, token: Symbol('cart.add.success') })
+        if (!optimistic) {
+          setSuccessNotice({ name: knownProduct.name, quantity, token: Symbol('cart.add.success') })
+        }
         return { success: true, operationId }
       } catch (error) {
         const message = messageFor(error)
         const availableFromError = error?.response?.data?.availableQuantity
         const remainingFromError = error?.response?.data?.remainingAddableQuantity
         if (current === generation.current) {
+          setSuccessNotice(null)
           settle()
           setCart(projectCart(cartRef.current, pending.current))
           if (typeof availableFromError === 'number') {
@@ -246,12 +263,6 @@ export function CartProvider({ children }) {
             setRetryableAdd(null)
           }
           setNotice(message)
-          if (error?.response?.status === 409) {
-            try {
-              const { data } = await cartApi.get()
-              if (current === generation.current) apply(data)
-            } catch { /* keep last known cart */ }
-          }
         }
         return {
           success: false,
@@ -261,13 +272,13 @@ export function CartProvider({ children }) {
           remainingAddableQuantity: remainingFromError,
         }
       } finally {
-        addingLockRef.current = false
         if (current === generation.current) {
+          addingLockRef.current = false
           setAddingIds(prev => prev.filter(id => id !== knownProduct.id))
         }
         if (import.meta.env.DEV) performance.measure('cart.add.request', { start: startedAt, end: performance.now() })
       }
-    })
+    })()
   }, [enqueue, apply])
 
   // Creates a NEW add-to-cart operation (performs additive stock preflight and mints a fresh operationId).
@@ -418,16 +429,7 @@ export function CartProvider({ children }) {
       applyBuildProposal: (id, acknowledged) => mutate(() => pcBuildApi.confirm(id, acknowledged), 'cart.build-proposal'),
     }}>
       {children}
-      {adding && (
-        <div className="cart-notice cart-notice--pending" role="status" aria-live="polite">
-          <LoaderCircle size={20} className="cart-add-spinner" aria-hidden="true" />
-          <div className="cart-notice__content">
-            <strong>Đang đồng bộ giỏ hàng…</strong>
-            <span>Giỏ hàng đã cập nhật trên màn hình.</span>
-          </div>
-        </div>
-      )}
-      {successNotice && !notice && !adding && <div className="cart-notice cart-notice--success" role="status">
+      {successNotice && !notice && <div className="cart-notice cart-notice--success" role="status">
         <CheckCircle2 size={24} aria-hidden="true" />
         <div className="cart-notice__content"><strong>Đã thêm vào giỏ hàng thành công</strong>
           <span>{successNotice.name}{successNotice.quantity > 1 ? ` (×${successNotice.quantity})` : ''}</span>

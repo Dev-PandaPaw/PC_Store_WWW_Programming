@@ -112,8 +112,9 @@ export function isRetryableAddError(error) {
 
 /**
  * Executes an add-to-cart operation with a stable operationId.
- * If the response is lost / network drops / cartVersion conflicts, reloads the cart to get the latest
- * cartVersion and retries once with the SAME operationId so the backend never double-adds.
+ * Refreshes and retries version conflicts and immediate network failures once using the SAME ID.
+ * Timeouts and server errors return to the UI immediately for a manual retry instead of
+ * keeping the mutation queue blocked through another GET + POST timeout cycle.
  */
 export async function executeIdempotentAdd({
   productId,
@@ -129,7 +130,10 @@ export async function executeIdempotentAdd({
     const response = await addRequest(productId, quantity, getVersion(), opId)
     return { data: response.data, operationId: opId, retried: false }
   } catch (firstError) {
-    if (!isRetryableAddError(firstError)) {
+    const timedOut = ['ECONNABORTED', 'ETIMEDOUT', 'ERR_CANCELED'].includes(firstError.code)
+    const code = firstError.response?.data?.errorCode || firstError.response?.data?.code
+    const canAutoRetry = code === 'CART_VERSION_CONFLICT' || (!firstError.response && !timedOut)
+    if (!canAutoRetry) {
       firstError.operationId = opId
       throw firstError
     }

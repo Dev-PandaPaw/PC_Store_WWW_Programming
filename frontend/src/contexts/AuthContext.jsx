@@ -22,7 +22,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const current = revision.current
     const controller = new AbortController()
-    http.get('/auth/me', { signal: controller.signal }).then(({ data }) => {
+    http.get('/auth/me', { signal: controller.signal, timeout: 8000 }).then(({ data }) => {
       if (!controller.signal.aborted && current === revision.current) {
         const { user } = splitLoginResponse(data)
         setSession({ user, loginCart: null }); cacheUser(user)

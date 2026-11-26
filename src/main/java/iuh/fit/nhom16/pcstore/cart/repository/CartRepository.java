@@ -1,6 +1,5 @@
 package iuh.fit.nhom16.pcstore.cart.repository;
 
-import iuh.fit.nhom16.pcstore.cart.entity.CartAddOperationEntity;
 import iuh.fit.nhom16.pcstore.cart.entity.CartAddOperationId;
 import iuh.fit.nhom16.pcstore.cart.entity.CartEntity;
 import iuh.fit.nhom16.pcstore.cart.entity.CartItemEntity;
@@ -45,17 +44,7 @@ public class CartRepository {
                             .orElseThrow(() -> new IllegalStateException("Cart row missing after ensureCartExists for user " + userId));
                 });
 
-        Map<UUID, Integer> quantities = new LinkedHashMap<>();
-        for (CartItemEntity item : entity.getItems()) {
-            quantities.put(item.getProductId(), item.getQuantity());
-        }
-
-        CartSession session = new CartSession(
-                entity.getId(),
-                entity.getVersion(),
-                quantities,
-                entity.isPcBuildCheckout(),
-                readRequirements(entity.getPcBuildRequirements()));
+        CartSession session = toSession(entity);
 
         if (operationId != null) {
             addOperations.findById(new CartAddOperationId(entity.getId(), operationId))
@@ -63,6 +52,26 @@ public class CartRepository {
                             op.getOperationId(), op.getProductId(), op.getQuantity(), op.getResultVersion())));
         }
         return session;
+    }
+
+    /** One snapshot query; reading a cart must not wait for an in-flight writer's row lock. */
+    public CartSession read(UUID userId) {
+        return carts.findSnapshotByUserId(userId).map(this::toSession).orElseGet(CartSession::new);
+    }
+
+    private CartSession toSession(CartEntity entity) {
+        Map<UUID, Integer> quantities = new LinkedHashMap<>();
+        for (CartItemEntity item : entity.getItems()) {
+            quantities.put(item.getProductId(), item.getQuantity());
+        }
+
+        return new CartSession(
+                entity.getId(),
+                entity.getVersion(),
+                quantities,
+                entity.isPcBuildCheckout(),
+                readRequirements(entity.getPcBuildRequirements()));
+
     }
 
     public void save(CartSession cart) {
@@ -73,17 +82,13 @@ public class CartRepository {
         entity.setPcBuildCheckout(cart.buildCheckoutRequired());
         entity.setPcBuildRequirements(writeRequirements(cart.buildRequirements()));
         entity.setUpdatedAt(OffsetDateTime.now());
-        carts.saveAndFlush(entity);
+        carts.save(entity);
 
         if (!cart.pendingAppliedAdds().isEmpty()) {
             for (CartSession.AppliedAddOperation op : cart.pendingAppliedAdds()) {
-                CartAddOperationId opId = new CartAddOperationId(cart.mergeId(), op.operationId());
-                if (!addOperations.existsById(opId)) {
-                    addOperations.save(new CartAddOperationEntity(
-                            cart.mergeId(), op.operationId(), op.productId(), op.quantity(), op.resultVersion()));
-                }
+                // Flush cart changes before the FK insert, without exists + merge SELECT round trips.
+                addOperations.insertIfAbsent(cart.mergeId(), op.operationId(), op.productId(), op.quantity(), op.resultVersion());
             }
-            addOperations.flush();
             cart.clearPendingAppliedAdds();
         }
     }

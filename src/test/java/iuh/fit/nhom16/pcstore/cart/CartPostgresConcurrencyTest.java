@@ -303,6 +303,37 @@ class CartPostgresConcurrencyTest {
     }
 
     @Test
+    void readingCartDoesNotWaitForUncommittedWriterOnSameSession() throws Exception {
+        MockHttpSession session = sessionFor(CUSTOMER_ONE);
+        mvc.perform(post("/api/v1/cart/items").session(session)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"productId\":\"" + PRODUCT + "\",\"quantity\":1,\"cartVersion\":0}"))
+                .andExpect(status().isOk());
+
+        try (Connection writer = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+             ExecutorService pool = Executors.newSingleThreadExecutor()) {
+            writer.setAutoCommit(false);
+            try (var statement = writer.createStatement()) {
+                statement.execute("SET search_path TO " + SCHEMA);
+            }
+            try (var statement = writer.prepareStatement("UPDATE carts SET version = version + 1 WHERE user_id = ?")) {
+                statement.setObject(1, CUSTOMER_ONE);
+                statement.executeUpdate();
+            }
+            try {
+                var read = pool.submit(() -> mvc.perform(get("/api/v1/cart").session(session))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.cartVersion").value(1))
+                        .andExpect(jsonPath("$.totalQuantity").value(1))
+                        .andReturn());
+                assertNotNull(read.get(5, TimeUnit.SECONDS));
+            } finally {
+                writer.rollback();
+            }
+        }
+    }
+
+    @Test
     void forShareLockWaitsForConcurrentStockUpdateAndReportsExactRemainingAddableQuantity() throws Exception {
         MockHttpSession session = sessionFor(CUSTOMER_ONE);
         mvc.perform(post("/api/v1/cart/items").session(session)

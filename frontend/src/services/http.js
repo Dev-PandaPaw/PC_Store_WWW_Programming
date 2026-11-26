@@ -32,7 +32,7 @@ http.interceptors.request.use(async (config) => {
   let token = document.cookie.match(/(?:^|;\s*)XSRF-TOKEN=([^;]+)/)?.[1];
 
   if (!token) {
-    csrfRequest ||= http.get("/csrf").finally(() => {
+    csrfRequest ||= http.get("/csrf", { timeout: 5000 }).finally(() => {
       csrfRequest = null;
     });
     await csrfRequest;
@@ -47,6 +47,10 @@ http.interceptors.request.use(async (config) => {
 export default http;
 
 export async function ensureCsrfToken() {
-  if (!document.cookie.match(/(?:^|;\s*)XSRF-TOKEN=([^;]+)/))
-    await http.get("/csrf");
+  if (!document.cookie.match(/(?:^|;\s*)XSRF-TOKEN=([^;]+)/)) {
+    csrfRequest ||= http.get("/csrf", { timeout: 5000 }).finally(() => {
+      csrfRequest = null;
+    });
+    await csrfRequest;
+  }
 }
