@@ -21,9 +21,22 @@ import java.util.function.Supplier;
 public class ProductSemanticRecommendationService {
     public static final int TOP_K = 5;
     public static final double MIN_SIMILARITY = 0.70;
-    public static final Set<String> CATEGORIES = Set.of("cpu","mainboard","vga","ram","storage","cooling","case","psu","monitor","mouse","keyboard");
+    private static final Map<String, String> CATEGORY_SEARCH_TEXT = Map.ofEntries(
+            Map.entry("cpu", "Bộ vi xử lý CPU Intel Core hoặc AMD Ryzen, số nhân luồng, xung nhịp GHz, socket LGA1700 hoặc AM5"),
+            Map.entry("mainboard", "Bo mạch chủ mainboard PC, chipset Intel B760 hoặc AMD B650, socket LGA1700 hoặc AM5, khe RAM DDR4 DDR5 và M.2 NVMe"),
+            Map.entry("vga", "Tên linh kiện: Card màn hình NVIDIA GeForce RTX hoặc AMD Radeon RX. Danh mục: vga. Thông số: GPU 8GB GDDR6, bus bộ nhớ, băng thông, PCIe, HDMI, DisplayPort, công suất nguồn khuyến nghị."),
+            Map.entry("ram", "Bộ nhớ RAM máy tính DDR4 hoặc DDR5, dung lượng 8GB 16GB 32GB, bus MHz, kit DIMM"),
+            Map.entry("storage", "Ổ cứng SSD máy tính, dung lượng 500GB 1TB 2TB, chuẩn M.2 NVMe PCIe hoặc SATA, tốc độ đọc ghi MB/s"),
+            Map.entry("cooling", "Tản nhiệt CPU máy tính, quạt tản khí hoặc tản nước AIO, socket Intel LGA1700 hoặc AMD AM5"),
+            Map.entry("case", "Vỏ case máy tính, thùng máy ATX hoặc Micro ATX, mặt kính, quạt tản nhiệt và khe linh kiện"),
+            Map.entry("psu", "Nguồn máy tính PSU ATX, công suất 550W 650W 750W, chứng nhận hiệu suất 80 Plus, dây nguồn PCIe"),
+            Map.entry("monitor", "Màn hình máy tính, kích thước 24 hoặc 27 inch, tấm nền IPS, Full HD QHD, tần số quét Hz, HDMI DisplayPort"),
+            Map.entry("mouse", "Chuột máy tính gaming, cảm biến quang DPI, kết nối USB có dây hoặc không dây, nút bấm"),
+            Map.entry("keyboard", "Bàn phím cơ gaming, switch, bố cục phím, đèn RGB, kết nối có dây USB hoặc không dây"));
+    public static final Set<String> CATEGORIES = CATEGORY_SEARCH_TEXT.keySet();
     public record Recommendation(StoreProduct product, double similarityScore, String compatibilityStatus) {}
     public record Result(List<Recommendation> products, String status) {}
+    private record CategoryQuery(String category, String text) {}
     private final RecommendationCatalog catalog;
     private final Supplier<VectorStore> vectors;
     private final Supplier<RecentCategoryProvider> behavior;
@@ -79,10 +92,11 @@ public class ProductSemanticRecommendationService {
         if (categories.isEmpty())
             return new Result(List.of(),
                     "insufficient_history");
-        String prompt = "Gợi ý linh kiện máy tính thuộc các danh mục quan tâm gần đây: "
-                + String.join(", ",categories)
-                + contextText(context);
-        return search(prompt,categories,null,context,null);
+        String buildContext = contextText(context);
+        List<CategoryQuery> queries = categories.stream()
+                .map(category -> new CategoryQuery(category, CATEGORY_SEARCH_TEXT.get(category) + buildContext))
+                .toList();
+        return search(queries, null, context, null);
     }
 
     // kiểm tra độ tương đồng
@@ -105,46 +119,31 @@ public class ProductSemanticRecommendationService {
                 + ". Giá tham chiếu VND: "
                 + source.product().price()
                 + contextText(context);
-        return search(prompt,List.of(source.product().category()),source,context,source.product().price());
+        return search(List.of(new CategoryQuery(source.product().category(), prompt)), source, context, source.product().price());
     }
 
     // tìm sản phẩm
-    private Result search(String prompt, List<String> categories, Item source, List<Item> context, Long price) {
+    private Result search(List<CategoryQuery> queries, Item source, List<Item> context, Long price) {
         VectorStore store = vectors.get();
         if(store instanceof ProductVectorStore products && !products.isPersistent())
             throw failure(503,"VECTOR_UNAVAILABLE","Bật profile semantic để dùng gợi ý từ PgVector.");
         if (store == null) throw failure(503,"VECTOR_UNAVAILABLE","Tìm kiếm vector chưa được bật.");
-        // Categories are whitelisted; metadata never supplies prices, stock or compatibility verdicts.
-        String filter = "embeddingSignature == '" + signature + "' && category in ["
-                + String.join(",",categories.stream().map(c -> "'"+c+"'").toList()) + "]";
-        if (source != null) filter += " && productId != '" + source.id() + "'";
-        List<Document> documents;
-        try {
-            documents = store.similaritySearch(SearchRequest.builder()
-                    .query(prompt)
-                    .topK(TOP_K)
-                    .similarityThreshold(MIN_SIMILARITY)
-                    .filterExpression(filter)
-                    .build());
-        }
-        catch (RuntimeException e) {
-            throw failure(503,"VECTOR_UNAVAILABLE","Dịch vụ tìm kiếm vector tạm thời gián đoạn.");
-        }
-        if (documents == null)
-            throw failure(503,"VECTOR_UNAVAILABLE","Dịch vụ tìm kiếm vector không trả dữ liệu hợp lệ.");
         Map<UUID, Double> scores = new HashMap<>();
-        for (Document document : documents) {
-            if (document == null || document.getScore() == null)
-                continue;
-            double score = document.getScore();
-            if (!Double.isFinite(score) || score < MIN_SIMILARITY || score > 1.0)
-                continue;
-            try {
-                UUID id = UUID.fromString(String.valueOf(document.getMetadata().get("productId")));
-                if (source == null || !source.id().equals(id)) scores.merge(id,score,Math::max);
-            } catch (IllegalArgumentException ignored) {
+        for (CategoryQuery query : queries) {
+            for (Document document : findDocuments(store, query, source)) {
+                if (document == null || document.getScore() == null)
+                    continue;
+                double score = document.getScore();
+                if (!Double.isFinite(score) || score < MIN_SIMILARITY || score > 1.0)
+                    continue;
+                try {
+                    UUID id = UUID.fromString(String.valueOf(document.getMetadata().get("productId")));
+                    if (source == null || !source.id().equals(id)) scores.merge(id, score, Math::max);
+                } catch (IllegalArgumentException ignored) {
                 }
+            }
         }
+        List<String> categories = queries.stream().map(CategoryQuery::category).toList();
         // One catalog statement rechecks candidates, source and build after the embedding call.
         Set<UUID> currentIds=new HashSet<>(scores.keySet());
         context.forEach(item -> currentIds.add(item.id()));
@@ -176,6 +175,25 @@ public class ProductSemanticRecommendationService {
         result.sort(Comparator.comparingDouble(Recommendation::similarityScore).reversed().thenComparing(r -> r.product().id()));
         List<Recommendation> top=result.stream().limit(TOP_K).toList();
         return new Result(top,top.isEmpty() ? "no_match" : "ok");
+    }
+
+    private List<Document> findDocuments(VectorStore store, CategoryQuery query, Item source) {
+        String filter = "embeddingSignature == '" + signature + "' && category == '" + query.category() + "'";
+        if (source != null) filter += " && productId != '" + source.id() + "'";
+        List<Document> documents;
+        try {
+            documents = store.similaritySearch(SearchRequest.builder()
+                    .query(query.text())
+                    .topK(TOP_K)
+                    .similarityThreshold(MIN_SIMILARITY)
+                    .filterExpression(filter)
+                    .build());
+        } catch (RuntimeException e) {
+            throw failure(503,"VECTOR_UNAVAILABLE","Dịch vụ tìm kiếm vector tạm thời gián đoạn.");
+        }
+        if (documents == null)
+            throw failure(503,"VECTOR_UNAVAILABLE","Dịch vụ tìm kiếm vector không trả dữ liệu hợp lệ.");
+        return documents;
     }
     private List<Item> context(List<UUID> ids) {
         if (ids == null || ids.isEmpty())

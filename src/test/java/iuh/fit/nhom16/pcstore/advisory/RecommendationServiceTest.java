@@ -55,7 +55,8 @@ class RecommendationServiceTest {
         assertEquals("needs_verification",result.products().getFirst().compatibilityStatus());
         var request=ArgumentCaptor.forClass(SearchRequest.class); verify(vectors).similaritySearch(request.capture());
         assertEquals(5,request.getValue().getTopK()); assertEquals(.70,request.getValue().getSimilarityThreshold());
-        assertTrue(request.getValue().getQuery().contains("cpu")); assertNotNull(request.getValue().getFilterExpression());
+        assertTrue(request.getValue().getQuery().contains("Bộ vi xử lý CPU"));
+        assertNotNull(request.getValue().getFilterExpression());
         verify(behavior).topCategories(USER,NOW.minus(Duration.ofDays(30)),3);
     }
     @Test void liveCatalogOverridesInventoryAndStatusFromIndex() {
@@ -113,10 +114,21 @@ class RecommendationServiceTest {
         verifyNoInteractions(vectors);
     }
     @Test void historyIsScopedWhitelistedAndHasNoInventedFallback() {
+        var cpu=add("cpu",100,1,0,"ACTIVE","AM5");
+        var board=add("mainboard",100,1,0,"ACTIVE","AM5");
         when(behavior.topCategories(eq(USER),any(),eq(3))).thenReturn(List.of("laptop","cpu","cpu","mainboard","ram","vga"));
-        service.personalized(USER,List.of());
-        var request=ArgumentCaptor.forClass(SearchRequest.class); verify(vectors).similaritySearch(request.capture());
-        assertFalse(request.getValue().getQuery().contains("laptop"));
+        when(vectors.similaritySearch(any(SearchRequest.class)))
+                .thenReturn(List.of(hit(cpu,.81)))
+                .thenReturn(List.of(hit(board,.88)))
+                .thenReturn(List.of());
+        var result=service.personalized(USER,List.of());
+        assertEquals(List.of(board.id().toString(),cpu.id().toString()),
+                result.products().stream().map(r -> r.product().id()).toList());
+        var requests=ArgumentCaptor.forClass(SearchRequest.class);
+        verify(vectors,times(3)).similaritySearch(requests.capture());
+        assertTrue(requests.getAllValues().get(0).getQuery().startsWith("Bộ vi xử lý CPU"));
+        assertTrue(requests.getAllValues().get(1).getQuery().startsWith("Bo mạch chủ"));
+        assertTrue(requests.getAllValues().get(2).getQuery().startsWith("Bộ nhớ RAM"));
         reset(vectors);
         when(behavior.topCategories(eq(USER),any(),eq(3))).thenReturn(List.of());
         assertEquals("insufficient_history",service.personalized(USER,List.of()).status());

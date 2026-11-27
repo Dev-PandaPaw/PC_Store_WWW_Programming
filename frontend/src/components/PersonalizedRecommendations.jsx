@@ -42,7 +42,8 @@ export default function PersonalizedRecommendations({
           setItems(results || [])
         }
       } catch (err) {
-        console.debug('[PersonalizedRecommendations] Handled fallback load:', err)
+        if (isMounted) setItems([])
+        console.debug('[PersonalizedRecommendations] Failed to load recommendations:', err)
       } finally {
         if (isMounted) setLoading(false)
       }
